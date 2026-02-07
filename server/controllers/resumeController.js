@@ -39,21 +39,30 @@ const getResumeById = async (req, res) => {
 // @access  Private
 const createResume = async (req, res) => {
     const { title, templateId } = req.body;
+    console.log('Create Resume Request:', { body: req.body, user: req.user?._id });
 
     try {
+        if (!req.user) {
+            console.error('Create Resume Error: req.user is missing');
+            return res.status(401).json({ message: 'User context missing' });
+        }
+
         const resume = new Resume({
             userId: req.user._id,
-            title,
-            templateId,
+            title: title || 'Untitled Resume',
+            templateId: templateId || 'modern',
             personalInfo: {
-                fullName: req.user.name,
-                email: req.user.email,
+                fullName: req.user.name || '',
+                email: req.user.email || '',
             },
         });
 
+        console.log('Attempting to save resume...');
         const createdResume = await resume.save();
+        console.log('Resume created successfully:', createdResume._id);
         res.status(201).json(createdResume);
     } catch (error) {
+        console.error('Create Resume Error:', error);
         res.status(500).json({ message: error.message });
     }
 };
