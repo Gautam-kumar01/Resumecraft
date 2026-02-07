@@ -5,20 +5,21 @@ const starterResumes = [
         role: 'Software Engineer',
         title: 'Full Stack Developer Starter',
         industry: 'Technology',
-        description: 'Perfect for Full Stack roles at top tech companies like Google, Meta, or Amazon.',
+        targetCompanies: ['Google', 'Meta', 'Netflix', 'Microsoft'],
+        description: 'Optimized for high-performance engineering roles at top-tier tech giants.',
         skills: [
             'JavaScript (ES6+)', 'React.js', 'Node.js', 'TypeScript', 'MongoDB',
             'Docker', 'Kubernetes', 'AWS', 'System Design', 'Agile Methodology',
-            'Problem Solving', 'Team Collaboration', 'Effective Communication'
+            'Advanced Algorithms', 'Scalable Architecture'
         ],
         summary: 'Passionate and challenge-driven Software Engineer with 3+ years of experience in building scalable web applications. Proficient in modern JavaScript frameworks and cloud-native architectures.',
         experience: [
             {
-                company: 'Tech Solutions Inc.',
-                position: 'Full Stack Developer',
+                company: 'Global Tech Hub',
+                position: 'Senior Software Engineer',
                 startDate: '2021-01',
                 endDate: 'Present',
-                description: 'Led the development of a microservices-based dashboard, improving system performance by 40%.'
+                description: 'Migrated monolithic architecture to microservices, reducing deployment time by 60% and improving scalability.'
             }
         ],
         education: [
@@ -27,14 +28,7 @@ const starterResumes = [
                 degree: 'B.S. in Computer Science',
                 startDate: '2016',
                 endDate: '2020',
-                description: 'Focus on Distributed Systems and Data Structures.'
-            }
-        ],
-        projects: [
-            {
-                name: 'CloudScale E-commerce',
-                description: 'A high-traffic e-commerce platform built with Node.js and React.',
-                technologies: ['React', 'Node.js', 'Redux', 'PostgreSQL']
+                description: 'First Class Honors. Focus on Distributed Systems.'
             }
         ]
     },
@@ -43,51 +37,67 @@ const starterResumes = [
         role: 'Data Scientist',
         title: 'AI & Data Science Specialist',
         industry: 'Analytics & AI',
-        description: 'Optimized for roles specializing in Machine Learning, Data Analytics, and Big Data.',
+        targetCompanies: ['Amazon', 'Tesla', 'OpenAI', 'NVIDIA'],
+        description: 'Master-level template for roles in AI, Machine Learning, and Big Data Analytics.',
         skills: [
-            'Python', 'R', 'SQL', 'TensorFlow', 'PyTorch',
-            'Scikit-Learn', 'Pandas', 'NumPy', 'Tableau', 'BigQuery',
-            'Statistical Modeling', 'Machine Learning', 'Data Visualization', 'Critical Thinking'
+            'Python', 'SQL', 'TensorFlow', 'PyTorch',
+            'Scikit-Learn', 'Pandas', 'Spark', 'Tableau', 'BigQuery',
+            'Deep Learning', 'Natural Language Processing', 'Data Engineering'
         ],
         summary: 'Data Scientist with a strong background in statistical analysis and machine learning. Experienced in transforming complex data sets into actionable business insights.',
         experience: [
             {
-                company: 'DataInsights Corp',
-                position: 'Junior Data Scientist',
+                company: 'DeepData Labs',
+                position: 'AI Research Associate',
                 startDate: '2020-06',
                 endDate: 'Present',
-                description: 'Developed a predictive maintenance model that reduced downtime by 25% for industrial clients.'
-            }
-        ],
-        education: [
-            {
-                institution: 'Global AI University',
-                degree: 'M.S. in Data Science',
-                startDate: '2018',
-                endDate: '2020',
-                description: 'Specialization in Deep Learning and Natural Language Processing.'
+                description: 'Orchestrated the development of a churn prediction model with 92% accuracy.'
             }
         ]
     },
     {
-        id: 'product-manager',
-        role: 'Product Manager',
-        title: 'Modern Product Manager',
-        industry: 'Product Management',
-        description: 'Designed for product leader roles focusing on user-centric design and business strategy.',
+        id: 'ux-designer',
+        role: 'UX/UI Designer',
+        title: 'Creative Product Designer',
+        industry: 'Design',
+        targetCompanies: ['Apple', 'Airbnb', 'Adobe', 'Uber'],
+        description: 'Visual-focused template emphasizing user-centric design and aesthetic precision.',
         skills: [
-            'Product Strategy', 'Roadmapping', 'User Research', 'A/B Testing',
-            'Jira', 'Confluence', 'SQL', 'Data Analytics', 'Stakeholder Management',
-            'Strategic Thinking', 'Leadership', 'Empathy', 'Public Speaking'
+            'Figma', 'Adobe XD', 'Prototyping', 'User Research', 'Typography',
+            'Design Systems', 'Interaction Design', 'Visual Hierarchy', 'Wireframing',
+            'User Testing', 'Micro-interactions'
         ],
-        summary: 'Dynamic Product Manager with a track record of launching successful SaaS products. Expert in translating user needs into technical requirements.',
+        summary: 'Detail-oriented UX/UI Designer dedicated to creating seamless digital experiences. Proven ability to translate complex user needs into beautiful, functional interfaces.',
         experience: [
             {
-                company: 'SaaS Innovators',
-                position: 'Associate Product Manager',
-                startDate: '2021-03',
+                company: 'PixelPerfect Agency',
+                position: 'UX Designer',
+                startDate: '2021-04',
                 endDate: 'Present',
-                description: 'Managed the end-to-end lifecycle of a new mobile app feature, resulting in 15% increase in MAU.'
+                description: 'Led the redesign of a major fintech app, resulting in a 40% increase in user engagement.'
+            }
+        ]
+    },
+    {
+        id: 'finance-analyst',
+        role: 'Finance Analyst',
+        title: 'Investment & Finance Starter',
+        industry: 'Finance',
+        targetCompanies: ['Goldman Sachs', 'J.P. Morgan', 'Morgan Stanley'],
+        description: 'Professional template for high-stakes roles in Investment Banking and Financial Analysis.',
+        skills: [
+            'Financial Modeling', 'Excel (VBA)', 'SQL', 'Python for Finance',
+            'Valuation Analysis', 'Risk Management', 'Market Research', 'Bloomberg Terminal',
+            'Strategic Planning', 'Report Writing'
+        ],
+        summary: 'Analytical Finance Professional with expertise in financial modeling and strategic planning. Committed to delivering accurate data-driven insights for investment decisions.',
+        experience: [
+            {
+                company: 'WallStreet Partners',
+                position: 'Investment Analyst',
+                startDate: '2021-02',
+                endDate: 'Present',
+                description: 'Analyzed portfolio performance for high-net-worth clients, consistently exceeding quarterly targets.'
             }
         ]
     }
