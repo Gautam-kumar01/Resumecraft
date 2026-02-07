@@ -44,8 +44,18 @@ connectDB();
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
-    mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
-    env: process.env.NODE_ENV
+    mongodb: {
+      status: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+      readyState: mongoose.connection.readyState
+    },
+    vercelConfig: {
+      hasMongo: !!process.env.MONGO_URI,
+      hasJwt: !!process.env.JWT_SECRET,
+      hasEmailUser: !!process.env.EMAIL_USER,
+      hasEmailPass: !!process.env.EMAIL_PASS,
+      nodeEnv: process.env.NODE_ENV
+    },
+    tip: 'If any "hasX" is false, add that variable in Vercel Dashboard > Settings > Environment Variables.'
   });
 });
 
