@@ -26,11 +26,28 @@ const connectDB = async () => {
 connectDB();
 
 // Routes
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+    env: process.env.NODE_ENV
+  });
+});
+
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/resumes', require('./routes/resume'));
 
 app.get('/', (req, res) => {
   res.send('ResumeCraft API is running...');
+});
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+  console.error('[SERVER ERROR]', err);
+  res.status(err.status || 500).json({
+    message: err.message || 'Internal Server Error',
+    stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+  });
 });
 
 const PORT = process.env.PORT || 5000;

@@ -42,7 +42,9 @@ const Register = () => {
             setShowOtp(true);
             setMessage(data.message || 'A verification code has been sent to your email.');
         } catch (err) {
-            setError(err.response?.data?.message || 'Registration failed');
+            console.error('Frontend Registration Error:', err);
+            const msg = err.response?.data?.message || err.message || 'Registration failed. Please check your internet connection or try a @gmail.com address.';
+            setError(msg);
         } finally {
             setLoading(false);
         }

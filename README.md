@@ -75,13 +75,24 @@ Visit `http://localhost:5173` to use the application.
 ## Project Structure
 
 - `client/`: React frontend
-  - `src/pages`: Application pages (Dashboard, Editor, etc.)
-  - `src/components`: Reusable components
-  - `src/context`: State management context
 - `server/`: Node.js backend
-  - `models/`: Mongoose schemas
-  - `routes/`: API routes
-  - `controllers/`: Request handlers
+
+## Deployment (Vercel)
+
+To deploy ResumeCraft to Vercel, follow these steps:
+
+1. **Environment Variables**: You MUST set the following Environment Variables in the Vercel Dashboard for your project:
+   - `MONGO_URI`: Your MongoDB Atlas connection string (e.g., `mongodb+srv://...`)
+   - `JWT_SECRET`: A strong secret key for token signing.
+   - `EMAIL_USER`: Your Gmail address (for OTP verification).
+   - `EMAIL_PASS`: Your Gmail App Password.
+   - `VITE_GOOGLE_CLIENT_ID`: Your Google OAuth Client ID.
+
+2. **Backend Entry**: The project uses a `vercel.json` file in the root to route `/api` requests to the `server/index.js` function.
+
+3. **Database**: Since Vercel is serverless, ensure your MongoDB Atlas IP Access List allows connections from anywhere (`0.0.0.0/0`) or use a managed database service.
+
+4. **Debugging**: If registration fails, check the **Function Logs** in the Vercel dashboard to see the exact error message (e.g., MongoDB timeout or invalid JWT secret).
 
 ## License
 
