@@ -25,6 +25,20 @@ git clone <repository-url>
 cd ResumeCraft
 ```
 
+### Quick Start (Development)
+You can run both the client and server concurrently from the root directory:
+
+1. Install root dependencies:
+```bash
+npm install
+```
+
+2. Start both servers:
+```bash
+npm start
+```
+This will run the server on port 5000 and the client on port 5173.
+
 ### 2. Backend Setup
 Navigate to the server directory and install dependencies:
 ```bash
