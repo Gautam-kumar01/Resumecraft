@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import AuthContext from '../context/AuthContext';
-import { Plus, FileText, Trash2, Edit, ExternalLink, Download, Sparkles } from 'lucide-react';
+import { Plus, FileText, Trash2, Edit, ExternalLink, Download, Sparkles, ArrowRight } from 'lucide-react';
 
 const Dashboard = () => {
     const [resumes, setResumes] = useState([]);
@@ -88,83 +88,85 @@ const Dashboard = () => {
                     <Link to="/templates" className="text-sm font-bold text-primary hover:underline">View All &rarr;</Link>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {starters.slice(0, 4).map((template) => (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+                    {starters.slice(0, 5).map((template) => (
                         <button
                             key={template.id}
                             onClick={() => useTemplate(template)}
-                            className="group relative flex flex-col bg-white rounded-3xl border border-slate-200 hover:border-primary/40 transition-all text-left overflow-hidden hover:shadow-2xl hover:-translate-y-2 h-[420px]"
+                            className="group relative flex flex-col bg-white rounded-3xl border border-slate-200 hover:border-primary/40 transition-all text-left overflow-hidden hover:shadow-2xl hover:-translate-y-2 h-[450px]"
                         >
-                            {/* Visual Resume Preview Header */}
-                            <div className="h-48 w-full relative bg-slate-50 p-4 border-b border-slate-100">
-                                <div className="w-full h-full rounded-xl bg-white shadow-sm border border-slate-200/50 p-4 relative overflow-hidden">
-                                    {/* Mini Resume Skeleton */}
-                                    <div className="flex gap-2 mb-3">
-                                        <div className="w-8 h-8 rounded-full bg-slate-100 shrink-0"></div>
-                                        <div className="flex-1 space-y-1.5">
-                                            <div className="h-2 w-2/3 bg-slate-200 rounded"></div>
-                                            <div className="h-1.5 w-1/2 bg-slate-100 rounded"></div>
+                            {/* Visual Resume Mockup Header */}
+                            <div className="h-56 w-full relative overflow-hidden bg-slate-900">
+                                <img
+                                    src={template.imageUrl || 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop'}
+                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 opacity-60 group-hover:opacity-80"
+                                    alt={template.title}
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/20 to-transparent"></div>
+
+                                {/* Glassmorphism Mini-Card Overlay */}
+                                <div className="absolute inset-0 p-4 flex flex-col justify-end">
+                                    <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                                        <div className="flex items-center space-x-2 mb-2">
+                                            <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center">
+                                                <Sparkles className="h-3 w-3 text-primary" />
+                                            </div>
+                                            <span className="text-[9px] font-black text-white uppercase tracking-widest">AI Engineered</span>
+                                        </div>
+                                        <div className="space-y-1.5">
+                                            <div className="h-1 w-full bg-white/20 rounded-full"></div>
+                                            <div className="h-1 w-2/3 bg-white/10 rounded-full"></div>
                                         </div>
                                     </div>
-                                    <div className="space-y-2">
-                                        <div className="h-1 w-full bg-slate-50 rounded"></div>
-                                        <div className="h-1 w-full bg-slate-50 rounded"></div>
-                                        <div className="h-1 w-3/4 bg-slate-50 rounded"></div>
-                                    </div>
-
-                                    {/* Company Badge Overlay */}
-                                    <div className="absolute top-4 right-4 h-6 w-12 bg-slate-900 rounded flex items-center justify-center opacity-10 group-hover:opacity-100 transition-opacity">
-                                        <span className="text-[8px] font-black text-white">{template.targetCompanies[0]}</span>
-                                    </div>
-
-                                    {/* Industry Spotlight */}
-                                    <div className="absolute bottom-4 left-4">
-                                        <span className="text-[10px] font-bold text-primary bg-primary/5 px-2 py-1 rounded-lg">
-                                            {template.industry}
-                                        </span>
-                                    </div>
                                 </div>
-                                <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-primary to-purple-600"></div>
+
+                                {/* Industry Spotlight */}
+                                <div className="absolute top-4 left-4">
+                                    <span className="text-[9px] font-black text-white bg-slate-900/80 px-2 py-1 rounded-lg border border-white/10 uppercase tracking-tighter backdrop-blur-sm">
+                                        {template.industry}
+                                    </span>
+                                </div>
                             </div>
 
                             <div className="p-6 flex flex-col flex-1">
                                 <div className="mb-4">
-                                    <h3 className="text-lg font-black text-slate-900 leading-tight group-hover:text-primary transition-colors">{template.title}</h3>
-                                    <p className="text-xs text-slate-500 mt-2 line-clamp-2">{template.description}</p>
+                                    <h3 className="text-sm font-black text-slate-900 leading-tight group-hover:text-primary transition-colors line-clamp-2">{template.title}</h3>
+                                    <p className="text-[10px] text-slate-500 mt-2 line-clamp-2 font-medium">{template.description}</p>
                                 </div>
 
                                 {/* "See Inside" - Pre-filled Data Preview */}
                                 <div className="mt-auto space-y-4">
                                     <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100">
-                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Internal Blueprints</p>
                                         <div className="flex flex-wrap gap-1.5">
-                                            {template.skills.slice(0, 4).map((skill, i) => (
-                                                <span key={i} className="text-[9px] font-bold text-slate-600 bg-white border border-slate-200 px-1.5 py-0.5 rounded-md">
+                                            {template.skills.slice(0, 3).map((skill, i) => (
+                                                <span key={i} className="text-[9px] font-bold text-slate-700 bg-white border border-slate-200 px-2 py-0.5 rounded-lg shadow-sm">
                                                     {skill}
                                                 </span>
                                             ))}
-                                            <span className="text-[9px] font-bold text-slate-400">+{template.skills.length - 4} more</span>
+                                            {template.skills.length > 3 && <span className="text-[9px] font-bold text-slate-400">+{template.skills.length - 3}</span>}
                                         </div>
                                     </div>
 
                                     <div className="flex items-center justify-between">
                                         <div className="flex -space-x-2">
                                             {template.targetCompanies.slice(0, 3).map((c, i) => (
-                                                <div key={i} className="w-6 h-6 rounded-full bg-white border border-slate-200 flex items-center justify-center text-[8px] font-black text-slate-100 shadow-sm overflow-hidden bg-slate-900">
+                                                <div key={i} className="w-7 h-7 rounded-full bg-white border-2 border-slate-100 flex items-center justify-center text-[10px] font-black text-slate-900 shadow-lg overflow-hidden">
                                                     {c[0]}
                                                 </div>
                                             ))}
                                         </div>
-                                        <span className="text-[10px] font-black text-primary uppercase tracking-tighter">Use Blueprint &rarr;</span>
+                                        <div className="bg-primary/10 p-2 rounded-full group-hover:bg-primary transition-colors">
+                                            <Plus className="h-4 w-4 text-primary group-hover:text-white transition-colors" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             {creating === template.id && (
-                                <div className="absolute inset-0 bg-white/90 backdrop-blur-sm flex items-center justify-center z-20">
+                                <div className="absolute inset-0 bg-slate-900/90 backdrop-blur-xl flex items-center justify-center z-20">
                                     <div className="flex flex-col items-center">
-                                        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mb-3"></div>
-                                        <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest animate-pulse">Cloning Blueprint...</span>
+                                        <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+                                        <span className="text-xs font-black text-white uppercase tracking-[0.2em] animate-pulse">Syncing AI Data...</span>
                                     </div>
                                 </div>
                             )}

@@ -1,65 +1,49 @@
 
 const starterResumes = [
     {
-        id: 'google-engineer',
-        role: 'Software Engineer',
-        title: 'Google Elite L5 Blueprint',
+        id: 'google-L5-engineer',
+        role: 'Senior Software Engineer',
+        title: 'Google AI-Optimized L5 Blueprint',
         industry: 'Technology',
-        targetCompanies: ['Google', 'Meta', 'Netflix', 'Microsoft'],
-        description: 'Engineered for high-complexity software roles at Google and top-tier silicon valley giants.',
+        targetCompanies: ['Google', 'DeepMind', 'OpenAI'],
+        description: 'Elite technical blueprint optimized for Google L5+ roles. Features AI-centric wording and architecture-heavy highlights.',
         templateId: 'modern',
         imageUrl: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop',
         personalInfo: {
-            fullName: 'Alexander Miller',
-            email: 'alex.miller@example.com',
-            phone: '+1 (555) 000-1111',
-            address: 'Mountain View, CA',
-            linkedin: 'linkedin.com/in/alexmiller',
-            github: 'github.com/alex-dev'
+            fullName: 'David "AI" Harrison',
+            email: 'david.h@google-alumni.com',
+            phone: '+1 (415) 555-9000',
+            address: 'Palo Alto, CA',
+            linkedin: 'linkedin.com/in/david-ai-harrison',
+            github: 'github.com/david-h-ai'
         },
         skills: [
-            'Go', 'C++', 'System Design', 'GCP', 'Kubernetes', 'Microservices',
-            'Distributed Systems', 'Java', 'Python', 'React', 'NoSQL', 'Agile'
+            'Deep Learning', 'PyTorch', 'Large Language Models (LLMs)', 'System Design',
+            'Go', 'GCP Vertex AI', 'Distributed Training', 'TensorFlow', 'Kubernetes'
         ],
-        summary: 'Senior Software Engineer with 8+ years of experience specialized in building large-scale distributed systems and cloud infrastructure. Proven track record of improving system latency by 40% and managing teams of 12+ developers.',
+        summary: 'Pioneering Senior Software Engineer with a decade of experience in AI-driven infrastructure. Specialized in optimizing inference latency for billion-parameter models and leading cross-functional teams at world-class research labs.',
         experience: [
             {
-                company: 'CloudScale Solutions',
-                position: 'Senior Systems Architect',
-                startDate: '2020-03',
+                company: 'Neural Arch Systems',
+                position: 'Principal AI Infrastructure Engineer',
+                startDate: '2021-05',
                 endDate: 'Present',
-                description: 'Led the migration of a global streaming platform to a multi-cloud architecture. Implemented automated scaling protocols that reduced operational costs by $2M annually.'
+                description: 'Orchestrated the development of a distributed training framework that increased throughput by 300%. Integrated Vertex AI pipelines to automate model deployment across 4 global regions.'
             },
             {
-                company: 'TechFlow Systems',
-                position: 'Software Engineer II',
-                startDate: '2017-06',
-                endDate: '2020-02',
-                description: 'Developed core backend APIs processing 500k+ requests/sec using Go and gRPC. Optimized database queries which improved data retrieval speeds by 35%.'
-            },
-            {
-                company: 'Innovate AI',
-                position: 'Full Stack Intern',
-                startDate: '2016-01',
-                endDate: '2016-12',
-                description: 'Built a real-time data visualization dashboard using React and Socket.io, currently used by 200+ enterprise clients.'
+                company: 'Search Engine Giant',
+                position: 'Senior Software Engineer (L5)',
+                startDate: '2018-02',
+                endDate: '2021-04',
+                description: 'Core contributor to the ranking latency reduction project, shaving 45ms off global P99 latency. Managed a team of 8 engineers focusing on high-throughput C++ services.'
             }
         ],
         education: [
             {
-                institution: 'MIT',
-                degree: 'M.S. in Computer Science',
-                startDate: '2014',
-                endDate: '2016',
-                description: 'Thesis focusing on Distributed Consensus Algorithms.'
-            }
-        ],
-        projects: [
-            {
-                name: 'OpenSource Distributed KV Store',
-                description: 'A robust, high-availability key-value store built in C++ using the Raft consensus protocol.',
-                link: 'github.com/alex-dev/kvstore',
-                technologies: ['C++', 'gRPC', 'Protobuf']
+                institution: 'Stanford University',
+                degree: 'M.S. in Computer Science (AI Specialization)',
+                startDate: '2016',
+                endDate: '2018'
             }
         ]
     },
@@ -68,8 +52,8 @@ const starterResumes = [
         role: 'Senior Data Scientist',
         title: 'Amazon ML Research Lead',
         industry: 'Analytics & AI',
-        targetCompanies: ['Amazon', 'Tesla', 'OpenAI', 'NVIDIA'],
-        description: 'The definitive blueprint for Data Science and Machine Learning roles at Amazon AWS and Alexa AI.',
+        targetCompanies: ['Amazon', 'Tesla', 'NVIDIA'],
+        description: 'High-performance blueprint for Data Science and ML roles at Amazon AWS and Alexa AI.',
         templateId: 'modern',
         imageUrl: 'https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=800&auto=format&fit=crop',
         personalInfo: {
@@ -81,7 +65,7 @@ const starterResumes = [
         },
         skills: [
             'Python', 'PyTorch', 'TensorFlow', 'SQL (Redshift)', 'AWS SageMaker',
-            'Apache Spark', 'NLP', 'Computer Vision', 'MLOps', 'BigQuery', 'Tableau'
+            'Apache Spark', 'NLP', 'Computer Vision', 'MLOps'
         ],
         summary: 'Accomplished Data Scientist with a focus on Deep Learning and predictive modeling. Expert at leveraging big data to drive customer engagement and optimize logistic supply chains.',
         experience: [
@@ -91,13 +75,6 @@ const starterResumes = [
                 startDate: '2019-11',
                 endDate: 'Present',
                 description: 'Developed a predictive maintenance model for a fleet of 5,000+ delivery vehicles, reducing downtime by 22% using LSTM networks.'
-            },
-            {
-                company: 'MarketInsights Corp',
-                position: 'Senior Data Analyst',
-                startDate: '2016-08',
-                endDate: '2019-10',
-                description: 'Automated the sentiment analysis of 1M+ daily social media mentions, providing direct strategic insights to the C-suite for brand pivoting.'
             }
         ],
         education: [
@@ -105,8 +82,7 @@ const starterResumes = [
                 institution: 'Stanford University',
                 degree: 'PhD in Statistics',
                 startDate: '2012',
-                endDate: '2016',
-                description: 'Research centered on High-Dimensional Data Analysis.'
+                endDate: '2016'
             }
         ]
     },
@@ -115,7 +91,7 @@ const starterResumes = [
         role: 'Product Designer',
         title: 'Apple Visual Artisan',
         industry: 'Design',
-        targetCompanies: ['Apple', 'Airbnb', 'Adobe', 'Uber'],
+        targetCompanies: ['Apple', 'Airbnb', 'Adobe'],
         description: 'Elite visual design template following the Apple Human Interface Guidelines strictly.',
         templateId: 'visual',
         imageUrl: 'https://images.unsplash.com/photo-1512418490241-537a8a242c31?q=80&w=800&auto=format&fit=crop',
@@ -126,24 +102,17 @@ const starterResumes = [
             website: 'isabelladesign.io'
         },
         skills: [
-            'Figma', 'Sketch', 'Principle', 'Design Systems', 'Interface Design',
-            'Prototyping', 'User Research', 'Typography', 'Motion Graphics', 'SwiftUI'
+            'Figma', 'Sketch', 'Design Systems', 'Interface Design',
+            'Prototyping', 'User Research', 'Motion Graphics', 'SwiftUI'
         ],
-        summary: 'Product Designer with a philosophy of "Simplicity is the Ultimate Sophistication." Specialist in creating pixel-perfect mobile and desktop interfaces that users love.',
+        summary: 'Product Designer with a philosophy of "Simplicity is the Ultimate Sophistication." Specialist in creating pixel-perfect mobile and desktop interfaces.',
         experience: [
             {
                 company: 'Creative Studio X',
                 position: 'Senior UI/UX Designer',
                 startDate: '2021-01',
                 endDate: 'Present',
-                description: 'Revamped the user interface for a top-tier banking app, leading to a 4.8 star rating on the App Store and a 15% increase in daily active users.'
-            },
-            {
-                company: 'AppVentures Inc',
-                position: 'Visual Designer',
-                startDate: '2018-05',
-                endDate: '2020-12',
-                description: 'Created an award-winning design system used across 5 distinct product lines, ensuring 100% brand consistency and 30% faster dev-handoff.'
+                description: 'Revamped the user interface for a top-tier banking app, leading to a 4.8 star rating and 15% increase in DAU.'
             }
         ],
         education: [
@@ -160,7 +129,7 @@ const starterResumes = [
         role: 'Investment Analyst',
         title: 'MSFT Core Finance Portfolio',
         industry: 'Finance',
-        targetCompanies: ['Goldman Sachs', 'J.P. Morgan', 'Morgan Stanley', 'Microsoft'],
+        targetCompanies: ['Goldman Sachs', 'Morgan Stanley', 'Microsoft'],
         description: 'Prestigious finance-focused blueprint for Investment Banking and Financial Planning.',
         templateId: 'elegant',
         imageUrl: 'https://images.unsplash.com/photo-1454165833767-027ffea9e78b?q=80&w=800&auto=format&fit=crop',
@@ -173,23 +142,53 @@ const starterResumes = [
         },
         skills: [
             'Financial Modeling', 'Excel (Advanced)', 'DCF Valuation', 'M&A',
-            'Risk Management', 'Asset Allocation', 'Python for Finance', 'Bloomberg', 'SAP'
+            'Risk Management', 'Asset Allocation', 'Python for Finance'
         ],
-        summary: 'Strategic Financial Analyst with a focus on M&A valuation and corporate treasury. Expert at preparing board-level financial reports and managing multi-million dollar asset portfolios.',
+        summary: 'Strategic Financial Analyst with a focus on M&A valuation and corporate treasury. Expert at preparing board-level financial reports.',
         experience: [
             {
                 company: 'HedgeLink Equity',
                 position: 'Lead Portfolio Analyst',
                 startDate: '2020-02',
                 endDate: 'Present',
-                description: 'Managed a portfolio with $500M AUM, consistently outperforming the S&P 500 index by 8% through rigorous quantitative analysis.'
-            },
+                description: 'Managed a portfolio with $500M AUM, consistently outperforming the S&P 500 index by 8%.'
+            }
+        ]
+    },
+    {
+        id: 'netflix-marketing',
+        role: 'Marketing Lead',
+        title: 'Netflix Growth Strategy',
+        industry: 'Marketing',
+        targetCompanies: ['Netflix', 'Spotify', 'Disney+'],
+        description: 'High-impact blueprint for growth marketing and content strategy at major streaming giants.',
+        templateId: 'visual',
+        imageUrl: 'https://images.unsplash.com/photo-1551288560-66936b61ee2b?q=80&w=800&auto=format&fit=crop',
+        personalInfo: {
+            fullName: 'Marcus Vane',
+            email: 'marcus.v@netflix-standard.com',
+            linkedin: 'linkedin.com/in/marcusgrowth'
+        },
+        skills: [
+            'Content Strategy', 'Growth Hacking', 'A/B Testing', 'Retention Analysis',
+            'SQL', 'Tableau', 'Social Ad Optimization', 'Brand Management'
+        ],
+        summary: 'Dynamic Marketing professional specializing in subscription-based growth and viral content strategies. Proven track record of reducing churn by 12% in competitive markets.',
+        experience: [
             {
-                company: 'Gotham Wealth',
-                position: 'Junior Investment Associate',
-                startDate: '2017-09',
-                endDate: '2020-01',
-                description: 'Assisted in the valuation of 5 major acquisition targets, performing comprehensive du-diligence and financial projections.'
+                company: 'Streamify Global',
+                position: 'Director of Growth',
+                startDate: '2019-06',
+                endDate: 'Present',
+                description: 'Led a cross-functional team of 15 to launch a new Tier-2 market division, acquiring 2M users within the first 6 months.'
+            }
+        ],
+        education: [
+            {
+                institution: 'Wharton School',
+                degree: 'MBA in Marketing',
+                startDate: '2017',
+                endDate: '2019'
             }
         ]
     }
