@@ -1,8 +1,26 @@
 
 import { Link } from 'react-router-dom';
-import { FileText, CheckCircle, Download, Share2 } from 'lucide-react';
+import { FileText, Download, Share2 } from 'lucide-react';
 
 const Home = () => {
+    const features = [
+        {
+            icon: <FileText className="h-8 w-8 text-primary" />,
+            title: "Professional Templates",
+            description: "Choose from a variety of clean, modern templates designed by HR experts."
+        },
+        {
+            icon: <Download className="h-8 w-8 text-primary" />,
+            title: "Instant Download",
+            description: "Export your resume as a high-quality PDF, ready for printing or emailing."
+        },
+        {
+            icon: <Share2 className="h-8 w-8 text-primary" />,
+            title: "Public Portfolio",
+            description: "Share your resume with a unique link. Perfect for LinkedIn and social media."
+        }
+    ];
+
     return (
         <div className="bg-slate-50">
             {/* Hero Section */}
@@ -46,30 +64,18 @@ const Home = () => {
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-12">
-                        {[
-                            {
-                                icon: <FileText className="h-8 w-8 text-primary" />,
-                                title: "Professional Templates",
-                                description: "Choose from a variety of clean, modern templates designed by HR experts."
-                            },
-                            {
-                                icon: <Download className="h-8 w-8 text-primary" />,
-                                title: "Instant Download",
-                                description: "Export your resume as a high-quality PDF, ready for printing or emailing."
-                            },
-                            {
-                                icon: <Share2 className="h-8 w-8 text-primary" />,
-                                title: "Public Portfolio",
-                                description: "Share your resume with a unique link. Perfect for LinkedIn and social media."
-                            }
-                        ].map((feature, index) => (
-                            <div key={index} className="p-8 rounded-2xl bg-slate-50 hover:bg-slate-100 transition-colors border border-slate-100">
-                                <div className="bg-white p-3 rounded-xl w-fit shadow-sm mb-6">
+                        {features.map((feature, index) => (
+                            <Link
+                                key={index}
+                                to="/login"
+                                className="p-8 rounded-2xl bg-slate-50 hover:bg-slate-100 transition-all border border-slate-100 cursor-pointer block hover:shadow-md hover:-translate-y-1 group no-underline"
+                            >
+                                <div className="bg-white p-3 rounded-xl w-fit shadow-sm mb-6 group-hover:scale-110 transition-transform">
                                     {feature.icon}
                                 </div>
                                 <h3 className="text-xl font-bold text-slate-900 mb-3">{feature.title}</h3>
                                 <p className="text-slate-600 leading-relaxed">{feature.description}</p>
-                            </div>
+                            </Link>
                         ))}
                     </div>
                 </div>
