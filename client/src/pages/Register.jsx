@@ -78,7 +78,7 @@ const Register = () => {
             await googleLogin(credentialResponse.credential);
             navigate('/dashboard');
         } catch (err) {
-            setError('Google login failed');
+            setError(err.response?.data?.message || 'Google login failed');
         }
     };
 
