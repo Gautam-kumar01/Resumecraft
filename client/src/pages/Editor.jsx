@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import ResumePreview from '../components/ResumePreview';
-import { Save, Download, Eye, ArrowLeft, Plus, Trash2 } from 'lucide-react';
+import { Save, Download, Eye, ArrowLeft, Plus, Trash2, User, Upload } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -44,6 +44,21 @@ const Editor = () => {
         }
     };
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            if (file.size > 1024 * 1024) { // 1MB limit for Base64 storage
+                alert("File size too large. Please select an image under 1MB.");
+                return;
+            }
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                handleChange('personalInfo', 'profilePicture', reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     const handleDownload = async () => {
         const input = document.getElementById('resume-preview');
         if (!input) {
@@ -74,7 +89,7 @@ const Editor = () => {
                         <style>${styles}</style>
                         <style>
                             body { background: white; margin: 0; padding: 0; }
-                            #resume-preview { box-shadow: none !important; width: 100% !important; p: 40px !important; }
+                            #resume-preview { box-shadow: none !important; width: 100% !important; padding: 40px !important; }
                         </style>
                     </head>
                     <body>
@@ -202,8 +217,38 @@ const Editor = () => {
                 {/* Forms */}
                 <div className="space-y-6">
                     {activeSection === 'personal' && (
-                        <div className="space-y-4">
+                        <div className="space-y-6">
                             <h3 className="text-lg font-bold text-slate-900">Personal Information</h3>
+
+                            {/* Photo Upload */}
+                            <div className="flex items-center space-x-6">
+                                <div className="relative group shrink-0">
+                                    <div className="w-24 h-24 rounded-full border-2 border-slate-100 bg-slate-50 flex items-center justify-center overflow-hidden">
+                                        {resume.personalInfo?.profilePicture ? (
+                                            <img src={resume.personalInfo.profilePicture} alt="Profile" className="w-full h-full object-cover" />
+                                        ) : (
+                                            <User className="h-10 w-10 text-slate-300" />
+                                        )}
+                                    </div>
+                                    <label className="absolute bottom-0 right-0 p-1.5 bg-primary text-white rounded-full cursor-pointer hover:bg-blue-700 transition-colors shadow-lg">
+                                        <Upload className="h-3.5 w-3.5" />
+                                        <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
+                                    </label>
+                                </div>
+                                <div className="space-y-1">
+                                    <p className="text-sm font-semibold text-slate-900">Profile Photo</p>
+                                    <p className="text-xs text-slate-500">Upload a professional headshot. Max 1MB.</p>
+                                    {resume.personalInfo?.profilePicture && (
+                                        <button
+                                            onClick={() => handleChange('personalInfo', 'profilePicture', null)}
+                                            className="text-xs text-red-500 font-medium hover:underline"
+                                        >
+                                            Remove photo
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+
                             <div className="grid grid-cols-2 gap-4">
                                 <input
                                     placeholder="Full Name"

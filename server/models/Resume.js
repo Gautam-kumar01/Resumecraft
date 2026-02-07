@@ -19,6 +19,7 @@ const ResumeSchema = new mongoose.Schema({
         linkedin: String,
         github: String,
         website: String,
+        profilePicture: String,
     },
     summary: String,
     education: [{

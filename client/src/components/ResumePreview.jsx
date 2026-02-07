@@ -9,30 +9,44 @@ const ResumePreview = ({ resume }) => {
     return (
         <div className="bg-white shadow-2xl w-full mx-auto p-12 min-h-[1000px] print:shadow-none print:w-full" id="resume-preview">
             {/* Header */}
-            <header className="border-b-2 border-slate-900 pb-8 mb-8">
-                <h1 className="text-4xl font-bold text-slate-900 uppercase tracking-widest mb-2">{personalInfo?.fullName || 'Your Name'}</h1>
-                <p className="text-xl text-slate-600 font-light mb-6">{resume.title || 'Professional Title'}</p>
+            <header className="border-b-2 border-slate-900 pb-8 mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div className="flex-1">
+                    <h1 className="text-4xl font-bold text-slate-900 uppercase tracking-widest mb-2">{personalInfo?.fullName || 'Your Name'}</h1>
+                    <p className="text-xl text-slate-600 font-light mb-6">{resume.title || 'Professional Title'}</p>
 
-                <div className="flex flex-wrap gap-4 text-sm text-slate-600">
-                    {personalInfo?.email && (
-                        <span>{personalInfo.email}</span>
-                    )}
-                    {personalInfo?.phone && (
-                        <span className="border-l border-slate-300 pl-4">{personalInfo.phone}</span>
-                    )}
-                    {personalInfo?.address && (
-                        <span className="border-l border-slate-300 pl-4">{personalInfo.address}</span>
-                    )}
-                    {personalInfo?.linkedin && (
-                        <span className="border-l border-slate-300 pl-4"><a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-primary">LinkedIn</a></span>
-                    )}
-                    {personalInfo?.github && (
-                        <span className="border-l border-slate-300 pl-4"><a href={personalInfo.github} target="_blank" rel="noopener noreferrer" className="hover:text-primary">GitHub</a></span>
-                    )}
-                    {personalInfo?.website && (
-                        <span className="border-l border-slate-300 pl-4"><a href={personalInfo.website} target="_blank" rel="noopener noreferrer" className="hover:text-primary">Portfolio</a></span>
-                    )}
+                    <div className="flex flex-wrap gap-4 text-sm text-slate-600">
+                        {personalInfo?.email && (
+                            <span>{personalInfo.email}</span>
+                        )}
+                        {personalInfo?.phone && (
+                            <span className="border-l border-slate-300 pl-4">{personalInfo.phone}</span>
+                        )}
+                        {personalInfo?.address && (
+                            <span className="border-l border-slate-300 pl-4">{personalInfo.address}</span>
+                        )}
+                        {personalInfo?.linkedin && (
+                            <span className="border-l border-slate-300 pl-4"><a href={personalInfo.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-primary">LinkedIn</a></span>
+                        )}
+                        {personalInfo?.github && (
+                            <span className="border-l border-slate-300 pl-4"><a href={personalInfo.github} target="_blank" rel="noopener noreferrer" className="hover:text-primary">GitHub</a></span>
+                        )}
+                        {personalInfo?.website && (
+                            <span className="border-l border-slate-300 pl-4"><a href={personalInfo.website} target="_blank" rel="noopener noreferrer" className="hover:text-primary">Portfolio</a></span>
+                        )}
+                    </div>
                 </div>
+
+                {personalInfo?.profilePicture && (
+                    <div className="shrink-0">
+                        <div className="w-32 h-32 rounded-full border-4 border-slate-100 shadow-xl overflow-hidden bg-slate-50">
+                            <img
+                                src={personalInfo.profilePicture}
+                                alt={personalInfo.fullName}
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+                    </div>
+                )}
             </header>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
