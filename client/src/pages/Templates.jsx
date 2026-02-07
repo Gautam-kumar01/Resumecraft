@@ -66,57 +66,19 @@ const Templates = () => {
                     <div key={template.id} className="group flex flex-col md:flex-row glass-effect rounded-[2.5rem] border border-white/80 hover:border-primary/40 transition-all duration-700 hover:shadow-2xl hover:shadow-primary/10 overflow-hidden">
 
                         {/* Visual Preview Side */}
-                        <div className={`md:w-[45%] p-10 flex flex-col justify-between relative overflow-hidden shrink-0 ${template.templateId === 'visual' ? 'bg-slate-900' :
-                                template.templateId === 'elegant' ? 'bg-indigo-50' : 'bg-slate-100'
-                            }`}>
+                        <div className="md:w-[45%] h-64 md:h-auto p-0 relative overflow-hidden shrink-0">
+                            <img
+                                src={template.imageUrl || 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop'}
+                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                alt={template.role}
+                            />
                             {/* Animated light effect */}
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-[80px] rounded-full group-hover:bg-primary/20 transition-colors duration-700"></div>
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 blur-[80px] rounded-full group-hover:bg-primary/30 transition-colors duration-700"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-60"></div>
 
-                            <div className="relative z-10 w-full h-40 border-2 border-slate-200/50 rounded-xl bg-white shadow-sm overflow-hidden p-4">
-                                {template.templateId === 'visual' ? (
-                                    <div className="flex h-full gap-2">
-                                        <div className="w-1/3 bg-slate-900 rounded-lg flex flex-col p-2 space-y-2">
-                                            <div className="w-8 h-8 rounded-full bg-slate-800"></div>
-                                            <div className="h-1 w-full bg-slate-800 rounded"></div>
-                                            <div className="h-1 w-2/3 bg-slate-800 rounded"></div>
-                                        </div>
-                                        <div className="flex-1 space-y-3">
-                                            <div className="h-2 w-full bg-slate-100 rounded"></div>
-                                            <div className="h-2 w-3/4 bg-slate-100 rounded"></div>
-                                            <div className="h-10 w-full bg-rose-50 rounded-lg border border-rose-100"></div>
-                                        </div>
-                                    </div>
-                                ) : template.templateId === 'elegant' ? (
-                                    <div className="flex flex-col items-center h-full space-y-4 pt-4">
-                                        <div className="h-3 w-3/4 bg-slate-100 rounded mx-auto"></div>
-                                        <div className="h-2 w-1/2 bg-slate-50 rounded mx-auto"></div>
-                                        <div className="space-y-2 w-full">
-                                            <div className="h-1 w-full bg-slate-50 rounded"></div>
-                                            <div className="h-1 w-full bg-slate-50 rounded"></div>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="space-y-4">
-                                        <div className="flex justify-between border-b pb-2">
-                                            <div className="space-y-2">
-                                                <div className="h-3 w-20 bg-slate-100 rounded"></div>
-                                                <div className="h-2 w-12 bg-slate-50 rounded"></div>
-                                            </div>
-                                            <div className="w-8 h-8 rounded-full bg-slate-100"></div>
-                                        </div>
-                                        <div className="space-y-3">
-                                            <div className="h-1 w-full bg-slate-50 rounded"></div>
-                                            <div className="h-1 w-full bg-slate-50 rounded"></div>
-                                            <div className="h-1 w-2/3 bg-slate-50 rounded"></div>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="relative z-10">
-                                <div className={`text-[10px] font-bold uppercase tracking-wider mb-3 ${template.templateId === 'visual' ? 'text-white/50' : 'text-slate-400'}`}>Core Industry</div>
-                                <div className={`inline-flex items-center px-4 py-2 rounded-2xl text-[11px] font-bold whitespace-nowrap ${template.templateId === 'visual' ? 'bg-white/10 border border-white/10 text-white' : 'bg-slate-900/5 text-slate-700'
-                                    }`}>
+                            <div className="absolute bottom-10 left-10 z-10">
+                                <div className="text-white/50 text-[10px] font-bold uppercase tracking-wider mb-2">Core Industry</div>
+                                <div className="inline-flex items-center px-4 py-2 rounded-2xl bg-white/10 border border-white/20 text-white text-[11px] font-bold backdrop-blur-md">
                                     {template.industry}
                                 </div>
                             </div>

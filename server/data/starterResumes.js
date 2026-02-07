@@ -1,13 +1,14 @@
 
 const starterResumes = [
     {
-        id: 'software-engineer',
+        id: 'google-engineer',
         role: 'Software Engineer',
-        title: 'Full Stack Developer Starter',
+        title: 'Google Elite Blueprint',
         industry: 'Technology',
         targetCompanies: ['Google', 'Meta', 'Netflix', 'Microsoft'],
         description: 'Optimized for high-performance engineering roles at top-tier tech giants.',
         templateId: 'modern',
+        imageUrl: 'https://images.unsplash.com/photo-1573163281530-5be9c89b75a8?q=80&w=800&auto=format&fit=crop',
         skills: [
             'JavaScript (ES6+)', 'React.js', 'Node.js', 'TypeScript', 'MongoDB',
             'Docker', 'Kubernetes', 'AWS', 'System Design', 'Agile Methodology',
@@ -34,13 +35,14 @@ const starterResumes = [
         ]
     },
     {
-        id: 'data-scientist',
+        id: 'amazon-data',
         role: 'Data Scientist',
-        title: 'AI & Data Science Specialist',
+        title: 'Amazon Data Mastery',
         industry: 'Analytics & AI',
         targetCompanies: ['Amazon', 'Tesla', 'OpenAI', 'NVIDIA'],
         description: 'Master-level template for roles in AI, Machine Learning, and Big Data Analytics.',
         templateId: 'modern',
+        imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop',
         skills: [
             'Python', 'SQL', 'TensorFlow', 'PyTorch',
             'Scikit-Learn', 'Pandas', 'Spark', 'Tableau', 'BigQuery',
@@ -58,13 +60,14 @@ const starterResumes = [
         ]
     },
     {
-        id: 'ux-designer',
+        id: 'apple-designer',
         role: 'UX/UI Designer',
-        title: 'Creative Product Designer',
+        title: 'Apple Visual Artisan',
         industry: 'Design',
         targetCompanies: ['Apple', 'Airbnb', 'Adobe', 'Uber'],
         description: 'Visual-focused template emphasizing user-centric design and aesthetic precision.',
         templateId: 'visual',
+        imageUrl: 'https://images.unsplash.com/photo-1586717791821-3f44a563dc4c?q=80&w=800&auto=format&fit=crop',
         skills: [
             'Figma', 'Adobe XD', 'Prototyping', 'Design Systems', 'Visual Hierarchy',
             'User Testing', 'Micro-interactions', 'Icon Design', 'Layout Optimization'
@@ -81,13 +84,14 @@ const starterResumes = [
         ]
     },
     {
-        id: 'finance-analyst',
+        id: 'microsoft-finance',
         role: 'Finance Analyst',
-        title: 'Investment & Finance Starter',
+        title: 'Microsoft Core Finance',
         industry: 'Finance',
-        targetCompanies: ['Goldman Sachs', 'J.P. Morgan', 'Morgan Stanley'],
+        targetCompanies: ['Goldman Sachs', 'J.P. Morgan', 'Morgan Stanley', 'Microsoft'],
         description: 'Professional template for high-stakes roles in Investment Banking and Financial Analysis.',
         templateId: 'elegant',
+        imageUrl: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=800&auto=format&fit=crop',
         skills: [
             'Financial Modeling', 'Excel (VBA)', 'SQL', 'Valuation Analysis',
             'Strategic Planning', 'Report Writing', 'Corporate Finance', 'Capital Markets'
@@ -104,13 +108,14 @@ const starterResumes = [
         ]
     },
     {
-        id: 'marketing-manager',
+        id: 'netflix-marketing',
         role: 'Marketing Manager',
-        title: 'Growth & Brand Strategist',
+        title: 'Netflix Growth Strategy',
         industry: 'Marketing',
-        targetCompanies: ['HubSpot', 'Nike', 'Coca-Cola', 'Google'],
+        targetCompanies: ['HubSpot', 'Nike', 'Coca-Cola', 'Google', 'Netflix'],
         description: 'Dynamic template for leaders in Digital Marketing, Brand Growth, and Strategy.',
         templateId: 'visual',
+        imageUrl: 'https://images.unsplash.com/photo-1551288560-66936b61ee2b?q=80&w=800&auto=format&fit=crop',
         skills: [
             'SEO/SEM', 'Content Strategy', 'Google Ads', 'Analytics',
             'Brand Management', 'Copywriting', 'CRM Management', 'Lead Generation'
