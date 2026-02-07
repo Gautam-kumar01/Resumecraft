@@ -53,37 +53,63 @@ const Editor = () => {
 
         setDownloading(true);
         try {
-            // Reset scroll to capture full element
-            window.scrollTo(0, 0);
+            console.log("Using High-Fidelity Backend PDF Engine...");
 
-            const canvas = await html2canvas(input, {
-                scale: 2, // Safe scale for memory
-                useCORS: true,
-                allowTaint: true,
-                scrollX: 0,
-                scrollY: 0,
-                windowWidth: document.documentElement.offsetWidth,
-                windowHeight: document.documentElement.offsetHeight,
-                backgroundColor: '#ffffff'
+            // Get all styles to send to the backend
+            const styles = Array.from(document.styleSheets)
+                .map(styleSheet => {
+                    try {
+                        return Array.from(styleSheet.cssRules)
+                            .map(rule => rule.cssText)
+                            .join('\n');
+                    } catch (e) {
+                        return '';
+                    }
+                })
+                .join('\n');
+
+            const contentHtml = `
+                <html>
+                    <head>
+                        <style>${styles}</style>
+                        <style>
+                            body { background: white; margin: 0; padding: 0; }
+                            #resume-preview { box-shadow: none !important; width: 100% !important; p: 40px !important; }
+                        </style>
+                    </head>
+                    <body>
+                        ${input.outerHTML}
+                    </body>
+                </html>
+            `;
+
+            const response = await api.post('/resumes/pdf', { html: contentHtml }, {
+                responseType: 'blob'
             });
 
-            const imgData = canvas.toDataURL('image/png', 1.0);
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = pdf.internal.pageSize.getHeight();
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `${resume.title || 'resume'}.pdf`);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
 
-            // Calculate height to maintain aspect ratio
-            const imgProps = pdf.getImageProperties(imgData);
-            const contentHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-            // If the content is longer than one page, we might need multiple pages
-            // But for simple resume, let's just fit to width
-            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, contentHeight);
-            pdf.save(`${resume.title || 'resume'}.pdf`);
-
+            console.log("Backend PDF generated successfully.");
         } catch (err) {
-            console.error("Critical download error:", err);
-            alert("Error: " + err.message);
+            console.error("Backend PDF Error:", err);
+            alert("Professional PDF generation failed. Using local fallback...");
+
+            // Fallback to local if backend fails
+            try {
+                const canvas = await html2canvas(input, { scale: 2, useCORS: true });
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
+                pdf.save(`${resume.title || 'resume'}.pdf`);
+            } catch (fallbackErr) {
+                alert("Both download methods failed. Please try again later.");
+            }
         } finally {
             setDownloading(false);
         }
