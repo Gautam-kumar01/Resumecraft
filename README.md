@@ -37,7 +37,7 @@ npm install
 ```bash
 npm start
 ```
-This will run the server on port 5000 and the client on port 5173.
+This will run the server on port 5000 and the client on port 5173 (or 5174 if 5173 is busy).
 
 ### 2. Backend Setup
 Navigate to the server directory and install dependencies:
