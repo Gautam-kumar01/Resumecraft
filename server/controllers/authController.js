@@ -3,7 +3,7 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { OAuth2Client } = require('google-auth-library');
-const { isTempMail } = require('../utils/emailValidator');
+const { isTempMail, isGmail } = require('../utils/emailValidator');
 const { sendOTP } = require('../utils/mailer');
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
@@ -22,6 +22,10 @@ const registerUser = async (req, res) => {
     const { name, email, password } = req.body;
 
     try {
+        if (!isGmail(email)) {
+            return res.status(400).json({ message: 'Invalid email. Only @gmail.com addresses are supported for verification.' });
+        }
+
         if (isTempMail(email)) {
             return res.status(400).json({ message: 'Temporary email services are not allowed. Please use a valid email (e.g., Gmail).' });
         }
@@ -29,7 +33,7 @@ const registerUser = async (req, res) => {
         const userExists = await User.findOne({ email });
 
         if (userExists) {
-            return res.status(400).json({ message: 'User already exists' });
+            return res.status(400).json({ message: 'User already exists with this email' });
         }
 
         // Generate 6-digit OTP

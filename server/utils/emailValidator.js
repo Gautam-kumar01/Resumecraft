@@ -19,4 +19,8 @@ const isTempMail = (email) => {
     return bannedDomains.some(banned => domain.includes(banned));
 };
 
-module.exports = { isTempMail };
+const isGmail = (email) => {
+    return email.toLowerCase().endsWith('@gmail.com');
+};
+
+module.exports = { isTempMail, isGmail };
