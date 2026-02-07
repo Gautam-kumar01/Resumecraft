@@ -236,27 +236,27 @@ const Home = () => {
                         <div>
                             <h4 className="font-bold text-slate-900 mb-6">About Us</h4>
                             <ul className="space-y-4">
-                                <li><Link to="#">Terms & Conditions</Link></li>
-                                <li><Link to="#">Privacy Policy</Link></li>
-                                <li><Link to="#">Affiliates</Link></li>
-                                <li><Link to="#">Contact Us</Link></li>
+                                <li><Link to="/terms">Terms & Conditions</Link></li>
+                                <li><Link to="/privacy">Privacy Policy</Link></li>
+                                <li><Link to="/terms">Affiliates</Link></li>
+                                <li><Link to="/contact">Contact Us</Link></li>
                             </ul>
                         </div>
                         <div>
                             <h4 className="font-bold text-slate-900 mb-6">Resources</h4>
                             <ul className="space-y-4">
-                                <li><Link to="#">Faqs</Link></li>
-                                <li><Link to="#">Accessibility</Link></li>
-                                <li><Link to="#">Cookies Policy</Link></li>
-                                <li><Link to="#">Sitemap</Link></li>
+                                <li><Link to="/terms">Faqs</Link></li>
+                                <li><Link to="/terms">Accessibility</Link></li>
+                                <li><Link to="/privacy">Cookies Policy</Link></li>
+                                <li><Link to="/terms">Sitemap</Link></li>
                             </ul>
                         </div>
                         <div>
                             <h4 className="font-bold text-slate-900 mb-6">Product</h4>
                             <ul className="space-y-4">
-                                <li><Link to="#">AI Resume Builder</Link></li>
-                                <li><Link to="#">Pricing</Link></li>
-                                <li><Link to="#">MNC Templates</Link></li>
+                                <li><Link to="/register">AI Resume Builder</Link></li>
+                                <li><Link to="/login">Pricing</Link></li>
+                                <li><Link to="/templates">MNC Templates</Link></li>
                             </ul>
                         </div>
                     </div>

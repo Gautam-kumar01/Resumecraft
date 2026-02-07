@@ -8,6 +8,9 @@ import Dashboard from './pages/Dashboard';
 import Editor from './pages/Editor';
 import PublicResume from './pages/PublicResume';
 import Templates from './pages/Templates';
+import Contact from './pages/Contact';
+import Terms from './pages/Terms';
+import Privacy from './pages/Privacy';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -31,6 +34,9 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/privacy" element={<Privacy />} />
 
                 <Route path="/dashboard" element={
                   <ProtectedRoute>
