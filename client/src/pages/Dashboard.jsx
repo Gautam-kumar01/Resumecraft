@@ -88,29 +88,84 @@ const Dashboard = () => {
                     <Link to="/templates" className="text-sm font-bold text-primary hover:underline">View All &rarr;</Link>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                    {starters.slice(0, 5).map((template) => (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {starters.slice(0, 4).map((template) => (
                         <button
                             key={template.id}
                             onClick={() => useTemplate(template)}
-                            className="group relative flex flex-col bg-white rounded-2xl border border-slate-200 hover:border-primary/50 transition-all text-left overflow-hidden hover:shadow-xl hover:-translate-y-1"
+                            className="group relative flex flex-col bg-white rounded-3xl border border-slate-200 hover:border-primary/40 transition-all text-left overflow-hidden hover:shadow-2xl hover:-translate-y-2 h-[420px]"
                         >
-                            <div className="h-32 w-full relative">
-                                <img src={template.imageUrl} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" alt={template.title} />
-                                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
-                                <div className="absolute bottom-3 left-3">
-                                    <span className="text-[10px] font-black text-white px-2 py-1 bg-primary/80 rounded uppercase tracking-tighter">
-                                        {template.industry}
-                                    </span>
+                            {/* Visual Resume Preview Header */}
+                            <div className="h-48 w-full relative bg-slate-50 p-4 border-b border-slate-100">
+                                <div className="w-full h-full rounded-xl bg-white shadow-sm border border-slate-200/50 p-4 relative overflow-hidden">
+                                    {/* Mini Resume Skeleton */}
+                                    <div className="flex gap-2 mb-3">
+                                        <div className="w-8 h-8 rounded-full bg-slate-100 shrink-0"></div>
+                                        <div className="flex-1 space-y-1.5">
+                                            <div className="h-2 w-2/3 bg-slate-200 rounded"></div>
+                                            <div className="h-1.5 w-1/2 bg-slate-100 rounded"></div>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <div className="h-1 w-full bg-slate-50 rounded"></div>
+                                        <div className="h-1 w-full bg-slate-50 rounded"></div>
+                                        <div className="h-1 w-3/4 bg-slate-50 rounded"></div>
+                                    </div>
+
+                                    {/* Company Badge Overlay */}
+                                    <div className="absolute top-4 right-4 h-6 w-12 bg-slate-900 rounded flex items-center justify-center opacity-10 group-hover:opacity-100 transition-opacity">
+                                        <span className="text-[8px] font-black text-white">{template.targetCompanies[0]}</span>
+                                    </div>
+
+                                    {/* Industry Spotlight */}
+                                    <div className="absolute bottom-4 left-4">
+                                        <span className="text-[10px] font-bold text-primary bg-primary/5 px-2 py-1 rounded-lg">
+                                            {template.industry}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-primary to-purple-600"></div>
+                            </div>
+
+                            <div className="p-6 flex flex-col flex-1">
+                                <div className="mb-4">
+                                    <h3 className="text-lg font-black text-slate-900 leading-tight group-hover:text-primary transition-colors">{template.title}</h3>
+                                    <p className="text-xs text-slate-500 mt-2 line-clamp-2">{template.description}</p>
+                                </div>
+
+                                {/* "See Inside" - Pre-filled Data Preview */}
+                                <div className="mt-auto space-y-4">
+                                    <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100">
+                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Internal Blueprints</p>
+                                        <div className="flex flex-wrap gap-1.5">
+                                            {template.skills.slice(0, 4).map((skill, i) => (
+                                                <span key={i} className="text-[9px] font-bold text-slate-600 bg-white border border-slate-200 px-1.5 py-0.5 rounded-md">
+                                                    {skill}
+                                                </span>
+                                            ))}
+                                            <span className="text-[9px] font-bold text-slate-400">+{template.skills.length - 4} more</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex -space-x-2">
+                                            {template.targetCompanies.slice(0, 3).map((c, i) => (
+                                                <div key={i} className="w-6 h-6 rounded-full bg-white border border-slate-200 flex items-center justify-center text-[8px] font-black text-slate-100 shadow-sm overflow-hidden bg-slate-900">
+                                                    {c[0]}
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <span className="text-[10px] font-black text-primary uppercase tracking-tighter">Use Blueprint &rarr;</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="p-4">
-                                <h3 className="text-sm font-bold text-slate-900 line-clamp-1">{template.title}</h3>
-                                <p className="text-[10px] text-slate-500 mt-1">Hits: {template.targetCompanies.slice(0, 2).join(', ')}</p>
-                            </div>
+
                             {creating === template.id && (
-                                <div className="absolute inset-0 bg-white/80 flex items-center justify-center z-20">
-                                    <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                                <div className="absolute inset-0 bg-white/90 backdrop-blur-sm flex items-center justify-center z-20">
+                                    <div className="flex flex-col items-center">
+                                        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mb-3"></div>
+                                        <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest animate-pulse">Cloning Blueprint...</span>
+                                    </div>
                                 </div>
                             )}
                         </button>

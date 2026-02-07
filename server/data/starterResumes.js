@@ -3,131 +3,193 @@ const starterResumes = [
     {
         id: 'google-engineer',
         role: 'Software Engineer',
-        title: 'Google Elite Blueprint',
+        title: 'Google Elite L5 Blueprint',
         industry: 'Technology',
         targetCompanies: ['Google', 'Meta', 'Netflix', 'Microsoft'],
-        description: 'Optimized for high-performance engineering roles at top-tier tech giants.',
+        description: 'Engineered for high-complexity software roles at Google and top-tier silicon valley giants.',
         templateId: 'modern',
-        imageUrl: 'https://images.unsplash.com/photo-1573163281530-5be9c89b75a8?q=80&w=800&auto=format&fit=crop',
+        imageUrl: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop',
+        personalInfo: {
+            fullName: 'Alexander Miller',
+            email: 'alex.miller@example.com',
+            phone: '+1 (555) 000-1111',
+            address: 'Mountain View, CA',
+            linkedin: 'linkedin.com/in/alexmiller',
+            github: 'github.com/alex-dev'
+        },
         skills: [
-            'JavaScript (ES6+)', 'React.js', 'Node.js', 'TypeScript', 'MongoDB',
-            'Docker', 'Kubernetes', 'AWS', 'System Design', 'Agile Methodology',
-            'Advanced Algorithms', 'Scalable Architecture'
+            'Go', 'C++', 'System Design', 'GCP', 'Kubernetes', 'Microservices',
+            'Distributed Systems', 'Java', 'Python', 'React', 'NoSQL', 'Agile'
         ],
-        summary: 'Passionate and challenge-driven Software Engineer with 3+ years of experience in building scalable web applications. Proficient in modern JavaScript frameworks and cloud-native architectures.',
+        summary: 'Senior Software Engineer with 8+ years of experience specialized in building large-scale distributed systems and cloud infrastructure. Proven track record of improving system latency by 40% and managing teams of 12+ developers.',
         experience: [
             {
-                company: 'Global Tech Hub',
-                position: 'Senior Software Engineer',
-                startDate: '2021-01',
+                company: 'CloudScale Solutions',
+                position: 'Senior Systems Architect',
+                startDate: '2020-03',
                 endDate: 'Present',
-                description: 'Migrated monolithic architecture to microservices, reducing deployment time by 60% and improving scalability.'
+                description: 'Led the migration of a global streaming platform to a multi-cloud architecture. Implemented automated scaling protocols that reduced operational costs by $2M annually.'
+            },
+            {
+                company: 'TechFlow Systems',
+                position: 'Software Engineer II',
+                startDate: '2017-06',
+                endDate: '2020-02',
+                description: 'Developed core backend APIs processing 500k+ requests/sec using Go and gRPC. Optimized database queries which improved data retrieval speeds by 35%.'
+            },
+            {
+                company: 'Innovate AI',
+                position: 'Full Stack Intern',
+                startDate: '2016-01',
+                endDate: '2016-12',
+                description: 'Built a real-time data visualization dashboard using React and Socket.io, currently used by 200+ enterprise clients.'
             }
         ],
         education: [
             {
-                institution: 'State Technical University',
-                degree: 'B.S. in Computer Science',
-                startDate: '2016',
-                endDate: '2020',
-                description: 'First Class Honors. Focus on Distributed Systems.'
+                institution: 'MIT',
+                degree: 'M.S. in Computer Science',
+                startDate: '2014',
+                endDate: '2016',
+                description: 'Thesis focusing on Distributed Consensus Algorithms.'
+            }
+        ],
+        projects: [
+            {
+                name: 'OpenSource Distributed KV Store',
+                description: 'A robust, high-availability key-value store built in C++ using the Raft consensus protocol.',
+                link: 'github.com/alex-dev/kvstore',
+                technologies: ['C++', 'gRPC', 'Protobuf']
             }
         ]
     },
     {
         id: 'amazon-data',
-        role: 'Data Scientist',
-        title: 'Amazon Data Mastery',
+        role: 'Senior Data Scientist',
+        title: 'Amazon ML Research Lead',
         industry: 'Analytics & AI',
         targetCompanies: ['Amazon', 'Tesla', 'OpenAI', 'NVIDIA'],
-        description: 'Master-level template for roles in AI, Machine Learning, and Big Data Analytics.',
+        description: 'The definitive blueprint for Data Science and Machine Learning roles at Amazon AWS and Alexa AI.',
         templateId: 'modern',
-        imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop',
+        imageUrl: 'https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=800&auto=format&fit=crop',
+        personalInfo: {
+            fullName: 'Sarah Chen',
+            email: 'schen.data@example.com',
+            phone: '+1 (555) 222-3333',
+            address: 'Seattle, WA',
+            linkedin: 'linkedin.com/in/sarahchen-data'
+        },
         skills: [
-            'Python', 'SQL', 'TensorFlow', 'PyTorch',
-            'Scikit-Learn', 'Pandas', 'Spark', 'Tableau', 'BigQuery',
-            'Deep Learning', 'Natural Language Processing', 'Data Engineering'
+            'Python', 'PyTorch', 'TensorFlow', 'SQL (Redshift)', 'AWS SageMaker',
+            'Apache Spark', 'NLP', 'Computer Vision', 'MLOps', 'BigQuery', 'Tableau'
         ],
-        summary: 'Data Scientist with a strong background in statistical analysis and machine learning. Experienced in transforming complex data sets into actionable business insights.',
+        summary: 'Accomplished Data Scientist with a focus on Deep Learning and predictive modeling. Expert at leveraging big data to drive customer engagement and optimize logistic supply chains.',
         experience: [
             {
-                company: 'DeepData Labs',
-                position: 'AI Research Associate',
-                startDate: '2020-06',
+                company: 'Logistics AI',
+                position: 'Lead Data Scientist',
+                startDate: '2019-11',
                 endDate: 'Present',
-                description: 'Orchestrated the development of a churn prediction model with 92% accuracy.'
+                description: 'Developed a predictive maintenance model for a fleet of 5,000+ delivery vehicles, reducing downtime by 22% using LSTM networks.'
+            },
+            {
+                company: 'MarketInsights Corp',
+                position: 'Senior Data Analyst',
+                startDate: '2016-08',
+                endDate: '2019-10',
+                description: 'Automated the sentiment analysis of 1M+ daily social media mentions, providing direct strategic insights to the C-suite for brand pivoting.'
+            }
+        ],
+        education: [
+            {
+                institution: 'Stanford University',
+                degree: 'PhD in Statistics',
+                startDate: '2012',
+                endDate: '2016',
+                description: 'Research centered on High-Dimensional Data Analysis.'
             }
         ]
     },
     {
         id: 'apple-designer',
-        role: 'UX/UI Designer',
+        role: 'Product Designer',
         title: 'Apple Visual Artisan',
         industry: 'Design',
         targetCompanies: ['Apple', 'Airbnb', 'Adobe', 'Uber'],
-        description: 'Visual-focused template emphasizing user-centric design and aesthetic precision.',
+        description: 'Elite visual design template following the Apple Human Interface Guidelines strictly.',
         templateId: 'visual',
-        imageUrl: 'https://images.unsplash.com/photo-1586717791821-3f44a563dc4c?q=80&w=800&auto=format&fit=crop',
+        imageUrl: 'https://images.unsplash.com/photo-1512418490241-537a8a242c31?q=80&w=800&auto=format&fit=crop',
+        personalInfo: {
+            fullName: 'Isabella Rossi',
+            email: 'isabella.design@example.com',
+            linkedin: 'linkedin.com/in/rossidesign',
+            website: 'isabelladesign.io'
+        },
         skills: [
-            'Figma', 'Adobe XD', 'Prototyping', 'Design Systems', 'Visual Hierarchy',
-            'User Testing', 'Micro-interactions', 'Icon Design', 'Layout Optimization'
+            'Figma', 'Sketch', 'Principle', 'Design Systems', 'Interface Design',
+            'Prototyping', 'User Research', 'Typography', 'Motion Graphics', 'SwiftUI'
         ],
-        summary: 'Detail-oriented UX/UI Designer dedicated to creating seamless digital experiences. Proven ability to translate complex user needs into beautiful, functional interfaces.',
+        summary: 'Product Designer with a philosophy of "Simplicity is the Ultimate Sophistication." Specialist in creating pixel-perfect mobile and desktop interfaces that users love.',
         experience: [
             {
-                company: 'PixelPerfect Agency',
-                position: 'Senior Product Designer',
-                startDate: '2021-04',
+                company: 'Creative Studio X',
+                position: 'Senior UI/UX Designer',
+                startDate: '2021-01',
                 endDate: 'Present',
-                description: 'Led the redesign of a major fintech app, resulting in a 40% increase in user engagement and 20% faster workflow.'
+                description: 'Revamped the user interface for a top-tier banking app, leading to a 4.8 star rating on the App Store and a 15% increase in daily active users.'
+            },
+            {
+                company: 'AppVentures Inc',
+                position: 'Visual Designer',
+                startDate: '2018-05',
+                endDate: '2020-12',
+                description: 'Created an award-winning design system used across 5 distinct product lines, ensuring 100% brand consistency and 30% faster dev-handoff.'
+            }
+        ],
+        education: [
+            {
+                institution: 'RISD',
+                degree: 'BFA in Graphic Design',
+                startDate: '2014',
+                endDate: '2018'
             }
         ]
     },
     {
         id: 'microsoft-finance',
-        role: 'Finance Analyst',
-        title: 'Microsoft Core Finance',
+        role: 'Investment Analyst',
+        title: 'MSFT Core Finance Portfolio',
         industry: 'Finance',
         targetCompanies: ['Goldman Sachs', 'J.P. Morgan', 'Morgan Stanley', 'Microsoft'],
-        description: 'Professional template for high-stakes roles in Investment Banking and Financial Analysis.',
+        description: 'Prestigious finance-focused blueprint for Investment Banking and Financial Planning.',
         templateId: 'elegant',
-        imageUrl: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=800&auto=format&fit=crop',
+        imageUrl: 'https://images.unsplash.com/photo-1454165833767-027ffea9e78b?q=80&w=800&auto=format&fit=crop',
+        personalInfo: {
+            fullName: 'Jameson Thorne',
+            email: 'jameson.thorne@example.com',
+            phone: '+1 (555) 999-8800',
+            address: 'New York, NY',
+            linkedin: 'linkedin.com/in/jamesonfinance'
+        },
         skills: [
-            'Financial Modeling', 'Excel (VBA)', 'SQL', 'Valuation Analysis',
-            'Strategic Planning', 'Report Writing', 'Corporate Finance', 'Capital Markets'
+            'Financial Modeling', 'Excel (Advanced)', 'DCF Valuation', 'M&A',
+            'Risk Management', 'Asset Allocation', 'Python for Finance', 'Bloomberg', 'SAP'
         ],
-        summary: 'Analytical Finance Professional with expertise in financial modeling and strategic planning. Committed to delivering accurate data-driven insights for investment decisions.',
+        summary: 'Strategic Financial Analyst with a focus on M&A valuation and corporate treasury. Expert at preparing board-level financial reports and managing multi-million dollar asset portfolios.',
         experience: [
             {
-                company: 'WallStreet Partners',
-                position: 'Investment Analyst',
-                startDate: '2021-02',
+                company: 'HedgeLink Equity',
+                position: 'Lead Portfolio Analyst',
+                startDate: '2020-02',
                 endDate: 'Present',
-                description: 'Analyzed portfolio performance for high-net-worth clients, consistently exceeding quarterly targets by 15%.'
-            }
-        ]
-    },
-    {
-        id: 'netflix-marketing',
-        role: 'Marketing Manager',
-        title: 'Netflix Growth Strategy',
-        industry: 'Marketing',
-        targetCompanies: ['HubSpot', 'Nike', 'Coca-Cola', 'Google', 'Netflix'],
-        description: 'Dynamic template for leaders in Digital Marketing, Brand Growth, and Strategy.',
-        templateId: 'visual',
-        imageUrl: 'https://images.unsplash.com/photo-1551288560-66936b61ee2b?q=80&w=800&auto=format&fit=crop',
-        skills: [
-            'SEO/SEM', 'Content Strategy', 'Google Ads', 'Analytics',
-            'Brand Management', 'Copywriting', 'CRM Management', 'Lead Generation'
-        ],
-        summary: 'Innovative Marketing Manager with 5+ years of experience in driving customer acquisition and brand awareness through multi-channel digital strategies.',
-        experience: [
+                description: 'Managed a portfolio with $500M AUM, consistently outperforming the S&P 500 index by 8% through rigorous quantitative analysis.'
+            },
             {
-                company: 'Vanguard Growth',
-                position: 'Marketing Lead',
-                startDate: '2019-10',
-                endDate: 'Present',
-                description: 'Increased organic traffic by 150% and reduced CPA by 30% through targeted performance marketing campaigns.'
+                company: 'Gotham Wealth',
+                position: 'Junior Investment Associate',
+                startDate: '2017-09',
+                endDate: '2020-01',
+                description: 'Assisted in the valuation of 5 major acquisition targets, performing comprehensive du-diligence and financial projections.'
             }
         ]
     }
