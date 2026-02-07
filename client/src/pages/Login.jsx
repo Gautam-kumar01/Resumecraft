@@ -48,7 +48,7 @@ const Login = () => {
         <div className="min-h-[calc(100vh-64px)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-slate-50">
             <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-xl border border-slate-100">
                 <div className="text-center">
-                    <h2 className="mt-2 text-3xl font-bold text-slate-900">Welcome Back</h2>
+                    <h2 className="mt-2 text-3xl font-bold text-slate-900">Welcome</h2>
                     <p className="mt-2 text-sm text-slate-600">
                         Sign in to continue to your dashboard
                     </p>
