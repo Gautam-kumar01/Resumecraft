@@ -20,6 +20,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Disable buffering so we don't get the "buffering timed out" 10s hang
+mongoose.set('bufferCommands', false);
+
 // Database Connection
 const connectDB = async () => {
   if (!process.env.MONGO_URI) {
@@ -27,17 +30,22 @@ const connectDB = async () => {
     return;
   }
 
+  // If already connected, don't reconnect
+  if (mongoose.connection.readyState >= 1) return;
+
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI, {
-      serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of hanging
+    console.log('Connecting to MongoDB...');
+    await mongoose.connect(process.env.MONGO_URI, {
+      serverSelectionTimeoutMS: 5000,
+      connectTimeoutMS: 5000,
     });
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
+    console.log('MongoDB Connected Successfully');
   } catch (error) {
     console.error(`MongoDB Connection Error: ${error.message}`);
-    // Do not process.exit(1) on Vercel as it crashes the whole function
   }
 };
 
+// Initial connection attempt
 connectDB();
 
 // Routes
@@ -59,8 +67,22 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/resumes', require('./routes/resume'));
+// Middleware to ensure DB connection before processing requests
+const ensureDb = async (req, res, next) => {
+  if (mongoose.connection.readyState !== 1) {
+    await connectDB();
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({
+        message: 'Database is starting or unreachable. Please try again in a few seconds.',
+        retryAfter: 5
+      });
+    }
+  }
+  next();
+};
+
+app.use('/api/auth', ensureDb, require('./routes/auth'));
+app.use('/api/resumes', ensureDb, require('./routes/resume'));
 
 app.get('/', (req, res) => {
   res.send('ResumeCraft API is running...');
