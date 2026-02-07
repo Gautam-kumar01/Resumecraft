@@ -1,6 +1,6 @@
 
 const Resume = require('../models/Resume');
-const puppeteer = require('puppeteer');
+// const puppeteer = require('puppeteer');
 const starterResumes = require('../data/starterResumes');
 
 // @desc    Get all resumes for user
@@ -165,34 +165,13 @@ const getPublicResume = async (req, res) => {
     }
 };
 
-// @desc    Generate PDF
+// @desc    Generate PDF (Disabled on Vercel)
 // @route   POST /api/resumes/pdf
 // @access  Private
-// note: in a real app, you might render a specific HTML template string or URL.
-// for simplicity here, we will just return a message or basic PDF.
-// Client side PDF generation is often better for immediate feedback, but requirements asked for backend.
 const generatePDF = async (req, res) => {
-    const { html } = req.body; // Expecting HTML content from client to render
-
-    if (!html) {
-        return res.status(400).json({ message: 'No HTML content provided' });
-    }
-
-    try {
-        const browser = await puppeteer.launch({ headless: 'new' });
-        const page = await browser.newPage();
-        await page.setContent(html, { waitUntil: 'networkidle0' });
-        const pdf = await page.pdf({ format: 'A4', printBackground: true });
-
-        await browser.close();
-
-        res.set({ 'Content-Type': 'application/pdf', 'Content-Length': pdf.length });
-        res.send(pdf);
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'PDF generation failed' });
-    }
+    res.status(501).json({
+        message: 'Backend PDF generation is currently disabled on Vercel due to environment limits. Please use the "Download PDF" button in the editor for high-fidelity frontend generation.'
+    });
 }
 
 // @desc    Get starter resume templates

@@ -6,6 +6,14 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+console.log('--- Environment Diagnostics ---');
+console.log('PORT:', process.env.PORT || 'not set (default 5000)');
+console.log('MONGO_URI:', process.env.MONGO_URI ? 'SET' : 'MISSING');
+console.log('JWT_SECRET:', process.env.JWT_SECRET ? 'SET' : 'MISSING');
+console.log('EMAIL_USER:', process.env.EMAIL_USER ? 'SET' : 'MISSING');
+console.log('EMAIL_PASS:', process.env.EMAIL_PASS ? 'SET' : 'MISSING');
+console.log('-------------------------------');
+
 const app = express();
 
 // Middleware
@@ -14,12 +22,19 @@ app.use(express.json());
 
 // Database Connection
 const connectDB = async () => {
+  if (!process.env.MONGO_URI) {
+    console.error('CRITICAL: MONGO_URI is not defined in environment variables!');
+    return;
+  }
+
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/resumecraft');
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
+      serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of hanging
+    });
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error(`Error: ${error.message}`);
-    process.exit(1);
+    console.error(`MongoDB Connection Error: ${error.message}`);
+    // Do not process.exit(1) on Vercel as it crashes the whole function
   }
 };
 

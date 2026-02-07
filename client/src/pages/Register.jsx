@@ -43,7 +43,18 @@ const Register = () => {
             setMessage(data.message || 'A verification code has been sent to your email.');
         } catch (err) {
             console.error('Frontend Registration Error:', err);
-            const msg = err.response?.data?.message || err.message || 'Registration failed. Please check your internet connection or try a @gmail.com address.';
+            let msg = 'Registration failed. ';
+
+            if (err.response) {
+                // Server responded with an error
+                msg = err.response.data?.message || `Server error (${err.response.status}).`;
+            } else if (err.request) {
+                // Request was made but no response received
+                msg = 'No response from server. This often means the database is not connected or the backend has crashed. Check your Vercel logs and MONGO_URI.';
+            } else {
+                msg += err.message || 'Please check your internet connection.';
+            }
+
             setError(msg);
         } finally {
             setLoading(false);
