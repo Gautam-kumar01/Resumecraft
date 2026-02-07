@@ -15,6 +15,7 @@ import {
     MessageSquare,
     ChevronRight
 } from 'lucide-react';
+import Logo from '../components/Logo';
 
 const Home = () => {
     return (
@@ -220,9 +221,7 @@ const Home = () => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-20">
                         <div className="col-span-2">
-                            <h3 className="text-2xl font-bold bg-gradient-to-r from-rose-500 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-6">
-                                ResumeCraft
-                            </h3>
+                            <Logo size="md" className="mb-6" />
                             <p className="max-w-xs mb-6">
                                 The world's most intuitive resume builder designed to help you land your dream job at record speed.
                             </p>

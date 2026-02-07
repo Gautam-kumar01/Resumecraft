@@ -1,9 +1,8 @@
-
 import { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
-
 import { GoogleLogin } from '@react-oauth/google';
+import Logo from '../components/Logo';
 
 const Register = () => {
     const location = useLocation();
@@ -89,6 +88,9 @@ const Register = () => {
         <div className="min-h-[calc(100vh-64px)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-slate-50">
             <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-xl border border-slate-100">
                 <div className="text-center">
+                    <div className="flex justify-center mb-6">
+                        <Logo size="lg" />
+                    </div>
                     <h2 className="mt-2 text-3xl font-bold text-slate-900">
                         {showOtp ? 'Verify Email' : 'Create Account'}
                     </h2>
