@@ -200,7 +200,7 @@ const Editor = () => {
 
                 {/* Section Tabs */}
                 <div className="flex space-x-2 overflow-x-auto pb-4 mb-6 border-b border-slate-100">
-                    {['personal', 'summary', 'experience', 'education', 'skills', 'projects'].map(sec => (
+                    {['personal', 'summary', 'experience', 'education', 'skills', 'projects', 'templates'].map(sec => (
                         <button
                             key={sec}
                             onClick={() => setActiveSection(sec)}
@@ -216,6 +216,35 @@ const Editor = () => {
 
                 {/* Forms */}
                 <div className="space-y-6">
+                    {activeSection === 'templates' && (
+                        <div className="space-y-6">
+                            <h3 className="text-lg font-bold text-slate-900">Choose Resume Template</h3>
+                            <div className="grid grid-cols-1 gap-4">
+                                {[
+                                    { id: 'modern', name: 'Professional Modern', desc: 'Sleek two-column layout with a clean header.' },
+                                    { id: 'visual', name: 'High-Impact Visual', desc: 'Eye-catching design with progress bars and bold sidebar.' },
+                                    { id: 'elegant', name: 'Classic Elegant', desc: 'Minimalist single-column serif design for senior roles.' }
+                                ].map(tpl => (
+                                    <button
+                                        key={tpl.id}
+                                        onClick={() => setResume({ ...resume, templateId: tpl.id })}
+                                        className={`p-6 rounded-2xl border-2 text-left transition-all ${resume.templateId === tpl.id
+                                            ? 'border-primary bg-primary/5 ring-4 ring-primary/5'
+                                            : 'border-slate-100 hover:border-slate-200 hover:bg-slate-50'
+                                            }`}
+                                    >
+                                        <div className="flex justify-between items-center mb-2">
+                                            <span className="font-bold text-slate-900">{tpl.name}</span>
+                                            {resume.templateId === tpl.id && (
+                                                <div className="bg-primary text-white p-1 rounded-full"><Eye className="h-3 w-3" /></div>
+                                            )}
+                                        </div>
+                                        <p className="text-sm text-slate-500">{tpl.desc}</p>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                     {activeSection === 'personal' && (
                         <div className="space-y-6">
                             <h3 className="text-lg font-bold text-slate-900">Personal Information</h3>
