@@ -29,7 +29,7 @@ const Home = () => {
                     <div className="text-center max-w-3xl mx-auto">
                         <h1 className="text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight mb-8">
                             Build Your Professional <br />
-                            <span className="bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                            <span className="bg-gradient-to-r from-rose-500 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
                                 Resume in Minutes
                             </span>
                         </h1>

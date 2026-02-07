@@ -18,10 +18,10 @@ const Navbar = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16 items-center">
                     <Link to="/" className="flex items-center space-x-2">
-                        <div className="bg-primary/10 p-2 rounded-lg">
-                            <FileText className="h-6 w-6 text-primary" />
+                        <div className="bg-rose-500/10 p-2 rounded-lg">
+                            <FileText className="h-6 w-6 text-rose-500" />
                         </div>
-                        <span className="text-xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                        <span className="text-xl font-bold bg-gradient-to-r from-rose-500 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
                             ResumeCraft
                         </span>
                     </Link>
