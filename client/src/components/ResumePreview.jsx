@@ -11,7 +11,8 @@ import {
     GraduationCap,
     Code2,
     Award,
-    Star
+    Star,
+    User
 } from 'lucide-react';
 
 const ResumePreview = ({ resume }) => {
