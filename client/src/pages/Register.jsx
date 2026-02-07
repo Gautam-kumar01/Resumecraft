@@ -34,6 +34,9 @@ const Register = () => {
         }
     };
 
+    const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    const isGoogleConfigured = googleClientId && !googleClientId.includes('PLACEHOLDER');
+
     return (
         <div className="min-h-[calc(100vh-64px)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-slate-50">
             <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-xl border border-slate-100">
@@ -50,27 +53,35 @@ const Register = () => {
                     </div>
                 )}
 
-                <div className="mt-8">
-                    <div className="flex justify-center">
-                        <GoogleLogin
-                            onSuccess={handleGoogleSuccess}
-                            onError={() => setError('Google login failed')}
-                            useOneTap
-                            theme="outline"
-                            shape="pill"
-                            width="100%"
-                        />
-                    </div>
+                {isGoogleConfigured && (
+                    <div className="mt-8">
+                        <div className="flex justify-center">
+                            <GoogleLogin
+                                onSuccess={handleGoogleSuccess}
+                                onError={() => setError('Google login failed')}
+                                useOneTap
+                                theme="outline"
+                                shape="pill"
+                                width="100%"
+                            />
+                        </div>
 
-                    <div className="relative mt-6">
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-slate-200"></div>
-                        </div>
-                        <div className="relative flex justify-center text-sm">
-                            <span className="px-2 bg-white text-slate-500 uppercase">Or continue with</span>
+                        <div className="relative mt-6">
+                            <div className="absolute inset-0 flex items-center">
+                                <div className="w-full border-t border-slate-200"></div>
+                            </div>
+                            <div className="relative flex justify-center text-sm">
+                                <span className="px-2 bg-white text-slate-500 uppercase">Or continue with</span>
+                            </div>
                         </div>
                     </div>
-                </div>
+                )}
+
+                {!isGoogleConfigured && (
+                    <div className="mt-4 p-3 bg-blue-50/50 rounded-xl border border-blue-100 text-[10px] text-blue-600 text-center">
+                        Google Login is ready! Just add your <strong>VITE_GOOGLE_CLIENT_ID</strong> to the client .env file to enable it.
+                    </div>
+                )}
 
                 <form className="mt-6 space-y-6" onSubmit={handleSubmit}>
                     <div className="space-y-4">
