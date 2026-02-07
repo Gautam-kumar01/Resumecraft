@@ -37,9 +37,20 @@ export const AuthProvider = ({ children }) => {
 
     const register = async (name, email, password) => {
         const { data } = await api.post('/auth/register', { name, email, password });
+        return data; // Return data but don't login yet
+    };
+
+    const verifyOTP = async (email, otp) => {
+        const { data } = await api.post('/auth/verify-otp', { email, otp });
         localStorage.setItem('token', data.token);
         api.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
         setUser(data);
+        return data;
+    };
+
+    const resendOTP = async (email) => {
+        const { data } = await api.post('/auth/resend-otp', { email });
+        return data;
     };
 
     const googleLogin = async (credential) => {
@@ -56,7 +67,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, register, googleLogin, logout, loading }}>
+        <AuthContext.Provider value={{ user, login, register, googleLogin, logout, loading, verifyOTP, resendOTP }}>
             {children}
         </AuthContext.Provider>
     );

@@ -16,6 +16,12 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    isVerified: {
+        type: Boolean,
+        default: false,
+    },
+    otp: String,
+    otpExpires: Date,
 }, { timestamps: true });
 
 UserSchema.methods.matchPassword = async function (enteredPassword) {

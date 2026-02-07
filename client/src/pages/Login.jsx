@@ -24,7 +24,11 @@ const Login = () => {
             await login(formData.email, formData.password);
             navigate(from, { replace: true });
         } catch (err) {
-            setError(err.response?.data?.message || 'Login failed');
+            if (err.response?.data?.notVerified) {
+                navigate('/register', { state: { email: formData.email, showOtp: true } });
+            } else {
+                setError(err.response?.data?.message || 'Login failed');
+            }
         }
     };
 
