@@ -4,8 +4,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import ResumePreview from '../components/ResumePreview';
 import { Save, Download, Eye, ArrowLeft, Plus, Trash2 } from 'lucide-react';
+import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 
 const Editor = () => {
     const { id } = useParams();
@@ -53,29 +53,37 @@ const Editor = () => {
 
         setDownloading(true);
         try {
-            console.log("Starting PDF generation...");
+            // Reset scroll to capture full element
+            window.scrollTo(0, 0);
+
             const canvas = await html2canvas(input, {
-                scale: 3, // Higher scale for better quality
+                scale: 2, // Safe scale for memory
                 useCORS: true,
-                logging: false,
+                allowTaint: true,
+                scrollX: 0,
+                scrollY: 0,
+                windowWidth: document.documentElement.offsetWidth,
+                windowHeight: document.documentElement.offsetHeight,
                 backgroundColor: '#ffffff'
             });
 
-            const imgData = canvas.toDataURL('image/png');
+            const imgData = canvas.toDataURL('image/png', 1.0);
             const pdf = new jsPDF('p', 'mm', 'a4');
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = pdf.internal.pageSize.getHeight();
 
             // Calculate height to maintain aspect ratio
             const imgProps = pdf.getImageProperties(imgData);
-            const height = (imgProps.height * pdfWidth) / imgProps.width;
+            const contentHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, height);
+            // If the content is longer than one page, we might need multiple pages
+            // But for simple resume, let's just fit to width
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, contentHeight);
             pdf.save(`${resume.title || 'resume'}.pdf`);
-            console.log("PDF download triggered successfully.");
+
         } catch (err) {
             console.error("Critical download error:", err);
-            alert("Download failed. Please try saving your work and refreshing the page.");
+            alert("Error: " + err.message);
         } finally {
             setDownloading(false);
         }
