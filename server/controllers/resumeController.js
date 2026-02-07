@@ -1,6 +1,7 @@
 
 const Resume = require('../models/Resume');
 const puppeteer = require('puppeteer');
+const starterResumes = require('../data/starterResumes');
 
 // @desc    Get all resumes for user
 // @route   GET /api/resumes
@@ -38,8 +39,18 @@ const getResumeById = async (req, res) => {
 // @route   POST /api/resumes
 // @access  Private
 const createResume = async (req, res) => {
-    const { title, templateId } = req.body;
-    console.log('Create Resume Request:', { body: req.body, user: req.user?._id });
+    const {
+        title,
+        templateId,
+        personalInfo,
+        summary,
+        education,
+        experience,
+        skills,
+        projects
+    } = req.body;
+
+    console.log('Create Resume Request:', { title, user: req.user?._id });
 
     try {
         if (!req.user) {
@@ -51,10 +62,15 @@ const createResume = async (req, res) => {
             userId: req.user._id,
             title: title || 'Untitled Resume',
             templateId: templateId || 'modern',
-            personalInfo: {
+            personalInfo: personalInfo || {
                 fullName: req.user.name || '',
                 email: req.user.email || '',
             },
+            summary: summary || '',
+            education: education || [],
+            experience: experience || [],
+            skills: skills || [],
+            projects: projects || []
         });
 
         console.log('Attempting to save resume...');
@@ -179,6 +195,13 @@ const generatePDF = async (req, res) => {
     }
 }
 
+// @desc    Get starter resume templates
+// @route   GET /api/resumes/starters
+// @access  Public
+const getStarters = async (req, res) => {
+    res.json(starterResumes);
+};
+
 module.exports = {
     getResumes,
     getResumeById,
@@ -186,5 +209,6 @@ module.exports = {
     updateResume,
     deleteResume,
     getPublicResume,
-    generatePDF
+    generatePDF,
+    getStarters
 };

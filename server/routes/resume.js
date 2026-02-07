@@ -8,10 +8,12 @@ const {
     updateResume,
     deleteResume,
     getPublicResume,
-    generatePDF
+    generatePDF,
+    getStarters
 } = require('../controllers/resumeController');
 const { protect } = require('../middleware/auth');
 
+router.route('/starters').get(getStarters);
 router.route('/').get(protect, getResumes).post(protect, createResume);
 router.route('/pdf').post(protect, generatePDF);
 router.route('/:id').get(protect, getResumeById).put(protect, updateResume).delete(protect, deleteResume);

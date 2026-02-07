@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Editor from './pages/Editor';
 import PublicResume from './pages/PublicResume';
+import Templates from './pages/Templates';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import { GoogleOAuthProvider } from '@react-oauth/google';
@@ -34,6 +35,12 @@ function App() {
                 <Route path="/dashboard" element={
                   <ProtectedRoute>
                     <Dashboard />
+                  </ProtectedRoute>
+                } />
+
+                <Route path="/templates" element={
+                  <ProtectedRoute>
+                    <Templates />
                   </ProtectedRoute>
                 } />
 

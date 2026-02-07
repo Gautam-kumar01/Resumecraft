@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import AuthContext from '../context/AuthContext';
-import { Plus, FileText, Trash2, Edit, ExternalLink, Download } from 'lucide-react';
+import { Plus, FileText, Trash2, Edit, ExternalLink, Download, Sparkles } from 'lucide-react';
 
 const Dashboard = () => {
     const [resumes, setResumes] = useState([]);
@@ -61,13 +61,22 @@ const Dashboard = () => {
                     <h1 className="text-3xl font-bold text-slate-900">My Resumes</h1>
                     <p className="mt-1 text-slate-500">Manage your resumes and portfolios.</p>
                 </div>
-                <button
-                    onClick={createResume}
-                    className="flex items-center space-x-2 bg-primary hover:bg-blue-700 text-white px-5 py-2.5 rounded-full font-medium transition-all shadow-lg shadow-blue-500/30"
-                >
-                    <Plus className="h-5 w-5" />
-                    <span>Create New</span>
-                </button>
+                <div className="flex space-x-4">
+                    <Link
+                        to="/templates"
+                        className="flex items-center space-x-2 bg-white border border-slate-200 hover:border-primary/50 text-slate-700 px-5 py-2.5 rounded-full font-medium transition-all hover:shadow-lg hover:shadow-primary/5"
+                    >
+                        <Sparkles className="h-5 w-5 text-primary" />
+                        <span>Browse Templates</span>
+                    </Link>
+                    <button
+                        onClick={createResume}
+                        className="flex items-center space-x-2 bg-primary hover:bg-blue-700 text-white px-5 py-2.5 rounded-full font-medium transition-all shadow-lg shadow-blue-500/30"
+                    >
+                        <Plus className="h-5 w-5" />
+                        <span>Create New</span>
+                    </button>
+                </div>
             </div>
 
             {resumes.length === 0 ? (
