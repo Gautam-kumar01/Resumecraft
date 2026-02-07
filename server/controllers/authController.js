@@ -46,6 +46,16 @@ const registerUser = async (req, res) => {
         });
 
         if (user) {
+            // DEVELOPER LOG: Always log OTP to terminal in case SMTP fails
+            console.log(`[AUTH] Verification code for ${email}: ${otp}`);
+
+            if (process.env.EMAIL_USER === 'your_gmail@gmail.com') {
+                return res.status(201).json({
+                    message: 'Account created! (SMTP not configured, check server log for OTP)',
+                    email: user.email,
+                });
+            }
+
             try {
                 await sendOTP(email, otp);
                 res.status(201).json({
@@ -54,7 +64,11 @@ const registerUser = async (req, res) => {
                 });
             } catch (mailError) {
                 console.error('Mail Error:', mailError);
-                res.status(500).json({ message: 'Failed to send verification email. Please check your SMTP settings.' });
+                res.status(201).json({
+                    message: 'Account created! However, email delivery failed. Check server terminal for your code.',
+                    email: user.email,
+                    mailError: true
+                });
             }
         } else {
             res.status(400).json({ message: 'Invalid user data' });
@@ -120,8 +134,23 @@ const resendOTP = async (req, res) => {
         user.otpExpires = new Date(Date.now() + 10 * 60 * 1000);
         await user.save();
 
-        await sendOTP(email, otp);
-        res.json({ message: 'New verification code sent' });
+        // DEVELOPER LOG: Always log OTP to terminal
+        console.log(`[AUTH] New verification code for ${email}: ${otp}`);
+
+        if (process.env.EMAIL_USER === 'your_gmail@gmail.com') {
+            return res.json({ message: 'New code generated! Check server terminal for the code.' });
+        }
+
+        try {
+            await sendOTP(email, otp);
+            res.json({ message: 'New verification code sent' });
+        } catch (mailError) {
+            console.error('Mail Error:', mailError);
+            res.status(200).json({
+                message: 'Failed to send email, but a new code was logged to the server terminal.',
+                email: user.email
+            });
+        }
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

@@ -39,9 +39,9 @@ const Register = () => {
         setError('');
         setLoading(true);
         try {
-            await register(formData.name, formData.email, formData.password);
+            const data = await register(formData.name, formData.email, formData.password);
             setShowOtp(true);
-            setMessage('A verification code has been sent to your email.');
+            setMessage(data.message || 'A verification code has been sent to your email.');
         } catch (err) {
             setError(err.response?.data?.message || 'Registration failed');
         } finally {
@@ -64,11 +64,12 @@ const Register = () => {
     };
 
     const handleResendOTP = async () => {
+        setError('');
         try {
-            await resendOTP(formData.email);
-            setMessage('New verification code sent!');
+            const data = await resendOTP(formData.email);
+            setMessage(data.message || 'New verification code sent!');
         } catch (err) {
-            setError('Failed to resend code');
+            setError(err.response?.data?.message || 'Failed to resend code');
         }
     };
 
