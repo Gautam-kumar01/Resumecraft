@@ -12,10 +12,9 @@ const Editor = () => {
     const navigate = useNavigate();
     const [resume, setResume] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [downloading, setDownloading] = useState(false);
     const [saving, setSaving] = useState(false);
     const [activeSection, setActiveSection] = useState('personal');
-
-    // Refs for scrolling or focus if needed
     const previewRef = useRef();
 
     useEffect(() => {
@@ -26,7 +25,6 @@ const Editor = () => {
                 setResume(data);
             } catch (error) {
                 console.error("Error fetching resume:", error);
-                // If not found, maybe redirect
             } finally {
                 setLoading(false);
             }
@@ -39,7 +37,6 @@ const Editor = () => {
         setSaving(true);
         try {
             await api.put(`/resumes/${id}`, resume);
-            // Show success toast or indicator (optional)
         } catch (error) {
             console.error("Error saving resume:", error);
         } finally {
@@ -49,24 +46,38 @@ const Editor = () => {
 
     const handleDownload = async () => {
         const input = document.getElementById('resume-preview');
-        if (!input) return;
+        if (!input) {
+            console.error("Resume preview element not found!");
+            return;
+        }
 
+        setDownloading(true);
         try {
-            const canvas = await html2canvas(input, { scale: 2 });
+            console.log("Starting PDF generation...");
+            const canvas = await html2canvas(input, {
+                scale: 3, // Higher scale for better quality
+                useCORS: true,
+                logging: false,
+                backgroundColor: '#ffffff'
+            });
+
             const imgData = canvas.toDataURL('image/png');
             const pdf = new jsPDF('p', 'mm', 'a4');
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = pdf.internal.pageSize.getHeight();
-            const imgWidth = canvas.width;
-            const imgHeight = canvas.height;
-            const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-            const imgX = (pdfWidth - imgWidth * ratio) / 2;
-            const imgY = 30;
 
-            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            // Calculate height to maintain aspect ratio
+            const imgProps = pdf.getImageProperties(imgData);
+            const height = (imgProps.height * pdfWidth) / imgProps.width;
+
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, height);
             pdf.save(`${resume.title || 'resume'}.pdf`);
+            console.log("PDF download triggered successfully.");
         } catch (err) {
-            console.error("Download failed", err);
+            console.error("Critical download error:", err);
+            alert("Download failed. Please try saving your work and refreshing the page.");
+        } finally {
+            setDownloading(false);
         }
     };
 
@@ -117,9 +128,13 @@ const Editor = () => {
                             <Save className="h-4 w-4 mr-2" />
                             {saving ? 'Saving...' : 'Save'}
                         </button>
-                        <button onClick={handleDownload} className="flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-700">
-                            <Download className="h-4 w-4 mr-2" />
-                            Download PDF
+                        <button
+                            onClick={handleDownload}
+                            disabled={downloading}
+                            className="flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                        >
+                            <Download className={`h-4 w-4 mr-2 ${downloading ? 'animate-bounce' : ''}`} />
+                            {downloading ? 'Generating...' : 'Download PDF'}
                         </button>
                     </div>
                 </div>
@@ -141,8 +156,8 @@ const Editor = () => {
                             key={sec}
                             onClick={() => setActiveSection(sec)}
                             className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap capitalize ${activeSection === sec
-                                    ? 'bg-primary/10 text-primary'
-                                    : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
+                                ? 'bg-primary/10 text-primary'
+                                : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
                                 }`}
                         >
                             {sec}
