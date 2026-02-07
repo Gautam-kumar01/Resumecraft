@@ -2,6 +2,9 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const { OAuth2Client } = require('google-auth-library');
+
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 // Generate JWT
 const generateToken = (id) => {
@@ -68,6 +71,45 @@ const loginUser = async (req, res) => {
     }
 };
 
+// @desc    Google Login
+// @route   POST /api/auth/google
+// @access  Public
+const googleLogin = async (req, res) => {
+    const { credential } = req.body;
+
+    try {
+        const ticket = await client.verifyIdToken({
+            idToken: credential,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+
+        const { name, email, picture, sub } = ticket.getPayload();
+
+        let user = await User.findOne({ email });
+
+        if (!user) {
+            // Create user if not exists
+            // We generate a random password since it won't be used
+            const randomPassword = Math.random().toString(36).slice(-8);
+            user = await User.create({
+                name,
+                email,
+                password: randomPassword,
+            });
+        }
+
+        res.json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            token: generateToken(user._id),
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(401).json({ message: 'Google authentication failed' });
+    }
+};
+
 // @desc    Get user data
 // @route   GET /api/auth/me
 // @access  Private
@@ -78,5 +120,6 @@ const getMe = async (req, res) => {
 module.exports = {
     registerUser,
     loginUser,
+    googleLogin,
     getMe,
 };

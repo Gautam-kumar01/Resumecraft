@@ -3,10 +3,12 @@ import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 
+import { GoogleLogin } from '@react-oauth/google';
+
 const Register = () => {
     const [formData, setFormData] = useState({ name: '', email: '', password: '' });
     const [error, setError] = useState('');
-    const { register } = useContext(AuthContext);
+    const { register, googleLogin } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -20,6 +22,15 @@ const Register = () => {
             navigate('/dashboard');
         } catch (err) {
             setError(err.response?.data?.message || 'Registration failed');
+        }
+    };
+
+    const handleGoogleSuccess = async (credentialResponse) => {
+        try {
+            await googleLogin(credentialResponse.credential);
+            navigate('/dashboard');
+        } catch (err) {
+            setError('Google login failed');
         }
     };
 
@@ -39,7 +50,29 @@ const Register = () => {
                     </div>
                 )}
 
-                <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+                <div className="mt-8">
+                    <div className="flex justify-center">
+                        <GoogleLogin
+                            onSuccess={handleGoogleSuccess}
+                            onError={() => setError('Google login failed')}
+                            useOneTap
+                            theme="outline"
+                            shape="pill"
+                            width="100%"
+                        />
+                    </div>
+
+                    <div className="relative mt-6">
+                        <div className="absolute inset-0 flex items-center">
+                            <div className="w-full border-t border-slate-200"></div>
+                        </div>
+                        <div className="relative flex justify-center text-sm">
+                            <span className="px-2 bg-white text-slate-500 uppercase">Or continue with</span>
+                        </div>
+                    </div>
+                </div>
+
+                <form className="mt-6 space-y-6" onSubmit={handleSubmit}>
                     <div className="space-y-4">
                         <div>
                             <label htmlFor="name" className="sr-only">Full Name</label>
