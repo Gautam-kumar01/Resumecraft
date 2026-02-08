@@ -6,7 +6,9 @@ const { OAuth2Client } = require('google-auth-library');
 const { isTempMail, isGmail } = require('../utils/emailValidator');
 const { sendOTP } = require('../utils/mailer');
 
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const client = process.env.GOOGLE_CLIENT_ID
+    ? new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
+    : null;
 
 // Generate JWT
 const generateToken = (id) => {
@@ -197,6 +199,10 @@ const loginUser = async (req, res) => {
 // @access  Public
 const googleLogin = async (req, res) => {
     const { credential } = req.body;
+
+    if (!client) {
+        return res.status(500).json({ message: 'Google Auth is not configured on the server.' });
+    }
 
     try {
         const ticket = await client.verifyIdToken({
