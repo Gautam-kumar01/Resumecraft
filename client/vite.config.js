@@ -9,7 +9,7 @@ export default defineConfig({
     tailwindcss(),
   ],
   build: {
-    outDir: '../public',
+    outDir: 'dist',
     chunkSizeWarningLimit: 2000,
   },
   server: {
