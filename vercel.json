@@ -1,16 +1,26 @@
 {
-    "buildCommand": "cd client && npm run build",
+    "buildCommand": "cd client && npm install --legacy-peer-deps && npm run build",
     "outputDirectory": "client/dist",
-    "devCommand": "cd client && npm run dev",
-    "installCommand": "cd client && npm install --legacy-peer-deps",
-    "framework": null,
+    "framework": "vite",
     "rewrites": [
         {
             "source": "/api/(.*)",
             "destination": "/api/index.js"
         },
         {
-            "source": "/((?!api/|.*\\..*).*)",
+            "source": "/google4d740df52294f260.html",
+            "destination": "/google4d740df52294f260.html"
+        },
+        {
+            "source": "/robots.txt",
+            "destination": "/robots.txt"
+        },
+        {
+            "source": "/sitemap.xml",
+            "destination": "/sitemap.xml"
+        },
+        {
+            "source": "/(.*)",
             "destination": "/index.html"
         }
     ]
