@@ -33,8 +33,12 @@ const sendOTP = async (email, otp) => {
         console.log('---------------------------------------------------');
 
         const mailOptions = {
-            from: `"ResumeCraft Support" <${process.env.EMAIL_USER}>`,
+            from: {
+                name: 'ResumeCraft Support',
+                address: process.env.EMAIL_USER
+            },
             to: email,
+            replyTo: process.env.EMAIL_USER,
             subject: 'Verify Your ResumeCraft Account',
             html: `
             <div style="font-family: sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
