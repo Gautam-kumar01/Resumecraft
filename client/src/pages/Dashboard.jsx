@@ -1,15 +1,22 @@
 
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import AuthContext from '../context/AuthContext';
-import { Plus, FileText, Trash2, Edit, ExternalLink, Download, Sparkles, ArrowRight, Copy } from 'lucide-react';
+import { Plus, FileText, Trash2, Edit, ExternalLink, Download, Sparkles, ArrowRight, Copy, Search, Filter, BarChart, Briefcase } from 'lucide-react';
 
 const Dashboard = () => {
     const [resumes, setResumes] = useState([]);
     const [starters, setStarters] = useState([]);
     const [loading, setLoading] = useState(true);
     const [creating, setCreating] = useState(null);
+    
+    // Filters
+    const [searchQuery, setSearchQuery] = useState('');
+    const [selectedIndustry, setSelectedIndustry] = useState('All');
+    const [selectedExperience, setSelectedExperience] = useState('All');
+    const [minAtsScore, setMinAtsScore] = useState(0);
+
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
 
@@ -31,6 +38,31 @@ const Dashboard = () => {
 
         fetchData();
     }, []);
+
+    // Extract unique values for filters
+    const industries = useMemo(() => {
+        const unique = new Set(starters.map(s => s.industry).filter(Boolean));
+        return ['All', ...Array.from(unique)];
+    }, [starters]);
+
+    const experienceLevels = useMemo(() => {
+        const unique = new Set(starters.map(s => s.experienceLevel).filter(Boolean));
+        return ['All', ...Array.from(unique)];
+    }, [starters]);
+
+    const filteredStarters = useMemo(() => {
+        return starters.filter(template => {
+            const matchesSearch = template.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                  template.targetCompanies.some(c => c.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                                  template.skills.some(s => s.toLowerCase().includes(searchQuery.toLowerCase()));
+            
+            const matchesIndustry = selectedIndustry === 'All' || template.industry === selectedIndustry;
+            const matchesExperience = selectedExperience === 'All' || template.experienceLevel === selectedExperience;
+            const matchesAts = (template.atsScore || 0) >= minAtsScore;
+
+            return matchesSearch && matchesIndustry && matchesExperience && matchesAts;
+        });
+    }, [starters, searchQuery, selectedIndustry, selectedExperience, minAtsScore]);
 
     const useTemplate = async (template) => {
         setCreating(template.id);
@@ -95,7 +127,7 @@ const Dashboard = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
             {/* MNC Blueprints Quick Start */}
             <div className="mb-12">
-                <div className="flex justify-between items-center mb-6">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                     <div>
                         <h2 className="text-xl font-black text-slate-900 flex items-center">
                             <Sparkles className="h-5 w-5 mr-2 text-primary" />
@@ -103,18 +135,77 @@ const Dashboard = () => {
                         </h2>
                         <p className="text-sm text-slate-500">Pick a high-performance blueprint to get hired at top MNCs.</p>
                     </div>
-                    <Link to="/templates" className="text-sm font-bold text-primary hover:underline">View All &rarr;</Link>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-                    {starters.slice(0, 5).map((template) => (
+                {/* Filters Section */}
+                <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm mb-8">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        {/* Search */}
+                        <div className="relative">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                            <input
+                                type="text"
+                                placeholder="Search roles, companies..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                            />
+                        </div>
+
+                        {/* Industry Filter */}
+                        <div className="relative">
+                            <Filter className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                            <select
+                                value={selectedIndustry}
+                                onChange={(e) => setSelectedIndustry(e.target.value)}
+                                className="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none bg-white cursor-pointer"
+                            >
+                                {industries.map(ind => (
+                                    <option key={ind} value={ind}>{ind === 'All' ? 'All Industries' : ind}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* Experience Filter */}
+                        <div className="relative">
+                            <Briefcase className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                            <select
+                                value={selectedExperience}
+                                onChange={(e) => setSelectedExperience(e.target.value)}
+                                className="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none bg-white cursor-pointer"
+                            >
+                                {experienceLevels.map(exp => (
+                                    <option key={exp} value={exp}>{exp === 'All' ? 'All Experience Levels' : exp}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* ATS Score Filter */}
+                        <div className="relative">
+                            <BarChart className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                            <select
+                                value={minAtsScore}
+                                onChange={(e) => setMinAtsScore(Number(e.target.value))}
+                                className="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none bg-white cursor-pointer"
+                            >
+                                <option value={0}>Any ATS Score</option>
+                                <option value={80}>80+ Score</option>
+                                <option value={90}>90+ Score</option>
+                                <option value={95}>95+ Score</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {filteredStarters.map((template) => (
                         <button
                             key={template.id}
                             onClick={() => useTemplate(template)}
-                            className="group relative flex flex-col bg-white rounded-3xl border border-slate-200 hover:border-primary/40 transition-all text-left overflow-hidden hover:shadow-2xl hover:-translate-y-2 h-[450px]"
+                            className="group relative flex flex-col bg-white rounded-3xl border border-slate-200 hover:border-primary/40 transition-all text-left overflow-hidden hover:shadow-2xl hover:-translate-y-2 h-[480px]"
                         >
                             {/* Visual Resume Mockup Header */}
-                            <div className="h-56 w-full relative overflow-hidden bg-slate-900">
+                            <div className="h-64 w-full relative overflow-hidden bg-slate-900">
                                 <img
                                     src={template.imageUrl || 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop'}
                                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 opacity-60 group-hover:opacity-80"
@@ -125,11 +216,18 @@ const Dashboard = () => {
                                 {/* Glassmorphism Mini-Card Overlay */}
                                 <div className="absolute inset-0 p-4 flex flex-col justify-end">
                                     <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                                        <div className="flex items-center space-x-2 mb-2">
-                                            <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center">
-                                                <Sparkles className="h-3 w-3 text-primary" />
+                                        <div className="flex items-center justify-between mb-2">
+                                            <div className="flex items-center space-x-2">
+                                                <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center">
+                                                    <Sparkles className="h-3 w-3 text-primary" />
+                                                </div>
+                                                <span className="text-[9px] font-black text-white uppercase tracking-widest">AI Engineered</span>
                                             </div>
-                                            <span className="text-[9px] font-black text-white uppercase tracking-widest">AI Engineered</span>
+                                            {template.atsScore && (
+                                                <span className="text-[10px] font-bold text-green-400 bg-green-400/10 px-1.5 py-0.5 rounded border border-green-400/20">
+                                                    {template.atsScore} ATS
+                                                </span>
+                                            )}
                                         </div>
                                         <div className="space-y-1.5">
                                             <div className="h-1 w-full bg-white/20 rounded-full"></div>
@@ -139,14 +237,19 @@ const Dashboard = () => {
                                 </div>
 
                                 {/* Industry Spotlight */}
-                                <div className="absolute top-4 left-4">
-                                    <span className="text-[9px] font-black text-white bg-slate-900/80 px-2 py-1 rounded-lg border border-white/10 uppercase tracking-tighter backdrop-blur-sm">
+                                <div className="absolute top-4 left-4 flex flex-col gap-2">
+                                    <span className="self-start text-[9px] font-black text-white bg-slate-900/80 px-2 py-1 rounded-lg border border-white/10 uppercase tracking-tighter backdrop-blur-sm">
                                         {template.industry}
                                     </span>
+                                    {template.experienceLevel && (
+                                        <span className="self-start text-[9px] font-bold text-slate-200 bg-white/10 px-2 py-1 rounded-lg border border-white/5 backdrop-blur-sm">
+                                            {template.experienceLevel}
+                                        </span>
+                                    )}
                                 </div>
                             </div>
 
-                            <div className="p-6 flex flex-col flex-1">
+                            <div className="p-5 flex flex-col flex-1">
                                 <div className="mb-4">
                                     <h3 className="text-sm font-black text-slate-900 leading-tight group-hover:text-primary transition-colors line-clamp-2">{template.title}</h3>
                                     <p className="text-[10px] text-slate-500 mt-2 line-clamp-2 font-medium">{template.description}</p>
