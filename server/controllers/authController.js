@@ -174,8 +174,22 @@ const loginUser = async (req, res) => {
 
         if (user && (await user.matchPassword(password))) {
             if (!user.isVerified) {
+                // Generate new OTP for unverified login attempt
+                const otp = Math.floor(100000 + Math.random() * 900000).toString();
+                user.otp = otp;
+                user.otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 mins
+                await user.save();
+
+                console.log(`[AUTH] Login verification code for ${email}: ${otp}`);
+
+                try {
+                    await sendOTP(email, otp);
+                } catch (mailError) {
+                    console.error('Mail Error:', mailError);
+                }
+
                 return res.status(401).json({
-                    message: 'Please verify your email first',
+                    message: 'Verification code sent to your email. Please verify.',
                     notVerified: true
                 });
             }
