@@ -10,19 +10,7 @@
             "destination": "/api/index.js"
         },
         {
-            "source": "/google4d740df52294f260.html",
-            "destination": "/google4d740df52294f260.html"
-        },
-        {
-            "source": "/robots.txt",
-            "destination": "/robots.txt"
-        },
-        {
-            "source": "/sitemap.xml",
-            "destination": "/sitemap.xml"
-        },
-        {
-            "source": "/(.*)",
+            "source": "/((?!api/|.*\\..*).*)",
             "destination": "/index.html"
         }
     ]
