@@ -125,14 +125,14 @@ const Dashboard = () => {
     }
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="min-h-screen bg-gray-50 pt-20 pb-10 px-4 sm:px-6 lg:px-8">
             <SEO 
-                title="My Dashboard" 
-                description="Manage your professional resumes and access premium MNC templates."
+                title="Dashboard | ResumeCraft - MNC Resume Templates" 
+                description="Access professional MNC-approved resume templates. Filter by industry, experience level, and ATS score to create your perfect resume."
             />
-            {/* MNC Blueprints Quick Start */}
-            <div className="mb-12">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            
+            <div className="max-w-7xl mx-auto">
+                <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
                     <div>
                         <h2 className="text-xl font-black text-slate-900 flex items-center">
                             <Sparkles className="h-5 w-5 mr-2 text-primary" />
