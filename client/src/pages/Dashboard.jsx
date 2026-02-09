@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import AuthContext from '../context/AuthContext';
-import { Plus, FileText, Trash2, Edit, ExternalLink, Download, Sparkles, ArrowRight } from 'lucide-react';
+import { Plus, FileText, Trash2, Edit, ExternalLink, Download, Sparkles, ArrowRight, Copy } from 'lucide-react';
 
 const Dashboard = () => {
     const [resumes, setResumes] = useState([]);
@@ -53,6 +53,24 @@ const Dashboard = () => {
             } catch (error) {
                 console.error('Failed to delete resume', error);
             }
+        }
+    };
+
+    const handleDuplicate = async (resume) => {
+        try {
+            const { data } = await api.post('/resumes', {
+                title: `Copy of ${resume.title}`,
+                templateId: resume.templateId,
+                personalInfo: resume.personalInfo,
+                summary: resume.summary,
+                education: resume.education,
+                experience: resume.experience,
+                skills: resume.skills,
+                projects: resume.projects
+            });
+            navigate(`/editor/${data._id}`);
+        } catch (error) {
+            console.error('Failed to duplicate resume', error);
         }
     };
 
@@ -212,7 +230,7 @@ const Dashboard = () => {
             ) : (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {resumes.map((resume) => (
-                        <div key={resume._id} className="group bg-white rounded-2xl border border-slate-200 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 overflow-hidden">
+                        <div key={resume._id} className="group bg-white rounded-2xl border border-slate-200 hover:border-primary/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
                             <div className="h-40 bg-slate-100 relative items-center justify-center flex">
                                 {/* Placeholder for preview image */}
                                 <FileText className="h-12 w-12 text-slate-300 group-hover:text-primary/50 transition-colors" />
@@ -237,6 +255,13 @@ const Dashboard = () => {
                                             <Edit className="h-5 w-5" />
                                         </Link>
                                         <button
+                                            onClick={() => handleDuplicate(resume)}
+                                            className="p-2 text-slate-500 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
+                                            title="Duplicate"
+                                        >
+                                            <Copy className="h-5 w-5" />
+                                        </button>
+                                        <button
                                             onClick={() => handleDelete(resume._id)}
                                             className="p-2 text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                                             title="Delete"
@@ -256,6 +281,13 @@ const Dashboard = () => {
                                                 <ExternalLink className="h-5 w-5" />
                                             </Link>
                                         )}
+                                        <Link
+                                            to={`/editor/${resume._id}`}
+                                            className="p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                                            title="Download (open in editor to export)"
+                                        >
+                                            <Download className="h-5 w-5" />
+                                        </Link>
                                     </div>
                                 </div>
                             </div>

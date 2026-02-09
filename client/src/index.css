@@ -127,3 +127,38 @@
 .animate-blob {
   animation: blob-bounce 35s infinite alternate ease-in-out;
 }
+
+@keyframes marquee-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  display: flex;
+  width: 200%;
+  animation: marquee-left 25s linear infinite;
+}
+
+.marquee-wrapper {
+  overflow: hidden;
+}
+
+@keyframes resume-page-scroll {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-40%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.resume-scroll {
+  animation: resume-page-scroll 8s ease-in-out infinite;
+}

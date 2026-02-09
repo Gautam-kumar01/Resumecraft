@@ -16,8 +16,20 @@ import {
     ChevronRight
 } from 'lucide-react';
 import Logo from '../components/Logo';
+import { motion } from 'framer-motion';
 
 const Home = () => {
+    const mncCards = [
+        { company: 'Google', role: 'Software Engineer', skills: ['Go', 'Distributed Systems', 'Cloud'], image: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop' },
+        { company: 'Amazon', role: 'AI Engineer', skills: ['Python', 'LLMs', 'SageMaker'], image: 'https://images.unsplash.com/photo-1512758017271-d7b84c2113f1?q=80&w=800&auto=format&fit=crop' },
+        { company: 'Microsoft', role: 'Product Manager', skills: ['Roadmaps', 'Analytics', 'Stakeholders'], image: 'https://images.unsplash.com/photo-1542744094-24638eff58bb?q=80&w=800&auto=format&fit=crop' },
+        { company: 'Apple', role: 'Designer', skills: ['Figma', 'HIG', 'Prototyping'], image: 'https://images.unsplash.com/photo-1587613865763-4b8b0b10d3b3?q=80&w=800&auto=format&fit=crop' },
+        { company: 'Netflix', role: 'Data Scientist', skills: ['PySpark', 'AB Testing', 'ML'], image: 'https://images.unsplash.com/photo-1553729459-efe14ef6055d?q=80&w=800&auto=format&fit=crop' },
+        { company: 'Meta', role: 'Software Engineer', skills: ['React', 'GraphQL', 'Hack'], image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=800&auto=format&fit=crop' },
+        { company: 'Tesla', role: 'AI Engineer', skills: ['C++', 'Vision', 'Robotics'], image: 'https://images.unsplash.com/photo-1555949963-aa79dcee981d?q=80&w=800&auto=format&fit=crop' },
+        { company: 'Adobe', role: 'Designer', skills: ['Illustrator', 'After Effects', 'Brand'], image: 'https://images.unsplash.com/photo-1529336953121-a52d210b15e6?q=80&w=800&auto=format&fit=crop' }
+    ];
+
     return (
         <div className="bg-white">
             {/* Hero Section */}
@@ -93,6 +105,82 @@ const Home = () => {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* MNC Resume Blueprints */}
+            <section className="py-24 bg-gradient-to-b from-slate-50 via-white to-slate-50">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 text-center">
+                    <h2 className="text-3xl lg:text-5xl font-extrabold text-slate-900">MNC Resume Blueprints</h2>
+                    <p className="text-slate-600 mt-3">Premium, recruiter-tested layouts inspired by Google, Amazon, Microsoft, Netflix, Apple, Meta, Tesla, Adobe.</p>
+                </div>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {mncCards.map((card, idx) => (
+                            <motion.div
+                                key={idx}
+                                whileHover={{ y: -6, scale: 1.01 }}
+                                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                                className="relative bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden group"
+                            >
+                                <div className="h-40 bg-slate-900 relative overflow-hidden">
+                                    <img src={card.image} alt={card.company} className="w-full h-full object-cover opacity-70 group-hover:opacity-90 transition-opacity" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/20 to-transparent"></div>
+                                    <div className="absolute inset-0 p-4 flex items-end">
+                                        <div className="w-full bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3">
+                                            <div className="h-2 w-full bg-white/20 rounded-full mb-1"></div>
+                                            <div className="h-2 w-2/3 bg-white/10 rounded-full"></div>
+                                        </div>
+                                    </div>
+                                    <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-white/90 text-slate-900 text-xs font-bold">{card.company}</div>
+                                </div>
+                                <div className="p-6">
+                                    <div className="flex items-center justify-between">
+                                        <h3 className="text-lg font-black text-slate-900">{card.role}</h3>
+                                        <div className="flex -space-x-2">
+                                            <div className="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-[10px] font-black">{card.company[0]}</div>
+                                        </div>
+                                    </div>
+                                    <div className="mt-4 flex flex-wrap gap-2">
+                                        {card.skills.map((s, i) => (
+                                            <span key={i} className="text-[10px] font-bold text-slate-700 bg-slate-50 border border-slate-200 px-2 py-1 rounded-lg">{s}</span>
+                                        ))}
+                                    </div>
+                                    <div className="mt-6">
+                                        <div className="relative h-24 rounded-xl border border-slate-200 overflow-hidden bg-white">
+                                            <img src={card.image} alt="Resume" className="w-full h-full object-cover resume-scroll" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Animated Resume Showcase */}
+            <section className="py-20 bg-white">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 text-center">
+                    <h2 className="text-3xl lg:text-5xl font-extrabold text-slate-900">Showcase</h2>
+                    <p className="text-slate-600 mt-3">Live, looping previews that feel like motion GIFs.</p>
+                </div>
+                <div className="marquee-wrapper">
+                    <div className="marquee-track">
+                        {[...mncCards, ...mncCards].map((card, i) => (
+                            <div key={i} className="mx-4 w-72 bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+                                <div className="h-40 bg-slate-900 relative overflow-hidden">
+                                    <img src={card.image} alt={card.company} className="w-full h-full object-cover opacity-70" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/20 to-transparent"></div>
+                                </div>
+                                <div className="p-4">
+                                    <div className="h-24 rounded-xl border border-slate-200 overflow-hidden bg-white">
+                                        <img src={card.image} alt="Resume" className="w-full h-full object-cover resume-scroll" />
+                                    </div>
+                                    <div className="mt-3 text-sm font-bold text-slate-900">{card.company} • {card.role}</div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>
