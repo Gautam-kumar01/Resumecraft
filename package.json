@@ -1,7 +1,7 @@
 {
     "name": "resumecraft-root",
-    "version": "1.0.0",
-    "description": "ResumeCraft Root",
+    "version": "1.0.1",
+    "description": "ResumeCraft Root - Fixed Build Config",
     "scripts": {
         "start": "concurrently \"npm run server\" \"npm run client\"",
         "server": "cd server && npm start",
