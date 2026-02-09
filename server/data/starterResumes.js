@@ -191,6 +191,117 @@ const starterResumes = [
                 endDate: '2019'
             }
         ]
+    },
+    {
+        id: 'meta-engineer',
+        role: 'Software Engineer',
+        title: 'Meta Full-Stack Architect',
+        industry: 'Technology',
+        targetCompanies: ['Meta', 'Uber', 'Twitter'],
+        description: 'Optimized for high-velocity engineering cultures. Highlights React, GraphQL, and large-scale system architecture.',
+        templateId: 'modern',
+        imageUrl: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=800&auto=format&fit=crop',
+        personalInfo: {
+            fullName: 'Jordan Lee',
+            email: 'jordan.lee@meta-example.com',
+            linkedin: 'linkedin.com/in/jordanlee-dev'
+        },
+        skills: [
+            'React', 'GraphQL', 'Hack/PHP', 'Relay', 'System Design',
+            'Cassandra', 'Memcached', 'CI/CD Pipelines'
+        ],
+        summary: 'Full Stack Engineer with deep expertise in the React ecosystem and graph-based data layers. Passionate about building scalable, user-centric interfaces serving millions of daily active users.',
+        experience: [
+            {
+                company: 'Social Connect Inc.',
+                position: 'Senior Frontend Engineer',
+                startDate: '2020-03',
+                endDate: 'Present',
+                description: 'Rebuilt the core messaging infrastructure using GraphQL and Relay, reducing data fetching latency by 40%.'
+            }
+        ],
+        education: [
+            {
+                institution: 'UC Berkeley',
+                degree: 'B.S. Electrical Engineering & CS',
+                startDate: '2015',
+                endDate: '2019'
+            }
+        ]
+    },
+    {
+        id: 'tesla-ai',
+        role: 'AI Engineer',
+        title: 'Tesla Autopilot Vision',
+        industry: 'Automotive & AI',
+        targetCompanies: ['Tesla', 'Waymo', 'Rivian'],
+        description: 'Engineering blueprint for computer vision and robotics. Emphasizes C++, real-time systems, and deep learning.',
+        templateId: 'minimalist',
+        imageUrl: 'https://images.unsplash.com/photo-1555949963-aa79dcee981d?q=80&w=800&auto=format&fit=crop',
+        personalInfo: {
+            fullName: 'Alex Musk',
+            email: 'alex.m@tesla-example.com',
+            linkedin: 'linkedin.com/in/alexmusk-ai'
+        },
+        skills: [
+            'C++', 'Computer Vision', 'PyTorch', 'CUDA', 'ROS',
+            'SLAM', 'Sensor Fusion', 'Real-time Systems'
+        ],
+        summary: 'Robotics and AI Engineer focused on autonomous systems. Experienced in deploying deep learning models to edge devices with strict latency constraints.',
+        experience: [
+            {
+                company: 'Future Drive Labs',
+                position: 'Computer Vision Engineer',
+                startDate: '2021-01',
+                endDate: 'Present',
+                description: 'Implemented a novel object detection pipeline for autonomous navigation, improving pedestrian detection accuracy by 15% in low-light conditions.'
+            }
+        ],
+        education: [
+            {
+                institution: 'MIT',
+                degree: 'M.S. Robotics',
+                startDate: '2018',
+                endDate: '2020'
+            }
+        ]
+    },
+    {
+        id: 'adobe-creative',
+        role: 'Creative Director',
+        title: 'Adobe Creative Suite Lead',
+        industry: 'Design',
+        targetCompanies: ['Adobe', 'Canva', 'Pinterest'],
+        description: 'Visual-heavy blueprint for creative directors and illustrators. Showcases brand strategy and tool mastery.',
+        templateId: 'visual',
+        imageUrl: 'https://images.unsplash.com/photo-1529336953121-a52d210b15e6?q=80&w=800&auto=format&fit=crop',
+        personalInfo: {
+            fullName: 'Elena Design',
+            email: 'elena.d@adobe-example.com',
+            linkedin: 'linkedin.com/in/elenadesign'
+        },
+        skills: [
+            'Adobe Illustrator', 'After Effects', 'Brand Strategy', 'Typography',
+            'Creative Direction', 'User Experience', 'Marketing Design'
+        ],
+        summary: 'Award-winning Creative Director with a passion for storytelling through visual media. Expert in leading design teams to deliver cohesive brand identities across digital and print channels.',
+        experience: [
+            {
+                company: 'Brand Zenith',
+                position: 'Art Director',
+                startDate: '2019-05',
+                endDate: 'Present',
+                description: 'Oversaw the rebranding of a Fortune 500 company, coordinating a team of 12 designers and illustrators to deliver a unified visual language.'
+            }
+        ],
+        education: [
+            {
+                institution: 'CalArts',
+                degree: 'BFA Graphic Design',
+                startDate: '2015',
+                endDate: '2019'
+            }
+        ]
     }
 ];
 

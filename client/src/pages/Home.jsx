@@ -1,5 +1,7 @@
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import AuthContext from '../context/AuthContext';
 import {
     FileText,
     Zap,
@@ -19,6 +21,17 @@ import Logo from '../components/Logo';
 import { motion } from 'framer-motion';
 
 const Home = () => {
+    const { user } = useContext(AuthContext);
+    const navigate = useNavigate();
+
+    const handleBlueprintClick = () => {
+        if (user) {
+            navigate('/dashboard');
+        } else {
+            navigate('/login');
+        }
+    };
+
     const mncCards = [
         { company: 'Google', role: 'Software Engineer', skills: ['Go', 'Distributed Systems', 'Cloud'], image: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop' },
         { company: 'Amazon', role: 'AI Engineer', skills: ['Python', 'LLMs', 'SageMaker'], image: 'https://images.unsplash.com/photo-1512758017271-d7b84c2113f1?q=80&w=800&auto=format&fit=crop' },
@@ -122,7 +135,8 @@ const Home = () => {
                                 key={idx}
                                 whileHover={{ y: -6, scale: 1.01 }}
                                 transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                                className="relative bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden group"
+                                className="relative bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden group cursor-pointer"
+                                onClick={handleBlueprintClick}
                             >
                                 <div className="h-40 bg-slate-900 relative overflow-hidden">
                                     <img src={card.image} alt={card.company} className="w-full h-full object-cover opacity-70 group-hover:opacity-90 transition-opacity" />
@@ -168,7 +182,11 @@ const Home = () => {
                 <div className="marquee-wrapper">
                     <div className="marquee-track">
                         {[...mncCards, ...mncCards].map((card, i) => (
-                            <div key={i} className="mx-4 w-72 bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+                            <div 
+                                key={i} 
+                                className="mx-4 w-72 bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden cursor-pointer hover:border-primary/50 transition-colors"
+                                onClick={handleBlueprintClick}
+                            >
                                 <div className="h-40 bg-slate-900 relative overflow-hidden">
                                     <img src={card.image} alt={card.company} className="w-full h-full object-cover opacity-70" />
                                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/20 to-transparent"></div>
