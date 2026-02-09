@@ -26,6 +26,12 @@ const sendOTP = async (email, otp) => {
             });
         });
 
+        console.log('---------------------------------------------------');
+        console.log('[MAIL DEBUG] Preparing to send email');
+        console.log(`[MAIL DEBUG] FROM (Sender): ${process.env.EMAIL_USER}`);
+        console.log(`[MAIL DEBUG] TO (Recipient): ${email}`);
+        console.log('---------------------------------------------------');
+
         const mailOptions = {
             from: `"ResumeCraft Support" <${process.env.EMAIL_USER}>`,
             to: email,
