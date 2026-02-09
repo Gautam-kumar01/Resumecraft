@@ -1,7 +1,7 @@
 {
     "name": "resumecraft-root",
-    "version": "1.0.1",
-    "description": "ResumeCraft Root - Fixed Build Config",
+    "version": "1.0.2",
+    "description": "ResumeCraft Root - Fixed Vercel Build",
     "scripts": {
         "start": "concurrently \"npm run server\" \"npm run client\"",
         "server": "cd server && npm start",
