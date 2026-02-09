@@ -64,4 +64,46 @@ const sendOTP = async (email, otp) => {
     }
 };
 
-module.exports = { sendOTP };
+const sendResetCode = async (email, otp) => {
+    try {
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS,
+            },
+        });
+
+        const mailOptions = {
+            from: {
+                name: 'ResumeCraft Support',
+                address: process.env.EMAIL_USER
+            },
+            to: email,
+            replyTo: process.env.EMAIL_USER,
+            subject: 'Reset Your Password - ResumeCraft',
+            html: `
+            <div style="font-family: sans-serif; max-width: 500px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+                <h2 style="color: #ef4444; text-align: center;">Password Reset Request</h2>
+                <p>Hello,</p>
+                <p>We received a request to reset your password. Use the code below to proceed:</p>
+                <div style="background: #fff0f0; padding: 20px; text-align: center; border-radius: 10px; font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #b91c1c;">
+                    ${otp}
+                </div>
+                <p style="color: #64748b; font-size: 14px; margin-top: 20px;">This code will expire in 10 minutes. If you did not request this, please ignore this email.</p>
+                <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
+                <p style="text-align: center; color: #94a3b8; font-size: 12px;">© 2026 ResumeCraft. Secure your future.</p>
+            </div>
+        `,
+        };
+
+        const info = await transporter.sendMail(mailOptions);
+        console.log('[MAIL] Reset code sent: %s', info.messageId);
+        return info;
+    } catch (error) {
+        console.error('[MAIL] Error sending reset email:', error);
+        throw error;
+    }
+};
+
+module.exports = { sendOTP, sendResetCode };
