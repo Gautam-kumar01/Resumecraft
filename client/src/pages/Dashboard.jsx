@@ -3,6 +3,7 @@ import { useState, useEffect, useContext, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import AuthContext from '../context/AuthContext';
+import SEO from '../components/SEO';
 import { Plus, FileText, Trash2, Edit, ExternalLink, Download, Sparkles, ArrowRight, Copy, Search, Filter, BarChart, Briefcase } from 'lucide-react';
 
 const Dashboard = () => {
@@ -125,6 +126,10 @@ const Dashboard = () => {
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <SEO 
+                title="My Dashboard" 
+                description="Manage your professional resumes and access premium MNC templates."
+            />
             {/* MNC Blueprints Quick Start */}
             <div className="mb-12">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">

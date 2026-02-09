@@ -2,6 +2,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import AuthContext from '../context/AuthContext';
+import SEO from '../components/SEO';
 import {
     FileText,
     Zap,
@@ -45,6 +46,10 @@ const Home = () => {
 
     return (
         <div className="bg-white">
+            <SEO 
+                title="Best AI Resume Builder for MNC Jobs" 
+                description="Create professional resumes in minutes with ResumeCraft. AI-powered content, MNC-approved templates (Google, Amazon, etc.), and ATS-friendly formats."
+            />
             {/* Hero Section */}
             <section className="relative pt-20 pb-16 lg:pt-32 lg:pb-24 overflow-hidden">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

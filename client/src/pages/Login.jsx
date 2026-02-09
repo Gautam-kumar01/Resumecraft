@@ -1,6 +1,7 @@
 import { useState, useContext } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
+import SEO from '../components/SEO';
 import { GoogleLogin } from '@react-oauth/google';
 import Logo from '../components/Logo';
 
@@ -45,6 +46,10 @@ const Login = () => {
 
     return (
         <div className="min-h-[calc(100vh-64px)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-slate-50">
+            <SEO 
+                title="Login" 
+                description="Sign in to ResumeCraft to continue building your professional resume."
+            />
             <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-xl border border-slate-100">
                 <div className="text-center">
                     <div className="flex justify-center mb-6">
