@@ -22,7 +22,7 @@ const ResumePreview = ({ resume }) => {
 
     // --- Template 1: MODERN (Original) ---
     const ModernTemplate = () => (
-        <div className="bg-white p-12 min-h-[1000px] font-sans" id="resume-preview">
+        <div className="bg-white p-12 min-h-[1000px] font-sans" id="resume-preview-modern">
             <header className="border-b-2 border-slate-900 pb-8 mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 text-slate-900">
                 <div className="flex-1">
                     <h1 className="text-4xl font-bold uppercase tracking-widest mb-2">{personalInfo?.fullName || 'Your Name'}</h1>
@@ -105,7 +105,7 @@ const ResumePreview = ({ resume }) => {
 
     // --- Template 2: VISUAL (Recruiter Eye-Catching) ---
     const VisualTemplate = () => (
-        <div className="bg-white min-h-[1000px] border-t-[12px] border-rose-500 font-sans shadow-2xl overflow-hidden" id="resume-preview">
+        <div className="bg-white min-h-[1000px] border-t-[12px] border-rose-500 font-sans shadow-2xl overflow-hidden" id="resume-preview-visual">
             <div className="flex flex-col md:flex-row h-full">
                 {/* Visual Sidebar */}
                 <div className="w-full md:w-80 bg-slate-900 text-white p-10 space-y-12">
@@ -214,7 +214,7 @@ const ResumePreview = ({ resume }) => {
 
     // --- Template 3: ELEGANT (Classic Single Column) ---
     const ElegantTemplate = () => (
-        <div className="bg-white p-12 min-h-[1000px] font-serif max-w-4xl mx-auto shadow-2xl" id="resume-preview">
+        <div className="bg-white p-12 min-h-[1000px] font-serif max-w-4xl mx-auto shadow-2xl" id="resume-preview-elegant">
             <div className="text-center mb-12 border-b-2 border-slate-200 pb-12">
                 <h1 className="text-5xl font-light tracking-tight text-slate-900 mb-4">{personalInfo?.fullName || 'Your Name'}</h1>
                 <div className="flex justify-center space-x-6 text-sm text-slate-500 italic mb-6">

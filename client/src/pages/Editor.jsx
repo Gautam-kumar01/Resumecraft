@@ -60,74 +60,68 @@ const Editor = () => {
     };
 
     const handleDownload = async () => {
-        const input = document.getElementById('resume-preview');
+        const templateId = resume.templateId || 'modern';
+        const elementId = `resume-preview-${templateId}`;
+        const input = document.getElementById(elementId);
+        
         if (!input) {
-            console.error("Resume preview element not found!");
+            console.error(`Resume preview element not found: #${elementId}`);
+            alert("Could not find resume preview. Please refresh the page and try again.");
             return;
         }
 
         setDownloading(true);
+        
+        // Direct local generation (Backend PDF generation is disabled on Vercel)
         try {
-            console.log("Using High-Fidelity Backend PDF Engine...");
+            console.log("Starting local PDF generation...");
+            
+            // Clone the element to isolate it from page scaling/layout issues
+            const clone = input.cloneNode(true);
+            
+            // Create a container for the clone that mimics A4 dimensions
+            const container = document.createElement('div');
+            container.style.position = 'fixed';
+            container.style.top = '-10000px'; // Off-screen
+            container.style.left = '0';
+            container.style.width = '210mm'; // Exact A4 width
+            container.style.zIndex = '-1000';
+            // Remove any transform scaling that might be on parent elements
+            container.style.transform = 'none';
+            
+            container.appendChild(clone);
+            document.body.appendChild(container);
 
-            // Get all styles to send to the backend
-            const styles = Array.from(document.styleSheets)
-                .map(styleSheet => {
-                    try {
-                        return Array.from(styleSheet.cssRules)
-                            .map(rule => rule.cssText)
-                            .join('\n');
-                    } catch (e) {
-                        return '';
-                    }
-                })
-                .join('\n');
+            // Wait a moment for images to settle in the clone
+            await new Promise(resolve => setTimeout(resolve, 500));
 
-            const contentHtml = `
-                <html>
-                    <head>
-                        <style>${styles}</style>
-                        <style>
-                            body { background: white; margin: 0; padding: 0; }
-                            #resume-preview { box-shadow: none !important; width: 100% !important; padding: 40px !important; }
-                        </style>
-                    </head>
-                    <body>
-                        ${input.outerHTML}
-                    </body>
-                </html>
-            `;
-
-            const response = await api.post('/resumes/pdf', { html: contentHtml }, {
-                responseType: 'blob'
+            const canvas = await html2canvas(clone, { 
+                scale: 2, // High quality
+                useCORS: true, // Allow cross-origin images
+                logging: false,
+                backgroundColor: '#ffffff',
+                windowWidth: container.scrollWidth,
+                windowHeight: container.scrollHeight
             });
 
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', `${resume.title || 'resume'}.pdf`);
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
+            // Cleanup clone
+            document.body.removeChild(container);
 
-            console.log("Backend PDF generated successfully.");
-        } catch (err) {
-            console.error("Backend PDF Error:", err);
-            alert("Professional PDF generation failed. Using local fallback...");
-
-            // Fallback to local if backend fails
-            try {
-                const canvas = await html2canvas(input, { scale: 2, useCORS: true });
-                const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                pdf.addImage(imgData, 'PNG', 0, 0, 210, 297);
-                pdf.save(`${resume.title || 'resume'}.pdf`);
-            } catch (fallbackErr) {
-                alert("Both download methods failed. Please try again later.");
-            }
-        } finally {
-            setDownloading(false);
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+            
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            pdf.save(`${resume.title || 'resume'}.pdf`);
+            
+            console.log("Local PDF generated successfully.");
+        } catch (fallbackErr) {
+            console.error("Local PDF Error:", fallbackErr);
+            alert("Download failed. Please check your console for details or try a different browser.");
         }
+        
+        setDownloading(false);
     };
 
     const handleChange = (section, field, value) => {
