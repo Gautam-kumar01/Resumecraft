@@ -82,10 +82,11 @@ const Editor = () => {
             // Create a container for the clone that mimics A4 dimensions
             const container = document.createElement('div');
             container.style.position = 'fixed';
-            container.style.top = '-10000px'; // Off-screen
+            container.style.top = '0'; // Changed from -10000px to avoid viewport issues
             container.style.left = '0';
             container.style.width = '210mm'; // Exact A4 width
-            container.style.zIndex = '-1000';
+            container.style.zIndex = '-9999'; // Behind everything
+            container.style.background = 'white';
             // Remove any transform scaling that might be on parent elements
             container.style.transform = 'none';
             
@@ -93,7 +94,7 @@ const Editor = () => {
             document.body.appendChild(container);
 
             // Wait a moment for images to settle in the clone
-            await new Promise(resolve => setTimeout(resolve, 500));
+            await new Promise(resolve => setTimeout(resolve, 800));
 
             const canvas = await html2canvas(clone, { 
                 scale: 2, // High quality
@@ -101,7 +102,11 @@ const Editor = () => {
                 logging: false,
                 backgroundColor: '#ffffff',
                 windowWidth: container.scrollWidth,
-                windowHeight: container.scrollHeight
+                windowHeight: container.scrollHeight,
+                scrollX: 0,
+                scrollY: 0,
+                x: 0,
+                y: 0
             });
 
             // Cleanup clone
@@ -118,7 +123,7 @@ const Editor = () => {
             console.log("Local PDF generated successfully.");
         } catch (fallbackErr) {
             console.error("Local PDF Error:", fallbackErr);
-            alert("Download failed. Please check your console for details or try a different browser.");
+            alert(`Download failed: ${fallbackErr.message || "Unknown error"}. Please try a different browser.`);
         }
         
         setDownloading(false);
