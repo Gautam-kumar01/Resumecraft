@@ -26,11 +26,7 @@ const Home = () => {
     const navigate = useNavigate();
 
     const handleBlueprintClick = () => {
-        if (user) {
-            navigate('/dashboard');
-        } else {
-            navigate('/login');
-        }
+        navigate('/editor');
     };
 
     const mncCards = [
@@ -70,14 +66,14 @@ const Home = () => {
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <Link
-                                    to="/register"
+                                    to="/editor"
                                     className="px-8 py-4 bg-slate-900 text-white rounded-xl font-bold text-lg hover:bg-slate-800 transition-all shadow-xl shadow-slate-900/20 flex items-center justify-center group"
                                 >
                                     Create new resume
                                     <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                                 </Link>
                                 <Link
-                                    to="/login"
+                                    to="/editor"
                                     className="px-8 py-4 bg-white text-slate-900 border-2 border-slate-200 rounded-xl font-bold text-lg hover:bg-slate-50 transition-all flex items-center justify-center"
                                 >
                                     Optimize my resume
@@ -299,7 +295,7 @@ const Home = () => {
                         ))}
                     </div>
                     <div className="mt-16 text-center">
-                        <Link to="/register" className="inline-flex items-center px-8 py-4 bg-rose-500 text-white rounded-xl font-bold hover:bg-rose-600 transition-all shadow-lg shadow-rose-200">
+                        <Link to="/editor" className="inline-flex items-center px-8 py-4 bg-rose-500 text-white rounded-xl font-bold hover:bg-rose-600 transition-all shadow-lg shadow-rose-200">
                             Choose a template
                         </Link>
                     </div>

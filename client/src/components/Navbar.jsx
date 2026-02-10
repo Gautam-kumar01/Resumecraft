@@ -50,7 +50,7 @@ const Navbar = () => {
                                     Login
                                 </Link>
                                 <Link
-                                    to="/register"
+                                    to="/editor"
                                     className="bg-primary hover:bg-blue-700 text-white px-5 py-2.5 rounded-full font-medium transition-all shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50"
                                 >
                                     Get Started
@@ -111,7 +111,7 @@ const Navbar = () => {
                                     Login
                                 </Link>
                                 <Link
-                                    to="/register"
+                                    to="/editor"
                                     className="bg-primary text-white px-4 py-3 rounded-xl font-bold text-center shadow-lg shadow-primary/20"
                                     onClick={() => setIsMenuOpen(false)}
                                 >

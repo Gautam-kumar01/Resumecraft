@@ -1,42 +1,105 @@
-
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
+import AuthContext from '../context/AuthContext';
 import ResumePreview from '../components/ResumePreview';
+import LoginModal from '../components/LoginModal';
 import { Save, Download, Eye, ArrowLeft, Plus, Trash2, User, Upload } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
+const initialResumeState = {
+    title: 'My Resume',
+    personalInfo: {
+        fullName: '',
+        email: '',
+        phone: '',
+        address: '',
+        linkedin: '',
+        github: '',
+        website: '',
+        profilePicture: ''
+    },
+    summary: '',
+    experience: [],
+    education: [],
+    skills: [],
+    projects: [],
+    templateId: 'modern'
+};
+
 const Editor = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { user } = useContext(AuthContext);
+    
     const [resume, setResume] = useState(null);
     const [loading, setLoading] = useState(true);
     const [downloading, setDownloading] = useState(false);
     const [saving, setSaving] = useState(false);
     const [activeSection, setActiveSection] = useState('personal');
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [pendingAction, setPendingAction] = useState(null); // 'download' or 'save'
+    
     const previewRef = useRef();
 
+    // Load resume data
     useEffect(() => {
         const fetchResume = async () => {
-            if (!id) return;
-            try {
-                const { data } = await api.get(`/resumes/${id}`);
-                setResume(data);
-            } catch (error) {
-                console.error("Error fetching resume:", error);
-            } finally {
+            if (id) {
+                // Editing existing resume from backend
+                try {
+                    const { data } = await api.get(`/resumes/${id}`);
+                    setResume(data);
+                } catch (error) {
+                    console.error("Error fetching resume:", error);
+                    navigate('/dashboard');
+                } finally {
+                    setLoading(false);
+                }
+            } else {
+                // Guest mode or creating new
+                const savedDraft = localStorage.getItem('guest_resume_draft');
+                if (savedDraft) {
+                    try {
+                        setResume(JSON.parse(savedDraft));
+                    } catch (e) {
+                        setResume(initialResumeState);
+                    }
+                } else {
+                    setResume(initialResumeState);
+                }
                 setLoading(false);
             }
         };
 
         fetchResume();
-    }, [id]);
+    }, [id, navigate]);
+
+    // Auto-save to local storage for guests
+    useEffect(() => {
+        if (!id && resume) {
+            localStorage.setItem('guest_resume_draft', JSON.stringify(resume));
+        }
+    }, [resume, id]);
 
     const handleSave = async () => {
+        if (!user) {
+            setPendingAction('save');
+            setShowLoginModal(true);
+            return;
+        }
+
         setSaving(true);
         try {
-            await api.put(`/resumes/${id}`, resume);
+            if (id) {
+                await api.put(`/resumes/${id}`, resume);
+            } else {
+                const { data } = await api.post('/resumes', resume);
+                // Clear draft and navigate to new ID
+                localStorage.removeItem('guest_resume_draft');
+                navigate(`/editor/${data._id}`, { replace: true });
+            }
         } catch (error) {
             console.error("Error saving resume:", error);
         } finally {
@@ -44,22 +107,7 @@ const Editor = () => {
         }
     };
 
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            if (file.size > 1024 * 1024) { // 1MB limit for Base64 storage
-                alert("File size too large. Please select an image under 1MB.");
-                return;
-            }
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                handleChange('personalInfo', 'profilePicture', reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
-    const handleDownload = async () => {
+    const performDownload = async () => {
         const templateId = resume.templateId || 'modern';
         const elementId = `resume-preview-${templateId}`;
         const input = document.getElementById(elementId);
@@ -72,33 +120,27 @@ const Editor = () => {
 
         setDownloading(true);
         
-        // Direct local generation (Backend PDF generation is disabled on Vercel)
         try {
             console.log("Starting local PDF generation...");
             
-            // Clone the element to isolate it from page scaling/layout issues
             const clone = input.cloneNode(true);
-            
-            // Create a container for the clone that mimics A4 dimensions
             const container = document.createElement('div');
             container.style.position = 'fixed';
-            container.style.top = '0'; // Changed from -10000px to avoid viewport issues
+            container.style.top = '0';
             container.style.left = '0';
-            container.style.width = '210mm'; // Exact A4 width
-            container.style.zIndex = '-9999'; // Behind everything
+            container.style.width = '210mm';
+            container.style.zIndex = '-9999';
             container.style.background = 'white';
-            // Remove any transform scaling that might be on parent elements
             container.style.transform = 'none';
             
             container.appendChild(clone);
             document.body.appendChild(container);
 
-            // Wait a moment for images to settle in the clone
             await new Promise(resolve => setTimeout(resolve, 800));
 
             const canvas = await html2canvas(clone, { 
-                scale: 2, // High quality
-                useCORS: true, // Allow cross-origin images
+                scale: 2,
+                useCORS: true,
                 logging: false,
                 backgroundColor: '#ffffff',
                 windowWidth: container.scrollWidth,
@@ -109,7 +151,6 @@ const Editor = () => {
                 y: 0
             });
 
-            // Cleanup clone
             document.body.removeChild(container);
 
             const imgData = canvas.toDataURL('image/png');
@@ -129,6 +170,63 @@ const Editor = () => {
         setDownloading(false);
     };
 
+    const handleDownload = async () => {
+        if (!user) {
+            setPendingAction('download');
+            setShowLoginModal(true);
+            return;
+        }
+        await performDownload();
+    };
+
+    const handleLoginSuccess = async () => {
+        // User just logged in. 
+        // 1. Save the guest resume to backend to create a record
+        // 2. Perform the pending action (download or just save)
+        
+        setSaving(true);
+        try {
+            // Create the resume in backend
+            const { data } = await api.post('/resumes', resume);
+            
+            // Clear local draft
+            localStorage.removeItem('guest_resume_draft');
+            
+            // Update URL without page reload
+            window.history.replaceState(null, '', `/editor/${data._id}`);
+            
+            // If pending action was download, do it now
+            if (pendingAction === 'download') {
+                await performDownload();
+            }
+            
+            // Navigate to proper URL (this might cause re-render but that's fine)
+             navigate(`/editor/${data._id}`, { replace: true });
+             
+        } catch (error) {
+            console.error("Error syncing guest resume:", error);
+            alert("Resume saved locally but failed to sync. Please try saving again.");
+        } finally {
+            setSaving(false);
+            setPendingAction(null);
+        }
+    };
+
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            if (file.size > 1024 * 1024) { 
+                alert("File size too large. Please select an image under 1MB.");
+                return;
+            }
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                handleChange('personalInfo', 'profilePicture', reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     const handleChange = (section, field, value) => {
         setResume(prev => ({
             ...prev,
@@ -139,7 +237,6 @@ const Editor = () => {
         }));
     };
 
-    // Helper to update arrays
     const handleArrayChange = (section, index, field, value) => {
         const newArray = [...resume[section]];
         newArray[index] = { ...newArray[index], [field]: value };
@@ -164,12 +261,20 @@ const Editor = () => {
     if (!resume) return <div className="p-10 text-center">Resume not found</div>;
 
     return (
-        <div className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] h-auto overflow-y-auto md:overflow-hidden">
+        <div className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] h-auto overflow-y-auto md:overflow-hidden relative">
+            <LoginModal 
+                isOpen={showLoginModal} 
+                onClose={() => setShowLoginModal(false)}
+                onSuccess={handleLoginSuccess}
+                title="🎉 Your resume is ready!"
+                subtitle="Login or sign up to download and save your resume."
+            />
+
             {/* Sidebar / Form Area */}
             <div className="w-full md:w-1/2 bg-white border-r border-slate-200 overflow-y-auto p-4 md:p-8 h-auto md:h-full order-2 md:order-1">
                 <div className="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <button onClick={() => navigate('/dashboard')} className="flex items-center text-slate-500 hover:text-slate-700">
-                        <ArrowLeft className="h-4 w-4 mr-1" /> Back
+                    <button onClick={() => navigate(user ? '/dashboard' : '/')} className="flex items-center text-slate-500 hover:text-slate-700">
+                        <ArrowLeft className="h-4 w-4 mr-1" /> {user ? 'Dashboard' : 'Home'}
                     </button>
                     <div className="flex space-x-2 w-full md:w-auto">
                         <button onClick={handleSave} disabled={saving} className="flex-1 md:flex-none justify-center flex items-center px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 disabled:opacity-50">
@@ -366,7 +471,7 @@ const Editor = () => {
                         <div className="space-y-6">
                             <div className="flex justify-between items-center">
                                 <h3 className="text-lg font-bold text-slate-900">Education</h3>
-                                <button onClick={() => addItem('education', { institution: '', degree: '', startDate: '', endDate: '', description: '' })} className="text-sm text-primary font-medium hover:underline flex items-center">
+                                <button onClick={() => addItem('education', { school: '', degree: '', startDate: '', endDate: '', description: '' })} className="text-sm text-primary font-medium hover:underline flex items-center">
                                     <Plus className="h-4 w-4 mr-1" /> Add Education
                                 </button>
                             </div>
@@ -376,27 +481,30 @@ const Editor = () => {
                                         <Trash2 className="h-4 w-4" />
                                     </button>
                                     <div className="grid grid-cols-2 gap-3">
-                                        <input placeholder="Institution" value={edu.institution} onChange={(e) => handleArrayChange('education', index, 'institution', e.target.value)} className="px-3 py-2 border rounded-lg bg-white" />
+                                        <input placeholder="School" value={edu.school} onChange={(e) => handleArrayChange('education', index, 'school', e.target.value)} className="px-3 py-2 border rounded-lg bg-white" />
                                         <input placeholder="Degree" value={edu.degree} onChange={(e) => handleArrayChange('education', index, 'degree', e.target.value)} className="px-3 py-2 border rounded-lg bg-white" />
                                         <input placeholder="Start Date" value={edu.startDate} onChange={(e) => handleArrayChange('education', index, 'startDate', e.target.value)} className="px-3 py-2 border rounded-lg bg-white" />
                                         <input placeholder="End Date" value={edu.endDate} onChange={(e) => handleArrayChange('education', index, 'endDate', e.target.value)} className="px-3 py-2 border rounded-lg bg-white" />
                                     </div>
+                                    <textarea placeholder="Description" rows={3} value={edu.description} onChange={(e) => handleArrayChange('education', index, 'description', e.target.value)} className="w-full px-3 py-2 border rounded-lg bg-white" />
                                 </div>
                             ))}
                         </div>
                     )}
 
                     {activeSection === 'skills' && (
-                        <div className="space-y-4">
+                        <div className="space-y-6">
                             <h3 className="text-lg font-bold text-slate-900">Skills</h3>
-                            <p className="text-sm text-slate-500">Separate skills with commas</p>
-                            <textarea
-                                rows={4}
-                                value={resume.skills?.join(', ') || ''}
-                                onChange={(e) => setResume({ ...resume, skills: e.target.value.split(',').map(s => s.trim()) })}
-                                className="w-full px-4 py-3 border rounded-lg outline-none"
-                                placeholder="React, Node.js, Python, Design..."
-                            />
+                            <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                <p className="text-sm text-slate-500 mb-2">Separate skills with commas</p>
+                                <textarea
+                                    rows={4}
+                                    value={resume.skills?.join(', ') || ''}
+                                    onChange={(e) => setResume({ ...resume, skills: e.target.value.split(',').map(s => s.trim()) })}
+                                    className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
+                                    placeholder="Java, Python, React, Team Leadership..."
+                                />
+                            </div>
                         </div>
                     )}
 
@@ -404,7 +512,7 @@ const Editor = () => {
                         <div className="space-y-6">
                             <div className="flex justify-between items-center">
                                 <h3 className="text-lg font-bold text-slate-900">Projects</h3>
-                                <button onClick={() => addItem('projects', { name: '', description: '', link: '', technologies: [] })} className="text-sm text-primary font-medium hover:underline flex items-center">
+                                <button onClick={() => addItem('projects', { name: '', description: '', link: '' })} className="text-sm text-primary font-medium hover:underline flex items-center">
                                     <Plus className="h-4 w-4 mr-1" /> Add Project
                                 </button>
                             </div>
@@ -415,41 +523,19 @@ const Editor = () => {
                                     </button>
                                     <div className="grid grid-cols-2 gap-3">
                                         <input placeholder="Project Name" value={proj.name} onChange={(e) => handleArrayChange('projects', index, 'name', e.target.value)} className="px-3 py-2 border rounded-lg bg-white" />
-                                        <input placeholder="Link" value={proj.link} onChange={(e) => handleArrayChange('projects', index, 'link', e.target.value)} className="px-3 py-2 border rounded-lg bg-white" />
+                                        <input placeholder="Link (Optional)" value={proj.link} onChange={(e) => handleArrayChange('projects', index, 'link', e.target.value)} className="px-3 py-2 border rounded-lg bg-white" />
                                     </div>
                                     <textarea placeholder="Description" rows={3} value={proj.description} onChange={(e) => handleArrayChange('projects', index, 'description', e.target.value)} className="w-full px-3 py-2 border rounded-lg bg-white" />
                                 </div>
                             ))}
                         </div>
                     )}
-
-                    <div className="pt-6 border-t border-slate-100">
-                        <label className="flex items-center space-x-3 cursor-pointer">
-                            <input
-                                type="checkbox"
-                                checked={resume.isPublic}
-                                onChange={(e) => setResume({ ...resume, isPublic: e.target.checked })}
-                                className="form-checkbox h-5 w-5 text-primary rounded"
-                            />
-                            <div>
-                                <span className="text-slate-900 font-medium">Make Public</span>
-                                <p className="text-xs text-slate-500">Allow anyone with the link to view this resume</p>
-                            </div>
-                        </label>
-                        {resume.isPublic && (
-                            <div className="mt-2 bg-blue-50 text-blue-800 text-xs p-2 rounded flex items-center justify-between">
-                                <span className="truncate">{window.location.origin}/p/{resume._id}</span>
-                                <a href={`/p/${resume._id}`} target="_blank" className="font-bold underline ml-2">Open</a>
-                            </div>
-                        )}
-                    </div>
-
                 </div>
             </div>
 
             {/* Preview Area */}
-            <div className="w-full md:w-1/2 bg-slate-100 overflow-y-auto p-4 md:p-12 flex justify-center h-[50vh] md:h-full order-1 md:order-2 border-b md:border-b-0 border-slate-200">
-                <div className="origin-top scale-[0.4] sm:scale-[0.6] md:scale-[0.8] w-[210mm] mb-[-150mm] md:mb-0">
+            <div className="w-full md:w-1/2 bg-slate-100 p-4 md:p-8 h-[50vh] md:h-full overflow-y-auto flex items-start justify-center order-1 md:order-2">
+                <div id={`resume-preview-${resume.templateId || 'modern'}`} className="w-full max-w-[210mm] bg-white shadow-xl min-h-[297mm] origin-top transform scale-[0.6] sm:scale-[0.7] md:scale-[0.8] lg:scale-[0.9] xl:scale-100 transition-transform">
                     <ResumePreview resume={resume} />
                 </div>
             </div>

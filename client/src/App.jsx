@@ -55,9 +55,7 @@ function App() {
                 } />
 
                 <Route path="/editor/:id?" element={
-                  <ProtectedRoute>
-                    <Editor />
-                  </ProtectedRoute>
+                  <Editor />
                 } />
 
                 <Route path="/p/:id" element={<PublicResume />} />
