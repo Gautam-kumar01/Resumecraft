@@ -99,10 +99,14 @@ const Register = () => {
     const isGoogleConfigured = googleClientId && !googleClientId.includes('PLACEHOLDER');
 
     return (
-        <div className="min-h-[calc(100vh-64px)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-slate-50">
-            <SEO 
-                title="Create Account" 
-                description="Join ResumeCraft today and start building your professional resume for free."
+        <div className="min-h-[calc(100vh-64px)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-slate-50 relative overflow-hidden">
+             {/* Background Blobs - Added for consistency with Login */}
+             <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-400/30 rounded-full blur-[120px] mix-blend-multiply animate-blob"></div>
+             <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-indigo-400/30 rounded-full blur-[120px] mix-blend-multiply animate-blob animation-delay-2000"></div>
+             
+             <SEO 
+                title="Sign Up" 
+                description="Create your free account on ResumeCraft. Build professional resumes with AI assistance and get hired faster."
             />
             <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-xl border border-slate-100">
                 <div className="text-center">

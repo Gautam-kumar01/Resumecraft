@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
+import SEO from '../components/SEO';
 import { Sparkles, ArrowRight, Brain, Zap, Briefcase, Globe, Target, ShieldCheck } from 'lucide-react';
 
 const Templates = () => {
@@ -48,6 +49,10 @@ const Templates = () => {
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <SEO 
+                title="Resume Templates" 
+                description="Choose from our collection of ATS-friendly and MNC-approved resume templates. Built for Google, Amazon, and top tier companies."
+            />
             <div className="text-center mb-20">
                 <div className="inline-flex items-center space-x-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full text-primary text-xs font-bold uppercase tracking-widest mb-6">
                     <Globe className="h-3.5 w-3.5" />

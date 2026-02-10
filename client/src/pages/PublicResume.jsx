@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../api/axios';
 import ResumePreview from '../components/ResumePreview';
+import SEO from '../components/SEO';
 
 const PublicResume = () => {
     const { id } = useParams();
@@ -41,6 +42,10 @@ const PublicResume = () => {
 
     return (
         <div className="min-h-screen bg-slate-100 py-10 flex flex-col items-center overflow-x-auto">
+            <SEO 
+                title={resume.personalInfo?.fullName ? `${resume.personalInfo.fullName}'s Resume` : resume.title}
+                description={resume.summary || `Professional resume of ${resume.personalInfo?.fullName}`}
+            />
             <div className="w-[210mm] shrink-0 bg-white shadow-lg mx-auto">
                 <ResumePreview resume={resume} />
                 <div className="text-center py-8 text-slate-500 text-sm bg-slate-100">

@@ -1,10 +1,15 @@
 
 import React from 'react';
 import { ShieldCheck, Lock, Eye, Database } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const Privacy = () => {
     return (
         <div className="min-h-screen pt-24 pb-16 bg-slate-50">
+            <SEO 
+                title="Privacy Policy" 
+                description="We value your privacy. Learn how ResumeCraft collects, uses, and protects your personal data."
+            />
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="bg-white rounded-3xl shadow-xl p-12 border border-slate-100">
                     <div className="flex items-center space-x-4 mb-8">

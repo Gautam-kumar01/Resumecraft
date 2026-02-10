@@ -1,10 +1,15 @@
 
 import React from 'react';
 import { ShieldCheck, Scale, FileText, Lock } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const Terms = () => {
     return (
         <div className="min-h-screen pt-24 pb-16 bg-slate-50">
+            <SEO 
+                title="Terms & Conditions" 
+                description="Read our Terms and Conditions to understand your rights and responsibilities when using ResumeCraft."
+            />
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="bg-white rounded-3xl shadow-xl p-12 border border-slate-100">
                     <div className="flex items-center space-x-4 mb-8">

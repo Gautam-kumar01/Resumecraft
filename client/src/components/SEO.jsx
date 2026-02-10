@@ -11,7 +11,7 @@ const SEO = ({
     const siteTitle = "ResumeCraft - AI Powered Resume Builder";
     const defaultDescription = "Create professional resumes in minutes with ResumeCraft. AI-powered content, MNC-approved templates, and ATS-friendly formats. Get hired by top companies like Google, Amazon, and more.";
     const defaultKeywords = "resume builder, ai resume, free resume templates, cv maker, professional resume, mnc resume formats, ats friendly resume, job search, career growth";
-    const siteUrl = "https://resumecraft.app"; // Ideally from env
+    const siteUrl = "https://resumecraft-beta-blush.vercel.app"; // Using the deployed URL
     const defaultImage = "https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop";
 
     const metaTitle = title ? `${title} | ResumeCraft` : siteTitle;

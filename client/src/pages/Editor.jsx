@@ -4,6 +4,7 @@ import api from '../api/axios';
 import AuthContext from '../context/AuthContext';
 import ResumePreview from '../components/ResumePreview';
 import LoginModal from '../components/LoginModal';
+import SEO from '../components/SEO';
 import { Save, Download, Eye, ArrowLeft, Plus, Trash2, User, Upload } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -262,6 +263,10 @@ const Editor = () => {
 
     return (
         <div className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] h-auto overflow-y-auto md:overflow-hidden relative">
+            <SEO 
+                title={resume.title ? `${resume.title} - Editor` : "Resume Editor"} 
+                description="Edit and customize your professional resume. Choose from multiple ATS-friendly templates."
+            />
             <LoginModal 
                 isOpen={showLoginModal} 
                 onClose={() => setShowLoginModal(false)}
