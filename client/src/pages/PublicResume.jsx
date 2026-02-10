@@ -40,10 +40,10 @@ const PublicResume = () => {
     );
 
     return (
-        <div className="min-h-screen bg-slate-100 py-10 flex justify-center">
-            <div className="w-[210mm]">
+        <div className="min-h-screen bg-slate-100 py-10 flex flex-col items-center overflow-x-auto">
+            <div className="w-[210mm] shrink-0 bg-white shadow-lg mx-auto">
                 <ResumePreview resume={resume} />
-                <div className="text-center mt-8 text-slate-500 text-sm">
+                <div className="text-center py-8 text-slate-500 text-sm bg-slate-100">
                     Created with <a href="/" className="text-primary font-bold">ResumeCraft</a>
                 </div>
             </div>

@@ -59,7 +59,7 @@ const Home = () => {
                                 <Award className="h-4 w-4" />
                                 <span>India's Top Resume Templates</span>
                             </div>
-                            <h1 className="text-5xl lg:text-7xl font-extrabold text-slate-900 leading-[1.1] mb-6">
+                            <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold text-slate-900 leading-[1.1] mb-6">
                                 Get the job <br />
                                 <span className="bg-gradient-to-r from-rose-500 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
                                     2x as fast.
@@ -189,7 +189,7 @@ const Home = () => {
                         {[...mncCards, ...mncCards].map((card, i) => (
                             <div 
                                 key={i} 
-                                className="mx-4 w-72 bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden cursor-pointer hover:border-primary/50 transition-colors"
+                                className="mx-4 w-72 flex-shrink-0 bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden cursor-pointer hover:border-primary/50 transition-colors"
                                 onClick={handleBlueprintClick}
                             >
                                 <div className="h-40 bg-slate-900 relative overflow-hidden">

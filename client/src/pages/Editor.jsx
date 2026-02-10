@@ -164,22 +164,22 @@ const Editor = () => {
     if (!resume) return <div className="p-10 text-center">Resume not found</div>;
 
     return (
-        <div className="flex h-[calc(100vh-64px)] overflow-hidden">
+        <div className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] h-auto overflow-y-auto md:overflow-hidden">
             {/* Sidebar / Form Area */}
-            <div className="w-1/2 bg-white border-r border-slate-200 overflow-y-auto p-8">
-                <div className="mb-6 flex items-center justify-between">
+            <div className="w-full md:w-1/2 bg-white border-r border-slate-200 overflow-y-auto p-4 md:p-8 h-auto md:h-full order-2 md:order-1">
+                <div className="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <button onClick={() => navigate('/dashboard')} className="flex items-center text-slate-500 hover:text-slate-700">
                         <ArrowLeft className="h-4 w-4 mr-1" /> Back
                     </button>
-                    <div className="flex space-x-2">
-                        <button onClick={handleSave} disabled={saving} className="flex items-center px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 disabled:opacity-50">
+                    <div className="flex space-x-2 w-full md:w-auto">
+                        <button onClick={handleSave} disabled={saving} className="flex-1 md:flex-none justify-center flex items-center px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 disabled:opacity-50">
                             <Save className="h-4 w-4 mr-2" />
                             {saving ? 'Saving...' : 'Save'}
                         </button>
                         <button
                             onClick={handleDownload}
                             disabled={downloading}
-                            className="flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                            className="flex-1 md:flex-none justify-center flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
                         >
                             <Download className={`h-4 w-4 mr-2 ${downloading ? 'animate-bounce' : ''}`} />
                             {downloading ? 'Generating...' : 'Download PDF'}
@@ -198,7 +198,7 @@ const Editor = () => {
                 </div>
 
                 {/* Section Tabs */}
-                <div className="flex space-x-2 overflow-x-auto pb-4 mb-6 border-b border-slate-100">
+                <div className="flex space-x-2 overflow-x-auto pb-4 mb-6 border-b border-slate-100 no-scrollbar">
                     {['personal', 'summary', 'experience', 'education', 'skills', 'projects', 'templates'].map(sec => (
                         <button
                             key={sec}
@@ -448,8 +448,8 @@ const Editor = () => {
             </div>
 
             {/* Preview Area */}
-            <div className="w-1/2 bg-slate-100 overflow-y-auto p-12 flex justify-center">
-                <div className="origin-top scale-[0.8] w-[210mm]">
+            <div className="w-full md:w-1/2 bg-slate-100 overflow-y-auto p-4 md:p-12 flex justify-center h-[50vh] md:h-full order-1 md:order-2 border-b md:border-b-0 border-slate-200">
+                <div className="origin-top scale-[0.4] sm:scale-[0.6] md:scale-[0.8] w-[210mm] mb-[-150mm] md:mb-0">
                     <ResumePreview resume={resume} />
                 </div>
             </div>

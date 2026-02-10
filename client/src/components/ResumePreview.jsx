@@ -23,7 +23,7 @@ const ResumePreview = ({ resume }) => {
     // --- Template 1: MODERN (Original) ---
     const ModernTemplate = () => (
         <div className="bg-white p-12 min-h-[1000px] font-sans" id="resume-preview-modern">
-            <header className="border-b-2 border-slate-900 pb-8 mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 text-slate-900">
+            <header className="border-b-2 border-slate-900 pb-8 mb-8 flex flex-row justify-between items-center gap-6 text-slate-900">
                 <div className="flex-1">
                     <h1 className="text-4xl font-bold uppercase tracking-widest mb-2">{personalInfo?.fullName || 'Your Name'}</h1>
                     <p className="text-xl text-slate-600 font-light mb-6">{resume.title || 'Professional Title'}</p>
@@ -44,8 +44,8 @@ const ResumePreview = ({ resume }) => {
                 )}
             </header>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-                <div className="md:col-span-2 space-y-10">
+            <div className="grid grid-cols-3 gap-12">
+                <div className="col-span-2 space-y-10">
                     {summary && (
                         <section>
                             <h2 className="text-sm font-bold uppercase tracking-widest mb-4 border-b border-slate-200 pb-2">Professional Summary</h2>
@@ -106,9 +106,9 @@ const ResumePreview = ({ resume }) => {
     // --- Template 2: VISUAL (Recruiter Eye-Catching) ---
     const VisualTemplate = () => (
         <div className="bg-white min-h-[1000px] border-t-[12px] border-rose-500 font-sans shadow-2xl overflow-hidden" id="resume-preview-visual">
-            <div className="flex flex-col md:flex-row h-full">
+            <div className="flex flex-row h-full">
                 {/* Visual Sidebar */}
-                <div className="w-full md:w-80 bg-slate-900 text-white p-10 space-y-12">
+                <div className="w-80 bg-slate-900 text-white p-10 space-y-12">
                     <div className="text-center">
                         {personalInfo?.profilePicture ? (
                             <img src={personalInfo.profilePicture} className="w-40 h-40 rounded-3xl mx-auto shadow-2xl border-4 border-slate-800 object-cover mb-6 rotate-3 hover:rotate-0 transition-transform" alt="Avatar" />

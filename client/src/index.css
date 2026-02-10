@@ -166,7 +166,7 @@
 
 .marquee-track {
   display: flex;
-  width: 200%;
+  width: max-content;
   animation: marquee-left 25s linear infinite;
 }
 

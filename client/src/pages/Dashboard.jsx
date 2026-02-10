@@ -301,7 +301,7 @@ const Dashboard = () => {
                 </div>
             </div>
 
-            <div className="flex justify-between items-center mb-8 pt-8 border-t border-slate-100">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 pt-8 border-t border-slate-100 gap-4">
                 <div>
                     <h1 className="text-2xl font-bold text-slate-900">My Resumes</h1>
                     <p className="mt-1 text-slate-500">Your personalized professional collection.</p>
@@ -309,7 +309,7 @@ const Dashboard = () => {
                 <div className="flex space-x-4">
                     <button
                         onClick={createResume}
-                        className="flex items-center space-x-2 bg-primary hover:bg-blue-700 text-white px-5 py-2.5 rounded-full font-medium transition-all shadow-lg shadow-blue-500/30"
+                        className="flex items-center space-x-2 bg-primary hover:bg-blue-700 text-white px-5 py-2.5 rounded-full font-medium transition-all shadow-lg shadow-blue-500/30 w-full sm:w-auto justify-center"
                     >
                         <Plus className="h-5 w-5" />
                         <span>Create Blank</span>
