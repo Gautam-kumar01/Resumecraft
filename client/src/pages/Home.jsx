@@ -25,6 +25,27 @@ const Home = () => {
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
 
+    const handleCreateNew = () => {
+        const emptyData = {
+            personalInfo: {
+                fullName: '',
+                email: '',
+                phone: '',
+                address: '',
+                linkedin: '',
+                website: '',
+            },
+            summary: '',
+            experience: [],
+            education: [],
+            skills: [],
+            projects: [],
+            templateId: 'modern'
+        };
+        localStorage.setItem('guest_resume_draft', JSON.stringify(emptyData));
+        navigate('/editor');
+    };
+
     const handleBlueprintClick = (card) => {
         const initialData = {
             title: `${card.company} Resume`,
@@ -100,13 +121,13 @@ const Home = () => {
                                 Experience the easiest <strong>resume making online</strong>. Use our <strong>AI resume builder</strong> with recruiter-approved templates to create your professional CV in minutes.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4">
-                                <Link
-                                    to="/editor"
+                                <button
+                                    onClick={handleCreateNew}
                                     className="px-8 py-4 bg-slate-900 text-white rounded-xl font-bold text-lg hover:bg-slate-800 transition-all shadow-xl shadow-slate-900/20 flex items-center justify-center group"
                                 >
                                     Create new resume
                                     <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                                </Link>
+                                </button>
                                 <Link
                                     to="/editor"
                                     className="px-8 py-4 bg-white text-slate-900 border-2 border-slate-200 rounded-xl font-bold text-lg hover:bg-slate-50 transition-all flex items-center justify-center"
@@ -330,7 +351,7 @@ const Home = () => {
                         ))}
                     </div>
                     <div className="mt-16 text-center">
-                        <Link to="/editor" className="inline-flex items-center px-8 py-4 bg-rose-500 text-white rounded-xl font-bold hover:bg-rose-600 transition-all shadow-lg shadow-rose-200">
+                        <Link to="/templates" className="inline-flex items-center px-8 py-4 bg-rose-500 text-white rounded-xl font-bold hover:bg-rose-600 transition-all shadow-lg shadow-rose-200">
                             Choose a template
                         </Link>
                     </div>
