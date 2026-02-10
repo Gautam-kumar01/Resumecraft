@@ -50,8 +50,8 @@ const Templates = () => {
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <SEO 
-                title="Resume Templates" 
-                description="Choose from our collection of ATS-friendly and MNC-approved resume templates. Built for Google, Amazon, and top tier companies."
+                title="Free Resume Templates & Formats for Online Resume Making" 
+                description="Choose from our collection of free resume templates. Perfect for online resume making with our AI resume builder. ATS-friendly and MNC-approved."
             />
             <div className="text-center mb-20">
                 <div className="inline-flex items-center space-x-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded-full text-primary text-xs font-bold uppercase tracking-widest mb-6">
@@ -59,10 +59,10 @@ const Templates = () => {
                     <span>MNC Standard Blueprint</span>
                 </div>
                 <h1 className="text-4xl md:text-6xl font-black text-slate-900 mb-6 tracking-tight">
-                    Win at <span className="bg-gradient-to-r from-primary via-purple-600 to-blue-600 bg-clip-text text-transparent">Global Scale</span>
+                    Win with Top <span className="bg-gradient-to-r from-primary via-purple-600 to-blue-600 bg-clip-text text-transparent">Resume Formats</span>
                 </h1>
                 <p className="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-                    Industry-ready resumes designed to bypass ATS systems and impress recruiters at world-leading corporations.
+                    Industry-ready templates designed for <strong>online resume making</strong>. Bypass ATS systems and impress recruiters at world-leading corporations.
                 </p>
             </div>
 

@@ -78,8 +78,8 @@ const Home = () => {
     return (
         <div className="bg-white">
             <SEO 
-                title="Best AI Resume Builder for MNC Jobs" 
-                description="Create professional resumes in minutes with ResumeCraft. AI-powered content, MNC-approved templates (Google, Amazon, etc.), and ATS-friendly formats."
+                title="Free Resume Builder & Resume Making Online Tool" 
+                description="The best free resume making online tool. Build your professional resume in minutes with our AI resume builder. ATS-friendly templates approved by top MNCs."
             />
             {/* Hero Section */}
             <section className="relative pt-20 pb-16 lg:pt-32 lg:pb-24 overflow-hidden">
@@ -88,16 +88,16 @@ const Home = () => {
                         <div>
                             <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-rose-50 border border-rose-100 text-rose-600 font-medium text-sm mb-6">
                                 <Award className="h-4 w-4" />
-                                <span>India's Top Resume Templates</span>
+                                <span>#1 Resume Making Online Tool</span>
                             </div>
                             <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold text-slate-900 leading-[1.1] mb-6">
-                                Get the job <br />
+                                Free Online <br />
                                 <span className="bg-gradient-to-r from-rose-500 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-                                    2x as fast.
+                                    Resume Builder.
                                 </span>
                             </h1>
                             <p className="text-xl text-slate-600 mb-10 max-w-lg leading-relaxed">
-                                Use recruiter-approved templates and step-by-step content recommendations to create a new resume or optimize your current one.
+                                Experience the easiest <strong>resume making online</strong>. Use our <strong>AI resume builder</strong> with recruiter-approved templates to create your professional CV in minutes.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <Link

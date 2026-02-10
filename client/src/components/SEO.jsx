@@ -8,9 +8,9 @@ const SEO = ({
     url,
     type = 'website'
 }) => {
-    const siteTitle = "ResumeCraft - AI Powered Resume Builder";
-    const defaultDescription = "Create professional resumes in minutes with ResumeCraft. AI-powered content, MNC-approved templates, and ATS-friendly formats. Get hired by top companies like Google, Amazon, and more.";
-    const defaultKeywords = "resume builder, ai resume, free resume templates, cv maker, professional resume, mnc resume formats, ats friendly resume, job search, career growth";
+    const siteTitle = "ResumeCraft - Best Free Online Resume Builder";
+    const defaultDescription = "ResumeCraft is the best free resume making online tool. Create professional resumes in minutes with our AI resume builder. MNC-approved templates, ATS-friendly formats, and instant download.";
+    const defaultKeywords = "resume making, resume builder, resume making online, free resume builder, online resume maker, cv maker, ai resume builder, professional resume, mnc resume formats, ats friendly resume";
     const siteUrl = "https://resumecraft-beta-blush.vercel.app"; // Using the deployed URL
     const defaultImage = "https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop";
 
