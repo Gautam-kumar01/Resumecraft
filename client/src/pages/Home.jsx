@@ -25,19 +25,54 @@ const Home = () => {
     const { user } = useContext(AuthContext);
     const navigate = useNavigate();
 
-    const handleBlueprintClick = () => {
+    const handleBlueprintClick = (card) => {
+        const initialData = {
+            title: `${card.company} Resume`,
+            personalInfo: {
+                fullName: 'Your Name',
+                email: 'email@example.com',
+                phone: '+1 234 567 8900',
+                address: 'San Francisco, CA',
+                linkedin: 'linkedin.com/in/yourname',
+                github: 'github.com/yourname',
+                website: 'yourportfolio.com',
+                profilePicture: ''
+            },
+            summary: `Aspiring ${card.role} with a passion for ${card.skills.join(', ')}. Ready to contribute to ${card.company}'s innovative projects.`,
+            experience: [
+                {
+                    company: card.company,
+                    position: card.role,
+                    startDate: '2023',
+                    endDate: 'Present',
+                    description: `Working as a ${card.role} at ${card.company}. Leveraging skills in ${card.skills.join(', ')} to deliver high-impact solutions.`
+                }
+            ],
+            education: [
+                {
+                    institution: 'University of Technology',
+                    degree: 'Bachelor of Science in Computer Science',
+                    startDate: '2019',
+                    endDate: '2023'
+                }
+            ],
+            skills: card.skills,
+            projects: [],
+            templateId: 'modern'
+        };
+        localStorage.setItem('guest_resume_draft', JSON.stringify(initialData));
         navigate('/editor');
     };
 
     const mncCards = [
-        { company: 'Google', role: 'Software Engineer', skills: ['Go', 'Distributed Systems', 'Cloud'], image: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop' },
-        { company: 'Amazon', role: 'AI Engineer', skills: ['Python', 'LLMs', 'SageMaker'], image: 'https://images.unsplash.com/photo-1512758017271-d7b84c2113f1?q=80&w=800&auto=format&fit=crop' },
-        { company: 'Microsoft', role: 'Product Manager', skills: ['Roadmaps', 'Analytics', 'Stakeholders'], image: 'https://images.unsplash.com/photo-1542744094-24638eff58bb?q=80&w=800&auto=format&fit=crop' },
-        { company: 'Apple', role: 'Designer', skills: ['Figma', 'HIG', 'Prototyping'], image: 'https://images.unsplash.com/photo-1587613865763-4b8b0b10d3b3?q=80&w=800&auto=format&fit=crop' },
-        { company: 'Netflix', role: 'Data Scientist', skills: ['PySpark', 'AB Testing', 'ML'], image: 'https://images.unsplash.com/photo-1553729459-efe14ef6055d?q=80&w=800&auto=format&fit=crop' },
-        { company: 'Meta', role: 'Software Engineer', skills: ['React', 'GraphQL', 'Hack'], image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=800&auto=format&fit=crop' },
-        { company: 'Tesla', role: 'AI Engineer', skills: ['C++', 'Vision', 'Robotics'], image: 'https://images.unsplash.com/photo-1555949963-aa79dcee981d?q=80&w=800&auto=format&fit=crop' },
-        { company: 'Adobe', role: 'Designer', skills: ['Illustrator', 'After Effects', 'Brand'], image: 'https://images.unsplash.com/photo-1529336953121-a52d210b15e6?q=80&w=800&auto=format&fit=crop' }
+        { company: 'Google', role: 'Software Engineer', skills: ['Go', 'Distributed Systems', 'Cloud'], image: 'https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&q=80&w=800' },
+        { company: 'Amazon', role: 'AI Engineer', skills: ['Python', 'LLMs', 'SageMaker'], image: 'https://images.unsplash.com/photo-1523474253046-8cd2748b5fd2?auto=format&fit=crop&q=80&w=800' },
+        { company: 'Microsoft', role: 'Product Manager', skills: ['Roadmaps', 'Analytics', 'Stakeholders'], image: 'https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&q=80&w=800' },
+        { company: 'Apple', role: 'Designer', skills: ['Figma', 'HIG', 'Prototyping'], image: 'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&q=80&w=800' },
+        { company: 'Netflix', role: 'Data Scientist', skills: ['PySpark', 'AB Testing', 'ML'], image: 'https://images.unsplash.com/photo-1579621970563-ebec7560eb3e?auto=format&fit=crop&q=80&w=800' },
+        { company: 'Meta', role: 'Software Engineer', skills: ['React', 'GraphQL', 'Hack'], image: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&q=80&w=800' },
+        { company: 'Tesla', role: 'AI Engineer', skills: ['C++', 'Vision', 'Robotics'], image: 'https://images.unsplash.com/photo-1531297461136-82lw9b44d940?auto=format&fit=crop&q=80&w=800' },
+        { company: 'Adobe', role: 'Designer', skills: ['Illustrator', 'After Effects', 'Brand'], image: 'https://images.unsplash.com/photo-1626785774573-4b799312e1db?auto=format&fit=crop&q=80&w=800' }
     ];
 
     return (
@@ -137,7 +172,7 @@ const Home = () => {
                                 whileHover={{ y: -6, scale: 1.01 }}
                                 transition={{ type: 'spring', stiffness: 300, damping: 20 }}
                                 className="relative bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden group cursor-pointer"
-                                onClick={handleBlueprintClick}
+                                onClick={() => handleBlueprintClick(card)}
                             >
                                 <div className="h-40 bg-slate-900 relative overflow-hidden">
                                     <img src={card.image} alt={card.company} className="w-full h-full object-cover opacity-70 group-hover:opacity-90 transition-opacity" />
@@ -186,7 +221,7 @@ const Home = () => {
                             <div 
                                 key={i} 
                                 className="mx-4 w-72 flex-shrink-0 bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden cursor-pointer hover:border-primary/50 transition-colors"
-                                onClick={handleBlueprintClick}
+                                onClick={() => handleBlueprintClick(card)}
                             >
                                 <div className="h-40 bg-slate-900 relative overflow-hidden">
                                     <img src={card.image} alt={card.company} className="w-full h-full object-cover opacity-70" />
