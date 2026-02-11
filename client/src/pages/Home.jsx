@@ -129,10 +129,10 @@ const Home = () => {
                                     <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                                 </button>
                                 <Link
-                                    to="/editor"
+                                    to="/templates"
                                     className="px-8 py-4 bg-white text-slate-900 border-2 border-slate-200 rounded-xl font-bold text-lg hover:bg-slate-50 transition-all flex items-center justify-center"
                                 >
-                                    Optimize my resume
+                                    Choose a template
                                 </Link>
                             </div>
 

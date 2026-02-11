@@ -25,6 +25,9 @@ const Navbar = () => {
 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex items-center space-x-6">
+                        <Link to="/templates" className="text-slate-600 hover:text-primary transition-colors font-medium">
+                            Templates
+                        </Link>
                         {user ? (
                             <>
                                 <Link to="/dashboard" className="text-slate-600 hover:text-primary transition-colors font-medium">
@@ -50,7 +53,7 @@ const Navbar = () => {
                                     Login
                                 </Link>
                                 <Link
-                                    to="/editor"
+                                    to="/templates"
                                     className="bg-primary hover:bg-blue-700 text-white px-5 py-2.5 rounded-full font-medium transition-all shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50"
                                 >
                                     Get Started
@@ -75,6 +78,13 @@ const Navbar = () => {
             {isMenuOpen && (
                 <div className="md:hidden bg-white border-b border-gray-100 px-4 pt-2 pb-6 shadow-xl">
                     <div className="flex flex-col space-y-4">
+                        <Link 
+                            to="/templates" 
+                            className="text-slate-600 hover:text-primary font-medium px-2 py-2 hover:bg-slate-50 rounded-lg transition-colors"
+                            onClick={() => setIsMenuOpen(false)}
+                        >
+                            Templates
+                        </Link>
                         {user ? (
                             <>
                                 <div className="flex items-center space-x-3 px-2 py-3 bg-slate-50 rounded-lg">
@@ -111,7 +121,7 @@ const Navbar = () => {
                                     Login
                                 </Link>
                                 <Link
-                                    to="/editor"
+                                    to="/templates"
                                     className="bg-primary text-white px-4 py-3 rounded-xl font-bold text-center shadow-lg shadow-primary/20"
                                     onClick={() => setIsMenuOpen(false)}
                                 >
