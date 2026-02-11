@@ -10,7 +10,7 @@ const starterResumes = [
         targetCompanies: ['Google', 'DeepMind', 'OpenAI'],
         description: 'Elite technical blueprint optimized for Google L5+ roles. Features AI-centric wording and architecture-heavy highlights.',
         templateId: 'modern',
-        imageUrl: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop',
+        imageUrl: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=800&auto=format&fit=crop',
         personalInfo: {
             fullName: 'David "AI" Harrison',
             email: 'david.h@google-alumni.com',
@@ -59,7 +59,7 @@ const starterResumes = [
         targetCompanies: ['Amazon', 'Tesla', 'NVIDIA'],
         description: 'High-performance blueprint for Data Science and ML roles at Amazon AWS and Alexa AI.',
         templateId: 'modern',
-        imageUrl: 'https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=800&auto=format&fit=crop',
+        imageUrl: 'https://images.unsplash.com/photo-1551288560-66936b61ee2b?q=80&w=800&auto=format&fit=crop',
         personalInfo: {
             fullName: 'Sarah Chen',
             email: 'schen.data@example.com',
@@ -100,7 +100,7 @@ const starterResumes = [
         targetCompanies: ['Apple', 'Airbnb', 'Adobe'],
         description: 'Elite visual design template following the Apple Human Interface Guidelines strictly.',
         templateId: 'visual',
-        imageUrl: 'https://images.unsplash.com/photo-1512418490241-537a8a242c31?q=80&w=800&auto=format&fit=crop',
+        imageUrl: 'https://images.unsplash.com/photo-1512484776495-a09d92e8a9ec?q=80&w=800&auto=format&fit=crop',
         personalInfo: {
             fullName: 'Isabella Rossi',
             email: 'isabella.design@example.com',
@@ -140,7 +140,7 @@ const starterResumes = [
         targetCompanies: ['Goldman Sachs', 'Morgan Stanley', 'Microsoft'],
         description: 'Prestigious finance-focused blueprint for Investment Banking and Financial Planning.',
         templateId: 'elegant',
-        imageUrl: 'https://images.unsplash.com/photo-1454165833767-027ffea9e78b?q=80&w=800&auto=format&fit=crop',
+        imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop',
         personalInfo: {
             fullName: 'Jameson Thorne',
             email: 'jameson.thorne@example.com',
@@ -173,7 +173,7 @@ const starterResumes = [
         targetCompanies: ['Netflix', 'Spotify', 'Disney+'],
         description: 'High-impact blueprint for growth marketing and content strategy at major streaming giants.',
         templateId: 'visual',
-        imageUrl: 'https://images.unsplash.com/photo-1551288560-66936b61ee2b?q=80&w=800&auto=format&fit=crop',
+        imageUrl: 'https://images.unsplash.com/photo-1557838923-2985c318be48?q=80&w=800&auto=format&fit=crop',
         personalInfo: {
             fullName: 'Marcus Vane',
             email: 'marcus.v@netflix-standard.com',
@@ -212,7 +212,7 @@ const starterResumes = [
         targetCompanies: ['Meta', 'Uber', 'Twitter'],
         description: 'Optimized for high-velocity engineering cultures. Highlights React, GraphQL, and large-scale system architecture.',
         templateId: 'modern',
-        imageUrl: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=800&auto=format&fit=crop',
+        imageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=800&auto=format&fit=crop',
         personalInfo: {
             fullName: 'Jordan Lee',
             email: 'jordan.lee@meta-example.com',
@@ -251,7 +251,7 @@ const starterResumes = [
         targetCompanies: ['Tesla', 'Waymo', 'Rivian'],
         description: 'Engineering blueprint for computer vision and robotics. Emphasizes C++, real-time systems, and deep learning.',
         templateId: 'minimalist',
-        imageUrl: 'https://images.unsplash.com/photo-1555949963-aa79dcee981d?q=80&w=800&auto=format&fit=crop',
+        imageUrl: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=800&auto=format&fit=crop',
         personalInfo: {
             fullName: 'Alex Musk',
             email: 'alex.m@tesla-example.com',
@@ -290,7 +290,7 @@ const starterResumes = [
         targetCompanies: ['Adobe', 'Canva', 'Pinterest'],
         description: 'Visual-heavy blueprint for creative directors and illustrators. Showcases brand strategy and tool mastery.',
         templateId: 'visual',
-        imageUrl: 'https://images.unsplash.com/photo-1529336953121-a52d210b15e6?q=80&w=800&auto=format&fit=crop',
+        imageUrl: 'https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=800&auto=format&fit=crop',
         personalInfo: {
             fullName: 'Elena Design',
             email: 'elena.d@adobe-example.com',
