@@ -149,43 +149,60 @@ const Editor = () => {
             await new Promise(resolve => setTimeout(resolve, 1000));
 
             const canvas = await html2canvas(clone, { 
-                scale: 2,
+                scale: 3, // Increased scale for better text clarity
                 useCORS: true,
                 logging: false,
                 backgroundColor: '#ffffff',
                 windowWidth: 794,
+                letterRendering: true, // Specific option for html2canvas to handle text better
                 onclone: (clonedDoc) => {
-                     // Force fonts to be visible and fix overlapping
-                     const style = clonedDoc.createElement('style');
-                     style.innerHTML = `
-                         * { 
-                             -webkit-print-color-adjust: exact !important;
-                             color-adjust: exact !important;
-                             text-rendering: optimizeLegibility !important;
-                         }
-                         h1, h2, h3, h4, h5, h6, p, span, div {
-                             letter-spacing: normal !important;
-                             word-spacing: normal !important;
-                         }
-                         .tracking-widest { letter-spacing: 0.1em !important; }
-                          .tracking-tight { letter-spacing: -0.01em !important; }
-                          .tracking-tighter { letter-spacing: -0.02em !important; }
-                          .tracking-\[0\.2em\] { letter-spacing: 0.2em !important; }
-                          .tracking-\[0\.3em\] { letter-spacing: 0.3em !important; }
-                          .tracking-\[0\.4em\] { letter-spacing: 0.4em !important; }
-                         .whitespace-pre-wrap { white-space: pre-wrap !important; }
-                          .grid { display: grid !important; }
-                          .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
-                          .col-span-2 { grid-column: span 2 / span 2 !important; }
-                          .flex { display: flex !important; }
-                          .flex-wrap { flex-wrap: wrap !important; }
-                          .gap-2 { gap: 0.5rem !important; }
-                          .gap-4 { gap: 1rem !important; }
-                          .gap-6 { gap: 1.5rem !important; }
-                          .gap-12 { gap: 3rem !important; }
-                      `;
-                     clonedDoc.head.appendChild(style);
-                 }
+                    // Force a very basic, high-compatibility font stack and clear any spacing issues
+                    const style = clonedDoc.createElement('style');
+                    style.innerHTML = `
+                        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+                        
+                        * { 
+                            -webkit-print-color-adjust: exact !important;
+                            color-adjust: exact !important;
+                            text-rendering: auto !important;
+                            -webkit-font-smoothing: antialiased !important;
+                            font-kerning: normal !important;
+                        }
+
+                        /* Force standard fonts to prevent overlapping from custom font loading issues */
+                        body, div, p, span, h1, h2, h3, h4 {
+                            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+                            line-height: 1.5 !important;
+                            letter-spacing: 0 !important;
+                            word-spacing: 0 !important;
+                        }
+
+                        h1 { line-height: 1.2 !important; margin-bottom: 0.5rem !important; }
+                        h2, h3 { line-height: 1.3 !important; }
+
+                        /* Reset spacing classes to safe values for canvas capture */
+                        .tracking-widest { letter-spacing: 0.05em !important; }
+                        .tracking-tight { letter-spacing: -0.01em !important; }
+                        .tracking-tighter { letter-spacing: -0.02em !important; }
+                        
+                        /* Fix specific spacing in the header and sections */
+                        header div { margin-bottom: 4px !important; }
+                        header h1 { margin-bottom: 8px !important; }
+                        
+                        /* Layout fixes */
+                        .whitespace-pre-wrap { white-space: pre-wrap !important; word-break: break-word !important; }
+                        .grid { display: grid !important; }
+                        .grid-cols-3 { grid-template-columns: 2fr 1fr !important; gap: 40px !important; }
+                        .flex { display: flex !important; }
+                        .flex-wrap { flex-wrap: wrap !important; }
+                        .gap-4 { gap: 16px !important; }
+                        .gap-2 { gap: 8px !important; }
+                        
+                        /* Remove animations that might mess up capture */
+                        * { transition: none !important; animation: none !important; transform: none !important; }
+                    `;
+                    clonedDoc.head.appendChild(style);
+                }
             });
 
             document.body.removeChild(container);
