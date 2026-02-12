@@ -18,7 +18,8 @@ const starterResumes = [
             address: 'Palo Alto, CA',
             linkedin: 'linkedin.com/in/david-ai-harrison',
             github: 'github.com/david-h-ai',
-            profilePicture: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop'
+            profilePicture: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop',
+            website: 'davidharrison.ai'
         },
         skills: [
             'Deep Learning', 'PyTorch', 'Large Language Models (LLMs)', 'System Design',
