@@ -252,8 +252,8 @@ const Home = () => {
             {/* Animated Resume Showcase */}
             <section className="py-20 bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 text-center">
-                    <h2 className="text-3xl lg:text-5xl font-extrabold text-slate-900">Showcase</h2>
-                    <p className="text-slate-600 mt-3">Live, looping previews that feel like motion GIFs.</p>
+                    <h2 className="text-3xl lg:text-5xl font-extrabold text-slate-900">Elite Blueprints</h2>
+                    <p className="text-slate-600 mt-3">Interactive resume designs modeled after successful candidates at top-tier companies.</p>
                 </div>
                 <div className="marquee-wrapper">
                     <div className="marquee-track">
@@ -279,7 +279,7 @@ const Home = () => {
                                     <div className="h-24 rounded-xl border border-slate-200 overflow-hidden bg-white">
                                         <img src={card.image} alt="Resume" className="w-full h-full object-cover resume-scroll" />
                                     </div>
-                                    <div className="mt-3 text-sm font-bold text-slate-900">{card.company} • {card.role}</div>
+                                    <div className="mt-3 text-sm font-bold text-slate-900">{card.company} • {card.role} (Accepted)</div>
                                 </div>
                             </div>
                         ))}
