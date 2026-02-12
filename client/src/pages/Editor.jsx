@@ -122,108 +122,123 @@ const Editor = () => {
         setDownloading(true);
         
         try {
-            console.log("Starting local PDF generation...");
+            console.log("Starting high-fidelity PDF generation...");
             
-            // Create a temporary container for the clone
-            const container = document.createElement('div');
-            container.style.position = 'absolute';
-            container.style.left = '-9999px';
-            container.style.top = '0';
-            container.style.width = '794px'; // A4 width at 96 DPI
-            document.body.appendChild(container);
+            // Create a temporary iframe for clean printing
+            const iframe = document.createElement('iframe');
+            iframe.style.position = 'fixed';
+            iframe.style.right = '0';
+            iframe.style.bottom = '0';
+            iframe.style.width = '0';
+            iframe.style.height = '0';
+            iframe.style.border = '0';
+            document.body.appendChild(iframe);
 
-            const clone = input.cloneNode(true);
-            // Remove the ID to avoid duplicates
-            clone.removeAttribute('id');
-            // Force styles on clone
-            clone.style.width = '794px';
-            clone.style.height = 'auto';
-            clone.style.margin = '0';
-            clone.style.padding = '40px';
-            clone.style.display = 'block';
-            clone.style.backgroundColor = 'white';
+            const doc = iframe.contentWindow.document;
             
-            container.appendChild(clone);
+            // Copy all stylesheets from the main document
+            const styles = Array.from(document.styleSheets)
+                .map(styleSheet => {
+                    try {
+                        return Array.from(styleSheet.cssRules)
+                            .map(rule => rule.cssText)
+                            .join('');
+                    } catch (e) {
+                        return '';
+                    }
+                }).join('');
 
-            // Wait for images and fonts to settle
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
-            const canvas = await html2canvas(clone, { 
-                scale: 3, // Increased scale for better text clarity
-                useCORS: true,
-                logging: false,
-                backgroundColor: '#ffffff',
-                windowWidth: 794,
-                letterRendering: true, // Specific option for html2canvas to handle text better
-                onclone: (clonedDoc) => {
-                    // Force a very basic, high-compatibility font stack and clear any spacing issues
-                    const style = clonedDoc.createElement('style');
-                    style.innerHTML = `
-                        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-                        
-                        * { 
-                            -webkit-print-color-adjust: exact !important;
-                            color-adjust: exact !important;
-                            text-rendering: auto !important;
-                            -webkit-font-smoothing: antialiased !important;
-                            font-kerning: normal !important;
-                        }
-
-                        /* Force standard fonts to prevent overlapping from custom font loading issues */
-                        body, div, p, span, h1, h2, h3, h4 {
-                            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
-                            line-height: 1.5 !important;
-                            letter-spacing: 0 !important;
-                            word-spacing: 0 !important;
-                        }
-
-                        h1 { line-height: 1.2 !important; margin-bottom: 0.5rem !important; }
-                        h2, h3 { line-height: 1.3 !important; }
-
-                        /* Reset spacing classes to safe values for canvas capture */
-                        .tracking-widest { letter-spacing: 0.05em !important; }
-                        .tracking-tight { letter-spacing: -0.01em !important; }
-                        .tracking-tighter { letter-spacing: -0.02em !important; }
-                        
-                        /* Fix specific spacing in the header and sections */
-                        header div { margin-bottom: 4px !important; }
-                        header h1 { margin-bottom: 8px !important; }
-                        
-                        /* Layout fixes */
-                        .whitespace-pre-wrap { white-space: pre-wrap !important; word-break: break-word !important; }
-                        .grid { display: grid !important; }
-                        .grid-cols-3 { grid-template-columns: 2fr 1fr !important; gap: 40px !important; }
-                        .flex { display: flex !important; }
-                        .flex-wrap { flex-wrap: wrap !important; }
-                        .gap-4 { gap: 16px !important; }
-                        .gap-2 { gap: 8px !important; }
-                        
-                        /* Remove animations that might mess up capture */
-                        * { transition: none !important; animation: none !important; transform: none !important; }
-                    `;
-                    clonedDoc.head.appendChild(style);
-                }
-            });
-
-            document.body.removeChild(container);
-
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = pdf.internal.pageSize.getHeight();
+            const content = input.innerHTML;
             
-            // Calculate height to maintain aspect ratio
-            const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+            doc.open();
+            doc.write(`
+                <html>
+                    <head>
+                        <title>${resume.title || 'Resume'}</title>
+                        <style>
+                            ${styles}
+                            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+                            
+                            body {
+                                margin: 0;
+                                padding: 0;
+                                font-family: 'Inter', sans-serif !important;
+                                background: white;
+                            }
+                            
+                            /* Force the container to be A4 size */
+                            #print-root {
+                                width: 210mm;
+                                min-height: 297mm;
+                                padding: 0;
+                                margin: 0;
+                                background: white;
+                            }
+
+                            /* Fix overlapping by ensuring clean box model */
+                            * {
+                                box-sizing: border-box !important;
+                                -webkit-print-color-adjust: exact !important;
+                                print-color-adjust: exact !important;
+                            }
+
+                            /* Ensure text rendering is clean */
+                            h1, h2, h3, h4, p, span, div {
+                                line-height: 1.4 !important;
+                                letter-spacing: normal !important;
+                                word-spacing: normal !important;
+                                transform: none !important;
+                            }
+
+                            /* Fix specific overlapping in header */
+                            header {
+                                display: block !important;
+                                width: 100% !important;
+                            }
+                            
+                            header h1 {
+                                margin-bottom: 10px !important;
+                                font-size: 32pt !important;
+                            }
+
+                            /* Ensure grid/flex don't break */
+                            .grid { display: grid !important; }
+                            .flex { display: flex !important; }
+                            
+                            @page {
+                                size: A4;
+                                margin: 0;
+                            }
+                            
+                            @media print {
+                                body { width: 210mm; }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div id="print-root">
+                            ${content}
+                        </div>
+                        <script>
+                            window.onload = () => {
+                                setTimeout(() => {
+                                    window.print();
+                                }, 500);
+                            };
+                        </script>
+                    </body>
+                </html>
+            `);
+            doc.close();
+
+            // Give the user time to see the print dialog
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            document.body.removeChild(iframe);
             
-            // If the resume is longer than one page, we might need multiple pages
-            // But for now, let's ensure it fits or scales
-            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, imgHeight > pdfHeight ? pdfHeight : imgHeight);
-            pdf.save(`${resume.title || 'resume'}.pdf`);
-            
-            console.log("Local PDF generated successfully.");
-        } catch (fallbackErr) {
-            console.error("Local PDF Error:", fallbackErr);
-            alert(`Download failed: ${fallbackErr.message || "Unknown error"}. Please try a different browser.`);
+            console.log("Print dialog opened.");
+        } catch (err) {
+            console.error("PDF Error:", err);
+            alert(`Download failed: ${err.message || "Unknown error"}`);
         }
         
         setDownloading(false);
