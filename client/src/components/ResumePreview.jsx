@@ -79,9 +79,27 @@ const ResumePreview = ({ resume }) => {
                             <div className="space-y-6">
                                 {education.map((edu, i) => (
                                     <div key={i}>
-                                        <div className="font-bold">{edu.institution}</div>
+                                        <div className="font-bold">{edu.school}</div>
                                         <div className="text-slate-700">{edu.degree}</div>
                                         <div className="text-sm text-slate-500 mt-1">{edu.startDate} - {edu.endDate}</div>
+                                        {edu.description && <p className="text-sm text-slate-600 mt-2 whitespace-pre-wrap">{edu.description}</p>}
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {projects?.length > 0 && (
+                        <section>
+                            <h2 className="text-sm font-bold uppercase tracking-widest mb-6 border-b border-slate-200 pb-2">Projects</h2>
+                            <div className="space-y-6">
+                                {projects.map((proj, i) => (
+                                    <div key={i}>
+                                        <div className="flex justify-between items-baseline">
+                                            <div className="font-bold">{proj.name}</div>
+                                            {proj.link && <span className="text-xs text-indigo-600">{proj.link}</span>}
+                                        </div>
+                                        <p className="text-sm text-slate-700 mt-2 whitespace-pre-wrap">{proj.description}</p>
                                     </div>
                                 ))}
                             </div>
@@ -198,9 +216,30 @@ const ResumePreview = ({ resume }) => {
                                 <div className="grid grid-cols-2 gap-4">
                                     {education.map((edu, i) => (
                                         <div key={i} className="p-6 rounded-2xl bg-indigo-50/50 border border-indigo-100/50">
-                                            <h4 className="font-bold text-slate-900">{edu.institution}</h4>
+                                            <h4 className="font-bold text-slate-900">{edu.school}</h4>
                                             <p className="text-slate-600 text-sm mb-2">{edu.degree}</p>
-                                            <div className="text-[10px] font-black text-indigo-600 uppercase tracking-tighter">{edu.startDate} - {edu.endDate}</div>
+                                            <div className="text-[10px] font-black text-indigo-600 uppercase tracking-tighter mb-2">{edu.startDate} - {edu.endDate}</div>
+                                            {edu.description && <p className="text-xs text-slate-500 whitespace-pre-wrap line-clamp-3">{edu.description}</p>}
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+                        )}
+
+                        {projects?.length > 0 && (
+                            <section>
+                                <div className="flex items-center space-x-3 mb-6">
+                                    <div className="p-2 bg-emerald-50 rounded-xl text-emerald-500"><Code2 className="h-5 w-5" /></div>
+                                    <h2 className="text-xl font-black uppercase tracking-tight">Key Projects</h2>
+                                </div>
+                                <div className="space-y-6">
+                                    {projects.map((proj, i) => (
+                                        <div key={i} className="p-6 rounded-2xl bg-slate-50 border border-slate-100">
+                                            <div className="flex justify-between items-center mb-2">
+                                                <h4 className="font-bold text-slate-900">{proj.name}</h4>
+                                                {proj.link && <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">{proj.link}</span>}
+                                            </div>
+                                            <p className="text-slate-600 text-sm whitespace-pre-wrap">{proj.description}</p>
                                         </div>
                                     ))}
                                 </div>
@@ -245,6 +284,37 @@ const ResumePreview = ({ resume }) => {
                                     <h3 className="text-xl font-bold text-slate-900">{job.position}</h3>
                                     <div className="text-indigo-600 font-medium italic mb-4">{job.company}</div>
                                     <p className="text-slate-600 max-w-xl mx-auto whitespace-pre-wrap text-sm leading-relaxed">{job.description}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {education?.length > 0 && (
+                    <section>
+                        <h2 className="text-sm font-bold text-slate-300 uppercase tracking-[0.4em] text-center mb-8 italic">Education</h2>
+                        <div className="space-y-10">
+                            {education.map((edu, i) => (
+                                <div key={i} className="text-center">
+                                    <div className="text-xs text-slate-400 font-black mb-2 uppercase tracking-widest">{edu.startDate} — {edu.endDate}</div>
+                                    <h3 className="text-xl font-bold text-slate-900">{edu.school}</h3>
+                                    <div className="text-indigo-600 font-medium italic mb-4">{edu.degree}</div>
+                                    {edu.description && <p className="text-slate-600 max-w-xl mx-auto whitespace-pre-wrap text-sm leading-relaxed">{edu.description}</p>}
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {projects?.length > 0 && (
+                    <section>
+                        <h2 className="text-sm font-bold text-slate-300 uppercase tracking-[0.4em] text-center mb-8 italic">Projects</h2>
+                        <div className="space-y-10">
+                            {projects.map((proj, i) => (
+                                <div key={i} className="text-center">
+                                    <h3 className="text-xl font-bold text-slate-900">{proj.name}</h3>
+                                    {proj.link && <div className="text-indigo-600 text-xs mb-4">{proj.link}</div>}
+                                    <p className="text-slate-600 max-w-xl mx-auto whitespace-pre-wrap text-sm leading-relaxed">{proj.description}</p>
                                 </div>
                             ))}
                         </div>
