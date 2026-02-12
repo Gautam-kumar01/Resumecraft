@@ -213,30 +213,36 @@ const Dashboard = () => {
                             <div className="h-64 w-full relative overflow-hidden bg-slate-900">
                                 <img
                                     src={template.imageUrl || 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop'}
-                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 opacity-60 group-hover:opacity-80"
+                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 opacity-80 group-hover:opacity-100"
                                     alt={template.title}
+                                    onError={(e) => {
+                                        e.target.src = 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop';
+                                        e.target.className = "w-full h-full object-cover opacity-40";
+                                    }}
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/20 to-transparent"></div>
+                                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/40 to-transparent"></div>
 
                                 {/* Glassmorphism Mini-Card Overlay */}
                                 <div className="absolute inset-0 p-4 flex flex-col justify-end">
-                                    <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                                    <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 shadow-2xl">
                                         <div className="flex items-center justify-between mb-2">
                                             <div className="flex items-center space-x-2">
-                                                <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center">
-                                                    <Sparkles className="h-3 w-3 text-primary" />
+                                                <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
+                                                    <Sparkles className="h-3 w-3 text-white" />
                                                 </div>
                                                 <span className="text-[9px] font-black text-white uppercase tracking-widest">AI Engineered</span>
                                             </div>
                                             {template.atsScore && (
-                                                <span className="text-[10px] font-bold text-green-400 bg-green-400/10 px-1.5 py-0.5 rounded border border-green-400/20">
+                                                <span className="text-[10px] font-bold text-green-400 bg-green-950/50 px-1.5 py-0.5 rounded border border-green-400/30 backdrop-blur-sm">
                                                     {template.atsScore} ATS
                                                 </span>
                                             )}
                                         </div>
                                         <div className="space-y-1.5">
-                                            <div className="h-1 w-full bg-white/20 rounded-full"></div>
-                                            <div className="h-1 w-2/3 bg-white/10 rounded-full"></div>
+                                            <div className="h-1.5 w-full bg-white/30 rounded-full overflow-hidden">
+                                                <div className="h-full bg-primary/60 w-3/4"></div>
+                                            </div>
+                                            <div className="h-1.5 w-2/3 bg-white/20 rounded-full"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -339,9 +345,34 @@ const Dashboard = () => {
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {resumes.map((resume) => (
                         <div key={resume._id} className="group bg-white rounded-2xl border border-slate-200 hover:border-primary/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-                            <div className="h-40 bg-slate-100 relative items-center justify-center flex">
-                                {/* Placeholder for preview image */}
-                                <FileText className="h-12 w-12 text-slate-300 group-hover:text-primary/50 transition-colors" />
+                            <div className="h-40 bg-slate-50 relative overflow-hidden border-b border-slate-100 p-4">
+                                <div className="absolute inset-0 bg-gradient-to-br from-slate-100 to-white"></div>
+                                {/* Mini Resume Mockup */}
+                                <div className="relative h-full bg-white shadow-sm border border-slate-200 rounded-sm p-3 transform group-hover:scale-105 group-hover:rotate-1 transition-transform duration-500 origin-top">
+                                    <div className="flex items-center space-x-2 mb-2">
+                                        <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center overflow-hidden">
+                                            {resume.personalInfo?.profilePicture ? (
+                                                <img src={resume.personalInfo.profilePicture} className="w-full h-full object-cover" alt="Profile" />
+                                            ) : (
+                                                <FileText className="h-3 w-3 text-slate-400" />
+                                            )}
+                                        </div>
+                                        <div className="space-y-0.5">
+                                            <div className="h-1.5 w-16 bg-slate-200 rounded-full"></div>
+                                            <div className="h-1 w-10 bg-slate-100 rounded-full"></div>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-1.5 mt-3">
+                                        <div className="h-1 w-full bg-slate-100 rounded-full"></div>
+                                        <div className="h-1 w-full bg-slate-50 rounded-full"></div>
+                                        <div className="h-1 w-2/3 bg-slate-50 rounded-full"></div>
+                                    </div>
+                                    <div className="mt-4 flex space-x-1">
+                                        <div className="h-1.5 w-4 bg-primary/20 rounded-full"></div>
+                                        <div className="h-1.5 w-4 bg-primary/20 rounded-full"></div>
+                                        <div className="h-1.5 w-4 bg-primary/20 rounded-full"></div>
+                                    </div>
+                                </div>
                                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors" />
                             </div>
                             <div className="p-6">

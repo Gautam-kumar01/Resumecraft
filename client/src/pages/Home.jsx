@@ -207,8 +207,16 @@ const Home = () => {
                                 onClick={() => handleBlueprintClick(card)}
                             >
                                 <div className="h-40 bg-slate-900 relative overflow-hidden">
-                                    <img src={card.image} alt={card.company} className="w-full h-full object-cover opacity-70 group-hover:opacity-90 transition-opacity" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/20 to-transparent"></div>
+                                    <img 
+                                        src={card.image} 
+                                        alt={card.company} 
+                                        className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" 
+                                        onError={(e) => {
+                                            e.target.src = 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop';
+                                            e.target.className = "w-full h-full object-cover opacity-40";
+                                        }}
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/40 to-transparent"></div>
                                     <div className="absolute inset-0 p-4 flex items-end">
                                         <div className="w-full bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3">
                                             <div className="h-2 w-full bg-white/20 rounded-full mb-1"></div>
@@ -256,8 +264,16 @@ const Home = () => {
                                 onClick={() => handleBlueprintClick(card)}
                             >
                                 <div className="h-40 bg-slate-900 relative overflow-hidden">
-                                    <img src={card.image} alt={card.company} className="w-full h-full object-cover opacity-70" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/20 to-transparent"></div>
+                                    <img 
+                                        src={card.image} 
+                                        alt={card.company} 
+                                        className="w-full h-full object-cover opacity-80" 
+                                        onError={(e) => {
+                                            e.target.src = 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop';
+                                            e.target.className = "w-full h-full object-cover opacity-40";
+                                        }}
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/40 to-transparent"></div>
                                 </div>
                                 <div className="p-4">
                                     <div className="h-24 rounded-xl border border-slate-200 overflow-hidden bg-white">

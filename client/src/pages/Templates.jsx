@@ -74,12 +74,16 @@ const Templates = () => {
                         <div className="md:w-[45%] h-64 md:h-auto p-0 relative overflow-hidden shrink-0">
                             <img
                                 src={template.imageUrl || 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop'}
-                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-90 group-hover:opacity-100"
                                 alt={template.role}
+                                onError={(e) => {
+                                    e.target.src = 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop';
+                                    e.target.className = "w-full h-full object-cover opacity-50";
+                                }}
                             />
                             {/* Animated light effect */}
                             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/20 blur-[80px] rounded-full group-hover:bg-primary/30 transition-colors duration-700"></div>
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-60"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-80"></div>
 
                             <div className="absolute bottom-10 left-10 z-10">
                                 <div className="text-white/50 text-[10px] font-bold uppercase tracking-wider mb-2">Core Industry</div>
