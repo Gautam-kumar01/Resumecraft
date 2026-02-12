@@ -287,13 +287,39 @@ const AIWorkspace = () => {
     { role: 'ai', content: "Hello! I'm your AI career assistant. I can help you optimize your bullet points or write a powerful professional summary. What would you like to work on?" }
   ]);
   const [typing, setTyping] = useState(false);
+  const [input, setInput] = useState('');
 
-  const simulateAI = () => {
+  const simulateAI = async () => {
+    if (!input.trim()) return;
+    
+    const userMessage = input.trim();
+    setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+    setInput('');
     setTyping(true);
-    setTimeout(() => {
-      setMessages(prev => [...prev, { role: 'ai', content: "Based on your experience as a Senior Software Engineer, I suggest adding: 'Spearheaded the migration of legacy monolith to microservices architecture, improving system scalability by 40%.' Would you like to use this?" }]);
+
+    try {
+      // Basic logic to handle specific keywords for Software Engineer
+      let aiResponse = "";
+      const lowerMsg = userMessage.toLowerCase();
+
+      if (lowerMsg.includes('software engineer') || lowerMsg.includes('swe') || lowerMsg.includes('developer')) {
+        aiResponse = "As a Software Engineer, your resume should highlight technical impact. I recommend using metrics like 'Reduced latency by 30%' or 'Scaled system to handle 1M+ requests'. Would you like me to help rewrite a specific bullet point with these metrics?";
+      } else if (lowerMsg.includes('summary') || lowerMsg.includes('summarize')) {
+        aiResponse = "A powerful professional summary should be concise. For example: 'Innovative Software Engineer with 5+ years of experience in full-stack development and cloud architecture. Proven track record of optimizing system performance and leading cross-functional teams.' Does this match your profile?";
+      } else if (lowerMsg.includes('project') || lowerMsg.includes('description')) {
+        aiResponse = "For project descriptions, use the STAR method (Situation, Task, Action, Result). For your software projects, focus on the tech stack and the specific problem you solved. For example: 'Built a real-time analytics dashboard using React and Node.js, resulting in a 20% increase in data visibility for stakeholders.'";
+      } else {
+        aiResponse = "That's a great question. To give you the best career strategy, could you tell me more about your target role or a specific part of your resume you'd like to improve?";
+      }
+
+      setTimeout(() => {
+        setMessages(prev => [...prev, { role: 'ai', content: aiResponse }]);
+        setTyping(false);
+      }, 1000);
+    } catch (error) {
+      setMessages(prev => [...prev, { role: 'ai', content: "I'm having trouble connecting right now, but I can still give you general advice: Always quantify your achievements!" }]);
       setTyping(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -355,6 +381,8 @@ const AIWorkspace = () => {
         <div className="p-8 border-t border-slate-50 bg-white">
           <div className="relative group">
             <input 
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
               placeholder="E.g. 'Help me optimize my project bullet points'..." 
               className="w-full pl-8 pr-16 py-5 bg-slate-50 border-2 border-transparent focus:border-purple-100 focus:bg-white rounded-[24px] outline-none text-sm font-medium transition-all duration-300"
               onKeyPress={(e) => e.key === 'Enter' && simulateAI()}
@@ -371,7 +399,13 @@ const AIWorkspace = () => {
       
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {['Fix Grammar', 'Add Metrics', 'Power Verbs', 'Summarize'].map((action) => (
-          <button key={action} className="p-4 bg-white rounded-2xl border border-slate-100 text-xs font-bold text-slate-600 hover:border-purple-200 hover:bg-purple-50 transition-all flex flex-col items-center space-y-2">
+          <button 
+            key={action} 
+            onClick={() => {
+              setInput(`Can you help me ${action.toLowerCase()} my resume?`);
+            }}
+            className="p-4 bg-white rounded-2xl border border-slate-100 text-xs font-bold text-slate-600 hover:border-purple-200 hover:bg-purple-50 transition-all flex flex-col items-center space-y-2"
+          >
             <Sparkles className="w-4 h-4 text-purple-500" />
             <span>{action}</span>
           </button>
