@@ -252,9 +252,8 @@ const Home = () => {
             {/* Animated Resume Showcase */}
             <section className="py-20 bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 text-center">
-                    <h2 className="text-3xl lg:text-5xl font-extrabold text-slate-900">Modern SaaS Style</h2>
-                    <p className="text-xl font-bold text-slate-800 mt-4">Design Your Resume. Impress Recruiters. Get Hired.</p>
-                    <p className="text-slate-600 mt-2">Smart templates. Real-time preview. ATS-friendly formats.</p>
+                    <p className="text-3xl lg:text-5xl font-extrabold text-slate-900">Design Your Resume. Impress Recruiters. Get Hired.</p>
+                    <p className="text-slate-600 mt-4 text-lg">Smart templates. Real-time preview. ATS-friendly formats.</p>
                 </div>
                 <div className="marquee-wrapper">
                     <div className="marquee-track">
