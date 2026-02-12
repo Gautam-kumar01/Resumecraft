@@ -122,123 +122,94 @@ const Editor = () => {
         setDownloading(true);
         
         try {
-            console.log("Starting high-fidelity PDF generation...");
+            console.log("Starting high-fidelity mobile-friendly PDF generation...");
             
-            // Create a temporary iframe for clean printing
-            const iframe = document.createElement('iframe');
-            iframe.style.position = 'fixed';
-            iframe.style.right = '0';
-            iframe.style.bottom = '0';
-            iframe.style.width = '0';
-            iframe.style.height = '0';
-            iframe.style.border = '0';
-            document.body.appendChild(iframe);
+            // Create a dedicated hidden container for the capture
+            const container = document.createElement('div');
+            container.style.position = 'fixed';
+            container.style.left = '-9999px';
+            container.style.top = '0';
+            container.style.width = '210mm'; // Standard A4 width
+            container.style.backgroundColor = 'white';
+            document.body.appendChild(container);
 
-            const doc = iframe.contentWindow.document;
+            // Clone the resume content
+            const clone = input.cloneNode(true);
+            clone.style.width = '210mm';
+            clone.style.margin = '0';
+            clone.style.padding = '0';
+            clone.style.transform = 'none';
             
-            // Copy all stylesheets from the main document
-            const styles = Array.from(document.styleSheets)
-                .map(styleSheet => {
-                    try {
-                        return Array.from(styleSheet.cssRules)
-                            .map(rule => rule.cssText)
-                            .join('');
-                    } catch (e) {
-                        return '';
-                    }
-                }).join('');
+            // Apply specific styles to the clone to fix overlapping and spacing
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+                
+                * {
+                    box-sizing: border-box !important;
+                    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+                    text-rendering: optimizeLegibility !important;
+                    -webkit-font-smoothing: antialiased !important;
+                    letter-spacing: 0.01em !important; /* Slightly positive to prevent overlap */
+                }
 
-            const content = input.innerHTML;
+                h1, h2, h3, h4, p, span {
+                    line-height: 1.4 !important;
+                    margin-bottom: 0.2rem !important;
+                }
+
+                h1 { font-size: 28pt !important; margin-bottom: 0.5rem !important; }
+                h2 { font-size: 14pt !important; margin-top: 1rem !important; }
+
+                /* Fix layout for templates */
+                .grid { display: grid !important; }
+                .flex { display: flex !important; }
+                .grid-cols-3 { grid-template-columns: 2fr 1fr !important; gap: 40px !important; }
+                
+                /* Ensure background colors are captured */
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            `;
             
-            doc.open();
-            doc.write(`
-                <html>
-                    <head>
-                        <title>${resume.title || 'Resume'}</title>
-                        <style>
-                            ${styles}
-                            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-                            
-                            body {
-                                margin: 0;
-                                padding: 0;
-                                font-family: 'Inter', sans-serif !important;
-                                background: white;
-                            }
-                            
-                            /* Force the container to be A4 size */
-                            #print-root {
-                                width: 210mm;
-                                min-height: 297mm;
-                                padding: 0;
-                                margin: 0;
-                                background: white;
-                            }
+            container.appendChild(style);
+            container.appendChild(clone);
 
-                            /* Fix overlapping by ensuring clean box model */
-                            * {
-                                box-sizing: border-box !important;
-                                -webkit-print-color-adjust: exact !important;
-                                print-color-adjust: exact !important;
-                            }
+            // Wait for images and fonts
+            await new Promise(resolve => setTimeout(resolve, 1500));
 
-                            /* Ensure text rendering is clean */
-                            h1, h2, h3, h4, p, span, div {
-                                line-height: 1.4 !important;
-                                letter-spacing: normal !important;
-                                word-spacing: normal !important;
-                                transform: none !important;
-                            }
+            const canvas = await html2canvas(clone, {
+                scale: 2,
+                useCORS: true,
+                logging: false,
+                backgroundColor: '#ffffff',
+                width: clone.offsetWidth,
+                height: clone.offsetHeight,
+                windowWidth: 1024, // Fix viewport for mobile
+                onclone: (clonedDoc) => {
+                    // Final cleanup on the captured document
+                    const element = clonedDoc.querySelector('[style*="fixed"]');
+                    if (element) element.style.display = 'none';
+                }
+            });
 
-                            /* Fix specific overlapping in header */
-                            header {
-                                display: block !important;
-                                width: 100% !important;
-                            }
-                            
-                            header h1 {
-                                margin-bottom: 10px !important;
-                                font-size: 32pt !important;
-                            }
+            document.body.removeChild(container);
 
-                            /* Ensure grid/flex don't break */
-                            .grid { display: grid !important; }
-                            .flex { display: flex !important; }
-                            
-                            @page {
-                                size: A4;
-                                margin: 0;
-                            }
-                            
-                            @media print {
-                                body { width: 210mm; }
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <div id="print-root">
-                            ${content}
-                        </div>
-                        <script>
-                            window.onload = () => {
-                                setTimeout(() => {
-                                    window.print();
-                                }, 500);
-                            };
-                        </script>
-                    </body>
-                </html>
-            `);
-            doc.close();
-
-            // Give the user time to see the print dialog
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            document.body.removeChild(iframe);
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
             
-            console.log("Print dialog opened.");
+            const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+            
+            // Add image to PDF - handle multi-page if needed
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, imgHeight);
+            
+            pdf.save(`${resume.title || 'resume'}.pdf`);
+            
+            console.log("PDF generated and downloaded.");
         } catch (err) {
             console.error("PDF Error:", err);
-            alert(`Download failed: ${err.message || "Unknown error"}`);
+            alert(`Download failed: ${err.message || "Unknown error"}. Please try again.`);
         }
         
         setDownloading(false);
