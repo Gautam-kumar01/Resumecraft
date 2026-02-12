@@ -1,11 +1,9 @@
 
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
-import AuthContext from '../context/AuthContext';
 import SEO from '../components/SEO';
 import {
     FileText,
-    Zap,
     Award,
     Clock,
     Target,
@@ -20,13 +18,21 @@ import {
 } from 'lucide-react';
 import Logo from '../components/Logo';
 import { motion } from 'framer-motion';
+import FeatureShowcase from '../components/FeatureShowcase';
 
 const Home = () => {
-    const { user } = useContext(AuthContext);
     const navigate = useNavigate();
+    const [showcaseOpen, setShowcaseOpen] = useState(false);
+    const [activeFeature, setActiveFeature] = useState(0);
+
+    const openFeature = (index) => {
+        setActiveFeature(index);
+        setShowcaseOpen(true);
+    };
 
     const handleCreateNew = () => {
         const emptyData = {
+            title: 'Untitled Resume',
             personalInfo: {
                 fullName: '',
                 email: '',
@@ -34,6 +40,7 @@ const Home = () => {
                 address: '',
                 linkedin: '',
                 website: '',
+                profilePicture: ''
             },
             summary: '',
             experience: [],
@@ -48,16 +55,16 @@ const Home = () => {
 
     const handleBlueprintClick = (card) => {
         const initialData = {
-            title: `${card.company} Resume`,
+            title: `${card.company} ${card.role} Blueprint`,
             personalInfo: {
-                fullName: 'Your Name',
-                email: 'email@example.com',
-                phone: '+1 234 567 8900',
+                fullName: `Alex ${card.company} Candidate`,
+                profilePicture: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop',
+                email: `alex.${card.company.toLowerCase()}@example.com`,
+                phone: '+1 (555) 000-0000',
                 address: 'San Francisco, CA',
-                linkedin: 'linkedin.com/in/yourname',
-                github: 'github.com/yourname',
-                website: 'yourportfolio.com',
-                profilePicture: ''
+                linkedin: `linkedin.com/in/alex-${card.company.toLowerCase()}`,
+                github: `github.com/alex-${card.company.toLowerCase()}`,
+                website: `alex-${card.company.toLowerCase()}.dev`
             },
             summary: `Aspiring ${card.role} with a passion for ${card.skills.join(', ')}. Ready to contribute to ${card.company}'s innovative projects.`,
             experience: [
@@ -303,64 +310,124 @@ const Home = () => {
             </section>
 
             {/* 6 Features to boost your job search */}
-            <section className="py-24 bg-white">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-                    <h2 className="text-4xl font-extrabold text-slate-900 mb-4">6 features to boost your job search</h2>
-                    <div className="h-2 w-24 bg-gradient-to-r from-rose-500 via-purple-600 to-indigo-600 rounded-full"></div>
+            <section className="py-24 bg-white relative overflow-hidden">
+                {/* Background decorative elements */}
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-50/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+                <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-50/50 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
+
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 relative z-10">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                        <div>
+                            <h2 className="text-4xl lg:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
+                                6 features to boost your <br />
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">job search success</span>
+                            </h2>
+                            <p className="text-lg text-slate-600 max-w-2xl">
+                                Powerful tools designed to help you build, optimize, and track your professional identity.
+                            </p>
+                        </div>
+                        <div className="h-1 w-24 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full mb-2 hidden md:block"></div>
+                    </div>
                 </div>
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
                         {[
                             {
-                                icon: <FileText className="text-rose-500" />,
+                                icon: <FileText className="w-8 h-8" />,
                                 title: "35+ Template Designs",
-                                text: "Extensive library of high-fidelity, MNC-focused resume layouts."
+                                text: "Extensive library of high-fidelity, MNC-focused resume layouts.",
+                                color: "from-rose-500 to-rose-600",
+                                lightColor: "bg-rose-50",
+                                textColor: "text-rose-600"
                             },
                             {
-                                icon: <Cpu className="text-purple-600" />,
+                                icon: <Cpu className="w-8 h-8" />,
                                 title: "Enhance with AI",
-                                text: "AI-powered suggestions for your bullets and professional summary."
+                                text: "AI-powered suggestions for your bullets and professional summary.",
+                                color: "from-purple-500 to-purple-600",
+                                lightColor: "bg-purple-50",
+                                textColor: "text-purple-600"
                             },
                             {
-                                icon: <Eye className="text-indigo-600" />,
+                                icon: <Eye className="w-8 h-8" />,
                                 title: "Resume Review",
-                                text: "Instant feedback on your resume clarity, grammar, and ATS impact."
+                                text: "Instant feedback on your resume clarity, grammar, and ATS impact.",
+                                color: "from-indigo-500 to-indigo-600",
+                                lightColor: "bg-indigo-50",
+                                textColor: "text-indigo-600"
                             },
                             {
-                                icon: <MessageSquare className="text-rose-500" />,
+                                icon: <MessageSquare className="w-8 h-8" />,
                                 title: "AI Cover Letter Builder",
-                                text: "Generate matching cover letters in seconds with our smart engine."
+                                text: "Generate matching cover letters in seconds with our smart engine.",
+                                color: "from-rose-500 to-rose-600",
+                                lightColor: "bg-rose-50",
+                                textColor: "text-rose-600"
                             },
                             {
-                                icon: <Globe className="text-purple-600" />,
+                                icon: <Globe className="w-8 h-8" />,
                                 title: "Resume Website",
-                                text: "Host your professional portfolio with a unique, shareable public link."
+                                text: "Host your professional portfolio with a unique, shareable public link.",
+                                color: "from-purple-500 to-purple-600",
+                                lightColor: "bg-purple-50",
+                                textColor: "text-purple-600"
                             },
                             {
-                                icon: <BarChart3 className="text-indigo-600" />,
+                                icon: <BarChart3 className="w-8 h-8" />,
                                 title: "Resume Tracking",
-                                text: "Insights into how many people viewed your professional profile."
+                                text: "Insights into how many people viewed your professional profile.",
+                                color: "from-indigo-500 to-indigo-600",
+                                lightColor: "bg-indigo-50",
+                                textColor: "text-indigo-600"
                             }
-                        ].map((feature, i) => (
-                            <div key={i} className="flex items-start space-x-5 p-6 rounded-2xl border border-slate-50 hover:bg-slate-50 transition-colors group">
-                                <div className="bg-white p-3 rounded-xl shadow-md border border-slate-100 group-hover:scale-110 transition-transform">
-                                    {feature.icon}
+                        ].map((item, i) => (
+                            <motion.div 
+                                key={i}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: i * 0.1 }}
+                                whileHover={{ y: -8, scale: 1.02 }}
+                                onClick={() => openFeature(i)}
+                                className="group relative flex flex-col items-start p-8 rounded-[32px] bg-white border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-slate-200/50 transition-all duration-500 cursor-pointer overflow-hidden"
+                            >
+                                {/* Glassmorphism background effect on hover */}
+                                <div className="absolute inset-0 bg-gradient-to-br from-slate-50/50 to-white/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 backdrop-blur-[2px]"></div>
+                                
+                                {/* Background Glow */}
+                                <div className={`absolute -right-10 -top-10 w-32 h-32 rounded-full blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-500 bg-gradient-to-br ${item.color}`}></div>
+
+                                <div className={`mb-8 p-4 rounded-2xl ${item.lightColor} ${item.textColor} group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-sm relative z-10`}>
+                                    {item.icon}
                                 </div>
-                                <div>
-                                    <h4 className="font-bold text-lg text-slate-900 mb-1">{feature.title}</h4>
-                                    <p className="text-slate-500 text-sm leading-relaxed">{feature.text}</p>
+                                
+                                <h3 className="text-2xl font-bold text-slate-900 mb-4 relative z-10 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-slate-900 group-hover:to-slate-600 transition-all duration-300">
+                                    {item.title}
+                                </h3>
+                                
+                                <p className="text-slate-600 leading-relaxed mb-8 relative z-10">
+                                    {item.text}
+                                </p>
+                                
+                                <div className="mt-auto flex items-center font-bold text-sm text-slate-400 group-hover:text-slate-900 transition-colors relative z-10">
+                                    <span className="mr-2">Explore Workspace</span>
+                                    <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                                 </div>
-                            </div>
+
+                                {/* Premium Ripple/Glow Border Effect */}
+                                <div className={`absolute inset-0 border-2 border-transparent group-hover:border-slate-100/50 rounded-[32px] transition-all duration-500`}></div>
+                            </motion.div>
                         ))}
-                    </div>
-                    <div className="mt-16 text-center">
-                        <Link to="/templates" className="inline-flex items-center px-8 py-4 bg-rose-500 text-white rounded-xl font-bold hover:bg-rose-600 transition-all shadow-lg shadow-rose-200">
-                            Choose a template
-                        </Link>
                     </div>
                 </div>
             </section>
+
+            <FeatureShowcase 
+                isOpen={showcaseOpen} 
+                onClose={() => setShowcaseOpen(false)} 
+                initialFeature={activeFeature} 
+            />
 
             {/* Partners / Companies Section */}
             <section className="py-24 bg-slate-900 relative overflow-hidden">
