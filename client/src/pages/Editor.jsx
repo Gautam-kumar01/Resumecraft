@@ -124,32 +124,68 @@ const Editor = () => {
         try {
             console.log("Starting local PDF generation...");
             
-            const clone = input.cloneNode(true);
+            // Create a temporary container for the clone
             const container = document.createElement('div');
-            container.style.position = 'fixed';
+            container.style.position = 'absolute';
+            container.style.left = '-9999px';
             container.style.top = '0';
-            container.style.left = '0';
-            container.style.width = '210mm';
-            container.style.zIndex = '-9999';
-            container.style.background = 'white';
-            container.style.transform = 'none';
-            
-            container.appendChild(clone);
+            container.style.width = '794px'; // A4 width at 96 DPI
             document.body.appendChild(container);
 
-            await new Promise(resolve => setTimeout(resolve, 800));
+            const clone = input.cloneNode(true);
+            // Remove the ID to avoid duplicates
+            clone.removeAttribute('id');
+            // Force styles on clone
+            clone.style.width = '794px';
+            clone.style.height = 'auto';
+            clone.style.margin = '0';
+            clone.style.padding = '40px';
+            clone.style.display = 'block';
+            clone.style.backgroundColor = 'white';
+            
+            container.appendChild(clone);
+
+            // Wait for images and fonts to settle
+            await new Promise(resolve => setTimeout(resolve, 1000));
 
             const canvas = await html2canvas(clone, { 
                 scale: 2,
                 useCORS: true,
                 logging: false,
                 backgroundColor: '#ffffff',
-                windowWidth: container.scrollWidth,
-                windowHeight: container.scrollHeight,
-                scrollX: 0,
-                scrollY: 0,
-                x: 0,
-                y: 0
+                windowWidth: 794,
+                onclone: (clonedDoc) => {
+                     // Force fonts to be visible and fix overlapping
+                     const style = clonedDoc.createElement('style');
+                     style.innerHTML = `
+                         * { 
+                             -webkit-print-color-adjust: exact !important;
+                             color-adjust: exact !important;
+                             text-rendering: optimizeLegibility !important;
+                         }
+                         h1, h2, h3, h4, h5, h6, p, span, div {
+                             letter-spacing: normal !important;
+                             word-spacing: normal !important;
+                         }
+                         .tracking-widest { letter-spacing: 0.1em !important; }
+                          .tracking-tight { letter-spacing: -0.01em !important; }
+                          .tracking-tighter { letter-spacing: -0.02em !important; }
+                          .tracking-\[0\.2em\] { letter-spacing: 0.2em !important; }
+                          .tracking-\[0\.3em\] { letter-spacing: 0.3em !important; }
+                          .tracking-\[0\.4em\] { letter-spacing: 0.4em !important; }
+                         .whitespace-pre-wrap { white-space: pre-wrap !important; }
+                          .grid { display: grid !important; }
+                          .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+                          .col-span-2 { grid-column: span 2 / span 2 !important; }
+                          .flex { display: flex !important; }
+                          .flex-wrap { flex-wrap: wrap !important; }
+                          .gap-2 { gap: 0.5rem !important; }
+                          .gap-4 { gap: 1rem !important; }
+                          .gap-6 { gap: 1.5rem !important; }
+                          .gap-12 { gap: 3rem !important; }
+                      `;
+                     clonedDoc.head.appendChild(style);
+                 }
             });
 
             document.body.removeChild(container);
@@ -159,7 +195,12 @@ const Editor = () => {
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = pdf.internal.pageSize.getHeight();
             
-            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            // Calculate height to maintain aspect ratio
+            const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+            
+            // If the resume is longer than one page, we might need multiple pages
+            // But for now, let's ensure it fits or scales
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, imgHeight > pdfHeight ? pdfHeight : imgHeight);
             pdf.save(`${resume.title || 'resume'}.pdf`);
             
             console.log("Local PDF generated successfully.");
