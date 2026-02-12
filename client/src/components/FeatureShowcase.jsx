@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   X, FileText, Cpu, Eye, MessageSquare, Globe, BarChart3, 
   ChevronRight, Sparkles, CheckCircle2, Layout, Search, 
-  ArrowRight, Mail, PieChart, TrendingUp, Users, Zap
+  ArrowRight, Mail, PieChart, TrendingUp, Users, Zap,
+  Download, Award, Target
 } from 'lucide-react';
 
 const FeatureShowcase = ({ isOpen, onClose, initialFeature = 0 }) => {
