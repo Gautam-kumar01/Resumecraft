@@ -17,7 +17,8 @@ const starterResumes = [
             phone: '+1 (415) 555-9000',
             address: 'Palo Alto, CA',
             linkedin: 'linkedin.com/in/david-ai-harrison',
-            github: 'github.com/david-h-ai'
+            github: 'github.com/david-h-ai',
+            profilePicture: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=400&auto=format&fit=crop'
         },
         skills: [
             'Deep Learning', 'PyTorch', 'Large Language Models (LLMs)', 'System Design',
@@ -65,7 +66,8 @@ const starterResumes = [
             email: 'schen.data@example.com',
             phone: '+1 (555) 222-3333',
             address: 'Seattle, WA',
-            linkedin: 'linkedin.com/in/sarahchen-data'
+            linkedin: 'linkedin.com/in/sarahchen-data',
+            profilePicture: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=400&auto=format&fit=crop'
         },
         skills: [
             'Python', 'PyTorch', 'TensorFlow', 'SQL (Redshift)', 'AWS SageMaker',
@@ -105,7 +107,8 @@ const starterResumes = [
             fullName: 'Isabella Rossi',
             email: 'isabella.design@example.com',
             linkedin: 'linkedin.com/in/rossidesign',
-            website: 'isabelladesign.io'
+            website: 'isabelladesign.io',
+            profilePicture: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=400&auto=format&fit=crop'
         },
         skills: [
             'Figma', 'Sketch', 'Design Systems', 'Interface Design',
@@ -146,7 +149,8 @@ const starterResumes = [
             email: 'jameson.thorne@example.com',
             phone: '+1 (555) 999-8800',
             address: 'New York, NY',
-            linkedin: 'linkedin.com/in/jamesonfinance'
+            linkedin: 'linkedin.com/in/jamesonfinance',
+            profilePicture: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=400&auto=format&fit=crop'
         },
         skills: [
             'Financial Modeling', 'Excel (Advanced)', 'DCF Valuation', 'M&A',
@@ -177,7 +181,8 @@ const starterResumes = [
         personalInfo: {
             fullName: 'Marcus Vane',
             email: 'marcus.v@netflix-standard.com',
-            linkedin: 'linkedin.com/in/marcusgrowth'
+            linkedin: 'linkedin.com/in/marcusgrowth',
+            profilePicture: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop'
         },
         skills: [
             'Content Strategy', 'Growth Hacking', 'A/B Testing', 'Retention Analysis',
@@ -216,7 +221,8 @@ const starterResumes = [
         personalInfo: {
             fullName: 'Jordan Lee',
             email: 'jordan.lee@meta-example.com',
-            linkedin: 'linkedin.com/in/jordanlee-dev'
+            linkedin: 'linkedin.com/in/jordanlee-dev',
+            profilePicture: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=400&auto=format&fit=crop'
         },
         skills: [
             'React', 'GraphQL', 'Hack/PHP', 'Relay', 'System Design',
@@ -253,9 +259,10 @@ const starterResumes = [
         templateId: 'minimalist',
         imageUrl: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=800&auto=format&fit=crop',
         personalInfo: {
-            fullName: 'Alex Musk',
-            email: 'alex.m@tesla-example.com',
-            linkedin: 'linkedin.com/in/alexmusk-ai'
+            fullName: 'Alex "Neural" Vance',
+            email: 'alex.vance@tesla-example.com',
+            linkedin: 'linkedin.com/in/alexvance-ai',
+            profilePicture: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=400&auto=format&fit=crop'
         },
         skills: [
             'C++', 'Computer Vision', 'PyTorch', 'CUDA', 'ROS',
@@ -294,7 +301,8 @@ const starterResumes = [
         personalInfo: {
             fullName: 'Elena Design',
             email: 'elena.d@adobe-example.com',
-            linkedin: 'linkedin.com/in/elenadesign'
+            linkedin: 'linkedin.com/in/elenadesign',
+            profilePicture: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=400&auto=format&fit=crop'
         },
         skills: [
             'Adobe Illustrator', 'After Effects', 'Brand Strategy', 'Typography',
@@ -333,7 +341,8 @@ const starterResumes = [
         personalInfo: {
             fullName: 'Robert Cloud',
             email: 'robert.c@ibm-example.com',
-            linkedin: 'linkedin.com/in/robertcloud'
+            linkedin: 'linkedin.com/in/robertcloud',
+            profilePicture: 'https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?q=80&w=400&auto=format&fit=crop'
         },
         skills: [
             'Hybrid Cloud', 'Red Hat OpenShift', 'IBM Cloud', 'Security Compliance',
@@ -364,7 +373,8 @@ const starterResumes = [
         personalInfo: {
             fullName: 'Anita Operations',
             email: 'anita.o@uber-example.com',
-            linkedin: 'linkedin.com/in/anitaops'
+            linkedin: 'linkedin.com/in/anitaops',
+            profilePicture: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=400&auto=format&fit=crop'
         },
         skills: [
             'Marketplace Dynamics', 'SQL', 'Supply Chain Management', 'Driver Acquisition',
@@ -395,7 +405,8 @@ const starterResumes = [
         personalInfo: {
             fullName: 'Michael Guest',
             email: 'michael.g@airbnb-example.com',
-            linkedin: 'linkedin.com/in/michaelguest-pm'
+            linkedin: 'linkedin.com/in/michaelguest-pm',
+            profilePicture: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=400&auto=format&fit=crop'
         },
         skills: [
             'Product Strategy', 'User Research', 'A/B Testing', 'Community Growth',
@@ -424,9 +435,10 @@ const starterResumes = [
         templateId: 'elegant',
         imageUrl: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=800&auto=format&fit=crop',
         personalInfo: {
-            fullName: 'William Street',
-            email: 'william.s@goldman-example.com',
-            linkedin: 'linkedin.com/in/williamstreet'
+            fullName: 'Christopher Wealth',
+            email: 'c.wealth@goldman-example.com',
+            linkedin: 'linkedin.com/in/chriswealth',
+            profilePicture: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400&auto=format&fit=crop'
         },
         skills: [
             'Financial Modeling', 'LBO Analysis', 'Valuation Multiples', 'Pitch Books',
