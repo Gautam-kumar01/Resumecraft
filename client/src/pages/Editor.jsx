@@ -180,15 +180,48 @@ const Editor = () => {
             const canvas = await html2canvas(clone, {
                 scale: 2,
                 useCORS: true,
-                logging: false,
+                logging: true,
                 backgroundColor: '#ffffff',
                 width: clone.offsetWidth,
                 height: clone.offsetHeight,
-                windowWidth: 1024, // Fix viewport for mobile
+                windowWidth: 1024,
+                imageTimeout: 15000,
                 onclone: (clonedDoc) => {
                     // Final cleanup on the captured document
                     const element = clonedDoc.querySelector('[style*="fixed"]');
                     if (element) element.style.display = 'none';
+
+                    // Force convert all styles in the document to prevent oklab/oklch crashes
+                    const styleTags = clonedDoc.getElementsByTagName('style');
+                    for (let i = 0; i < styleTags.length; i++) {
+                        let css = styleTags[i].innerHTML;
+                        if (css.includes('oklab') || css.includes('oklch')) {
+                            // Replace oklab/oklch with a safe fallback in the entire stylesheet
+                            // This is a bit aggressive but prevents html2canvas from crashing
+                            styleTags[i].innerHTML = css.replace(/oklab\([^)]+\)/g, '#71717a')
+                                                        .replace(/oklch\([^)]+\)/g, '#71717a');
+                        }
+                    }
+
+                    // Deep fix for oklab/oklch errors in inline styles and computed values
+                    const allElements = clonedDoc.getElementsByTagName('*');
+                    for (let i = 0; i < allElements.length; i++) {
+                        const el = allElements[i];
+                        const style = window.getComputedStyle(el);
+                        
+                        // html2canvas fails on oklab/oklch. We force them to RGB/Hex.
+                        const properties = ['color', 'backgroundColor', 'borderColor', 'outlineColor', 'fill', 'stroke'];
+                        properties.forEach(prop => {
+                            const val = style[prop];
+                            if (val && (val.includes('oklab') || val.includes('oklch'))) {
+                                // In most modern browsers, getComputedStyle already returns rgb()
+                                // but if it doesn't (or if html2canvas is looking elsewhere), we force a fallback.
+                                if (prop === 'backgroundColor') el.style[prop] = '#ffffff';
+                                else if (prop === 'color') el.style[prop] = '#000000';
+                                else el.style[prop] = 'transparent';
+                            }
+                        });
+                    }
                 }
             });
 
