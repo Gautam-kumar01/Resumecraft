@@ -192,12 +192,13 @@ const Editor = () => {
                     if (element) element.style.display = 'none';
 
                     // Force convert all styles in the document to prevent oklab/oklch crashes
+                    // html2canvas fails when it encounters modern CSS color functions
                     const styleTags = clonedDoc.getElementsByTagName('style');
                     for (let i = 0; i < styleTags.length; i++) {
                         let css = styleTags[i].innerHTML;
                         if (css.includes('oklab') || css.includes('oklch')) {
-                            // Replace oklab/oklch with a safe fallback in the entire stylesheet
-                            // This is a bit aggressive but prevents html2canvas from crashing
+                            // Replace oklab/oklch with safe hex fallbacks
+                            // We use a more robust regex to catch variations
                             styleTags[i].innerHTML = css.replace(/oklab\([^)]+\)/g, '#71717a')
                                                         .replace(/oklch\([^)]+\)/g, '#71717a');
                         }
@@ -207,18 +208,24 @@ const Editor = () => {
                     const allElements = clonedDoc.getElementsByTagName('*');
                     for (let i = 0; i < allElements.length; i++) {
                         const el = allElements[i];
-                        const style = window.getComputedStyle(el);
                         
-                        // html2canvas fails on oklab/oklch. We force them to RGB/Hex.
-                        const properties = ['color', 'backgroundColor', 'borderColor', 'outlineColor', 'fill', 'stroke'];
+                        // Check and fix inline style attributes
+                        const inlineStyle = el.getAttribute('style') || '';
+                        if (inlineStyle.includes('oklab') || inlineStyle.includes('oklch')) {
+                            el.setAttribute('style', inlineStyle.replace(/(oklab|oklch)\([^)]+\)/g, '#71717a'));
+                        }
+
+                        // Force computed styles that html2canvas might struggle with
+                        const style = window.getComputedStyle(el);
+                        const properties = ['color', 'backgroundColor', 'borderColor', 'outlineColor', 'fill', 'stroke', 'stopColor'];
+                        
                         properties.forEach(prop => {
                             const val = style[prop];
                             if (val && (val.includes('oklab') || val.includes('oklch'))) {
-                                // In most modern browsers, getComputedStyle already returns rgb()
-                                // but if it doesn't (or if html2canvas is looking elsewhere), we force a fallback.
-                                if (prop === 'backgroundColor') el.style[prop] = '#ffffff';
-                                else if (prop === 'color') el.style[prop] = '#000000';
-                                else el.style[prop] = 'transparent';
+                                // If we detect problematic colors, override them directly on the element's style
+                                if (prop === 'backgroundColor') el.style.backgroundColor = '#ffffff';
+                                else if (prop === 'color') el.style.color = '#000000';
+                                else if (el.style) el.style[prop] = '#71717a';
                             }
                         });
                     }
