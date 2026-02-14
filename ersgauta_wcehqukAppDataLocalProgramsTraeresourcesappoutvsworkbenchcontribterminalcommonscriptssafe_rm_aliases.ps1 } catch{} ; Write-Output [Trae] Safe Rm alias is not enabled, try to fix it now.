@@ -1,84 +1,19 @@
-{
-    "buildCommand": "cd client && npm install --legacy-peer-deps && npm run build",
-    "outputDirectory": "client/dist",
-    "framework": "vite",
-    "rewrites": [
-        {
-            "source": "/api/(.*)",
-            "destination": "/api/index.js"
-        },
-        {
-            "source": "/google4d740df52294f260.html",
-            "destination": "/google4d740df52294f260.html"
-        },
-        {
-            "source": "/robots.txt",
-            "destination": "/robots.txt"
-        },
-        {
-            "source": "/sitemap.xml",
-            "destination": "/sitemap.xml"
-        },
-        {
-            "source": "/((?!api/|.*\\..*).*)",
-            "destination": "/index.html"
-        }
-    ]
-}[33mcommit 7786f51022e6a58387938f9f98dcd8355e162cfc[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
-Author: Gautam-kumar01 <gautamkr192007@gmail.com>
-Date:   Thu Feb 12 20:02:53 2026 +0530
 
-    fix-feature-icons
+                   SSUUMMMMAARRYY OOFF LLEESSSS CCOOMMMMAANNDDSS
 
-[33mcommit afe2952657b735c5ab3d0aa821225dfb482ad8fb[m
-Author: Gautam-kumar01 <gautamkr192007@gmail.com>
-Date:   Thu Feb 12 19:54:30 2026 +0530
+      Commands marked with * may be preceded by a number, _N.
+      Notes in parentheses indicate the behavior if _N is given.
+      A key preceded by a caret indicates the Ctrl key; thus ^K is ctrl-K.
 
-    feat-ai-career-strategist
+  h  H                 Display this help.
+  q  :q  Q  :Q  ZZ     Exit.
+ ---------------------------------------------------------------------------
 
-[33mcommit 510e8bfbf3dc41cc5ecf102c85b0858b2fe822f3[m
-Author: Gautam-kumar01 <gautamkr192007@gmail.com>
-Date:   Thu Feb 12 19:45:24 2026 +0530
+                           MMOOVVIINNGG
 
-    feat-remove-saas-heading
-
-[33mcommit 3c6bba36b1f2ce3823e0ce58c72d026680baa252[m
-Author: Gautam-kumar01 <gautamkr192007@gmail.com>
-Date:   Thu Feb 12 19:37:55 2026 +0530
-
-    feat-update-home-showcase-saas-style
-
-[33mcommit 1fed3c199997e4a9a90cd2ad8809c3bd23935664[m
-Author: Gautam-kumar01 <gautamkr192007@gmail.com>
-Date:   Thu Feb 12 19:28:43 2026 +0530
-
-    feat-improve-showcase-copy
-[33mcommit 2a671fcc3aec98a00673c8e1bfb381843496c4a6[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
-Author: Gautam-kumar01 <gautamkr192007@gmail.com>
-Date:   Fri Feb 13 14:19:42 2026 +0530
-
-    fix-oklab-error
-
-[33mcommit 7786f51022e6a58387938f9f98dcd8355e162cfc[m
-Author: Gautam-kumar01 <gautamkr192007@gmail.com>
-Date:   Thu Feb 12 20:02:53 2026 +0530
-
-    fix-feature-icons
-
-[33mcommit afe2952657b735c5ab3d0aa821225dfb482ad8fb[m
-Author: Gautam-kumar01 <gautamkr192007@gmail.com>
-Date:   Thu Feb 12 19:54:30 2026 +0530
-
-    feat-ai-career-strategist
-
-[33mcommit 510e8bfbf3dc41cc5ecf102c85b0858b2fe822f3[m
-Author: Gautam-kumar01 <gautamkr192007@gmail.com>
-Date:   Thu Feb 12 19:45:24 2026 +0530
-
-    feat-remove-saas-heading
-
-[33mcommit 3c6bba36b1f2ce3823e0ce58c72d026680baa252[m
-Author: Gautam-kumar01 <gautamkr192007@gmail.com>
-Date:   Thu Feb 12 19:37:55 2026 +0530
-
-    feat-update-home-showcase-saas-style
+  e  ^E  j  ^N  CR  *  Forward  one line   (or _N lines).
+  y  ^Y  k  ^K  ^P  *  Backward one line   (or _N lines).
+  ESC-j             *  Forward  one file line (or _N file lines).
+  ESC-k             *  Backward one file line (or _N file lines).
+  f  ^F  ^V  SPACE  *  Forward  one window (or _N lines).
+  b  ^B  ESC-v      *  Backward one window (or
