@@ -10,7 +10,7 @@ import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
 const initialResumeState = {
-    title: 'My Resume',
+    title: '',
     personalInfo: {
         fullName: '',
         email: '',

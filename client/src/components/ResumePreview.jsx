@@ -26,7 +26,7 @@ const ResumePreview = ({ resume }) => {
             <header className="border-b-2 border-slate-900 pb-8 mb-8 flex flex-row justify-between items-center gap-6 text-slate-900">
                 <div className="flex-1">
                     <h1 className="text-4xl font-bold uppercase tracking-widest mb-2">{personalInfo?.fullName || 'Your Name'}</h1>
-                    <p className="text-xl text-slate-600 font-light mb-6">{resume.title || 'Professional Title'}</p>
+                    {resume.title && <p className="text-xl text-slate-600 font-light mb-6">{resume.title}</p>}
 
                     <div className="flex flex-wrap gap-4 text-sm text-slate-600">
                         {personalInfo?.email && <span className="flex items-center"><Mail className="h-3 w-3 mr-1" />{personalInfo.email}</span>}
@@ -137,7 +137,7 @@ const ResumePreview = ({ resume }) => {
                         )}
                         <h1 className="text-2xl font-black uppercase tracking-tighter mb-1">{personalInfo?.fullName || 'Your Name'}</h1>
                         <div className="h-1 w-12 bg-rose-500 mx-auto rounded-full mb-4"></div>
-                        <p className="text-rose-400 font-bold text-xs uppercase tracking-widest">{resume.title || 'Specialist'}</p>
+                        {resume.title && <p className="text-rose-400 font-bold text-xs uppercase tracking-widest">{resume.title}</p>}
                     </div>
 
                     <div className="space-y-6">
@@ -263,7 +263,7 @@ const ResumePreview = ({ resume }) => {
                     {personalInfo?.address && <span>·</span>}
                     {personalInfo?.address && <span>{personalInfo.address}</span>}
                 </div>
-                <h3 className="text-xl text-slate-400 font-light tracking-[0.3em] uppercase">{resume.title || 'Professional Title'}</h3>
+                {resume.title && <h3 className="text-xl text-slate-400 font-light tracking-[0.3em] uppercase">{resume.title}</h3>}
             </div>
 
             <div className="space-y-12">
@@ -407,7 +407,7 @@ const ResumePreview = ({ resume }) => {
             <header className="flex items-start justify-between border-b-4 border-blue-500 pb-6 mb-8">
                 <div>
                     <h1 className="text-4xl font-bold text-slate-800 mb-2">{personalInfo?.fullName || 'Your Name'}</h1>
-                    <p className="text-lg text-blue-600 font-medium">{resume.title || 'Aspiring Professional'}</p>
+                    {resume.title && <p className="text-lg text-blue-600 font-medium">{resume.title}</p>}
                 </div>
                 <div className="text-right text-sm text-slate-600 space-y-1">
                     {personalInfo?.email && <div className="flex justify-end items-center"><Mail className="h-4 w-4 mr-2" />{personalInfo.email}</div>}
