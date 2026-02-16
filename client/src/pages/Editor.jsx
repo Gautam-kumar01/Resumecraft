@@ -5,7 +5,7 @@ import AuthContext from '../context/AuthContext';
 import ResumePreview from '../components/ResumePreview';
 import LoginModal from '../components/LoginModal';
 import SEO from '../components/SEO';
-import { Save, Download, Eye, ArrowLeft, Plus, Trash2, User, Upload } from 'lucide-react';
+import { Save, Download, Eye, ArrowLeft, Plus, Trash2, User, Upload, Sparkles } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -33,7 +33,7 @@ const Editor = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const { user } = useContext(AuthContext);
-    
+
     const [resume, setResume] = useState(null);
     const [loading, setLoading] = useState(true);
     const [downloading, setDownloading] = useState(false);
@@ -41,7 +41,12 @@ const Editor = () => {
     const [activeSection, setActiveSection] = useState('personal');
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [pendingAction, setPendingAction] = useState(null); // 'download' or 'save'
-    
+
+    // AI State
+    const [aiJobRole, setAiJobRole] = useState('');
+    const [aiLoading, setAiLoading] = useState(false);
+    const [aiSuggestions, setAiSuggestions] = useState(null);
+
     const previewRef = useRef();
 
     // Load resume data
@@ -112,7 +117,7 @@ const Editor = () => {
         const templateId = resume.templateId || 'modern';
         const elementId = `resume-preview-${templateId}`;
         const input = document.getElementById(elementId);
-        
+
         if (!input) {
             console.error(`Resume preview element not found: #${elementId}`);
             alert("Could not find resume preview. Please refresh the page and try again.");
@@ -120,10 +125,10 @@ const Editor = () => {
         }
 
         setDownloading(true);
-        
+
         try {
             console.log("Starting high-fidelity mobile-friendly PDF generation...");
-            
+
             // Create a dedicated hidden container for the capture
             const container = document.createElement('div');
             container.style.position = 'fixed';
@@ -139,7 +144,7 @@ const Editor = () => {
             clone.style.margin = '0';
             clone.style.padding = '0';
             clone.style.transform = 'none';
-            
+
             // Apply specific styles to the clone to fix overlapping and spacing
             const style = document.createElement('style');
             style.innerHTML = `
@@ -170,7 +175,7 @@ const Editor = () => {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             `;
-            
+
             container.appendChild(style);
             container.appendChild(clone);
 
@@ -200,7 +205,7 @@ const Editor = () => {
                             // Replace oklab/oklch with safe hex fallbacks
                             // We use a more robust regex to catch variations
                             styleTags[i].innerHTML = css.replace(/oklab\([^)]+\)/g, '#71717a')
-                                                        .replace(/oklch\([^)]+\)/g, '#71717a');
+                                .replace(/oklch\([^)]+\)/g, '#71717a');
                         }
                     }
 
@@ -208,7 +213,7 @@ const Editor = () => {
                     const allElements = clonedDoc.getElementsByTagName('*');
                     for (let i = 0; i < allElements.length; i++) {
                         const el = allElements[i];
-                        
+
                         // Check and fix inline style attributes
                         const inlineStyle = el.getAttribute('style') || '';
                         if (inlineStyle.includes('oklab') || inlineStyle.includes('oklch')) {
@@ -218,7 +223,7 @@ const Editor = () => {
                         // Force computed styles that html2canvas might struggle with
                         const style = window.getComputedStyle(el);
                         const properties = ['color', 'backgroundColor', 'borderColor', 'outlineColor', 'fill', 'stroke', 'stopColor'];
-                        
+
                         properties.forEach(prop => {
                             const val = style[prop];
                             if (val && (val.includes('oklab') || val.includes('oklch'))) {
@@ -238,20 +243,20 @@ const Editor = () => {
             const pdf = new jsPDF('p', 'mm', 'a4');
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = pdf.internal.pageSize.getHeight();
-            
+
             const imgHeight = (canvas.height * pdfWidth) / canvas.width;
-            
+
             // Add image to PDF - handle multi-page if needed
             pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, imgHeight);
-            
+
             pdf.save(`${resume.title || 'resume'}.pdf`);
-            
+
             console.log("PDF generated and downloaded.");
         } catch (err) {
             console.error("PDF Error:", err);
             alert(`Download failed: ${err.message || "Unknown error"}. Please try again.`);
         }
-        
+
         setDownloading(false);
     };
 
@@ -268,26 +273,26 @@ const Editor = () => {
         // User just logged in. 
         // 1. Save the guest resume to backend to create a record
         // 2. Perform the pending action (download or just save)
-        
+
         setSaving(true);
         try {
             // Create the resume in backend
             const { data } = await api.post('/resumes', resume);
-            
+
             // Clear local draft
             localStorage.removeItem('guest_resume_draft');
-            
+
             // Update URL without page reload
             window.history.replaceState(null, '', `/editor/${data._id}`);
-            
+
             // If pending action was download, do it now
             if (pendingAction === 'download') {
                 await performDownload();
             }
-            
+
             // Navigate to proper URL (this might cause re-render but that's fine)
-             navigate(`/editor/${data._id}`, { replace: true });
-             
+            navigate(`/editor/${data._id}`, { replace: true });
+
         } catch (error) {
             console.error("Error syncing guest resume:", error);
             alert("Resume saved locally but failed to sync. Please try saving again.");
@@ -300,7 +305,7 @@ const Editor = () => {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            if (file.size > 1024 * 1024) { 
+            if (file.size > 1024 * 1024) {
                 alert("File size too large. Please select an image under 1MB.");
                 return;
             }
@@ -342,17 +347,50 @@ const Editor = () => {
         setResume(prev => ({ ...prev, [section]: newArray }));
     };
 
+    const handleAIGenerate = async () => {
+        if (!aiJobRole.trim()) return alert("Please enter a job role");
+
+        setAiLoading(true);
+        try {
+            const { data } = await api.post('/ai/suggest', { jobRole: aiJobRole });
+            setAiSuggestions(data);
+        } catch (error) {
+            console.error("AI Error:", error);
+            alert("Failed to generate suggestions. Please try again.");
+        } finally {
+            setAiLoading(false);
+        }
+    };
+
+    const applySuggestion = (type, data) => {
+        if (type === 'summary') {
+            setResume(prev => ({ ...prev, summary: data }));
+        } else if (type === 'skills') {
+            setResume(prev => ({ ...prev, skills: [...(prev.skills || []), ...data] }));
+        } else if (type === 'experience') {
+            // Add as a new experience entry draft
+            addItem('experience', {
+                company: 'Sample Company',
+                position: aiJobRole,
+                startDate: '202X',
+                endDate: 'Present',
+                description: data.map(b => `• ${b}`).join('\n')
+            });
+        }
+        alert("Applied to resume!");
+    };
+
     if (loading) return <div className="p-10 text-center">Loading...</div>;
     if (!resume) return <div className="p-10 text-center">Resume not found</div>;
 
     return (
         <div className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] h-auto overflow-y-auto md:overflow-hidden relative">
-            <SEO 
-                title={resume.title ? `${resume.title} - Editor` : "Resume Editor"} 
+            <SEO
+                title={resume.title ? `${resume.title} - Editor` : "Resume Editor"}
                 description="Edit and customize your professional resume. Choose from multiple ATS-friendly templates."
             />
-            <LoginModal 
-                isOpen={showLoginModal} 
+            <LoginModal
+                isOpen={showLoginModal}
                 onClose={() => setShowLoginModal(false)}
                 onSuccess={handleLoginSuccess}
                 title="🎉 Your resume is ready!"
@@ -393,22 +431,92 @@ const Editor = () => {
 
                 {/* Section Tabs */}
                 <div className="flex space-x-2 overflow-x-auto pb-4 mb-6 border-b border-slate-100 no-scrollbar">
-                    {['personal', 'summary', 'experience', 'education', 'skills', 'projects', 'templates'].map(sec => (
+                    {['ai', 'personal', 'summary', 'experience', 'education', 'skills', 'projects', 'templates'].map(sec => (
                         <button
                             key={sec}
                             onClick={() => setActiveSection(sec)}
-                            className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap capitalize ${activeSection === sec
+                            className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap capitalize flex items-center ${activeSection === sec
                                 ? 'bg-primary/10 text-primary'
                                 : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
                                 }`}
                         >
-                            {sec}
+                            {sec === 'ai' && <Sparkles className="h-3 w-3 mr-1" />}
+                            {sec === 'ai' ? 'AI Assistant' : sec}
                         </button>
                     ))}
                 </div>
 
                 {/* Forms */}
                 <div className="space-y-6">
+                    {activeSection === 'ai' && (
+                        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                            <div className="bg-gradient-to-r from-violet-600 to-indigo-600 rounded-2xl p-6 text-white shadow-lg">
+                                <h3 className="text-xl font-bold mb-2 flex items-center">
+                                    <Sparkles className="h-5 w-5 mr-2" /> AI Resume Assistant
+                                </h3>
+                                <p className="text-indigo-100 text-sm mb-6">
+                                    Enter your target job role, and our AI will generate professional summaries, skills, and bullet points for you.
+                                </p>
+
+                                <div className="flex space-x-2">
+                                    <input
+                                        type="text"
+                                        placeholder="e.g. Full Stack Developer, Accountant"
+                                        value={aiJobRole}
+                                        onChange={(e) => setAiJobRole(e.target.value)}
+                                        className="flex-1 px-4 py-3 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-white/50"
+                                        onKeyDown={(e) => e.key === 'Enter' && handleAIGenerate()}
+                                    />
+                                    <button
+                                        onClick={handleAIGenerate}
+                                        disabled={aiLoading}
+                                        className="bg-white text-indigo-600 px-6 py-3 rounded-xl font-bold hover:bg-indigo-50 disabled:opacity-50 transition-colors"
+                                    >
+                                        {aiLoading ? 'Thinking...' : 'Generate'}
+                                    </button>
+                                </div>
+                            </div>
+
+                            {aiSuggestions && (
+                                <div className="space-y-6">
+                                    {/* Summary Suggestion */}
+                                    <div className="p-5 border border-slate-200 rounded-xl bg-slate-50">
+                                        <div className="flex justify-between items-start mb-3">
+                                            <h4 className="font-bold text-slate-800">Suggested Summary</h4>
+                                            <button onClick={() => applySuggestion('summary', aiSuggestions.summary)} className="text-xs bg-slate-900 text-white px-3 py-1 rounded-full hover:bg-slate-700">Apply</button>
+                                        </div>
+                                        <p className="text-sm text-slate-600 leading-relaxed">{aiSuggestions.summary}</p>
+                                    </div>
+
+                                    {/* Skills Suggestion */}
+                                    <div className="p-5 border border-slate-200 rounded-xl bg-slate-50">
+                                        <div className="flex justify-between items-start mb-3">
+                                            <h4 className="font-bold text-slate-800">Suggested Skills</h4>
+                                            <button onClick={() => applySuggestion('skills', aiSuggestions.skills)} className="text-xs bg-slate-900 text-white px-3 py-1 rounded-full hover:bg-slate-700">Add All</button>
+                                        </div>
+                                        <div className="flex flex-wrap gap-2">
+                                            {aiSuggestions.skills.map((skill, i) => (
+                                                <span key={i} className="px-2 py-1 bg-white border border-slate-200 rounded text-xs text-slate-600">{skill}</span>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Graphic Bullet Points */}
+                                    <div className="p-5 border border-slate-200 rounded-xl bg-slate-50">
+                                        <div className="flex justify-between items-start mb-3">
+                                            <h4 className="font-bold text-slate-800">Sample Accomplishments</h4>
+                                            <button onClick={() => applySuggestion('experience', aiSuggestions.bullets)} className="text-xs bg-slate-900 text-white px-3 py-1 rounded-full hover:bg-slate-700">Add as Experience</button>
+                                        </div>
+                                        <ul className="list-disc pl-5 space-y-2">
+                                            {aiSuggestions.bullets.map((bullet, i) => (
+                                                <li key={i} className="text-sm text-slate-600">{bullet}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
                     {activeSection === 'templates' && (
                         <div className="space-y-6">
                             <h3 className="text-lg font-bold text-slate-900">Choose Resume Template</h3>
@@ -416,7 +524,9 @@ const Editor = () => {
                                 {[
                                     { id: 'modern', name: 'Professional Modern', desc: 'Sleek two-column layout with a clean header.' },
                                     { id: 'visual', name: 'High-Impact Visual', desc: 'Eye-catching design with progress bars and bold sidebar.' },
-                                    { id: 'elegant', name: 'Classic Elegant', desc: 'Minimalist single-column serif design for senior roles.' }
+                                    { id: 'elegant', name: 'Classic Elegant', desc: 'Minimalist single-column serif design for senior roles.' },
+                                    { id: 'government', name: 'Government Standard', desc: 'Strict, formal, and authoritative format for public sector jobs.' },
+                                    { id: 'internship', name: 'Internship Ready', desc: 'Clean layout emphasizing education and skills for students.' }
                                 ].map(tpl => (
                                     <button
                                         key={tpl.id}

@@ -84,6 +84,7 @@ const ensureDb = async (req, res, next) => {
 
 app.use('/api/auth', ensureDb, require('./routes/auth'));
 app.use('/api/resumes', ensureDb, require('./routes/resume'));
+app.use('/api/ai', ensureDb, require('./routes/ai'));
 
 app.get('/', (req, res) => {
   res.send('ResumeCraft API is running...');

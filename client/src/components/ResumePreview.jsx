@@ -335,10 +335,179 @@ const ResumePreview = ({ resume }) => {
         </div>
     );
 
+    // --- Template 4: GOVERNMENT (Formal, Strict, Dense) ---
+    const GovernmentTemplate = () => (
+        <div className="bg-white p-12 min-h-[1000px] font-serif text-black" id="resume-preview-government" style={{ fontFamily: '"Times New Roman", Times, serif' }}>
+            <div className="text-center border-b-2 border-black pb-4 mb-6">
+                <h1 className="text-3xl font-bold uppercase mb-2">{personalInfo?.fullName || 'YOUR NAME'}</h1>
+                <div className="flex justify-center flex-wrap gap-4 text-sm">
+                    {personalInfo?.address && <span>{personalInfo.address}</span>}
+                    {personalInfo?.email && <span>{personalInfo.email}</span>}
+                    {personalInfo?.phone && <span>{personalInfo.phone}</span>}
+                </div>
+            </div>
+
+            <div className="space-y-6">
+                {summary && (
+                    <section>
+                        <h2 className="text-md font-bold uppercase border-b border-black mb-2">Objective</h2>
+                        <p className="text-sm leading-relaxed">{summary}</p>
+                    </section>
+                )}
+
+                {education?.length > 0 && (
+                    <section>
+                        <h2 className="text-md font-bold uppercase border-b border-black mb-2">Education</h2>
+                        <div className="space-y-4">
+                            {education.map((edu, i) => (
+                                <div key={i}>
+                                    <div className="flex justify-between font-bold text-sm">
+                                        <span>{edu.school}</span>
+                                        <span>{edu.startDate} - {edu.endDate}</span>
+                                    </div>
+                                    <div className="text-sm italic">{edu.degree}</div>
+                                    {edu.description && <p className="text-sm mt-1">{edu.description}</p>}
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {experience?.length > 0 && (
+                    <section>
+                        <h2 className="text-md font-bold uppercase border-b border-black mb-2">Professional Experience</h2>
+                        <div className="space-y-4">
+                            {experience.map((job, i) => (
+                                <div key={i}>
+                                    <div className="flex justify-between font-bold text-sm">
+                                        <span>{job.company}</span>
+                                        <span>{job.startDate} - {job.endDate}</span>
+                                    </div>
+                                    <div className="text-sm italic mb-1">{job.position}</div>
+                                    <p className="text-sm whitespace-pre-wrap">{job.description}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {skills?.length > 0 && (
+                    <section>
+                        <h2 className="text-md font-bold uppercase border-b border-black mb-2">Skills</h2>
+                        <p className="text-sm">{skills.join(', ')}</p>
+                    </section>
+                )}
+            </div>
+        </div>
+    );
+
+    // --- Template 5: INTERNSHIP (Education First, Clean) ---
+    const InternshipTemplate = () => (
+        <div className="bg-white p-12 min-h-[1000px] font-sans" id="resume-preview-internship">
+            <header className="flex items-start justify-between border-b-4 border-blue-500 pb-6 mb-8">
+                <div>
+                    <h1 className="text-4xl font-bold text-slate-800 mb-2">{personalInfo?.fullName || 'Your Name'}</h1>
+                    <p className="text-lg text-blue-600 font-medium">{resume.title || 'Aspiring Professional'}</p>
+                </div>
+                <div className="text-right text-sm text-slate-600 space-y-1">
+                    {personalInfo?.email && <div className="flex justify-end items-center"><Mail className="h-4 w-4 mr-2" />{personalInfo.email}</div>}
+                    {personalInfo?.phone && <div className="flex justify-end items-center"><Phone className="h-4 w-4 mr-2" />{personalInfo.phone}</div>}
+                    {personalInfo?.linkedin && <div className="flex justify-end items-center"><Linkedin className="h-4 w-4 mr-2" />LinkedIn</div>}
+                    {personalInfo?.github && <div className="flex justify-end items-center"><Github className="h-4 w-4 mr-2" />Github</div>}
+                </div>
+            </header>
+
+            <div className="grid grid-cols-3 gap-8">
+                <div className="col-span-2 space-y-8">
+                    {summary && (
+                        <section>
+                            <h2 className="text-lg font-bold text-slate-800 uppercase mb-3 flex items-center">
+                                <span className="w-2 h-8 bg-blue-500 mr-3 rounded"></span> Summary
+                            </h2>
+                            <p className="text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-lg">{summary}</p>
+                        </section>
+                    )}
+
+                    {education?.length > 0 && (
+                        <section>
+                            <h2 className="text-lg font-bold text-slate-800 uppercase mb-3 flex items-center">
+                                <span className="w-2 h-8 bg-blue-500 mr-3 rounded"></span> Education
+                            </h2>
+                            <div className="space-y-6">
+                                {education.map((edu, i) => (
+                                    <div key={i} className="relative pl-6 border-l-2 border-slate-200">
+                                        <div className="absolute -left-[5px] top-2 w-2 h-2 rounded-full bg-blue-500"></div>
+                                        <h3 className="font-bold text-lg text-slate-900">{edu.school}</h3>
+                                        <div className="text-blue-600 font-medium">{edu.degree}</div>
+                                        <div className="text-sm text-slate-500 mb-2">{edu.startDate} - {edu.endDate}</div>
+                                        {edu.description && <p className="text-sm text-slate-600">{edu.description}</p>}
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {projects?.length > 0 && (
+                        <section>
+                            <h2 className="text-lg font-bold text-slate-800 uppercase mb-3 flex items-center">
+                                <span className="w-2 h-8 bg-blue-500 mr-3 rounded"></span> Projects
+                            </h2>
+                            <div className="space-y-4">
+                                {projects.map((proj, i) => (
+                                    <div key={i} className="bg-slate-50 p-4 rounded-lg border border-slate-100">
+                                        <div className="flex justify-between items-center mb-1">
+                                            <h3 className="font-bold text-slate-900">{proj.name}</h3>
+                                            {proj.link && <span className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">{proj.link}</span>}
+                                        </div>
+                                        <p className="text-sm text-slate-600">{proj.description}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {experience?.length > 0 && (
+                        <section>
+                            <h2 className="text-lg font-bold text-slate-800 uppercase mb-3 flex items-center">
+                                <span className="w-2 h-8 bg-blue-500 mr-3 rounded"></span> Experience
+                            </h2>
+                            <div className="space-y-6">
+                                {experience.map((job, i) => (
+                                    <div key={i} className="pl-4">
+                                        <h3 className="font-bold text-lg text-slate-900">{job.position}</h3>
+                                        <div className="text-slate-600 mb-1">{job.company} <span className="text-slate-400">|</span> <span className="text-sm">{job.startDate} - {job.endDate}</span></div>
+                                        <p className="text-sm text-slate-600">{job.description}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+                </div>
+
+                <div className="space-y-8">
+                    {skills?.length > 0 && (
+                        <section>
+                            <h2 className="text-lg font-bold text-slate-800 uppercase mb-3 flex items-center">
+                                <span className="w-2 h-8 bg-blue-500 mr-3 rounded"></span> Skills
+                            </h2>
+                            <div className="flex flex-wrap gap-2">
+                                {skills.map((skill, i) => (
+                                    <span key={i} className="px-3 py-1 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium border border-blue-100">{skill}</span>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+
     // Render based on templateId
     switch (templateId) {
         case 'visual': return <VisualTemplate />;
         case 'elegant': return <ElegantTemplate />;
+        case 'government': return <GovernmentTemplate />;
+        case 'internship': return <InternshipTemplate />;
         case 'modern':
         default: return <ModernTemplate />;
     }
