@@ -411,7 +411,7 @@ const Editor = () => {
                         <button
                             onClick={handleDownload}
                             disabled={downloading}
-                            className="flex-1 md:flex-none justify-center flex items-center px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                            className="flex-1 md:flex-none justify-center flex items-center px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 disabled:opacity-50"
                         >
                             <Download className={`h-4 w-4 mr-2 ${downloading ? 'animate-bounce' : ''}`} />
                             {downloading ? 'Generating...' : 'Download PDF'}
@@ -425,7 +425,7 @@ const Editor = () => {
                         type="text"
                         value={resume.title}
                         onChange={(e) => setResume({ ...resume, title: e.target.value })}
-                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
+                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none"
                     />
                 </div>
 
@@ -436,7 +436,7 @@ const Editor = () => {
                             key={sec}
                             onClick={() => setActiveSection(sec)}
                             className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap capitalize flex items-center ${activeSection === sec
-                                ? 'bg-primary/10 text-primary'
+                                ? 'bg-orange-100 text-orange-600'
                                 : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
                                 }`}
                         >
@@ -450,11 +450,11 @@ const Editor = () => {
                 <div className="space-y-6">
                     {activeSection === 'ai' && (
                         <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                            <div className="bg-gradient-to-r from-violet-600 to-indigo-600 rounded-2xl p-6 text-white shadow-lg">
+                            <div className="bg-gradient-to-r from-orange-500 to-orange-700 rounded-2xl p-6 text-white shadow-lg">
                                 <h3 className="text-xl font-bold mb-2 flex items-center">
                                     <Sparkles className="h-5 w-5 mr-2" /> AI Resume Assistant
                                 </h3>
-                                <p className="text-indigo-100 text-sm mb-6">
+                                <p className="text-orange-50 text-sm mb-6">
                                     Enter your target job role, and our AI will generate professional summaries, skills, and bullet points for you.
                                 </p>
 
@@ -470,7 +470,7 @@ const Editor = () => {
                                     <button
                                         onClick={handleAIGenerate}
                                         disabled={aiLoading}
-                                        className="bg-white text-indigo-600 px-6 py-3 rounded-xl font-bold hover:bg-indigo-50 disabled:opacity-50 transition-colors"
+                                        className="bg-white text-orange-600 px-6 py-3 rounded-xl font-bold hover:bg-orange-50 disabled:opacity-50 transition-colors"
                                     >
                                         {aiLoading ? 'Thinking...' : 'Generate'}
                                     </button>
@@ -532,14 +532,14 @@ const Editor = () => {
                                         key={tpl.id}
                                         onClick={() => setResume({ ...resume, templateId: tpl.id })}
                                         className={`p-6 rounded-2xl border-2 text-left transition-all ${resume.templateId === tpl.id
-                                            ? 'border-primary bg-primary/5 ring-4 ring-primary/5'
+                                            ? 'border-orange-500 bg-orange-50 ring-4 ring-orange-100'
                                             : 'border-slate-100 hover:border-slate-200 hover:bg-slate-50'
                                             }`}
                                     >
                                         <div className="flex justify-between items-center mb-2">
                                             <span className="font-bold text-slate-900">{tpl.name}</span>
                                             {resume.templateId === tpl.id && (
-                                                <div className="bg-primary text-white p-1 rounded-full"><Eye className="h-3 w-3" /></div>
+                                                <div className="bg-orange-500 text-white p-1 rounded-full"><Eye className="h-3 w-3" /></div>
                                             )}
                                         </div>
                                         <p className="text-sm text-slate-500">{tpl.desc}</p>
@@ -562,7 +562,7 @@ const Editor = () => {
                                             <User className="h-10 w-10 text-slate-300" />
                                         )}
                                     </div>
-                                    <label className="absolute bottom-0 right-0 p-1.5 bg-primary text-white rounded-full cursor-pointer hover:bg-blue-700 transition-colors shadow-lg">
+                                    <label className="absolute bottom-0 right-0 p-1.5 bg-orange-500 text-white rounded-full cursor-pointer hover:bg-orange-600 transition-colors shadow-lg">
                                         <Upload className="h-3.5 w-3.5" />
                                         <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
                                     </label>
@@ -635,7 +635,7 @@ const Editor = () => {
                                 rows={6}
                                 value={resume.summary || ''}
                                 onChange={(e) => setResume({ ...resume, summary: e.target.value })}
-                                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
+                                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none"
                                 placeholder="Write a compelling summary about yourself..."
                             />
                         </div>
@@ -645,7 +645,7 @@ const Editor = () => {
                         <div className="space-y-6">
                             <div className="flex justify-between items-center">
                                 <h3 className="text-lg font-bold text-slate-900">Work Experience</h3>
-                                <button onClick={() => addItem('experience', { company: '', position: '', startDate: '', endDate: '', description: '' })} className="text-sm text-primary font-medium hover:underline flex items-center">
+                                <button onClick={() => addItem('experience', { company: '', position: '', startDate: '', endDate: '', description: '' })} className="text-sm text-orange-600 font-medium hover:underline flex items-center">
                                     <Plus className="h-4 w-4 mr-1" /> Add Position
                                 </button>
                             </div>
@@ -670,7 +670,7 @@ const Editor = () => {
                         <div className="space-y-6">
                             <div className="flex justify-between items-center">
                                 <h3 className="text-lg font-bold text-slate-900">Education</h3>
-                                <button onClick={() => addItem('education', { school: '', degree: '', startDate: '', endDate: '', description: '' })} className="text-sm text-primary font-medium hover:underline flex items-center">
+                                <button onClick={() => addItem('education', { school: '', degree: '', startDate: '', endDate: '', description: '' })} className="text-sm text-orange-600 font-medium hover:underline flex items-center">
                                     <Plus className="h-4 w-4 mr-1" /> Add Education
                                 </button>
                             </div>
@@ -700,7 +700,7 @@ const Editor = () => {
                                     rows={4}
                                     value={resume.skills?.join(', ') || ''}
                                     onChange={(e) => setResume({ ...resume, skills: e.target.value.split(',').map(s => s.trim()) })}
-                                    className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
+                                    className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-200 focus:border-orange-500 outline-none"
                                     placeholder="Java, Python, React, Team Leadership..."
                                 />
                             </div>
@@ -711,7 +711,7 @@ const Editor = () => {
                         <div className="space-y-6">
                             <div className="flex justify-between items-center">
                                 <h3 className="text-lg font-bold text-slate-900">Projects</h3>
-                                <button onClick={() => addItem('projects', { name: '', description: '', link: '' })} className="text-sm text-primary font-medium hover:underline flex items-center">
+                                <button onClick={() => addItem('projects', { name: '', description: '', link: '' })} className="text-sm text-orange-600 font-medium hover:underline flex items-center">
                                     <Plus className="h-4 w-4 mr-1" /> Add Project
                                 </button>
                             </div>

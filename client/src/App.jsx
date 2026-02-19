@@ -25,9 +25,9 @@ function App() {
           <div className="min-h-screen font-sans text-slate-900 relative">
             {/* Premium Background Elements */}
             <div className="premium-bg">
-              <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-400/10 blur-[120px] rounded-full animate-blob"></div>
-              <div className="absolute top-[20%] right-[-5%] w-[35%] h-[35%] bg-purple-400/10 blur-[100px] rounded-full animate-blob" style={{ animationDelay: '2s' }}></div>
-              <div className="absolute bottom-[-10%] left-[20%] w-[30%] h-[30%] bg-sky-400/10 blur-[80px] rounded-full animate-blob" style={{ animationDelay: '4s' }}></div>
+              <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-orange-400/10 blur-[120px] rounded-full animate-blob"></div>
+              <div className="absolute top-[20%] right-[-5%] w-[35%] h-[35%] bg-orange-300/10 blur-[100px] rounded-full animate-blob" style={{ animationDelay: '2s' }}></div>
+              <div className="absolute bottom-[-10%] left-[20%] w-[30%] h-[30%] bg-orange-200/10 blur-[80px] rounded-full animate-blob" style={{ animationDelay: '4s' }}></div>
             </div>
 
             <Navbar />
@@ -35,10 +35,10 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/contact" element={<Contact />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/contact" element={<Contact />} />
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/privacy" element={<Privacy />} />
 

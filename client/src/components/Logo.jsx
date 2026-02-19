@@ -18,7 +18,7 @@ const Logo = ({ className = "", showText = true, size = "md" }) => {
             <div className="relative">
                 <div className={`relative ${currentSize.container} rounded-2xl overflow-hidden transition-all duration-500 group-hover:scale-110 group-hover:rotate-3`}>
                     {/* Animated Background Layers */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-rose-500 via-purple-600 to-indigo-600 animate-gradient-xy"></div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-orange-400 via-orange-500 to-orange-600 animate-gradient-xy"></div>
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.4),transparent_70%)]"></div>
 
                     {/* The Main Icon */}
@@ -36,7 +36,7 @@ const Logo = ({ className = "", showText = true, size = "md" }) => {
 
                 {/* Floating Accents */}
                 <div className={`absolute -top-1 -right-1 bg-white rounded-full p-1 shadow-lg transform transition-all duration-300 group-hover:scale-125 group-hover:-translate-y-1 z-20`}>
-                    <Sparkles className={`${currentSize.spark} text-rose-500 fill-rose-500`} />
+                    <Sparkles className={`${currentSize.spark} text-orange-500 fill-orange-500`} />
                 </div>
 
                 <div className={`absolute -bottom-1 -left-1 bg-white rounded-full p-0.5 shadow-md transform transition-all duration-300 group-hover:rotate-12 z-20`}>
@@ -48,14 +48,14 @@ const Logo = ({ className = "", showText = true, size = "md" }) => {
             {showText && (
                 <div className="flex flex-col">
                     <span className={`${currentSize.text} font-black tracking-tighter leading-none`}>
-                        <span className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 bg-clip-text text-transparent group-hover:from-rose-500 group-hover:to-indigo-600 transition-all duration-500">
+                        <span className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 bg-clip-text text-transparent group-hover:from-orange-500 group-hover:to-orange-600 transition-all duration-500">
                             Resume
                         </span>
-                        <span className="bg-gradient-to-r from-rose-500 via-purple-600 to-indigo-600 bg-clip-text text-transparent italic ml-0.5">
+                        <span className="bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 bg-clip-text text-transparent italic ml-0.5">
                             Craft
                         </span>
                     </span>
-                    <div className="h-1 w-0 group-hover:w-full bg-gradient-to-r from-rose-500 to-indigo-600 transition-all duration-700 rounded-full mt-1"></div>
+                    <div className="h-1 w-0 group-hover:w-full bg-gradient-to-r from-orange-400 to-orange-600 transition-all duration-700 rounded-full mt-1"></div>
                 </div>
             )}
         </div>

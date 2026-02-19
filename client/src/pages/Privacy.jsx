@@ -6,15 +6,15 @@ import SEO from '../components/SEO';
 const Privacy = () => {
     return (
         <div className="min-h-screen pt-24 pb-16 bg-slate-50">
-            <SEO 
-                title="Privacy Policy" 
+            <SEO
+                title="Privacy Policy"
                 description="We value your privacy. Learn how ResumeCraft collects, uses, and protects your personal data."
             />
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="bg-white rounded-3xl shadow-xl p-12 border border-slate-100">
                     <div className="flex items-center space-x-4 mb-8">
-                        <div className="bg-rose-100 p-3 rounded-2xl">
-                            <ShieldCheck className="h-8 w-8 text-rose-600" />
+                        <div className="bg-orange-100 p-3 rounded-2xl">
+                            <ShieldCheck className="h-8 w-8 text-orange-600" />
                         </div>
                         <h1 className="text-4xl font-extrabold text-slate-900">Privacy Policy</h1>
                     </div>
@@ -22,7 +22,7 @@ const Privacy = () => {
                     <div className="space-y-8 text-slate-600 leading-relaxed">
                         <section>
                             <h3 className="text-xl font-bold text-slate-900 mb-3 flex items-center">
-                                <Database className="h-5 w-5 mr-3 text-rose-500" />
+                                <Database className="h-5 w-5 mr-3 text-orange-500" />
                                 Data Collection
                             </h3>
                             <p>We collect minimal data required to build your professional resume. This includes your name, email address (exclusively Gmail), and the professional details you choose to enter into your resume templates.</p>
@@ -30,7 +30,7 @@ const Privacy = () => {
 
                         <section>
                             <h3 className="text-xl font-bold text-slate-900 mb-3 flex items-center">
-                                <Lock className="h-5 w-5 mr-3 text-purple-500" />
+                                <Lock className="h-5 w-5 mr-3 text-orange-500" />
                                 Data Security
                             </h3>
                             <p>Your data is encrypted and stored securely. We do not sell your personal data to third parties. Profile pictures are stored as Base64 strings to ensure portability and immediate rendering in your PDF downloads.</p>
@@ -38,7 +38,7 @@ const Privacy = () => {
 
                         <section>
                             <h3 className="text-xl font-bold text-slate-900 mb-3 flex items-center">
-                                <Eye className="h-5 w-5 mr-3 text-indigo-500" />
+                                <Eye className="h-5 w-5 mr-3 text-orange-500" />
                                 Cookies & Tracking
                             </h3>
                             <p>We use essential cookies to maintain your login session. No aggressive marketing tracking is utilized. Our goal is to provide a clean, "ad-free" resume building experience.</p>

@@ -25,12 +25,12 @@ const Navbar = () => {
 
                     {/* Desktop Menu */}
                     <div className="hidden md:flex items-center space-x-6">
-                        <Link to="/templates" className="text-slate-600 hover:text-primary transition-colors font-medium">
+                        <Link to="/templates" className="text-slate-600 hover:text-orange-500 transition-colors font-medium">
                             Templates
                         </Link>
                         {user ? (
                             <>
-                                <Link to="/dashboard" className="text-slate-600 hover:text-primary transition-colors font-medium">
+                                <Link to="/dashboard" className="text-slate-600 hover:text-orange-500 transition-colors font-medium">
                                     Dashboard
                                 </Link>
                                 <div className="flex items-center space-x-4 ml-4 pl-4 border-l border-gray-200">
@@ -49,12 +49,12 @@ const Navbar = () => {
                             </>
                         ) : (
                             <>
-                                <Link to="/login" className="text-slate-600 hover:text-primary transition-colors font-medium">
+                                <Link to="/login" className="text-slate-600 hover:text-orange-500 transition-colors font-medium">
                                     Login
                                 </Link>
                                 <Link
                                     to="/templates"
-                                    className="bg-primary hover:bg-blue-700 text-white px-5 py-2.5 rounded-full font-medium transition-all shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50"
+                                    className="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-full font-medium transition-all shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50"
                                 >
                                     Get Started
                                 </Link>
@@ -78,9 +78,9 @@ const Navbar = () => {
             {isMenuOpen && (
                 <div className="md:hidden bg-white border-b border-gray-100 px-4 pt-2 pb-6 shadow-xl">
                     <div className="flex flex-col space-y-4">
-                        <Link 
-                            to="/templates" 
-                            className="text-slate-600 hover:text-primary font-medium px-2 py-2 hover:bg-slate-50 rounded-lg transition-colors"
+                        <Link
+                            to="/templates"
+                            className="text-slate-600 hover:text-orange-500 font-medium px-2 py-2 hover:bg-slate-50 rounded-lg transition-colors"
                             onClick={() => setIsMenuOpen(false)}
                         >
                             Templates
@@ -88,17 +88,17 @@ const Navbar = () => {
                         {user ? (
                             <>
                                 <div className="flex items-center space-x-3 px-2 py-3 bg-slate-50 rounded-lg">
-                                    <div className="bg-primary/10 p-2 rounded-full">
-                                        <User className="h-5 w-5 text-primary" />
+                                    <div className="bg-orange-500/10 p-2 rounded-full">
+                                        <User className="h-5 w-5 text-orange-600" />
                                     </div>
                                     <div>
                                         <p className="text-sm font-bold text-slate-900">{user.name}</p>
                                         <p className="text-xs text-slate-500">{user.email}</p>
                                     </div>
                                 </div>
-                                <Link 
-                                    to="/dashboard" 
-                                    className="text-slate-600 hover:text-primary font-medium px-2 py-2 hover:bg-slate-50 rounded-lg transition-colors"
+                                <Link
+                                    to="/dashboard"
+                                    className="text-slate-600 hover:text-orange-500 font-medium px-2 py-2 hover:bg-slate-50 rounded-lg transition-colors"
                                     onClick={() => setIsMenuOpen(false)}
                                 >
                                     Dashboard
@@ -113,16 +113,16 @@ const Navbar = () => {
                             </>
                         ) : (
                             <>
-                                <Link 
-                                    to="/login" 
-                                    className="text-slate-600 hover:text-primary font-medium px-2 py-2 hover:bg-slate-50 rounded-lg transition-colors"
+                                <Link
+                                    to="/login"
+                                    className="text-slate-600 hover:text-orange-500 font-medium px-2 py-2 hover:bg-slate-50 rounded-lg transition-colors"
                                     onClick={() => setIsMenuOpen(false)}
                                 >
                                     Login
                                 </Link>
                                 <Link
                                     to="/templates"
-                                    className="bg-primary text-white px-4 py-3 rounded-xl font-bold text-center shadow-lg shadow-primary/20"
+                                    className="bg-orange-500 text-white px-4 py-3 rounded-xl font-bold text-center shadow-lg shadow-orange-500/20"
                                     onClick={() => setIsMenuOpen(false)}
                                 >
                                     Get Started

@@ -11,7 +11,7 @@ const Dashboard = () => {
     const [starters, setStarters] = useState([]);
     const [loading, setLoading] = useState(true);
     const [creating, setCreating] = useState(null);
-    
+
     // Filters
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedIndustry, setSelectedIndustry] = useState('All');
@@ -53,10 +53,10 @@ const Dashboard = () => {
 
     const filteredStarters = useMemo(() => {
         return starters.filter(template => {
-            const matchesSearch = template.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                                  template.targetCompanies.some(c => c.toLowerCase().includes(searchQuery.toLowerCase())) ||
-                                  template.skills.some(s => s.toLowerCase().includes(searchQuery.toLowerCase()));
-            
+            const matchesSearch = template.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                template.targetCompanies.some(c => c.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                template.skills.some(s => s.toLowerCase().includes(searchQuery.toLowerCase()));
+
             const matchesIndustry = selectedIndustry === 'All' || template.industry === selectedIndustry;
             const matchesExperience = selectedExperience === 'All' || template.experienceLevel === selectedExperience;
             const matchesAts = (template.atsScore || 0) >= minAtsScore;
@@ -119,23 +119,23 @@ const Dashboard = () => {
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-[calc(100vh-64px)]">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
             </div>
         );
     }
 
     return (
         <div className="min-h-screen bg-gray-50 pt-20 pb-10 px-4 sm:px-6 lg:px-8">
-            <SEO 
-                title="Dashboard | ResumeCraft - MNC Resume Templates" 
+            <SEO
+                title="Dashboard | ResumeCraft - MNC Resume Templates"
                 description="Access professional MNC-approved resume templates. Filter by industry, experience level, and ATS score to create your perfect resume."
             />
-            
+
             <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
                     <div>
                         <h2 className="text-xl font-black text-slate-900 flex items-center">
-                            <Sparkles className="h-5 w-5 mr-2 text-primary" />
+                            <Sparkles className="h-5 w-5 mr-2 text-orange-500" />
                             MNC Resume Blueprints
                         </h2>
                         <p className="text-sm text-slate-500">Pick a high-performance blueprint to get hired at top MNCs.</p>
@@ -153,7 +153,7 @@ const Dashboard = () => {
                                 placeholder="Search roles, companies..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                                className="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500"
                             />
                         </div>
 
@@ -163,7 +163,7 @@ const Dashboard = () => {
                             <select
                                 value={selectedIndustry}
                                 onChange={(e) => setSelectedIndustry(e.target.value)}
-                                className="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none bg-white cursor-pointer"
+                                className="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 appearance-none bg-white cursor-pointer"
                             >
                                 {industries.map(ind => (
                                     <option key={ind} value={ind}>{ind === 'All' ? 'All Industries' : ind}</option>
@@ -177,7 +177,7 @@ const Dashboard = () => {
                             <select
                                 value={selectedExperience}
                                 onChange={(e) => setSelectedExperience(e.target.value)}
-                                className="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none bg-white cursor-pointer"
+                                className="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 appearance-none bg-white cursor-pointer"
                             >
                                 {experienceLevels.map(exp => (
                                     <option key={exp} value={exp}>{exp === 'All' ? 'All Experience Levels' : exp}</option>
@@ -191,7 +191,7 @@ const Dashboard = () => {
                             <select
                                 value={minAtsScore}
                                 onChange={(e) => setMinAtsScore(Number(e.target.value))}
-                                className="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none bg-white cursor-pointer"
+                                className="w-full pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 appearance-none bg-white cursor-pointer"
                             >
                                 <option value={0}>Any ATS Score</option>
                                 <option value={80}>80+ Score</option>
@@ -207,7 +207,7 @@ const Dashboard = () => {
                         <button
                             key={template.id}
                             onClick={() => useTemplate(template)}
-                            className="group relative flex flex-col bg-white rounded-3xl border border-slate-200 hover:border-primary/40 transition-all text-left overflow-hidden hover:shadow-2xl hover:-translate-y-2 h-[480px]"
+                            className="group relative flex flex-col bg-white rounded-3xl border border-slate-200 hover:border-orange-500/40 transition-all text-left overflow-hidden hover:shadow-2xl hover:-translate-y-2 h-[480px]"
                         >
                             {/* Visual Resume Mockup Header */}
                             <div className="h-64 w-full relative overflow-hidden bg-slate-900">
@@ -227,7 +227,7 @@ const Dashboard = () => {
                                     <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 shadow-2xl">
                                         <div className="flex items-center justify-between mb-2">
                                             <div className="flex items-center space-x-2">
-                                                <div className="w-5 h-5 rounded-full bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
+                                                <div className="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center shadow-lg shadow-orange-500/20">
                                                     <Sparkles className="h-3 w-3 text-white" />
                                                 </div>
                                                 <span className="text-[9px] font-black text-white uppercase tracking-widest">AI Engineered</span>
@@ -240,7 +240,7 @@ const Dashboard = () => {
                                         </div>
                                         <div className="space-y-1.5">
                                             <div className="h-1.5 w-full bg-white/30 rounded-full overflow-hidden">
-                                                <div className="h-full bg-primary/60 w-3/4"></div>
+                                                <div className="h-full bg-orange-500/60 w-3/4"></div>
                                             </div>
                                             <div className="h-1.5 w-2/3 bg-white/20 rounded-full"></div>
                                         </div>
@@ -262,7 +262,7 @@ const Dashboard = () => {
 
                             <div className="p-5 flex flex-col flex-1">
                                 <div className="mb-4">
-                                    <h3 className="text-sm font-black text-slate-900 leading-tight group-hover:text-primary transition-colors line-clamp-2">{template.title}</h3>
+                                    <h3 className="text-sm font-black text-slate-900 leading-tight group-hover:text-orange-500 transition-colors line-clamp-2">{template.title}</h3>
                                     <p className="text-[10px] text-slate-500 mt-2 line-clamp-2 font-medium">{template.description}</p>
                                 </div>
 
@@ -287,8 +287,8 @@ const Dashboard = () => {
                                                 </div>
                                             ))}
                                         </div>
-                                        <div className="bg-primary/10 p-2 rounded-full group-hover:bg-primary transition-colors">
-                                            <Plus className="h-4 w-4 text-primary group-hover:text-white transition-colors" />
+                                        <div className="bg-orange-500/10 p-2 rounded-full group-hover:bg-orange-500 transition-colors">
+                                            <Plus className="h-4 w-4 text-orange-500 group-hover:text-white transition-colors" />
                                         </div>
                                     </div>
                                 </div>
@@ -297,7 +297,7 @@ const Dashboard = () => {
                             {creating === template.id && (
                                 <div className="absolute inset-0 bg-slate-900/90 backdrop-blur-xl flex items-center justify-center z-20">
                                     <div className="flex flex-col items-center">
-                                        <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
+                                        <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mb-4"></div>
                                         <span className="text-xs font-black text-white uppercase tracking-[0.2em] animate-pulse">Syncing AI Data...</span>
                                     </div>
                                 </div>
@@ -315,7 +315,7 @@ const Dashboard = () => {
                 <div className="flex space-x-4">
                     <button
                         onClick={createResume}
-                        className="flex items-center space-x-2 bg-primary hover:bg-blue-700 text-white px-5 py-2.5 rounded-full font-medium transition-all shadow-lg shadow-blue-500/30 w-full sm:w-auto justify-center"
+                        className="flex items-center space-x-2 bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-full font-medium transition-all shadow-lg shadow-orange-500/30 w-full sm:w-auto justify-center"
                     >
                         <Plus className="h-5 w-5" />
                         <span>Create Blank</span>
@@ -335,7 +335,7 @@ const Dashboard = () => {
                     <div className="mt-6">
                         <button
                             onClick={createResume}
-                            className="text-primary hover:text-blue-700 font-medium"
+                            className="text-orange-600 hover:text-orange-700 font-medium"
                         >
                             Create one now &rarr;
                         </button>
@@ -344,7 +344,7 @@ const Dashboard = () => {
             ) : (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {resumes.map((resume) => (
-                        <div key={resume._id} className="group bg-white rounded-2xl border border-slate-200 hover:border-primary/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+                        <div key={resume._id} className="group bg-white rounded-2xl border border-slate-200 hover:border-orange-500/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
                             <div className="h-40 bg-slate-50 relative overflow-hidden border-b border-slate-100 p-4">
                                 <div className="absolute inset-0 bg-gradient-to-br from-slate-100 to-white"></div>
                                 {/* Mini Resume Mockup */}
@@ -368,9 +368,9 @@ const Dashboard = () => {
                                         <div className="h-1 w-2/3 bg-slate-50 rounded-full"></div>
                                     </div>
                                     <div className="mt-4 flex space-x-1">
-                                        <div className="h-1.5 w-4 bg-primary/20 rounded-full"></div>
-                                        <div className="h-1.5 w-4 bg-primary/20 rounded-full"></div>
-                                        <div className="h-1.5 w-4 bg-primary/20 rounded-full"></div>
+                                        <div className="h-1.5 w-4 bg-orange-500/20 rounded-full"></div>
+                                        <div className="h-1.5 w-4 bg-orange-500/20 rounded-full"></div>
+                                        <div className="h-1.5 w-4 bg-orange-500/20 rounded-full"></div>
                                     </div>
                                 </div>
                                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors" />
@@ -388,14 +388,14 @@ const Dashboard = () => {
                                     <div className="flex space-x-2">
                                         <Link
                                             to={`/editor/${resume._id}`}
-                                            className="p-2 text-slate-500 hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
+                                            className="p-2 text-slate-500 hover:text-orange-500 hover:bg-orange-500/5 rounded-lg transition-colors"
                                             title="Edit"
                                         >
                                             <Edit className="h-5 w-5" />
                                         </Link>
                                         <button
                                             onClick={() => handleDuplicate(resume)}
-                                            className="p-2 text-slate-500 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
+                                            className="p-2 text-slate-500 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
                                             title="Duplicate"
                                         >
                                             <Copy className="h-5 w-5" />
@@ -414,7 +414,7 @@ const Dashboard = () => {
                                             <Link
                                                 to={`/p/${resume._id}`}
                                                 target="_blank"
-                                                className="p-2 text-slate-500 hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
+                                                className="p-2 text-slate-500 hover:text-orange-500 hover:bg-orange-500/5 rounded-lg transition-colors"
                                                 title="View Public Link"
                                             >
                                                 <ExternalLink className="h-5 w-5" />
@@ -422,7 +422,7 @@ const Dashboard = () => {
                                         )}
                                         <Link
                                             to={`/editor/${resume._id}`}
-                                            className="p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                                            className="p-2 text-slate-500 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
                                             title="Download (open in editor to export)"
                                         >
                                             <Download className="h-5 w-5" />

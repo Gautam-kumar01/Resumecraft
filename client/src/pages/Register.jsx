@@ -100,12 +100,12 @@ const Register = () => {
 
     return (
         <div className="min-h-[calc(100vh-64px)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-slate-50 relative overflow-hidden">
-             {/* Background Blobs - Added for consistency with Login */}
-             <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-400/30 rounded-full blur-[120px] mix-blend-multiply animate-blob"></div>
-             <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-indigo-400/30 rounded-full blur-[120px] mix-blend-multiply animate-blob animation-delay-2000"></div>
-             
-             <SEO 
-                title="Sign Up" 
+            {/* Background Blobs - Added for consistency with Login */}
+            <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-orange-400/20 rounded-full blur-[120px] mix-blend-multiply animate-blob"></div>
+            <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-orange-300/20 rounded-full blur-[120px] mix-blend-multiply animate-blob animation-delay-2000"></div>
+
+            <SEO
+                title="Sign Up"
                 description="Create your free account on ResumeCraft. Build professional resumes with AI assistance and get hired faster."
             />
             <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-xl border border-slate-100">
@@ -166,7 +166,7 @@ const Register = () => {
                                         name="name"
                                         type="text"
                                         required
-                                        className="appearance-none rounded-xl relative block w-full px-4 py-3 border border-slate-300 placeholder-slate-400 text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary sm:text-sm transition-all"
+                                        className="appearance-none rounded-xl relative block w-full px-4 py-3 border border-slate-300 placeholder-slate-400 text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 sm:text-sm transition-all"
                                         placeholder="Full Name"
                                         value={formData.name}
                                         onChange={handleChange}
@@ -177,7 +177,7 @@ const Register = () => {
                                         name="email"
                                         type="email"
                                         required
-                                        className="appearance-none rounded-xl relative block w-full px-4 py-3 border border-slate-300 placeholder-slate-400 text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary sm:text-sm transition-all"
+                                        className="appearance-none rounded-xl relative block w-full px-4 py-3 border border-slate-300 placeholder-slate-400 text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 sm:text-sm transition-all"
                                         placeholder="Email address"
                                         value={formData.email}
                                         onChange={handleChange}
@@ -188,7 +188,7 @@ const Register = () => {
                                         name="password"
                                         type="password"
                                         required
-                                        className="appearance-none rounded-xl relative block w-full px-4 py-3 border border-slate-300 placeholder-slate-400 text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary sm:text-sm transition-all"
+                                        className="appearance-none rounded-xl relative block w-full px-4 py-3 border border-slate-300 placeholder-slate-400 text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 sm:text-sm transition-all"
                                         placeholder="Password"
                                         value={formData.password}
                                         onChange={handleChange}
@@ -199,7 +199,7 @@ const Register = () => {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-primary hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all shadow-lg shadow-blue-500/30 disabled:opacity-50"
+                                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all shadow-lg shadow-orange-500/30 disabled:opacity-50"
                             >
                                 {loading ? 'Sending Code...' : 'Create Account'}
                             </button>
@@ -212,7 +212,7 @@ const Register = () => {
                                 type="text"
                                 required
                                 maxLength="6"
-                                className="appearance-none rounded-xl relative block w-full px-4 py-4 border border-slate-300 placeholder-slate-400 text-slate-900 text-center text-3xl font-bold tracking-[0.5em] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                                className="appearance-none rounded-xl relative block w-full px-4 py-4 border border-slate-300 placeholder-slate-400 text-slate-900 text-center text-3xl font-bold tracking-[0.5em] focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all"
                                 placeholder="000000"
                                 value={otp}
                                 onChange={(e) => setOtp(e.target.value)}
@@ -230,7 +230,7 @@ const Register = () => {
                             <button
                                 type="button"
                                 onClick={handleResendOTP}
-                                className="w-full text-center text-sm font-medium text-primary hover:text-blue-700"
+                                className="w-full text-center text-sm font-medium text-orange-600 hover:text-orange-700"
                             >
                                 Didn't receive code? Resend
                             </button>
@@ -248,7 +248,7 @@ const Register = () => {
                 {!showOtp && (
                     <div className="text-center text-sm">
                         <span className="text-slate-600">Already have an account? </span>
-                        <Link to="/login" className="font-medium text-primary hover:text-blue-700 transition-colors">
+                        <Link to="/login" className="font-medium text-orange-600 hover:text-orange-700 transition-colors">
                             Sign in
                         </Link>
                     </div>

@@ -54,22 +54,22 @@ const Login = () => {
     return (
         <div className="min-h-[calc(100vh-64px)] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
             {/* Background Blobs for extra glass effect context */}
-            <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-400/30 rounded-full blur-[120px] mix-blend-multiply animate-blob"></div>
-            <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-indigo-400/30 rounded-full blur-[120px] mix-blend-multiply animate-blob animation-delay-2000"></div>
-            
-            <SEO 
-                title="Login" 
+            <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-orange-400/20 rounded-full blur-[120px] mix-blend-multiply animate-blob"></div>
+            <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-orange-300/20 rounded-full blur-[120px] mix-blend-multiply animate-blob animation-delay-2000"></div>
+
+            <SEO
+                title="Login"
                 description="Sign in to ResumeCraft to continue building your professional resume."
             />
-            
-            <motion.div 
+
+            <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
                 className="max-w-md w-full space-y-8 glass-effect p-10 rounded-3xl relative z-10"
             >
                 <div className="text-center">
-                    <motion.div 
+                    <motion.div
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ delay: 0.2 }}
@@ -86,7 +86,7 @@ const Login = () => {
                 </div>
 
                 {error && (
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         className="bg-red-50/80 backdrop-blur-sm text-red-600 p-4 rounded-xl text-sm text-center border border-red-200 shadow-sm flex items-center justify-center gap-2"
@@ -106,7 +106,7 @@ const Login = () => {
                                     useOneTap
                                     theme="filled_blue"
                                     shape="pill"
-                                    width="100%" 
+                                    width="100%"
                                     text="continue_with"
                                 />
                             </div>
@@ -131,14 +131,14 @@ const Login = () => {
                             <label htmlFor="email" className="sr-only">Email address</label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <Mail className="h-5 w-5 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
+                                    <Mail className="h-5 w-5 text-slate-400 group-focus-within:text-orange-500 transition-colors" />
                                 </div>
                                 <input
                                     id="email"
                                     name="email"
                                     type="email"
                                     required
-                                    className="block w-full pl-11 pr-4 py-3.5 bg-white/50 border border-slate-200/60 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all duration-300 backdrop-blur-sm hover:bg-white/80"
+                                    className="block w-full pl-11 pr-4 py-3.5 bg-white/50 border border-slate-200/60 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all duration-300 backdrop-blur-sm hover:bg-white/80"
                                     placeholder="Email address"
                                     value={formData.email}
                                     onChange={handleChange}
@@ -149,14 +149,14 @@ const Login = () => {
                             <label htmlFor="password" className="sr-only">Password</label>
                             <div className="relative">
                                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                    <Lock className="h-5 w-5 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
+                                    <Lock className="h-5 w-5 text-slate-400 group-focus-within:text-orange-500 transition-colors" />
                                 </div>
                                 <input
                                     id="password"
                                     name="password"
                                     type="password"
                                     required
-                                    className="block w-full pl-11 pr-4 py-3.5 bg-white/50 border border-slate-200/60 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all duration-300 backdrop-blur-sm hover:bg-white/80"
+                                    className="block w-full pl-11 pr-4 py-3.5 bg-white/50 border border-slate-200/60 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all duration-300 backdrop-blur-sm hover:bg-white/80"
                                     placeholder="Password"
                                     value={formData.password}
                                     onChange={handleChange}
@@ -171,7 +171,7 @@ const Login = () => {
                                 id="remember-me"
                                 name="remember-me"
                                 type="checkbox"
-                                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-slate-300 rounded cursor-pointer"
+                                className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-slate-300 rounded cursor-pointer"
                             />
                             <label htmlFor="remember-me" className="ml-2 block text-sm text-slate-600 cursor-pointer select-none">
                                 Remember me
@@ -179,12 +179,12 @@ const Login = () => {
                         </div>
 
                         <div className="text-sm">
-                            <Link 
-                                to="/forgot-password" 
-                                className="font-medium text-[#7DD3FC] hover:text-[#38BDF8] transition-all duration-300 relative group"
+                            <Link
+                                to="/forgot-password"
+                                className="font-medium text-orange-400 hover:text-orange-500 transition-all duration-300 relative group"
                             >
                                 Forgot your password?
-                                <span className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-[#38BDF8] transition-all group-hover:w-full duration-300"></span>
+                                <span className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-orange-500 transition-all group-hover:w-full duration-300"></span>
                             </Link>
                         </div>
                     </div>
@@ -193,7 +193,7 @@ const Login = () => {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="group relative w-full flex justify-center py-3.5 px-4 border border-transparent text-sm font-bold rounded-xl text-white bg-gradient-to-r from-[#6366F1] to-[#A855F7] hover:shadow-lg hover:shadow-indigo-500/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300 overflow-hidden"
+                            className="group relative w-full flex justify-center py-3.5 px-4 border border-transparent text-sm font-bold rounded-xl text-white bg-gradient-to-r from-orange-500 to-orange-600 hover:shadow-lg hover:shadow-orange-500/30 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all duration-300 overflow-hidden"
                         >
                             <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out"></div>
                             {isLoading ? (
@@ -207,12 +207,12 @@ const Login = () => {
                         </button>
                     </div>
                 </form>
-                
+
                 <div className="mt-6 text-center">
                     <p className="text-slate-600 mb-3 text-sm">Don't have an account?</p>
-                    <Link 
-                        to="/register" 
-                        className="inline-flex items-center justify-center px-6 py-2.5 border border-slate-200/60 rounded-xl text-sm font-semibold text-slate-700 bg-white/40 hover:bg-white/80 hover:text-indigo-600 hover:border-indigo-200 transition-all duration-300 backdrop-blur-sm shadow-sm hover:shadow group w-full sm:w-auto"
+                    <Link
+                        to="/register"
+                        className="inline-flex items-center justify-center px-6 py-2.5 border border-slate-200/60 rounded-xl text-sm font-semibold text-slate-700 bg-white/40 hover:bg-white/80 hover:text-orange-600 hover:border-orange-200 transition-all duration-300 backdrop-blur-sm shadow-sm hover:shadow group w-full sm:w-auto"
                     >
                         <UserPlus className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
                         Create free account

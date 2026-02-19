@@ -9,7 +9,7 @@ import { Lock, Key, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 const ResetPassword = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  
+
   // Get email from navigation state or allow user to type it if missing
   const [email, setEmail] = useState(location.state?.email || '');
   const [otp, setOtp] = useState('');
@@ -61,7 +61,7 @@ const ResetPassword = () => {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <motion.div 
+          <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 text-center"
@@ -89,15 +89,15 @@ const ResetPassword = () => {
 
   return (
     <>
-      <SEO 
-        title="Reset Password - ResumeCraft" 
+      <SEO
+        title="Reset Password - ResumeCraft"
         description="Set a new password for your ResumeCraft account."
       />
       <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <div className="flex justify-center mb-6">
             <Link to="/" className="flex items-center gap-2">
-              <Logo className="h-10 w-10 text-blue-600" />
+              <Logo className="h-10 w-10 text-orange-600" />
               <span className="text-2xl font-bold text-slate-900">ResumeCraft</span>
             </Link>
           </div>
@@ -110,7 +110,7 @@ const ResetPassword = () => {
         </div>
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10"
@@ -130,26 +130,26 @@ const ResetPassword = () => {
 
             <form className="space-y-6" onSubmit={handleSubmit}>
               {!location.state?.email && (
-                 <div>
-                 <label htmlFor="email" className="block text-sm font-medium text-slate-700">
-                   Email address
-                 </label>
-                 <div className="mt-1 relative rounded-md shadow-sm">
-                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                     <Key className="h-5 w-5 text-slate-400" />
-                   </div>
-                   <input
-                     id="email"
-                     name="email"
-                     type="email"
-                     required
-                     value={email}
-                     onChange={(e) => setEmail(e.target.value)}
-                     className="block w-full pl-10 sm:text-sm border-slate-300 rounded-md focus:ring-blue-500 focus:border-blue-500 p-2 border"
-                     placeholder="Confirm your email"
-                   />
-                 </div>
-               </div>
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-slate-700">
+                    Email address
+                  </label>
+                  <div className="mt-1 relative rounded-md shadow-sm">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Key className="h-5 w-5 text-slate-400" />
+                    </div>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="block w-full pl-10 sm:text-sm border-slate-300 rounded-md focus:ring-orange-500 focus:border-orange-500 p-2 border"
+                      placeholder="Confirm your email"
+                    />
+                  </div>
+                </div>
               )}
 
               <div>
@@ -167,7 +167,7 @@ const ResetPassword = () => {
                     required
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
-                    className="block w-full pl-10 sm:text-sm border-slate-300 rounded-md focus:ring-blue-500 focus:border-blue-500 p-2 border tracking-widest"
+                    className="block w-full pl-10 sm:text-sm border-slate-300 rounded-md focus:ring-orange-500 focus:border-orange-500 p-2 border tracking-widest"
                     placeholder="123456"
                     maxLength={6}
                   />
@@ -189,7 +189,7 @@ const ResetPassword = () => {
                     required
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    className="block w-full pl-10 sm:text-sm border-slate-300 rounded-md focus:ring-blue-500 focus:border-blue-500 p-2 border"
+                    className="block w-full pl-10 sm:text-sm border-slate-300 rounded-md focus:ring-orange-500 focus:border-orange-500 p-2 border"
                     placeholder="••••••••"
                   />
                 </div>
@@ -210,7 +210,7 @@ const ResetPassword = () => {
                     required
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="block w-full pl-10 sm:text-sm border-slate-300 rounded-md focus:ring-blue-500 focus:border-blue-500 p-2 border"
+                    className="block w-full pl-10 sm:text-sm border-slate-300 rounded-md focus:ring-orange-500 focus:border-orange-500 p-2 border"
                     placeholder="••••••••"
                   />
                 </div>
@@ -220,7 +220,7 @@ const ResetPassword = () => {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-70 disabled:cursor-not-allowed transition-colors"
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-70 disabled:cursor-not-allowed transition-colors"
                 >
                   {isLoading ? (
                     <>

@@ -6,15 +6,15 @@ import SEO from '../components/SEO';
 const Terms = () => {
     return (
         <div className="min-h-screen pt-24 pb-16 bg-slate-50">
-            <SEO 
-                title="Terms & Conditions" 
+            <SEO
+                title="Terms & Conditions"
                 description="Read our Terms and Conditions to understand your rights and responsibilities when using ResumeCraft."
             />
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="bg-white rounded-3xl shadow-xl p-12 border border-slate-100">
                     <div className="flex items-center space-x-4 mb-8">
-                        <div className="bg-purple-100 p-3 rounded-2xl">
-                            <Scale className="h-8 w-8 text-purple-600" />
+                        <div className="bg-orange-100 p-3 rounded-2xl">
+                            <Scale className="h-8 w-8 text-orange-600" />
                         </div>
                         <h1 className="text-4xl font-extrabold text-slate-900">Terms & Conditions</h1>
                     </div>

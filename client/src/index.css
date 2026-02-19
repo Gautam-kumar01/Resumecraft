@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #6366f1;
-  --color-primary-dark: #4f46e5;
-  --color-accent: #10b981;
+  --color-primary: #f97316;
+  --color-primary-dark: #ea580c;
+  --color-accent: #fb923c;
   --color-surface: #ffffff;
 
   /* Standard Hex Slate Palette (Fixes oklch error in html2canvas) */
@@ -19,7 +19,18 @@
   --color-slate-900: #0f172a;
   --color-slate-950: #020617;
 
-  /* Additional colors used in ResumePreview.jsx (Rose, Indigo, Blue, Red, Green) */
+  /* Additional colors used in ResumePreview.jsx (Orange, Rose, Indigo, Blue, Red, Green) */
+  --color-orange-50: #fff7ed;
+  --color-orange-100: #ffedd5;
+  --color-orange-200: #fed7aa;
+  --color-orange-300: #fdba74;
+  --color-orange-400: #fb923c;
+  --color-orange-500: #f97316;
+  --color-orange-600: #ea580c;
+  --color-orange-700: #c2410c;
+  --color-orange-800: #9a3412;
+  --color-orange-900: #7c2d12;
+
   --color-rose-50: #fff1f2;
   --color-rose-100: #ffe4e6;
   --color-rose-200: #fecdd3;
@@ -114,13 +125,13 @@
   height: 100%;
   z-index: -1;
   overflow: hidden;
-  background: radial-gradient(circle at 0% 0%, #fdfcfb 0%, #e2d1c3 100%);
+  background: radial-gradient(circle at 0% 0%, #fffdfa 0%, #fff7ed 100%);
   background-image:
-    radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 45%),
-    radial-gradient(circle at 90% 10%, rgba(139, 92, 246, 0.12) 0%, transparent 45%),
-    radial-gradient(circle at 80% 90%, rgba(20, 184, 166, 0.1) 0%, transparent 45%),
-    radial-gradient(circle at 20% 80%, rgba(244, 63, 94, 0.08) 0%, transparent 45%),
-    radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.05) 0%, transparent 60%);
+    radial-gradient(circle at 10% 20%, rgba(249, 115, 22, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 90% 10%, rgba(251, 146, 60, 0.1) 0%, transparent 45%),
+    radial-gradient(circle at 80% 90%, rgba(255, 255, 255, 0.4) 0%, transparent 45%),
+    radial-gradient(circle at 20% 80%, rgba(234, 88, 12, 0.06) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(249, 115, 22, 0.04) 0%, transparent 60%);
 }
 
 .premium-bg::before {
@@ -130,9 +141,9 @@
   height: 150%;
   top: -25%;
   left: -25%;
-  background: radial-gradient(circle at 50% 50%, #818cf8 0%, transparent 25%);
+  background: radial-gradient(circle at 50% 50%, #fdba74 0%, transparent 25%);
   filter: blur(120px);
-  opacity: 0.22;
+  opacity: 0.18;
   animation: mesh-rotate 60s linear infinite;
 }
 
@@ -211,6 +222,7 @@
   0% {
     transform: translateX(0);
   }
+
   100% {
     transform: translateX(-50%);
   }
@@ -230,9 +242,11 @@
   0% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-40%);
   }
+
   100% {
     transform: translateY(0);
   }

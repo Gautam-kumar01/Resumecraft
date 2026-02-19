@@ -35,7 +35,7 @@ const LoginModal = ({ isOpen, onClose, onSuccess, initialMode = 'login', title, 
                 // Re-reading AuthContext: register returns data but doesn't login.
                 // Let's just try to login immediately after register if the backend allows, 
                 // or simpler: just use login.
-                
+
                 // For this specific flow "Minimal fields", usually we want auto-login.
                 // But if verification is required, we should show OTP.
                 // Let's assume standard flow: Register -> Login (or Auto-login if no verify).
@@ -84,7 +84,7 @@ const LoginModal = ({ isOpen, onClose, onSuccess, initialMode = 'login', title, 
                     exit={{ opacity: 0, scale: 0.95, y: 20 }}
                     className="relative w-full max-w-md bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden border border-white/50 p-8"
                 >
-                    <button 
+                    <button
                         onClick={onClose}
                         className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-colors"
                     >
@@ -99,8 +99,8 @@ const LoginModal = ({ isOpen, onClose, onSuccess, initialMode = 'login', title, 
                             {title || (mode === 'login' ? 'Welcome Back' : 'Create Account')}
                         </h2>
                         <p className="text-sm text-slate-500 mt-2">
-                            {subtitle || (mode === 'login' 
-                                ? 'Sign in to save and download your resume' 
+                            {subtitle || (mode === 'login'
+                                ? 'Sign in to save and download your resume'
                                 : 'Join for free to access premium features')}
                         </p>
                     </div>
@@ -112,13 +112,13 @@ const LoginModal = ({ isOpen, onClose, onSuccess, initialMode = 'login', title, 
                     )}
 
                     <div className="mb-6">
-                         <GoogleLogin
+                        <GoogleLogin
                             onSuccess={handleGoogleSuccess}
                             onError={() => setError('Google login failed')}
                             useOneTap
                             theme="filled_blue"
                             shape="pill"
-                            width="100%" 
+                            width="100%"
                             text={mode === 'login' ? "signin_with" : "signup_with"}
                         />
                     </div>
@@ -137,7 +137,7 @@ const LoginModal = ({ isOpen, onClose, onSuccess, initialMode = 'login', title, 
                     <form onSubmit={handleSubmit} className="space-y-4">
                         {mode === 'register' && (
                             <div className="relative group">
-                                <User className="absolute left-3 top-3.5 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
+                                <User className="absolute left-3 top-3.5 h-5 w-5 text-slate-400 group-focus-within:text-orange-500 transition-colors" />
                                 <input
                                     name="name"
                                     type="text"
@@ -145,12 +145,12 @@ const LoginModal = ({ isOpen, onClose, onSuccess, initialMode = 'login', title, 
                                     placeholder="Full Name"
                                     value={formData.name}
                                     onChange={handleChange}
-                                    className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                                    className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all"
                                 />
                             </div>
                         )}
                         <div className="relative group">
-                            <Mail className="absolute left-3 top-3.5 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
+                            <Mail className="absolute left-3 top-3.5 h-5 w-5 text-slate-400 group-focus-within:text-orange-500 transition-colors" />
                             <input
                                 name="email"
                                 type="email"
@@ -158,11 +158,11 @@ const LoginModal = ({ isOpen, onClose, onSuccess, initialMode = 'login', title, 
                                 placeholder="Email address"
                                 value={formData.email}
                                 onChange={handleChange}
-                                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all"
                             />
                         </div>
                         <div className="relative group">
-                            <Lock className="absolute left-3 top-3.5 h-5 w-5 text-slate-400 group-focus-within:text-primary transition-colors" />
+                            <Lock className="absolute left-3 top-3.5 h-5 w-5 text-slate-400 group-focus-within:text-orange-500 transition-colors" />
                             <input
                                 name="password"
                                 type="password"
@@ -170,7 +170,7 @@ const LoginModal = ({ isOpen, onClose, onSuccess, initialMode = 'login', title, 
                                 placeholder="Password"
                                 value={formData.password}
                                 onChange={handleChange}
-                                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all"
                             />
                         </div>
 
@@ -193,9 +193,9 @@ const LoginModal = ({ isOpen, onClose, onSuccess, initialMode = 'login', title, 
                     <div className="mt-6 text-center">
                         <p className="text-sm text-slate-600">
                             {mode === 'login' ? "Don't have an account? " : "Already have an account? "}
-                            <button 
+                            <button
                                 onClick={toggleMode}
-                                className="font-bold text-primary hover:text-blue-700 transition-colors"
+                                className="font-bold text-orange-600 hover:text-orange-700 transition-colors"
                             >
                                 {mode === 'login' ? 'Sign up for free' : 'Log in'}
                             </button>

@@ -105,8 +105,8 @@ const Home = () => {
 
     return (
         <div className="bg-white">
-            <SEO 
-                title="Free Resume Builder & Resume Making Online Tool" 
+            <SEO
+                title="Free Resume Builder & Resume Making Online Tool"
                 description="The best free resume making online tool. Build your professional resume in minutes with our AI resume builder. ATS-friendly templates approved by top MNCs."
             />
             {/* Hero Section */}
@@ -114,13 +114,13 @@ const Home = () => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div className="grid lg:grid-cols-2 gap-12 items-center">
                         <div>
-                            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-rose-50 border border-rose-100 text-rose-600 font-medium text-sm mb-6">
+                            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-orange-50 border border-orange-100 text-orange-600 font-medium text-sm mb-6">
                                 <Award className="h-4 w-4" />
                                 <span>#1 Resume Making Online Tool</span>
                             </div>
                             <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold text-slate-900 leading-[1.1] mb-6">
                                 Free Online <br />
-                                <span className="bg-gradient-to-r from-rose-500 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                                <span className="bg-gradient-to-r from-orange-500 via-orange-400 to-orange-600 bg-clip-text text-transparent">
                                     Resume Builder.
                                 </span>
                             </h1>
@@ -160,10 +160,10 @@ const Home = () => {
                         </div>
 
                         <div className="relative">
-                            <div className="absolute -top-20 -right-20 w-96 h-96 bg-rose-500/10 rounded-full blur-3xl animate-blob"></div>
-                            <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl animate-blob [animation-delay:2s]"></div>
+                            <div className="absolute -top-20 -right-20 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl animate-blob"></div>
+                            <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-orange-400/10 rounded-full blur-3xl animate-blob [animation-delay:2s]"></div>
 
-                            <motion.div 
+                            <motion.div
                                 whileHover={{ scale: 1.02, rotate: 0 }}
                                 onClick={handleCreateNew}
                                 className="relative glass-effect p-4 rounded-3xl border border-white shadow-2xl rotate-2 cursor-pointer transition-all duration-500"
@@ -207,10 +207,10 @@ const Home = () => {
                                 onClick={() => handleBlueprintClick(card)}
                             >
                                 <div className="h-40 bg-slate-900 relative overflow-hidden">
-                                    <img 
-                                        src={card.image} 
-                                        alt={card.company} 
-                                        className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" 
+                                    <img
+                                        src={card.image}
+                                        alt={card.company}
+                                        className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
                                         onError={(e) => {
                                             e.target.src = 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop';
                                             e.target.className = "w-full h-full object-cover opacity-40";
@@ -258,16 +258,16 @@ const Home = () => {
                 <div className="marquee-wrapper">
                     <div className="marquee-track">
                         {[...mncCards, ...mncCards].map((card, i) => (
-                            <div 
-                                key={i} 
-                                className="mx-4 w-72 flex-shrink-0 bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden cursor-pointer hover:border-primary/50 transition-colors"
+                            <div
+                                key={i}
+                                className="mx-4 w-72 flex-shrink-0 bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden cursor-pointer hover:border-orange-500/50 transition-colors"
                                 onClick={() => handleBlueprintClick(card)}
                             >
                                 <div className="h-40 bg-slate-900 relative overflow-hidden">
-                                    <img 
-                                        src={card.image} 
-                                        alt={card.company} 
-                                        className="w-full h-full object-cover opacity-80" 
+                                    <img
+                                        src={card.image}
+                                        alt={card.company}
+                                        className="w-full h-full object-cover opacity-80"
                                         onError={(e) => {
                                             e.target.src = 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop';
                                             e.target.className = "w-full h-full object-cover opacity-40";
@@ -300,17 +300,17 @@ const Home = () => {
                     <div className="grid md:grid-cols-3 gap-8">
                         {[
                             {
-                                icon: <Award className="h-8 w-8 text-rose-500" />,
+                                icon: <Award className="h-8 w-8 text-orange-500" />,
                                 title: "Recruiter-Approved Resume",
                                 description: "We work with recruiters to design resume templates that format automatically and bypass ATS filters."
                             },
                             {
-                                icon: <Clock className="h-8 w-8 text-purple-600" />,
+                                icon: <Clock className="h-8 w-8 text-orange-600" />,
                                 title: "Finish Your Resume in 15 Minutes",
                                 description: "ResumeCraft helps you tackle your work experience by suggesting what you did at your previous jobs."
                             },
                             {
-                                icon: <Target className="h-8 w-8 text-indigo-600" />,
+                                icon: <Target className="h-8 w-8 text-orange-500" />,
                                 title: "Land an Interview",
                                 description: "We suggest critical skills for your industry. We've helped over a million people land high-paying interviews."
                             }
@@ -328,21 +328,21 @@ const Home = () => {
             {/* 6 Features to boost your job search */}
             <section className="py-24 bg-white relative overflow-hidden">
                 {/* Background decorative elements */}
-                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-purple-50/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-                <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-50/50 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-orange-100/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+                <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-orange-50/50 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 relative z-10">
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                         <div>
                             <h2 className="text-4xl lg:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
                                 6 features to boost your <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600">job search success</span>
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-600">job search success</span>
                             </h2>
                             <p className="text-lg text-slate-600 max-w-2xl">
                                 Powerful tools designed to help you build, optimize, and track your professional identity.
                             </p>
                         </div>
-                        <div className="h-1 w-24 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full mb-2 hidden md:block"></div>
+                        <div className="h-1 w-24 bg-gradient-to-r from-orange-500 to-orange-600 rounded-full mb-2 hidden md:block"></div>
                     </div>
                 </div>
 
@@ -353,52 +353,52 @@ const Home = () => {
                                 icon: <FileText className="w-8 h-8" />,
                                 title: "35+ Template Designs",
                                 text: "Extensive library of high-fidelity, MNC-focused resume layouts.",
-                                color: "from-rose-500 to-rose-600",
-                                lightColor: "bg-rose-50",
-                                textColor: "text-rose-600"
+                                color: "from-orange-500 to-orange-600",
+                                lightColor: "bg-orange-50",
+                                textColor: "text-orange-600"
                             },
                             {
                                 icon: <Cpu className="w-8 h-8" />,
                                 title: "Enhance with AI",
                                 text: "AI-powered suggestions for your bullets and professional summary.",
-                                color: "from-purple-500 to-purple-600",
-                                lightColor: "bg-purple-50",
-                                textColor: "text-purple-600"
+                                color: "from-orange-400 to-orange-500",
+                                lightColor: "bg-orange-100",
+                                textColor: "text-orange-600"
                             },
                             {
                                 icon: <Eye className="w-8 h-8" />,
                                 title: "Resume Review",
                                 text: "Instant feedback on your resume clarity, grammar, and ATS impact.",
-                                color: "from-indigo-500 to-indigo-600",
-                                lightColor: "bg-indigo-50",
-                                textColor: "text-indigo-600"
+                                color: "from-orange-500 to-orange-700",
+                                lightColor: "bg-orange-50",
+                                textColor: "text-orange-500"
                             },
                             {
                                 icon: <MessageSquare className="w-8 h-8" />,
                                 title: "AI Cover Letter Builder",
                                 text: "Generate matching cover letters in seconds with our smart engine.",
-                                color: "from-rose-500 to-rose-600",
-                                lightColor: "bg-rose-50",
-                                textColor: "text-rose-600"
+                                color: "from-orange-400 to-orange-500",
+                                lightColor: "bg-orange-50",
+                                textColor: "text-orange-600"
                             },
                             {
                                 icon: <Globe className="w-8 h-8" />,
                                 title: "Resume Website",
                                 text: "Host your professional portfolio with a unique, shareable public link.",
-                                color: "from-purple-500 to-purple-600",
-                                lightColor: "bg-purple-50",
-                                textColor: "text-purple-600"
+                                color: "from-orange-500 to-orange-600",
+                                lightColor: "bg-orange-100",
+                                textColor: "text-orange-500"
                             },
                             {
                                 icon: <BarChart3 className="w-8 h-8" />,
                                 title: "Resume Tracking",
                                 text: "Insights into how many people viewed your professional profile.",
-                                color: "from-indigo-500 to-indigo-600",
-                                lightColor: "bg-indigo-50",
-                                textColor: "text-indigo-600"
+                                color: "from-orange-600 to-orange-700",
+                                lightColor: "bg-orange-50",
+                                textColor: "text-orange-600"
                             }
                         ].map((item, i) => (
-                            <motion.div 
+                            <motion.div
                                 key={i}
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
@@ -410,22 +410,22 @@ const Home = () => {
                             >
                                 {/* Glassmorphism background effect on hover */}
                                 <div className="absolute inset-0 bg-gradient-to-br from-slate-50/50 to-white/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 backdrop-blur-[2px]"></div>
-                                
+
                                 {/* Background Glow */}
                                 <div className={`absolute -right-10 -top-10 w-32 h-32 rounded-full blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-500 bg-gradient-to-br ${item.color}`}></div>
 
                                 <div className={`mb-8 p-4 rounded-2xl ${item.lightColor} ${item.textColor} group-hover:scale-110 group-hover:rotate-3 transition-all duration-500 shadow-sm relative z-10`}>
                                     {item.icon}
                                 </div>
-                                
+
                                 <h3 className="text-2xl font-bold text-slate-900 mb-4 relative z-10 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-slate-900 group-hover:to-slate-600 transition-all duration-300">
                                     {item.title}
                                 </h3>
-                                
+
                                 <p className="text-slate-600 leading-relaxed mb-8 relative z-10">
                                     {item.text}
                                 </p>
-                                
+
                                 <div className="mt-auto flex items-center font-bold text-sm text-slate-400 group-hover:text-slate-900 transition-colors relative z-10">
                                     <span className="mr-2">Explore Workspace</span>
                                     <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -439,17 +439,17 @@ const Home = () => {
                 </div>
             </section>
 
-            <FeatureShowcase 
-                isOpen={showcaseOpen} 
-                onClose={() => setShowcaseOpen(false)} 
-                initialFeature={activeFeature} 
+            <FeatureShowcase
+                isOpen={showcaseOpen}
+                onClose={() => setShowcaseOpen(false)}
+                initialFeature={activeFeature}
             />
 
             {/* Partners / Companies Section */}
             <section className="py-24 bg-slate-900 relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-                    <div className="absolute top-0 right-0 w-1/2 h-full bg-indigo-500 blur-[120px]"></div>
-                    <div className="absolute bottom-0 left-0 w-1/2 h-full bg-rose-500 blur-[120px]"></div>
+                    <div className="absolute top-0 right-0 w-1/2 h-full bg-orange-500 blur-[120px]"></div>
+                    <div className="absolute bottom-0 left-0 w-1/2 h-full bg-orange-600 blur-[120px]"></div>
                 </div>
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
