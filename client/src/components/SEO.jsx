@@ -8,10 +8,10 @@ const SEO = ({
     url,
     type = 'website'
 }) => {
-    const siteTitle = "ResumeCraft - Best Free Online Resume Builder";
-    const defaultDescription = "ResumeCraft is the best free resume making online tool. Create professional resumes in minutes with our AI resume builder. MNC-approved templates, ATS-friendly formats, and instant download.";
-    const defaultKeywords = "resume making, resume builder, resume making online, free resume builder, online resume maker, cv maker, ai resume builder, professional resume, mnc resume formats, ats friendly resume";
-    const siteUrl = "https://resumecraft-beta-blush.vercel.app"; // Using the deployed URL
+    const siteTitle = "ResumeCraft – Free Resume Maker Online | AI Resume Builder India";
+    const defaultDescription = "ResumeCraft.co.in is a free online resume maker and AI resume builder. Create professional, ATS-friendly resumes in minutes with MNC-ready templates and instant download.";
+    const defaultKeywords = "resume making online, resume builder, free resume builder, online resume maker, cv maker, ai resume builder, professional resume, mnc resume formats, ats friendly resume, resume maker india, online cv maker india, fresher resume builder";
+    const siteUrl = "https://resumecraft.co.in";
     const defaultImage = "https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop";
 
     const metaTitle = title ? `${title} | ResumeCraft` : siteTitle;
@@ -54,7 +54,7 @@ const SEO = ({
                     "offers": {
                         "@type": "Offer",
                         "price": "0",
-                        "priceCurrency": "USD"
+                        "priceCurrency": "INR"
                     },
                     "description": defaultDescription,
                     "aggregateRating": {
