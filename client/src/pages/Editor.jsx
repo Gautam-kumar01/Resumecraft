@@ -352,12 +352,15 @@ const Editor = () => {
 
         setAiLoading(true);
         try {
+            console.log("Requesting AI suggestions for:", aiJobRole);
             const { data } = await api.post('/ai/suggest', { jobRole: aiJobRole });
+            console.log("AI Suggestions received:", data);
             setAiSuggestions(data);
         } catch (error) {
-            console.error("AI Error:", error);
+            console.error("AI Error Full Object:", error);
             const message = error.response?.data?.message || error.message || "Failed to generate suggestions";
-            alert(`${message}. Please try again.`);
+            const details = error.response?.data?.error || "";
+            alert(`${message}${details ? `: ${details}` : ""}. Please check if your server is running and your API key is valid.`);
         } finally {
             setAiLoading(false);
         }

@@ -24,23 +24,40 @@ exports.getSuggestions = async (req, res) => {
 
         for (const modelName of modelsToTry) {
             try {
-                // Configure model with JSON response constraint
-                const model = genAI.getGenerativeModel({ 
-                    model: modelName,
-                    generationConfig: { responseMimeType: "application/json" }
-                });
+                console.log(`Trying model: ${modelName}`);
+                // Try with and without JSON constraint as a fallback
+                let model;
+                let prompt;
+                
+                if (modelName.includes('flash')) {
+                    model = genAI.getGenerativeModel({ 
+                        model: modelName,
+                        generationConfig: { responseMimeType: "application/json" }
+                    });
+                    prompt = `You are a professional resume writer. The user is applying for a job as a "${jobRole}".
+                    Generate a professional resume data set with the following structure:
+                    {
+                      "summary": "2-3 sentence professional summary",
+                      "skills": ["skill1", "skill2", ...],
+                      "bullets": ["bullet1", "bullet2", ...]
+                    }
+                    Focus on high-impact, metrics-driven language for the bullets.`;
+                } else {
+                    model = genAI.getGenerativeModel({ model: modelName });
+                    prompt = `You are a professional resume writer. The user is applying for a job as a "${jobRole}".
+                    Please generate the following in JSON format:
+                    1. "summary": A professional summary (2-3 sentences).
+                    2. "skills": A list of 8-10 relevant technical and soft skills.
+                    3. "bullets": A list of 4-5 impactful, metrics-driven resume bullet points for this role.
 
-                const prompt = `You are a professional resume writer. The user is applying for a job as a "${jobRole}".
-                Generate a professional resume data set with the following structure:
-                {
-                  "summary": "2-3 sentence professional summary",
-                  "skills": ["skill1", "skill2", ...],
-                  "bullets": ["bullet1", "bullet2", ...]
+                    Return ONLY raw JSON, no markdown formatting. Example: {"summary": "...", "skills": [], "bullets": []}`;
                 }
-                Focus on high-impact, metrics-driven language for the bullets.`;
 
                 result = await model.generateContent(prompt);
-                if (result) break; // Success!
+                if (result) {
+                    console.log(`Success with model: ${modelName}`);
+                    break;
+                }
             } catch (err) {
                 lastError = err;
                 console.error(`Attempt with ${modelName} failed:`, err.message);
