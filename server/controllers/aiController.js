@@ -16,7 +16,7 @@ exports.getSuggestions = async (req, res) => {
 
     try {
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
         const prompt = `You are a professional resume writer. The user is applying for a job as a "${jobRole}".
         Please generate the following in JSON format:

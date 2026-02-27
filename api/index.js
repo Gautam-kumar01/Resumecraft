@@ -8,8 +8,29 @@ module.exports = async (req, res) => {
         return res.status(200).end();
     }
 
-    // Health check - no dependencies
+    // Health check - with live Gemini test
     if (req.url === '/api/health' || req.url === '/api/health/') {
+        let geminiStatus = 'not_tested';
+        let geminiError = null;
+
+        if (process.env.GEMINI_API_KEY) {
+            try {
+                const { GoogleGenerativeAI } = require('@google/generative-ai');
+                const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+                const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+                // Tiny test request
+                const result = await model.generateContent("hi");
+                if (result.response) {
+                    geminiStatus = 'working';
+                }
+            } catch (err) {
+                geminiStatus = 'error';
+                geminiError = err.message;
+            }
+        } else {
+            geminiStatus = 'missing_key';
+        }
+
         return res.status(200).json({
             status: 'alive',
             timestamp: new Date().toISOString(),
@@ -17,7 +38,10 @@ module.exports = async (req, res) => {
                 hasMongo: !!process.env.MONGO_URI,
                 hasJwt: !!process.env.JWT_SECRET,
                 hasGoogle: !!process.env.GOOGLE_CLIENT_ID,
-                hasGemini: !!process.env.GEMINI_API_KEY
+                gemini: {
+                    status: geminiStatus,
+                    error: geminiError
+                }
             }
         });
     }
