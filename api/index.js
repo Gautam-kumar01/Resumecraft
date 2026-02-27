@@ -75,15 +75,37 @@ module.exports = async (req, res) => {
 
         // Connect to database
         if (mongoose.connection.readyState !== 1) {
-            if (!process.env.MONGO_URI) {
-                return res.status(500).json({ error: 'Database not configured' });
+            const uri = process.env.MONGO_URI;
+            if (!uri) {
+                console.error('API Error: MONGO_URI is missing');
+                return res.status(500).json({ 
+                    error: 'Database not configured',
+                    message: 'MONGO_URI is missing in environment variables. Please add it in Vercel Dashboard.'
+                });
+            }
+
+            // Ensure we're not trying to connect to localhost on Vercel
+            if (uri.includes('localhost') || uri.includes('127.0.0.1')) {
+                console.error('API Error: Attempted to connect to localhost on Vercel');
+                return res.status(500).json({ 
+                    error: 'Invalid Database Configuration',
+                    message: 'MONGO_URI points to localhost. Use MongoDB Atlas for production.'
+                });
             }
 
             mongoose.set('bufferCommands', false);
-            await mongoose.connect(process.env.MONGO_URI, {
-                serverSelectionTimeoutMS: 5000,
-                connectTimeoutMS: 10000,
-            });
+            try {
+                await mongoose.connect(uri, {
+                    serverSelectionTimeoutMS: 5000,
+                    connectTimeoutMS: 10000,
+                });
+            } catch (connError) {
+                console.error('Database Connection Error:', connError.message);
+                return res.status(503).json({
+                    error: 'Database Connection Failed',
+                    message: connError.message
+                });
+            }
         }
 
         // Create Express app
