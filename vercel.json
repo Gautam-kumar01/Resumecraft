@@ -2,6 +2,19 @@
     "buildCommand": "cd client && npm install --legacy-peer-deps && npm run build",
     "outputDirectory": "client/dist",
     "framework": "vite",
+    "redirects": [
+        {
+            "source": "/(.*)",
+            "has": [
+                {
+                    "type": "host",
+                    "value": "resumecraft-beta-blush.vercel.app"
+                }
+            ],
+            "destination": "https://resumecraft.co.in/$1",
+            "permanent": true
+        }
+    ],
     "rewrites": [
         {
             "source": "/api/(.*)",
