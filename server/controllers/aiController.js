@@ -17,7 +17,7 @@ exports.getSuggestions = async (req, res) => {
     }
 
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
 
         const prompt = `You are a professional resume writer. The user is applying for a job as a "${jobRole}".
         Please generate the following in JSON format:
@@ -38,7 +38,7 @@ exports.getSuggestions = async (req, res) => {
 
         res.json(data);
     } catch (error) {
-        console.error("AI Generation Error:", error);
-        res.status(500).json({ message: "Failed to generate suggestions" });
+        console.error("AI Generation Error:", error.message || error);
+        res.status(500).json({ message: "Failed to generate suggestions", error: error.message });
     }
 };
