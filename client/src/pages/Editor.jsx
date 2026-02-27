@@ -356,7 +356,8 @@ const Editor = () => {
             setAiSuggestions(data);
         } catch (error) {
             console.error("AI Error:", error);
-            alert("Failed to generate suggestions. Please try again.");
+            const message = error.response?.data?.message || error.message || "Failed to generate suggestions";
+            alert(`${message}. Please try again.`);
         } finally {
             setAiLoading(false);
         }
