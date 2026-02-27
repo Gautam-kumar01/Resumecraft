@@ -16,17 +16,35 @@ exports.getSuggestions = async (req, res) => {
 
     try {
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-        const prompt = `You are a professional resume writer. The user is applying for a job as a "${jobRole}".
-        Please generate the following in JSON format:
-        1. "summary": A professional summary (2-3 sentences).
-        2. "skills": A list of 8-10 relevant technical and soft skills.
-        3. "bullets": A list of 4-5 impactful, metrics-driven resume bullet points for this role.
+        // Try multiple models in case one is deprecated or unavailable
+        const modelsToTry = ["gemini-1.5-flash-latest", "gemini-1.5-flash", "gemini-pro"];
+        let result = null;
+        let lastError = null;
 
-        Return ONLY raw JSON, no markdown formatting.`;
+        for (const modelName of modelsToTry) {
+            try {
+                const model = genAI.getGenerativeModel({ model: modelName });
+                const prompt = `You are a professional resume writer. The user is applying for a job as a "${jobRole}".
+                Please generate the following in JSON format:
+                1. "summary": A professional summary (2-3 sentences).
+                2. "skills": A list of 8-10 relevant technical and soft skills.
+                3. "bullets": A list of 4-5 impactful, metrics-driven resume bullet points for this role.
 
-        const result = await model.generateContent(prompt);
+                Return ONLY raw JSON, no markdown formatting.`;
+
+                result = await model.generateContent(prompt);
+                if (result) break; // Success!
+            } catch (err) {
+                lastError = err;
+                console.error(`Attempt with ${modelName} failed:`, err.message);
+            }
+        }
+
+        if (!result) {
+            throw lastError || new Error("All models failed");
+        }
+
         const response = await result.response;
         const text = response.text();
 
