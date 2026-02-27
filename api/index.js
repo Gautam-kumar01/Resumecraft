@@ -17,11 +17,30 @@ module.exports = async (req, res) => {
             try {
                 const { GoogleGenerativeAI } = require('@google/generative-ai');
                 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-                const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-                // Tiny test request
-                const result = await model.generateContent("hi");
-                if (result.response) {
-                    geminiStatus = 'working';
+
+                // Try a few common models to see which one is active
+                const modelsToTry = ["gemini-1.5-flash", "gemini-1.5-flash-latest", "gemini-pro"];
+                let successModel = null;
+
+                for (const modelName of modelsToTry) {
+                    try {
+                        const model = genAI.getGenerativeModel({ model: modelName });
+                        const result = await model.generateContent("hi");
+                        if (result.response) {
+                            successModel = modelName;
+                            geminiStatus = 'working';
+                            break;
+                        }
+                    } catch (e) {
+                        geminiError = (geminiError ? geminiError + " | " : "") + `${modelName}: ${e.message}`;
+                    }
+                }
+
+                if (successModel) {
+                    geminiStatus = `working (${successModel})`;
+                    geminiError = null; // Clear errors if at least one worked
+                } else {
+                    geminiStatus = 'error';
                 }
             } catch (err) {
                 geminiStatus = 'error';
