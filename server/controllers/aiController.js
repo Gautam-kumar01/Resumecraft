@@ -17,50 +17,46 @@ exports.getSuggestions = async (req, res) => {
     try {
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-        // Try multiple models in case one is deprecated or unavailable
-        const modelsToTry = ["gemini-1.5-flash-latest", "gemini-1.5-flash", "gemini-pro"];
+        // Primary model is gemini-1.5-flash which is fast and reliable
+        const modelsToTry = ["gemini-1.5-flash", "gemini-1.5-pro"];
         let result = null;
         let lastError = null;
 
         for (const modelName of modelsToTry) {
             try {
-                console.log(`Trying model: ${modelName}`);
-                // Try with and without JSON constraint as a fallback
-                let model;
-                let prompt;
+                console.log(`AI: Attempting generation with model: ${modelName}...`);
                 
-                if (modelName.includes('flash')) {
-                    model = genAI.getGenerativeModel({ 
-                        model: modelName,
-                        generationConfig: { responseMimeType: "application/json" }
-                    });
-                    prompt = `You are a professional resume writer. The user is applying for a job as a "${jobRole}".
-                    Generate a professional resume data set with the following structure:
-                    {
-                      "summary": "2-3 sentence professional summary",
-                      "skills": ["skill1", "skill2", ...],
-                      "bullets": ["bullet1", "bullet2", ...]
+                // Configure model
+                const model = genAI.getGenerativeModel({ 
+                    model: modelName,
+                    generationConfig: { 
+                        responseMimeType: "application/json",
+                        temperature: 0.7,
+                        topK: 40,
+                        topP: 0.95,
                     }
-                    Focus on high-impact, metrics-driven language for the bullets.`;
-                } else {
-                    model = genAI.getGenerativeModel({ model: modelName });
-                    prompt = `You are a professional resume writer. The user is applying for a job as a "${jobRole}".
-                    Please generate the following in JSON format:
-                    1. "summary": A professional summary (2-3 sentences).
-                    2. "skills": A list of 8-10 relevant technical and soft skills.
-                    3. "bullets": A list of 4-5 impactful, metrics-driven resume bullet points for this role.
+                });
 
-                    Return ONLY raw JSON, no markdown formatting. Example: {"summary": "...", "skills": [], "bullets": []}`;
+                const prompt = `You are a professional resume writer. The user is applying for a job as a "${jobRole}".
+                Generate a professional resume data set in JSON format with exactly this structure:
+                {
+                  "summary": "2-3 sentence professional summary",
+                  "skills": ["skill1", "skill2", "skill3", "skill4", "skill5", "skill6", "skill7", "skill8"],
+                  "bullets": ["High-impact bullet point 1", "High-impact bullet point 2", "High-impact bullet point 3", "High-impact bullet point 4"]
                 }
+                Use strong action verbs and metrics-driven language for the bullets.`;
 
                 result = await model.generateContent(prompt);
-                if (result) {
-                    console.log(`Success with model: ${modelName}`);
+                
+                if (result && result.response) {
+                    console.log(`AI: Success with model: ${modelName}`);
                     break;
                 }
             } catch (err) {
                 lastError = err;
-                console.error(`Attempt with ${modelName} failed:`, err.message);
+                console.error(`AI: Attempt with ${modelName} failed:`, err.message);
+                // If it's a 404 or model not found, we continue to next model
+                // If it's a 403 (Invalid Key) or 429 (Quota), it might fail for all, but we try anyway
             }
         }
 
