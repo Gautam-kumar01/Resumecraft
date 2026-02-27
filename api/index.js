@@ -16,7 +16,8 @@ module.exports = async (req, res) => {
             env: {
                 hasMongo: !!process.env.MONGO_URI,
                 hasJwt: !!process.env.JWT_SECRET,
-                hasGoogle: !!process.env.GOOGLE_CLIENT_ID
+                hasGoogle: !!process.env.GOOGLE_CLIENT_ID,
+                hasGemini: !!process.env.GEMINI_API_KEY
             }
         });
     }
@@ -49,9 +50,11 @@ module.exports = async (req, res) => {
         // Load routes
         const authRoutes = require('../server/routes/auth');
         const resumeRoutes = require('../server/routes/resume');
+        const aiRoutes = require('../server/routes/ai');
 
         app.use('/api/auth', authRoutes);
         app.use('/api/resumes', resumeRoutes);
+        app.use('/api/ai', aiRoutes);
 
         // Handle the request
         return app(req, res);
