@@ -3,8 +3,6 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
 exports.getSuggestions = async (req, res) => {
     const { jobRole } = req.body;
 
@@ -17,6 +15,7 @@ exports.getSuggestions = async (req, res) => {
     }
 
     try {
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
         const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
 
         const prompt = `You are a professional resume writer. The user is applying for a job as a "${jobRole}".
