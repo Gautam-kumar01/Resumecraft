@@ -17,9 +17,10 @@ exports.getSuggestions = async (req, res) => {
     try {
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-        // Use strictly valid model IDs for the current SDK version
-        // gemini-1.5-flash is the most widely available and stable model
-        const modelsToTry = ["gemini-1.5-flash", "gemini-1.0-pro"];
+        // Use strictly valid model IDs. 
+        // gemini-1.5-flash is the recommended model for most use cases now.
+        // gemini-pro is the legacy name for 1.0 pro.
+        const modelsToTry = ["gemini-1.5-flash", "gemini-pro", "gemini-1.5-pro"];
         let result = null;
         let lastError = null;
 
@@ -27,9 +28,14 @@ exports.getSuggestions = async (req, res) => {
             try {
                 console.log(`AI: Attempting generation with model: ${modelName}...`);
                 
-                const model = genAI.getGenerativeModel({ model: modelName });
+                // For gemini-pro (1.0), we don't use responseMimeType as it might not be supported in v1beta
+                const modelConfig = { model: modelName };
+                if (modelName.includes('1.5')) {
+                    modelConfig.generationConfig = { responseMimeType: "application/json" };
+                }
+                
+                const model = genAI.getGenerativeModel(modelConfig);
 
-                // Simplify generation config for better compatibility
                 const prompt = `You are a professional resume writer. The user is applying for a job as a "${jobRole}".
                 Return a JSON object with this exact structure:
                 {
@@ -37,7 +43,7 @@ exports.getSuggestions = async (req, res) => {
                   "skills": ["skill1", "skill2", "skill3", "skill4", "skill5", "skill6", "skill7", "skill8"],
                   "bullets": ["Impactful bullet point 1", "Impactful bullet point 2", "Impactful bullet point 3", "Impactful bullet point 4"]
                 }
-                Return ONLY the JSON, no markdown.`;
+                Return ONLY the JSON, no markdown code blocks.`;
 
                 result = await model.generateContent(prompt);
                 
