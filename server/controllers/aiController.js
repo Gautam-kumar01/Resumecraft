@@ -17,8 +17,9 @@ exports.getSuggestions = async (req, res) => {
     try {
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-        // Primary model is gemini-1.5-flash which is fast and reliable
-        const modelsToTry = ["gemini-1.5-flash", "gemini-1.5-pro"];
+        // Use strictly valid model IDs for the current SDK version
+        // gemini-1.5-flash is the most widely available and stable model
+        const modelsToTry = ["gemini-1.5-flash", "gemini-1.0-pro"];
         let result = null;
         let lastError = null;
 
@@ -26,25 +27,17 @@ exports.getSuggestions = async (req, res) => {
             try {
                 console.log(`AI: Attempting generation with model: ${modelName}...`);
                 
-                // Configure model
-                const model = genAI.getGenerativeModel({ 
-                    model: modelName,
-                    generationConfig: { 
-                        responseMimeType: "application/json",
-                        temperature: 0.7,
-                        topK: 40,
-                        topP: 0.95,
-                    }
-                });
+                const model = genAI.getGenerativeModel({ model: modelName });
 
+                // Simplify generation config for better compatibility
                 const prompt = `You are a professional resume writer. The user is applying for a job as a "${jobRole}".
-                Generate a professional resume data set in JSON format with exactly this structure:
+                Return a JSON object with this exact structure:
                 {
                   "summary": "2-3 sentence professional summary",
                   "skills": ["skill1", "skill2", "skill3", "skill4", "skill5", "skill6", "skill7", "skill8"],
-                  "bullets": ["High-impact bullet point 1", "High-impact bullet point 2", "High-impact bullet point 3", "High-impact bullet point 4"]
+                  "bullets": ["Impactful bullet point 1", "Impactful bullet point 2", "Impactful bullet point 3", "Impactful bullet point 4"]
                 }
-                Use strong action verbs and metrics-driven language for the bullets.`;
+                Return ONLY the JSON, no markdown.`;
 
                 result = await model.generateContent(prompt);
                 
@@ -55,8 +48,6 @@ exports.getSuggestions = async (req, res) => {
             } catch (err) {
                 lastError = err;
                 console.error(`AI: Attempt with ${modelName} failed:`, err.message);
-                // If it's a 404 or model not found, we continue to next model
-                // If it's a 403 (Invalid Key) or 429 (Quota), it might fail for all, but we try anyway
             }
         }
 
