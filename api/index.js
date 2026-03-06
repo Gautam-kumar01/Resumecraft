@@ -104,7 +104,7 @@ module.exports = async (req, res) => {
                 return res.status(503).json({
                     error: 'Database Connection Failed',
                     message: connError.message
-                });
+                }); 
             }
         }
 
