@@ -8,7 +8,7 @@ const options = {
     headers: {
         'Content-Type': 'application/json',
         'Content-Length': Buffer.byteLength(data)
-    }
+    } 
 };
 
 const req = https.request(options, (res) => {
