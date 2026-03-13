@@ -13,6 +13,34 @@
             ],
             "destination": "https://resumecraft.co.in/$1",
             "permanent": true
+        },
+        {
+            "source": "/(.*)",
+            "has": [
+                {
+                    "type": "host",
+                    "value": "www.resumecraft.co.in"
+                }
+            ],
+            "destination": "https://resumecraft.co.in/$1",
+            "permanent": true
+        }
+    ],
+    "headers": [
+        {
+            "source": "/(.*)",
+            "has": [
+                {
+                    "type": "host",
+                    "value": "resumecraft-beta-blush.vercel.app"
+                }
+            ],
+            "headers": [
+                {
+                    "key": "X-Robots-Tag",
+                    "value": "noindex, nofollow"
+                }
+            ]
         }
     ],
     "rewrites": [

@@ -11,14 +11,17 @@ const SEO = ({
     const siteTitle = "ResumeCraft – Free Resume Maker Online | AI Resume Builder India";
     const defaultDescription = "ResumeCraft.co.in is a free online resume maker and AI resume builder. Create professional, ATS-friendly resumes in minutes with MNC-ready templates and instant download.";
     const defaultKeywords = "resume making online, resume builder, free resume builder, online resume maker, cv maker, ai resume builder, professional resume, mnc resume formats, ats friendly resume, resume maker india, online cv maker india, fresher resume builder";
-    const siteUrl = "https://resumecraft.co.in";
+    const siteUrl = "https://resumecraft.co.in/";
     const defaultImage = "https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop";
 
     const metaTitle = title ? `${title} | ResumeCraft` : siteTitle;
     const metaDescription = description || defaultDescription;
     const metaKeywords = keywords || defaultKeywords;
     const metaImage = image || defaultImage;
-    const metaUrl = url ? `${siteUrl}${url}` : siteUrl;
+    
+    // Ensure URL doesn't start with a slash if siteUrl has a trailing slash
+    const cleanUrl = url ? (url.startsWith('/') ? url.substring(1) : url) : '';
+    const metaUrl = `${siteUrl}${cleanUrl}`;
 
     return (
         <Helmet>
