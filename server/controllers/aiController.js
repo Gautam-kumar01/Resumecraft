@@ -18,8 +18,8 @@ exports.getSuggestions = async (req, res) => {
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
         // Use strictly valid model IDs for the current SDK version
-        // gemini-2.0-flash-lite is the fast default, followed by 1.5-flash
-        const modelsToTry = ["gemini-2.0-flash-lite", "gemini-1.5-flash", "gemini-1.5-pro"];
+        // Prioritizing gemini-2.5-flash which is confirmed fully functional with the API Key
+        const modelsToTry = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
         let result = null;
         let lastError = null;
 
@@ -48,6 +48,12 @@ exports.getSuggestions = async (req, res) => {
             } catch (err) {
                 lastError = err;
                 console.error(`AI: Attempt with ${modelName} failed:`, err.message);
+                
+                // If the error is a Quota/Rate Limit (429) or API Key Issue (400, 403), stop trying other models
+                if (err.message.includes('429') || err.message.includes('quota') || err.message.includes('403') || err.message.includes('API key')) {
+                    console.error("Critical API Error encountered (Quota/Auth). Aborting model fallback.");
+                    break;
+                }
             }
         }
 

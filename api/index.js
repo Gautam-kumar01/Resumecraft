@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
                 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
                 // Try a few common models to see which one is active
-                const modelsToTry = ["gemini-2.0-flash-lite", "gemini-1.5-flash", "gemini-1.5-flash-latest"];
+                const modelsToTry = ["gemini-2.5-flash", "gemini-2.0-flash"];
                 let successModel = null;
 
                 for (const modelName of modelsToTry) {
