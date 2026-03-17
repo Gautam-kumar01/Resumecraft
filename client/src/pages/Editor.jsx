@@ -6,8 +6,7 @@ import ResumePreview from '../components/ResumePreview';
 import LoginModal from '../components/LoginModal';
 import SEO from '../components/SEO';
 import { Save, Download, Eye, ArrowLeft, Plus, Trash2, User, Upload, Sparkles } from 'lucide-react';
-import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
+
 
 const initialResumeState = {
     title: '',
@@ -114,150 +113,23 @@ const Editor = () => {
     };
 
     const performDownload = async () => {
-        const templateId = resume.templateId || 'modern';
-        const elementId = `resume-preview-${templateId}`;
-        const input = document.getElementById(elementId);
-
-        if (!input) {
-            console.error(`Resume preview element not found: #${elementId}`);
-            alert("Could not find resume preview. Please refresh the page and try again.");
-            return;
-        }
-
         setDownloading(true);
-
         try {
-            console.log("Starting high-fidelity mobile-friendly PDF generation...");
-
-            // Create a dedicated hidden container for the capture
-            const container = document.createElement('div');
-            container.style.position = 'fixed';
-            container.style.left = '-9999px';
-            container.style.top = '0';
-            container.style.width = '210mm'; // Standard A4 width
-            container.style.backgroundColor = 'white';
-            document.body.appendChild(container);
-
-            // Clone the resume content
-            const clone = input.cloneNode(true);
-            clone.style.width = '210mm';
-            clone.style.margin = '0';
-            clone.style.padding = '0';
-            clone.style.transform = 'none';
-
-            // Apply specific styles to the clone to fix overlapping and spacing
-            const style = document.createElement('style');
-            style.innerHTML = `
-                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-                
-                * {
-                    box-sizing: border-box !important;
-                    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-                    text-rendering: optimizeLegibility !important;
-                    -webkit-font-smoothing: antialiased !important;
-                    letter-spacing: 0.01em !important; /* Slightly positive to prevent overlap */
-                }
-
-                h1, h2, h3, h4, p, span {
-                    line-height: 1.4 !important;
-                    margin-bottom: 0.2rem !important;
-                }
-
-                h1 { font-size: 28pt !important; margin-bottom: 0.5rem !important; }
-                h2 { font-size: 14pt !important; margin-top: 1rem !important; }
-
-                /* Fix layout for templates */
-                .grid { display: grid !important; }
-                .flex { display: flex !important; }
-                .grid-cols-3 { grid-template-columns: 2fr 1fr !important; gap: 40px !important; }
-                
-                /* Ensure background colors are captured */
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            `;
-
-            container.appendChild(style);
-            container.appendChild(clone);
-
-            // Wait for images and fonts
-            await new Promise(resolve => setTimeout(resolve, 1500));
-
-            const canvas = await html2canvas(clone, {
-                scale: 2,
-                useCORS: true,
-                logging: true,
-                backgroundColor: '#ffffff',
-                width: clone.offsetWidth,
-                height: clone.offsetHeight,
-                windowWidth: 1024,
-                imageTimeout: 15000,
-                onclone: (clonedDoc) => {
-                    // Final cleanup on the captured document
-                    const element = clonedDoc.querySelector('[style*="fixed"]');
-                    if (element) element.style.display = 'none';
-
-                    // Force convert all styles in the document to prevent oklab/oklch crashes
-                    // html2canvas fails when it encounters modern CSS color functions
-                    const styleTags = clonedDoc.getElementsByTagName('style');
-                    for (let i = 0; i < styleTags.length; i++) {
-                        let css = styleTags[i].innerHTML;
-                        if (css.includes('oklab') || css.includes('oklch')) {
-                            // Replace oklab/oklch with safe hex fallbacks
-                            // We use a more robust regex to catch variations
-                            styleTags[i].innerHTML = css.replace(/oklab\([^)]+\)/g, '#71717a')
-                                .replace(/oklch\([^)]+\)/g, '#71717a');
-                        }
-                    }
-
-                    // Deep fix for oklab/oklch errors in inline styles and computed values
-                    const allElements = clonedDoc.getElementsByTagName('*');
-                    for (let i = 0; i < allElements.length; i++) {
-                        const el = allElements[i];
-
-                        // Check and fix inline style attributes
-                        const inlineStyle = el.getAttribute('style') || '';
-                        if (inlineStyle.includes('oklab') || inlineStyle.includes('oklch')) {
-                            el.setAttribute('style', inlineStyle.replace(/(oklab|oklch)\([^)]+\)/g, '#71717a'));
-                        }
-
-                        // Force computed styles that html2canvas might struggle with
-                        const style = window.getComputedStyle(el);
-                        const properties = ['color', 'backgroundColor', 'borderColor', 'outlineColor', 'fill', 'stroke', 'stopColor'];
-
-                        properties.forEach(prop => {
-                            const val = style[prop];
-                            if (val && (val.includes('oklab') || val.includes('oklch'))) {
-                                // If we detect problematic colors, override them directly on the element's style
-                                if (prop === 'backgroundColor') el.style.backgroundColor = '#ffffff';
-                                else if (prop === 'color') el.style.color = '#000000';
-                                else if (el.style) el.style[prop] = '#71717a';
-                            }
-                        });
-                    }
-                }
-            });
-
-            document.body.removeChild(container);
-
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = pdf.internal.pageSize.getHeight();
-
-            const imgHeight = (canvas.height * pdfWidth) / canvas.width;
-
-            // Add image to PDF - handle multi-page if needed
-            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, imgHeight);
-
-            pdf.save(`${resume.title || 'resume'}.pdf`);
-
-            console.log("PDF generated and downloaded.");
+            // Temporarily set the document title so the browser saves the PDF with this name
+            const originalTitle = document.title;
+            document.title = `${resume.title || 'Resume'}`;
+            
+            // Allow state to propagate before printing
+            setTimeout(() => {
+                window.print();
+                document.title = originalTitle;
+                setDownloading(false);
+            }, 300);
         } catch (err) {
-            console.error("PDF Error:", err);
-            alert(`Download failed: ${err.message || "Unknown error"}. Please try again.`);
+            console.error("PDF Print Error:", err);
+            alert(`Download failed. Please try again.`);
+            setDownloading(false);
         }
-
-        setDownloading(false);
     };
 
     const handleDownload = async () => {
@@ -738,7 +610,7 @@ const Editor = () => {
 
             {/* Preview Area */}
             <div className="w-full md:w-1/2 bg-slate-100 p-4 md:p-8 h-[50vh] md:h-full overflow-y-auto flex items-start justify-center order-1 md:order-2">
-                <div id={`resume-preview-${resume.templateId || 'modern'}`} className="w-full max-w-[210mm] bg-white shadow-xl min-h-[297mm] origin-top transform scale-[0.6] sm:scale-[0.7] md:scale-[0.8] lg:scale-[0.9] xl:scale-100 transition-transform">
+                <div id={`resume-preview-${resume.templateId || 'modern'}`} className="resume-print-area w-full max-w-[210mm] bg-white shadow-xl min-h-[297mm] origin-top transform scale-[0.6] sm:scale-[0.7] md:scale-[0.8] lg:scale-[0.9] xl:scale-100 transition-transform">
                     <ResumePreview resume={resume} />
                 </div>
             </div>
