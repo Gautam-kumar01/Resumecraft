@@ -17,9 +17,9 @@ exports.getSuggestions = async (req, res) => {
     try {
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-        // Use strictly valid model IDs for the current SDK version (v1)
-        // gemini-1.5-flash is the most widely available and stable model
-        const modelsToTry = ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-pro"];
+        // Use strictly valid model IDs for the current SDK version
+        // gemini-2.0-flash-lite is the fast default, followed by 1.5-flash
+        const modelsToTry = ["gemini-2.0-flash-lite", "gemini-1.5-flash", "gemini-1.5-pro"];
         let result = null;
         let lastError = null;
 
