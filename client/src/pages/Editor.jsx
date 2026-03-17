@@ -133,11 +133,6 @@ const Editor = () => {
     };
 
     const handleDownload = async () => {
-        if (!user) {
-            setPendingAction('download');
-            setShowLoginModal(true);
-            return;
-        }
         await performDownload();
     };
 
