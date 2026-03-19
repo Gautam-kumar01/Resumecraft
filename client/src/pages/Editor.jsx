@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import html2canvas from 'html2canvas';
-import { jsPDF } from 'jspdf';
+// html2canvas removed: using native print window for perfect PDF rendering
 import api from '../api/axios';
 import AuthContext from '../context/AuthContext';
 import ResumePreview from '../components/ResumePreview';
@@ -114,77 +113,114 @@ const Editor = () => {
         }
     };
 
-    const performDownload = async () => {
+    const performDownload = () => {
         setDownloading(true);
         try {
             const element = document.querySelector('.resume-print-area');
             if (!element) throw new Error("Resume content not found");
 
-            await document.fonts.ready;
+            // Collect all stylesheets from the current page
+            const styleSheets = Array.from(document.styleSheets)
+                .map(sheet => {
+                    try {
+                        return Array.from(sheet.cssRules).map(rule => rule.cssText).join('\n');
+                    } catch {
+                        // Cross-origin sheets can't be read - use link tag instead
+                        if (sheet.href) return `@import url('${sheet.href}');`;
+                        return '';
+                    }
+                })
+                .join('\n');
 
-            // A4 dimensions at 96 DPI
-            const A4_WIDTH_PX = 794;
-            
-            // Create a dedicated isolation container
-            const captureContainer = document.createElement('div');
-            captureContainer.style.cssText = `
-                position: fixed;
-                top: -9999px;
-                left: -9999px;
-                width: ${A4_WIDTH_PX}px;
-                background-color: white;
-                z-index: -1000;
+            // Get the resume's inner HTML
+            const resumeHTML = element.innerHTML;
+
+            // Build a complete standalone HTML document for printing
+            const printContent = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${resume.title || 'Resume'}</title>
+  <style>
+    /* Import the same fonts used in the app */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+    ${styleSheets}
+
+    /* --- Print-Specific Overrides --- */
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+    @media print {
+      html, body {
+        width: 210mm;
+        height: 297mm;
+        margin: 0;
+        padding: 0;
+        background: white;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+    }
+    * {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background: white;
+      font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    }
+    .resume-wrapper {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      background: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="resume-wrapper">${resumeHTML}</div>
+</body>
+</html>
             `;
-            document.body.appendChild(captureContainer);
 
-            // Clone and prepare
-            const clone = element.cloneNode(true);
-            clone.style.transform = 'none';
-            clone.style.width = `${A4_WIDTH_PX}px`;
-            clone.style.margin = '0';
-            clone.style.padding = '0';
-            clone.style.boxShadow = 'none';
-            captureContainer.appendChild(clone);
+            // Open a hidden print window
+            const printWindow = window.open('', '_blank', 'width=900,height=700');
+            if (!printWindow) {
+                alert('Please allow popups for this site to download your resume.');
+                setDownloading(false);
+                return;
+            }
 
-            // Wait for any lazy images/layout
-            await new Promise(resolve => setTimeout(resolve, 800));
+            printWindow.document.write(printContent);
+            printWindow.document.close();
 
-            const canvas = await html2canvas(clone, {
-                scale: 2, 
-                useCORS: true,
-                backgroundColor: '#ffffff',
-                logging: false,
-                width: A4_WIDTH_PX,
-                windowWidth: A4_WIDTH_PX,
-                onclone: (clonedDoc) => {
-                    const allNodes = clonedDoc.querySelectorAll('*');
-                    allNodes.forEach(node => {
-                        // Reset experimentalSpacing which often breaks html2canvas
-                        node.style.letterSpacing = 'normal';
-                        node.style.wordSpacing = 'normal';
-                        node.style.fontVariantLigatures = 'none';
-                    });
+            // Wait for fonts/images to load, then print
+            printWindow.onload = () => {
+                // Slight extra delay for font rendering
+                setTimeout(() => {
+                    printWindow.focus();
+                    printWindow.print();
+                    printWindow.close();
+                    setDownloading(false);
+                }, 600);
+            };
+
+            // Fallback if onload doesn't fire
+            setTimeout(() => {
+                if (printWindow && !printWindow.closed) {
+                    printWindow.focus();
+                    printWindow.print();
+                    printWindow.close();
                 }
-            });
-
-            // Cleanup
-            document.body.removeChild(captureContainer);
-
-            const imgData = canvas.toDataURL('image/jpeg', 1.0);
-            const pdf = new jsPDF({
-                orientation: 'portrait',
-                unit: 'mm',
-                format: 'a4',
-                compress: true
-            });
-
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
-            pdf.save(`${resume.title || 'Resume'}.pdf`);
-            
-            setDownloading(false);
+                setDownloading(false);
+            }, 2500);
         } catch (err) {
             console.error("PDF Export Error:", err);
             alert(`Download failed: ${err.message}`);
