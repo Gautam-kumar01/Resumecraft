@@ -125,28 +125,32 @@ const Editor = () => {
             // A4 dimensions at 96 DPI
             const A4_WIDTH_PX = 794;
             
-            // Create a dedicated hidden container for the capture to isolate from transforms
+            // Create a dedicated isolation container
             const captureContainer = document.createElement('div');
-            captureContainer.style.position = 'absolute';
-            captureContainer.style.top = '-9999px';
-            captureContainer.style.left = '-9999px';
-            captureContainer.style.width = `${A4_WIDTH_PX}px`;
-            captureContainer.style.backgroundColor = 'white';
+            captureContainer.style.cssText = `
+                position: fixed;
+                top: -9999px;
+                left: -9999px;
+                width: ${A4_WIDTH_PX}px;
+                background-color: white;
+                z-index: -1000;
+            `;
             document.body.appendChild(captureContainer);
 
-            // Clone the resume into this safe container
+            // Clone and prepare
             const clone = element.cloneNode(true);
             clone.style.transform = 'none';
             clone.style.width = `${A4_WIDTH_PX}px`;
             clone.style.margin = '0';
             clone.style.padding = '0';
+            clone.style.boxShadow = 'none';
             captureContainer.appendChild(clone);
 
-            // Small delay to let the layout settle in the new container
-            await new Promise(resolve => setTimeout(resolve, 500));
+            // Wait for any lazy images/layout
+            await new Promise(resolve => setTimeout(resolve, 800));
 
             const canvas = await html2canvas(clone, {
-                scale: 3, 
+                scale: 2, 
                 useCORS: true,
                 backgroundColor: '#ffffff',
                 logging: false,
@@ -155,17 +159,10 @@ const Editor = () => {
                 onclone: (clonedDoc) => {
                     const allNodes = clonedDoc.querySelectorAll('*');
                     allNodes.forEach(node => {
-                        // 🚀 CRITICAL: Force reset of all spacing that breaks in canvas
-                        node.style.setProperty('letter-spacing', '0', 'important');
-                        node.style.setProperty('word-spacing', 'normal', 'important');
-                        node.style.setProperty('transform', 'none', 'important');
-                        node.style.setProperty('transition', 'none', 'important');
-                        
-                        // Ensure text isn't squashed horizontally
-                        if (node.innerText && node.innerText.length > 0) {
-                            node.style.setProperty('display', 'block', 'important');
-                            node.style.setProperty('width', 'auto', 'important');
-                        }
+                        // Reset experimentalSpacing which often breaks html2canvas
+                        node.style.letterSpacing = 'normal';
+                        node.style.wordSpacing = 'normal';
+                        node.style.fontVariantLigatures = 'none';
                     });
                 }
             });
