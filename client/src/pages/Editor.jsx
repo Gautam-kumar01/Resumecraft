@@ -122,8 +122,17 @@ const Editor = () => {
             // Get the resume's inner HTML
             const resumeHTML = element.innerHTML;
 
-            // Build a complete standalone HTML document for printing
-            // Uses Tailwind CDN so ALL utility classes are guaranteed to work
+            // Collect the app's actual compiled stylesheet link tags
+            const styleLinkTags = Array.from(document.querySelectorAll('link[rel="stylesheet"]'))
+                .map(link => `<link rel="stylesheet" href="${link.href}">`)
+                .join('\n');
+
+            // Collect all inline <style> blocks (Tailwind v4 injects here)
+            const inlineStyles = Array.from(document.querySelectorAll('style'))
+                .map(style => `<style>${style.innerHTML}</style>`)
+                .join('\n');
+
+            // Build a complete standalone HTML document using the SAME CSS as the app
             const printContent = `
 <!DOCTYPE html>
 <html lang="en">
@@ -131,26 +140,22 @@ const Editor = () => {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${resume.title || 'Resume'}</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"><\/script>
+  ${styleLinkTags}
+  ${inlineStyles}
   <style>
-    /* Tailwind config to match the app */
     @page {
       size: A4 portrait;
-      margin: 0;
+      margin: 0 !important;
     }
     * {
       box-sizing: border-box;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
     html, body {
-      margin: 0;
-      padding: 0;
-      background: white;
-      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+      margin: 0 !important;
+      padding: 0 !important;
+      background: white !important;
+      width: 210mm;
     }
     .resume-wrapper {
       width: 210mm;
@@ -158,28 +163,17 @@ const Editor = () => {
       margin: 0;
       padding: 0;
       background: white;
-      overflow: hidden;
+      transform: none !important;
     }
-
-    /* Match app color tokens */
-    .text-slate-900 { color: #0f172a; }
-    .text-slate-700 { color: #334155; }
-    .text-slate-600 { color: #475569; }
-    .text-slate-500 { color: #64748b; }
-    .text-slate-400 { color: #94a3b8; }
-    .text-slate-300 { color: #cbd5e1; }
-    .text-orange-600 { color: #ea580c; }
-    .text-orange-500 { color: #f97316; }
-    .text-orange-400 { color: #fb923c; }
-    .bg-slate-900 { background-color: #0f172a; }
-    .bg-slate-100 { background-color: #f1f5f9; }
-    .bg-slate-50  { background-color: #f8fafc; }
-    .bg-orange-50 { background-color: #fff7ed; }
-    .border-slate-200 { border-color: #e2e8f0; }
-    .border-slate-900 { border-color: #0f172a; }
-    .border-orange-100 { border-color: #ffedd5; }
-    .border-orange-500 { border-color: #f97316; }
-
+    /* Force all image constraints to work */
+    img {
+      max-width: 100%;
+      display: block;
+    }
+    /* Override any scale transforms */
+    * {
+      transform: none !important;
+    }
     @media print {
       html, body {
         width: 210mm;
@@ -188,7 +182,6 @@ const Editor = () => {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
-      /* Ensure backgrounds and colors print */
       * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
@@ -199,12 +192,11 @@ const Editor = () => {
 <body>
   <div class="resume-wrapper">${resumeHTML}</div>
   <script>
-    // Trigger print after everything is fully loaded
     window.addEventListener('load', function() {
       setTimeout(function() {
         window.print();
         setTimeout(function() { window.close(); }, 500);
-      }, 800);
+      }, 1000);
     });
   <\/script>
 </body>
@@ -221,14 +213,12 @@ const Editor = () => {
 
             printWindow.document.write(printContent);
             printWindow.document.close();
-
             setDownloading(false);
         } catch (err) {
             console.error("PDF Export Error:", err);
             alert(`Download failed: ${err.message}`);
             setDownloading(false);
         }
-    };
 
     const handleDownload = async () => {
         await performDownload();
