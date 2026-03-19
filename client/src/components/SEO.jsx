@@ -12,7 +12,7 @@ const SEO = ({
     const defaultDescription = "ResumeCraft.co.in is a free online resume maker and AI resume builder. Create professional, ATS-friendly resumes in minutes with MNC-ready templates and instant download.";
     const defaultKeywords = "resume maker, free resume builder, AI resume builder, CV maker online, ATS friendly resume, professional resume, Indian resume builder, job resume maker, online resume generator, free CV templates, MNC resume formats, fresher resume builder, experience resume maker, resume builder india";
     const siteUrl = "https://resumecraft.co.in/";
-    const defaultImage = "https://resumecraft.co.in/og-image.jpg";
+    const defaultImage = "https://resumecraft.co.in/og-image.png";
 
     const metaTitle = title ? `${title} | ResumeCraft` : siteTitle;
     const metaDescription = description || defaultDescription;
