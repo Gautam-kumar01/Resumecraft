@@ -59,7 +59,7 @@ const Templates = () => {
                     <span>MNC Standard Blueprint</span>
                 </div>
                 <h1 className="text-4xl md:text-6xl font-black text-slate-900 mb-6 tracking-tight">
-                    Win with Top <span className="bg-gradient-to-r from-orange-500 via-orange-400 to-orange-600 bg-clip-text text-transparent">Resume Formats</span>
+                    Best Free <span className="bg-gradient-to-r from-orange-500 via-orange-400 to-orange-600 bg-clip-text text-transparent">Resume Templates</span> & Formats
                 </h1>
                 <p className="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
                     Industry-ready templates designed for <strong>online resume making</strong>. Bypass ATS systems and impress recruiters at world-leading corporations.

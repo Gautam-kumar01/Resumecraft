@@ -10,9 +10,9 @@ const SEO = ({
 }) => {
     const siteTitle = "ResumeCraft – Free Resume Maker Online | AI Resume Builder India";
     const defaultDescription = "ResumeCraft.co.in is a free online resume maker and AI resume builder. Create professional, ATS-friendly resumes in minutes with MNC-ready templates and instant download.";
-    const defaultKeywords = "resume making online, resume builder, free resume builder, online resume maker, cv maker, ai resume builder, professional resume, mnc resume formats, ats friendly resume, resume maker india, online cv maker india, fresher resume builder";
+    const defaultKeywords = "resume maker, free resume builder, AI resume builder, CV maker online, ATS friendly resume, professional resume, Indian resume builder, job resume maker, online resume generator, free CV templates, MNC resume formats, fresher resume builder, experience resume maker, resume builder india";
     const siteUrl = "https://resumecraft.co.in/";
-    const defaultImage = "https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop";
+    const defaultImage = "https://resumecraft.co.in/og-image.jpg";
 
     const metaTitle = title ? `${title} | ResumeCraft` : siteTitle;
     const metaDescription = description || defaultDescription;
@@ -65,6 +65,28 @@ const SEO = ({
                         "ratingValue": "4.8",
                         "ratingCount": "15884"
                     }
+                })}
+            </script>
+
+            {/* Breadcrumb Schema */}
+            <script type="application/ld+json">
+                {JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "BreadcrumbList",
+                    "itemListElement": [
+                        {
+                            "@type": "ListItem",
+                            "position": 1,
+                            "name": "Home",
+                            "item": siteUrl
+                        },
+                        {
+                            "@type": "ListItem",
+                            "position": 2,
+                            "name": title || "Current Page",
+                            "item": metaUrl
+                        }
+                    ]
                 })}
             </script>
         </Helmet>
