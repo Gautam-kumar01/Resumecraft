@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-// html2canvas removed: using native print window for perfect PDF rendering
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 import api from '../api/axios';
 import AuthContext from '../context/AuthContext';
 import ResumePreview from '../components/ResumePreview';
@@ -113,112 +114,93 @@ const Editor = () => {
         }
     };
 
-    const performDownload = () => {
+    const performDownload = async () => {
         setDownloading(true);
         try {
-            const element = document.querySelector('.resume-print-area');
-            if (!element) throw new Error("Resume content not found");
+            await document.fonts.ready;
 
-            // Get the resume's inner HTML
-            const resumeHTML = element.innerHTML;
+            // Get the source resume content
+            const sourceEl = document.querySelector('.resume-print-area');
+            if (!sourceEl) throw new Error('Resume content not found');
 
-            // Collect the app's actual compiled stylesheet link tags
-            const styleLinkTags = Array.from(document.querySelectorAll('link[rel="stylesheet"]'))
-                .map(link => `<link rel="stylesheet" href="${link.href}">`)
-                .join('\n');
+            // A4 at 96 DPI = 794 x 1123 px
+            const A4_W = 794;
 
-            // Collect all inline <style> blocks (Tailwind v4 injects here)
-            const inlineStyles = Array.from(document.querySelectorAll('style'))
-                .map(style => `<style>${style.innerHTML}</style>`)
-                .join('\n');
+            // ─── Build off-screen container ───────────────────────────────────────
+            const offscreen = document.createElement('div');
+            offscreen.style.cssText = [
+                'position:fixed',
+                'top:0',
+                'left:-9999px',
+                `width:${A4_W}px`,
+                'background:#fff',
+                'z-index:-9999',
+                'transform:none',
+                'overflow:visible',
+            ].join(';');
+            document.body.appendChild(offscreen);
 
-            // Build a complete standalone HTML document using the SAME CSS as the app
-            const printContent = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${resume.title || 'Resume'}</title>
-  ${styleLinkTags}
-  ${inlineStyles}
-  <style>
-    @page {
-      size: A4 portrait;
-      margin: 0 !important;
-    }
-    * {
-      box-sizing: border-box;
-      -webkit-font-smoothing: antialiased;
-    }
-    html, body {
-      margin: 0 !important;
-      padding: 0 !important;
-      background: white !important;
-      width: 210mm;
-    }
-    .resume-wrapper {
-      width: 210mm;
-      min-height: 297mm;
-      margin: 0;
-      padding: 0;
-      background: white;
-      transform: none !important;
-    }
-    /* Force all image constraints to work */
-    img {
-      max-width: 100%;
-      display: block;
-    }
-    /* Override any scale transforms */
-    * {
-      transform: none !important;
-    }
-    @media print {
-      html, body {
-        width: 210mm;
-        margin: 0 !important;
-        padding: 0 !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-      * {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="resume-wrapper">${resumeHTML}</div>
-  <script>
-    window.addEventListener('load', function() {
-      setTimeout(function() {
-        window.print();
-        setTimeout(function() { window.close(); }, 500);
-      }, 1000);
-    });
-  <\/script>
-</body>
-</html>
-            `;
+            // Deep-clone the resume into the off-screen container
+            const clone = sourceEl.cloneNode(true);
+            // Strip any scale transforms from the clone and all its children
+            [clone, ...clone.querySelectorAll('*')].forEach(el => {
+                el.style.transform = 'none';
+                el.style.transition = 'none';
+                el.style.animation = 'none';
+            });
+            clone.style.width = `${A4_W}px`;
+            clone.style.minHeight = 'auto';
+            clone.style.boxShadow = 'none';
+            clone.style.margin = '0';
+            clone.style.padding = '0';
+            offscreen.appendChild(clone);
 
-            // Open the print window
-            const printWindow = window.open('', '_blank', 'width=900,height=700,toolbar=0,menubar=0');
-            if (!printWindow) {
-                alert('Please allow popups for this site to enable resume download.');
-                setDownloading(false);
-                return;
+            // Wait for images and layout to settle
+            await new Promise(r => setTimeout(r, 600));
+
+            // ─── Capture with html2canvas ──────────────────────────────────────────
+            const canvas = await html2canvas(offscreen, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#ffffff',
+                logging: false,
+                width: A4_W,
+                height: offscreen.scrollHeight,
+                windowWidth: A4_W,
+                scrollX: 0,
+                scrollY: 0,
+            });
+
+            // Cleanup off-screen node
+            document.body.removeChild(offscreen);
+
+            // ─── Build PDF ────────────────────────────────────────────────────────
+            const imgData = canvas.toDataURL('image/jpeg', 0.98);
+            const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+            const pageW = pdf.internal.pageSize.getWidth();   // 210 mm
+            const pageH = pdf.internal.pageSize.getHeight();  // 297 mm
+            const imgH  = (canvas.height / canvas.width) * pageW;
+
+            // If resume is longer than one page, add extra pages
+            let remaining = imgH;
+            let yOffset   = 0;
+            while (remaining > 0) {
+                if (yOffset > 0) pdf.addPage();
+                const sliceH = Math.min(remaining, pageH);
+                pdf.addImage(imgData, 'JPEG', 0, -yOffset, pageW, imgH, '', 'FAST');
+                yOffset   += pageH;
+                remaining -= pageH;
             }
 
-            printWindow.document.write(printContent);
-            printWindow.document.close();
+            pdf.save(`${resume.title || 'Resume'}.pdf`);
             setDownloading(false);
         } catch (err) {
-            console.error("PDF Export Error:", err);
+            console.error('PDF Export Error:', err);
             alert(`Download failed: ${err.message}`);
             setDownloading(false);
         }
+    };
 
     const handleDownload = async () => {
         await performDownload();
