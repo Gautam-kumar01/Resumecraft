@@ -135,12 +135,13 @@ const Editor = () => {
             element.style.width = `${A4_WIDTH_PX}px`;
 
             const canvas = await html2canvas(element, {
-                scale: 3, 
+                scale: 2, // Adjusted for better text-to-pixel ratio on some systems
                 useCORS: true,
                 backgroundColor: '#ffffff',
                 logging: false,
+                letterRendering: true,
                 width: A4_WIDTH_PX,
-                windowWidth: A4_WIDTH_PX * 1.5, // Buffer to avoid text clipping
+                windowWidth: A4_WIDTH_PX,
                 onclone: (clonedDoc) => {
                     const clonedEl = clonedDoc.querySelector('.resume-print-area');
                     if (clonedEl) {
@@ -150,24 +151,27 @@ const Editor = () => {
                         clonedEl.style.padding = '0';
                         
                         // Force all text to behave normally during capture
-                        clonedEl.querySelectorAll('*').forEach(node => {
+                        const allNodes = clonedEl.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span, div, li, strong');
+                        allNodes.forEach(node => {
+                            // 🚀 Fix overlapping 1: Reset tracking to a safe value
+                            // Using a tiny positive value (0.3px) often prevents char merging in html2canvas
+                            node.style.setProperty('letter-spacing', '0.01em', 'important');
+                            node.style.setProperty('word-spacing', '0.05em', 'important');
+                            
+                            // 🚀 Fix overlapping 2: Avoid text justification crashes
                             const style = window.getComputedStyle(node);
-                            
-                            // 🚀 Fix overlapping 1: Reset tracking/letter-spacing which often breaks html2canvas
-                            if (parseFloat(style.letterSpacing) !== 0) {
-                                node.style.setProperty('letter-spacing', 'normal', 'important');
-                            }
-                            
-                            // 🚀 Fix overlapping 2: Explicit line-height for consistent spacing
-                            if (style.lineHeight === 'normal' || style.lineHeight.includes('px')) {
-                                // For normal, default to a safe multiplier. 
-                                // For px, we keep it but it might be too tight.
-                            }
-
-                            // 🚀 Fix overlapping 3: Avoid text justification glitches
                             if (style.textAlign === 'justify') {
                                 node.style.setProperty('text-align', 'left', 'important');
                             }
+
+                            // 🚀 Fix overlapping 3: Explicit line height
+                            if (style.lineHeight === 'normal' || parseFloat(style.lineHeight) < 1.2) {
+                                node.style.setProperty('line-height', '1.4', 'important');
+                            }
+                            
+                            // Ensure font smoothing doesn't interfere with the renderer
+                            node.style.setProperty('-webkit-font-smoothing', 'antialiased', 'important');
+                            node.style.setProperty('font-variant-ligatures', 'none', 'important');
                         });
                     }
                 }
