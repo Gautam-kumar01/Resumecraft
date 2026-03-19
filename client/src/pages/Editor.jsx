@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 import api from '../api/axios';
 import AuthContext from '../context/AuthContext';
 import ResumePreview from '../components/ResumePreview';
@@ -115,19 +117,67 @@ const Editor = () => {
     const performDownload = async () => {
         setDownloading(true);
         try {
-            // Temporarily set the document title so the browser saves the PDF with this name
-            const originalTitle = document.title;
-            document.title = `${resume.title || 'Resume'}`;
+            // Target the actual resume content area
+            const element = document.querySelector('.resume-print-area');
+            if (!element) throw new Error("Resume content not found");
+
+            // Store original styles to restore them after high-quality capture
+            const originalTransform = element.style.transform;
+            const originalWidth = element.style.width;
+            const originalMargin = element.style.margin;
             
-            // Allow state to propagate before printing
-            setTimeout(() => {
-                window.print();
-                document.title = originalTitle;
-                setDownloading(false);
-            }, 300);
+            // 🚨 Prepare for capture: Reset scales and set fixed pixel-perfect dimensions for A4
+            // A4 dimensions at 96 DPI: ~794px x 1123px. We use 210mm for A4.
+            element.style.transform = 'none';
+            element.style.width = '210mm';
+            element.style.margin = '0';
+
+            // Generate high-resolution canvas from DOM element
+            const canvas = await html2canvas(element, {
+                scale: 3, // High density for sharper text and visuals
+                useCORS: true, // Allow cross-origin images (profile pictures)
+                allowTaint: true,
+                backgroundColor: '#ffffff',
+                logging: false,
+                windowWidth: 794, // Standard A4 pixel width
+                onclone: (clonedDoc) => {
+                    // Force transform reset in the cloned document used for rendering
+                    const clonedEl = clonedDoc.querySelector('.resume-print-area');
+                    if (clonedEl) {
+                        clonedEl.style.transform = 'none';
+                        clonedEl.style.width = '210mm';
+                        clonedEl.style.margin = '0';
+                    }
+                }
+            });
+
+            // Immediately restore original display styles
+            element.style.transform = originalTransform;
+            element.style.width = originalWidth;
+            element.style.margin = originalMargin;
+
+            // Convert canvas to image data
+            const imgData = canvas.toDataURL('image/jpeg', 1.0);
+            
+            // Initialize jsPDF with A4 settings
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4',
+                compress: true
+            });
+
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+            // Add images and trigger direct download
+            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
+            pdf.save(`${resume.title || 'Resume'}.pdf`);
+            
+            setDownloading(false);
         } catch (err) {
-            console.error("PDF Print Error:", err);
-            alert(`Download failed. Please try again.`);
+            console.error("PDF Export Error:", err);
+            alert(`Download failed: ${err.message}. Please check if all images are loaded.`);
             setDownloading(false);
         }
     };
