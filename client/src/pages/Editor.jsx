@@ -120,58 +120,61 @@ const Editor = () => {
             const element = document.querySelector('.resume-print-area');
             if (!element) throw new Error("Resume content not found");
 
-            // Ensure fonts are loaded before capture
             await document.fonts.ready;
 
-            // Define A4 dimensions in pixels (96 DPI standard)
+            // A4 dimensions at 96 DPI
             const A4_WIDTH_PX = 794;
             
-            // Store original styles
+            // Store original state
             const originalTransform = element.style.transform;
-            const originalOuterWidth = element.style.width;
-            
-            // Temporarily prepare the element for pixel-perfect capture
+            const originalWidth = element.style.width;
+            const originalPosition = element.style.position;
+            const originalZIndex = element.style.zIndex;
+
+            // Reset element styles to natural for capture
             element.style.transform = 'none';
             element.style.width = `${A4_WIDTH_PX}px`;
 
             const canvas = await html2canvas(element, {
-                scale: 2, // Adjusted for better text-to-pixel ratio on some systems
+                scale: 4, // Higher scale for ultra-crisp text
                 useCORS: true,
                 backgroundColor: '#ffffff',
                 logging: false,
-                letterRendering: true,
                 width: A4_WIDTH_PX,
                 windowWidth: A4_WIDTH_PX,
                 onclone: (clonedDoc) => {
+                    // 🚀 CRITICAL: Remove all transforms from the cloned document to prevent text crushing
+                    const allNodes = clonedDoc.querySelectorAll('*');
+                    allNodes.forEach(node => {
+                        if (node.style.transform) node.style.transform = 'none';
+                        if (node.style.transition) node.style.transition = 'none';
+                    });
+
+                    // Target the actual resume in the clone
                     const clonedEl = clonedDoc.querySelector('.resume-print-area');
                     if (clonedEl) {
                         clonedEl.style.transform = 'none';
                         clonedEl.style.width = `${A4_WIDTH_PX}px`;
                         clonedEl.style.margin = '0';
                         clonedEl.style.padding = '0';
+                        clonedEl.style.position = 'relative';
                         
-                        // Force all text to behave normally during capture
-                        const allNodes = clonedEl.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span, div, li, strong');
-                        allNodes.forEach(node => {
-                            // 🚀 Fix overlapping 1: Reset tracking to a safe value
-                            // Using a tiny positive value (0.3px) often prevents char merging in html2canvas
-                            node.style.setProperty('letter-spacing', '0.01em', 'important');
-                            node.style.setProperty('word-spacing', '0.05em', 'important');
+                        // Fix for the specific overlapping seen in the screenshot
+                        const textElements = clonedEl.querySelectorAll('h1, h2, h3, h4, p, span, div, li');
+                        textElements.forEach(el => {
+                            // Reset tracking/kerning that breaks in canvas
+                            el.style.letterSpacing = 'normal';
+                            el.style.wordSpacing = 'normal';
                             
-                            // 🚀 Fix overlapping 2: Avoid text justification crashes
-                            const style = window.getComputedStyle(node);
-                            if (style.textAlign === 'justify') {
-                                node.style.setProperty('text-align', 'left', 'important');
-                            }
-
-                            // 🚀 Fix overlapping 3: Explicit line height
-                            if (style.lineHeight === 'normal' || parseFloat(style.lineHeight) < 1.2) {
-                                node.style.setProperty('line-height', '1.4', 'important');
-                            }
+                            // Prevent character compression
+                            el.style.fontVariantLigatures = 'none';
+                            el.style.fontKerning = 'none';
                             
-                            // Ensure font smoothing doesn't interfere with the renderer
-                            node.style.setProperty('-webkit-font-smoothing', 'antialiased', 'important');
-                            node.style.setProperty('font-variant-ligatures', 'none', 'important');
+                            // Ensure line-height is sufficient
+                            const style = window.getComputedStyle(el);
+                            if (parseFloat(style.lineHeight) < parseFloat(style.fontSize) * 1.2) {
+                                el.style.lineHeight = '1.5';
+                            }
                         });
                     }
                 }
@@ -179,7 +182,9 @@ const Editor = () => {
 
             // Restore original styles
             element.style.transform = originalTransform;
-            element.style.width = originalOuterWidth;
+            element.style.width = originalWidth;
+            element.style.position = originalPosition;
+            element.style.zIndex = originalZIndex;
 
             const imgData = canvas.toDataURL('image/jpeg', 1.0);
             const pdf = new jsPDF({
