@@ -119,23 +119,11 @@ const Editor = () => {
             const element = document.querySelector('.resume-print-area');
             if (!element) throw new Error("Resume content not found");
 
-            // Collect all stylesheets from the current page
-            const styleSheets = Array.from(document.styleSheets)
-                .map(sheet => {
-                    try {
-                        return Array.from(sheet.cssRules).map(rule => rule.cssText).join('\n');
-                    } catch {
-                        // Cross-origin sheets can't be read - use link tag instead
-                        if (sheet.href) return `@import url('${sheet.href}');`;
-                        return '';
-                    }
-                })
-                .join('\n');
-
             // Get the resume's inner HTML
             const resumeHTML = element.innerHTML;
 
             // Build a complete standalone HTML document for printing
+            // Uses Tailwind CDN so ALL utility classes are guaranteed to work
             const printContent = `
 <!DOCTYPE html>
 <html lang="en">
@@ -143,57 +131,90 @@ const Editor = () => {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${resume.title || 'Resume'}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"><\/script>
   <style>
-    /* Import the same fonts used in the app */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
-    ${styleSheets}
-
-    /* --- Print-Specific Overrides --- */
+    /* Tailwind config to match the app */
     @page {
       size: A4 portrait;
       margin: 0;
     }
-    @media print {
-      html, body {
-        width: 210mm;
-        height: 297mm;
-        margin: 0;
-        padding: 0;
-        background: white;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-    }
     * {
+      box-sizing: border-box;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
-      box-sizing: border-box;
     }
-    body {
+    html, body {
       margin: 0;
       padding: 0;
       background: white;
-      font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
     }
     .resume-wrapper {
       width: 210mm;
       min-height: 297mm;
-      margin: 0 auto;
+      margin: 0;
+      padding: 0;
       background: white;
+      overflow: hidden;
+    }
+
+    /* Match app color tokens */
+    .text-slate-900 { color: #0f172a; }
+    .text-slate-700 { color: #334155; }
+    .text-slate-600 { color: #475569; }
+    .text-slate-500 { color: #64748b; }
+    .text-slate-400 { color: #94a3b8; }
+    .text-slate-300 { color: #cbd5e1; }
+    .text-orange-600 { color: #ea580c; }
+    .text-orange-500 { color: #f97316; }
+    .text-orange-400 { color: #fb923c; }
+    .bg-slate-900 { background-color: #0f172a; }
+    .bg-slate-100 { background-color: #f1f5f9; }
+    .bg-slate-50  { background-color: #f8fafc; }
+    .bg-orange-50 { background-color: #fff7ed; }
+    .border-slate-200 { border-color: #e2e8f0; }
+    .border-slate-900 { border-color: #0f172a; }
+    .border-orange-100 { border-color: #ffedd5; }
+    .border-orange-500 { border-color: #f97316; }
+
+    @media print {
+      html, body {
+        width: 210mm;
+        margin: 0 !important;
+        padding: 0 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      /* Ensure backgrounds and colors print */
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
     }
   </style>
 </head>
 <body>
   <div class="resume-wrapper">${resumeHTML}</div>
+  <script>
+    // Trigger print after everything is fully loaded
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        window.print();
+        setTimeout(function() { window.close(); }, 500);
+      }, 800);
+    });
+  <\/script>
 </body>
 </html>
             `;
 
-            // Open a hidden print window
-            const printWindow = window.open('', '_blank', 'width=900,height=700');
+            // Open the print window
+            const printWindow = window.open('', '_blank', 'width=900,height=700,toolbar=0,menubar=0');
             if (!printWindow) {
-                alert('Please allow popups for this site to download your resume.');
+                alert('Please allow popups for this site to enable resume download.');
                 setDownloading(false);
                 return;
             }
@@ -201,26 +222,7 @@ const Editor = () => {
             printWindow.document.write(printContent);
             printWindow.document.close();
 
-            // Wait for fonts/images to load, then print
-            printWindow.onload = () => {
-                // Slight extra delay for font rendering
-                setTimeout(() => {
-                    printWindow.focus();
-                    printWindow.print();
-                    printWindow.close();
-                    setDownloading(false);
-                }, 600);
-            };
-
-            // Fallback if onload doesn't fire
-            setTimeout(() => {
-                if (printWindow && !printWindow.closed) {
-                    printWindow.focus();
-                    printWindow.print();
-                    printWindow.close();
-                }
-                setDownloading(false);
-            }, 2500);
+            setDownloading(false);
         } catch (err) {
             console.error("PDF Export Error:", err);
             alert(`Download failed: ${err.message}`);
