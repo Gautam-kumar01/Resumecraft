@@ -125,66 +125,53 @@ const Editor = () => {
             // A4 dimensions at 96 DPI
             const A4_WIDTH_PX = 794;
             
-            // Store original state
-            const originalTransform = element.style.transform;
-            const originalWidth = element.style.width;
-            const originalPosition = element.style.position;
-            const originalZIndex = element.style.zIndex;
+            // Create a dedicated hidden container for the capture to isolate from transforms
+            const captureContainer = document.createElement('div');
+            captureContainer.style.position = 'absolute';
+            captureContainer.style.top = '-9999px';
+            captureContainer.style.left = '-9999px';
+            captureContainer.style.width = `${A4_WIDTH_PX}px`;
+            captureContainer.style.backgroundColor = 'white';
+            document.body.appendChild(captureContainer);
 
-            // Reset element styles to natural for capture
-            element.style.transform = 'none';
-            element.style.width = `${A4_WIDTH_PX}px`;
+            // Clone the resume into this safe container
+            const clone = element.cloneNode(true);
+            clone.style.transform = 'none';
+            clone.style.width = `${A4_WIDTH_PX}px`;
+            clone.style.margin = '0';
+            clone.style.padding = '0';
+            captureContainer.appendChild(clone);
 
-            const canvas = await html2canvas(element, {
-                scale: 4, // Higher scale for ultra-crisp text
+            // Small delay to let the layout settle in the new container
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            const canvas = await html2canvas(clone, {
+                scale: 3, 
                 useCORS: true,
                 backgroundColor: '#ffffff',
                 logging: false,
                 width: A4_WIDTH_PX,
                 windowWidth: A4_WIDTH_PX,
                 onclone: (clonedDoc) => {
-                    // 🚀 CRITICAL: Remove all transforms from the cloned document to prevent text crushing
                     const allNodes = clonedDoc.querySelectorAll('*');
                     allNodes.forEach(node => {
-                        if (node.style.transform) node.style.transform = 'none';
-                        if (node.style.transition) node.style.transition = 'none';
-                    });
-
-                    // Target the actual resume in the clone
-                    const clonedEl = clonedDoc.querySelector('.resume-print-area');
-                    if (clonedEl) {
-                        clonedEl.style.transform = 'none';
-                        clonedEl.style.width = `${A4_WIDTH_PX}px`;
-                        clonedEl.style.margin = '0';
-                        clonedEl.style.padding = '0';
-                        clonedEl.style.position = 'relative';
+                        // 🚀 CRITICAL: Force reset of all spacing that breaks in canvas
+                        node.style.setProperty('letter-spacing', '0', 'important');
+                        node.style.setProperty('word-spacing', 'normal', 'important');
+                        node.style.setProperty('transform', 'none', 'important');
+                        node.style.setProperty('transition', 'none', 'important');
                         
-                        // Fix for the specific overlapping seen in the screenshot
-                        const textElements = clonedEl.querySelectorAll('h1, h2, h3, h4, p, span, div, li');
-                        textElements.forEach(el => {
-                            // Reset tracking/kerning that breaks in canvas
-                            el.style.letterSpacing = 'normal';
-                            el.style.wordSpacing = 'normal';
-                            
-                            // Prevent character compression
-                            el.style.fontVariantLigatures = 'none';
-                            el.style.fontKerning = 'none';
-                            
-                            // Ensure line-height is sufficient
-                            const style = window.getComputedStyle(el);
-                            if (parseFloat(style.lineHeight) < parseFloat(style.fontSize) * 1.2) {
-                                el.style.lineHeight = '1.5';
-                            }
-                        });
-                    }
+                        // Ensure text isn't squashed horizontally
+                        if (node.innerText && node.innerText.length > 0) {
+                            node.style.setProperty('display', 'block', 'important');
+                            node.style.setProperty('width', 'auto', 'important');
+                        }
+                    });
                 }
             });
 
-            // Restore original styles
-            element.style.transform = originalTransform;
-            element.style.width = originalWidth;
-            element.style.position = originalPosition;
-            element.style.zIndex = originalZIndex;
+            // Cleanup
+            document.body.removeChild(captureContainer);
 
             const imgData = canvas.toDataURL('image/jpeg', 1.0);
             const pdf = new jsPDF({
