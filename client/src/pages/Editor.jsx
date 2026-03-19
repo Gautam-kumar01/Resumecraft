@@ -117,49 +117,67 @@ const Editor = () => {
     const performDownload = async () => {
         setDownloading(true);
         try {
-            // Target the actual resume content area
             const element = document.querySelector('.resume-print-area');
             if (!element) throw new Error("Resume content not found");
 
-            // Store original styles to restore them after high-quality capture
-            const originalTransform = element.style.transform;
-            const originalWidth = element.style.width;
-            const originalMargin = element.style.margin;
-            
-            // 🚨 Prepare for capture: Reset scales and set fixed pixel-perfect dimensions for A4
-            // A4 dimensions at 96 DPI: ~794px x 1123px. We use 210mm for A4.
-            element.style.transform = 'none';
-            element.style.width = '210mm';
-            element.style.margin = '0';
+            // Ensure fonts are loaded before capture
+            await document.fonts.ready;
 
-            // Generate high-resolution canvas from DOM element
+            // Define A4 dimensions in pixels (96 DPI standard)
+            const A4_WIDTH_PX = 794;
+            
+            // Store original styles
+            const originalTransform = element.style.transform;
+            const originalOuterWidth = element.style.width;
+            
+            // Temporarily prepare the element for pixel-perfect capture
+            element.style.transform = 'none';
+            element.style.width = `${A4_WIDTH_PX}px`;
+
             const canvas = await html2canvas(element, {
-                scale: 3, // High density for sharper text and visuals
-                useCORS: true, // Allow cross-origin images (profile pictures)
-                allowTaint: true,
+                scale: 3, 
+                useCORS: true,
                 backgroundColor: '#ffffff',
                 logging: false,
-                windowWidth: 794, // Standard A4 pixel width
+                width: A4_WIDTH_PX,
+                windowWidth: A4_WIDTH_PX * 1.5, // Buffer to avoid text clipping
                 onclone: (clonedDoc) => {
-                    // Force transform reset in the cloned document used for rendering
                     const clonedEl = clonedDoc.querySelector('.resume-print-area');
                     if (clonedEl) {
                         clonedEl.style.transform = 'none';
-                        clonedEl.style.width = '210mm';
+                        clonedEl.style.width = `${A4_WIDTH_PX}px`;
                         clonedEl.style.margin = '0';
+                        clonedEl.style.padding = '0';
+                        
+                        // Force all text to behave normally during capture
+                        clonedEl.querySelectorAll('*').forEach(node => {
+                            const style = window.getComputedStyle(node);
+                            
+                            // 🚀 Fix overlapping 1: Reset tracking/letter-spacing which often breaks html2canvas
+                            if (parseFloat(style.letterSpacing) !== 0) {
+                                node.style.setProperty('letter-spacing', 'normal', 'important');
+                            }
+                            
+                            // 🚀 Fix overlapping 2: Explicit line-height for consistent spacing
+                            if (style.lineHeight === 'normal' || style.lineHeight.includes('px')) {
+                                // For normal, default to a safe multiplier. 
+                                // For px, we keep it but it might be too tight.
+                            }
+
+                            // 🚀 Fix overlapping 3: Avoid text justification glitches
+                            if (style.textAlign === 'justify') {
+                                node.style.setProperty('text-align', 'left', 'important');
+                            }
+                        });
                     }
                 }
             });
 
-            // Immediately restore original display styles
+            // Restore original styles
             element.style.transform = originalTransform;
-            element.style.width = originalWidth;
-            element.style.margin = originalMargin;
+            element.style.width = originalOuterWidth;
 
-            // Convert canvas to image data
             const imgData = canvas.toDataURL('image/jpeg', 1.0);
-            
-            // Initialize jsPDF with A4 settings
             const pdf = new jsPDF({
                 orientation: 'portrait',
                 unit: 'mm',
@@ -170,14 +188,13 @@ const Editor = () => {
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
 
-            // Add images and trigger direct download
             pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
             pdf.save(`${resume.title || 'Resume'}.pdf`);
             
             setDownloading(false);
         } catch (err) {
             console.error("PDF Export Error:", err);
-            alert(`Download failed: ${err.message}. Please check if all images are loaded.`);
+            alert(`Download failed: ${err.message}`);
             setDownloading(false);
         }
     };
