@@ -166,12 +166,13 @@ const Editor = () => {
             clone.style.padding = '0';
             offscreen.appendChild(clone);
 
-            // Wait for images and layout to settle
-            await new Promise(r => setTimeout(r, 800));
+            // Wait for images and fonts to definitely load
+            await document.fonts.ready;
+            await new Promise(r => setTimeout(r, 1200));
 
             // ─── Capture with html2canvas ──────────────────────────────────────────
             const canvas = await html2canvas(offscreen, {
-                scale: 3, // Increased scale for better resolution
+                scale: 3, // High resolution
                 useCORS: true,
                 backgroundColor: '#ffffff',
                 logging: false,
@@ -179,30 +180,35 @@ const Editor = () => {
                 height: offscreen.scrollHeight,
                 scrollX: 0,
                 scrollY: 0,
-                imageTimeout: 15000, // Increase timeout for images
-                // Removed windowWidth because it can cause incorrect character positioning
-                // in some browser environments
+                imageTimeout: 20000,
                 onclone: (clonedDoc) => {
-                    // One last deep fix for overlapping:
-                    // Force normalize all text elements in the final cloned doc
+                    // Force a deep reset of all text-related styles that cause overlapping
                     const all = clonedDoc.getElementsByTagName('*');
                     for (let i = 0; i < all.length; i++) {
                         const el = all[i];
-                         el.style.fontVariantLigatures = 'none';
-                         el.style.fontKerning = 'none';
-                          el.style.textRendering = 'auto';
-                          el.style.WebkitFontSmoothing = 'antialiased';
-                          
-                          // Fix for overlapping: Normalize line-height and letter-spacing
-                         const style = window.getComputedStyle(el);
-                         if (style.letterSpacing !== 'normal') {
-                             el.style.letterSpacing = 'normal';
-                         }
-                         
-                         // Ensure line-height is consistent
-                         if (el.tagName === 'P' || el.tagName === 'LI' || el.tagName === 'SPAN') {
-                            el.style.lineHeight = '1.5';
-                         }
+                        
+                        // Disable advanced typography features that canvas renderers often fail at
+                        el.style.fontVariantLigatures = 'none';
+                        el.style.fontKerning = 'none';
+                        el.style.textRendering = 'auto';
+                        el.style.WebkitFontSmoothing = 'antialiased';
+                        
+                        // Overlapping Fix: Force zero spacing and normal rendering
+                        el.style.letterSpacing = '0px';
+                        el.style.wordSpacing = '0px';
+                        
+                        // Ensure text-justify is off as it's a major cause of character drift
+                        if (el.style.textAlign === 'justify') {
+                            el.style.textAlign = 'left';
+                        }
+
+                        // Maintain consistent line height for all text containers
+                        if (['P', 'LI', 'SPAN', 'H1', 'H2', 'H3', 'H4'].includes(el.tagName)) {
+                            const style = window.getComputedStyle(el);
+                            if (style.display === 'inline' || style.display === 'inline-block' || style.display === 'block') {
+                                el.style.lineHeight = '1.4';
+                            }
+                        }
                     }
                 }
             });
