@@ -147,6 +147,17 @@ const Editor = () => {
                 el.style.transform = 'none';
                 el.style.transition = 'none';
                 el.style.animation = 'none';
+                
+                // Fix for overlapping text in html2canvas: 
+                // Sometimes it miscalculates letter-spacing or word-spacing
+                if (window.getComputedStyle(el).letterSpacing !== 'normal') {
+                    el.style.letterSpacing = 'normal';
+                }
+                
+                // html2canvas struggles with text-justify
+                if (window.getComputedStyle(el).textAlign === 'justify') {
+                    el.style.textAlign = 'left';
+                }
             });
             clone.style.width = `${A4_W}px`;
             clone.style.minHeight = 'auto';
@@ -156,19 +167,44 @@ const Editor = () => {
             offscreen.appendChild(clone);
 
             // Wait for images and layout to settle
-            await new Promise(r => setTimeout(r, 600));
+            await new Promise(r => setTimeout(r, 800));
 
             // ─── Capture with html2canvas ──────────────────────────────────────────
             const canvas = await html2canvas(offscreen, {
-                scale: 2,
+                scale: 3, // Increased scale for better resolution
                 useCORS: true,
                 backgroundColor: '#ffffff',
                 logging: false,
                 width: A4_W,
                 height: offscreen.scrollHeight,
-                windowWidth: A4_W,
                 scrollX: 0,
                 scrollY: 0,
+                imageTimeout: 15000, // Increase timeout for images
+                // Removed windowWidth because it can cause incorrect character positioning
+                // in some browser environments
+                onclone: (clonedDoc) => {
+                    // One last deep fix for overlapping:
+                    // Force normalize all text elements in the final cloned doc
+                    const all = clonedDoc.getElementsByTagName('*');
+                    for (let i = 0; i < all.length; i++) {
+                        const el = all[i];
+                         el.style.fontVariantLigatures = 'none';
+                         el.style.fontKerning = 'none';
+                          el.style.textRendering = 'auto';
+                          el.style.WebkitFontSmoothing = 'antialiased';
+                          
+                          // Fix for overlapping: Normalize line-height and letter-spacing
+                         const style = window.getComputedStyle(el);
+                         if (style.letterSpacing !== 'normal') {
+                             el.style.letterSpacing = 'normal';
+                         }
+                         
+                         // Ensure line-height is consistent
+                         if (el.tagName === 'P' || el.tagName === 'LI' || el.tagName === 'SPAN') {
+                            el.style.lineHeight = '1.5';
+                         }
+                    }
+                }
             });
 
             // Cleanup off-screen node
