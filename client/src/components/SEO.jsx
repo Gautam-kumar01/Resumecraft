@@ -45,6 +45,17 @@ const SEO = ({
             <meta name="twitter:description" content={metaDescription} />
             <meta name="twitter:image" content={metaImage} />
             
+            {/* Google Site Name Schema */}
+            <script type="application/ld+json">
+                {JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "WebSite",
+                    "name": "ResumeCraft",
+                    "alternateName": ["Resume Craft", "ResumeCraft India"],
+                    "url": siteUrl
+                })}
+            </script>
+            
             {/* Schema.org JSON-LD for Software Application */}
             <script type="application/ld+json">
                 {JSON.stringify({
