@@ -178,6 +178,7 @@ const Editor = () => {
                 logging: false,
                 width: A4_W,
                 height: offscreen.scrollHeight,
+                windowWidth: 1200, // Force a desktop-like viewport width for style calculations
                 scrollX: 0,
                 scrollY: 0,
                 imageTimeout: 20000,
@@ -204,11 +205,16 @@ const Editor = () => {
 
                         // Maintain consistent line height for all text containers
                         if (['P', 'LI', 'SPAN', 'H1', 'H2', 'H3', 'H4'].includes(el.tagName)) {
-                            const style = window.getComputedStyle(el);
-                            if (style.display === 'inline' || style.display === 'inline-block' || style.display === 'block') {
-                                el.style.lineHeight = '1.4';
-                            }
+                            el.style.lineHeight = '1.4';
                         }
+
+                        // Force standard font sizes if they were shrunk by mobile CSS
+                        // This is a safety measure
+                        if (el.classList.contains('text-xs')) el.style.fontSize = '12px';
+                        if (el.classList.contains('text-sm')) el.style.fontSize = '14px';
+                        if (el.classList.contains('text-base')) el.style.fontSize = '16px';
+                        if (el.classList.contains('text-lg')) el.style.fontSize = '18px';
+                        if (el.classList.contains('text-xl')) el.style.fontSize = '20px';
                     }
                 }
             });
