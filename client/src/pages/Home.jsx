@@ -118,13 +118,13 @@ const Home = () => {
                                 <Award className="h-4 w-4" />
                                 <span>#1 Resume Making Online Tool</span>
                             </div>
-                            <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold text-slate-900 leading-[1.1] mb-6">
+                            <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-slate-900 leading-[1.05] mb-6 tracking-tight">
                                 Free Online <br />
                                 <span className="bg-gradient-to-r from-orange-500 via-orange-400 to-orange-600 bg-clip-text text-transparent">
                                     Resume Builder.
                                 </span>
                             </h1>
-                            <p className="text-xl text-slate-600 mb-10 max-w-lg leading-relaxed">
+                            <p className="text-xl text-slate-600 mb-10 max-w-lg leading-relaxed font-medium">
                                 Experience the easiest <strong>resume making online</strong>. Use our <strong>AI resume builder</strong> with recruiter-approved templates to create your professional CV in minutes.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4">
@@ -193,8 +193,8 @@ const Home = () => {
             {/* MNC Resume Blueprints */}
             <section className="py-24 bg-gradient-to-b from-slate-50 via-white to-slate-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 text-center">
-                    <h2 className="text-3xl lg:text-5xl font-extrabold text-slate-900">MNC Resume Blueprints</h2>
-                    <p className="text-slate-600 mt-3">Premium, recruiter-tested layouts inspired by Google, Amazon, Microsoft, Netflix, Apple, Meta, Tesla, Adobe.</p>
+                    <h2 className="text-3xl lg:text-5xl font-black text-slate-900 tracking-tight">MNC Resume Blueprints</h2>
+                    <p className="text-slate-600 mt-4 text-lg max-w-2xl mx-auto font-medium">Premium, recruiter-tested layouts inspired by Google, Amazon, Microsoft, Netflix, Apple, Meta, Tesla, Adobe.</p>
                 </div>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -252,8 +252,8 @@ const Home = () => {
             {/* Animated Resume Showcase */}
             <section className="py-20 bg-white">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 text-center">
-                    <p className="text-3xl lg:text-5xl font-extrabold text-slate-900">Design Your Resume. Impress Recruiters. Get Hired.</p>
-                    <p className="text-slate-600 mt-4 text-lg">Smart templates. Real-time preview. ATS-friendly formats.</p>
+                    <h2 className="text-3xl lg:text-5xl font-black text-slate-900 tracking-tight">Design Your Resume. Impress Recruiters. Get Hired.</h2>
+                    <p className="text-slate-600 mt-4 text-lg font-medium">Smart templates. Real-time preview. ATS-friendly formats.</p>
                 </div>
                 <div className="marquee-wrapper">
                     <div className="marquee-track">
@@ -290,10 +290,10 @@ const Home = () => {
             {/* Core Value Props */}
             <section className="py-24 bg-slate-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-16">
-                    <h2 className="text-3xl lg:text-5xl font-extrabold text-slate-900 mb-4">
+                    <h2 className="text-3xl lg:text-5xl font-black text-slate-900 mb-4 tracking-tight">
                         Create a resume that gets results
                     </h2>
-                    <p className="text-lg text-slate-600">Choose a template and get hired by top companies.</p>
+                    <p className="text-lg text-slate-600 font-medium">Choose a template and get hired by top companies.</p>
                 </div>
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -334,11 +334,11 @@ const Home = () => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 relative z-10">
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                         <div>
-                            <h2 className="text-4xl lg:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
+                            <h2 className="text-4xl lg:text-5xl font-black text-slate-900 mb-4 tracking-tight">
                                 6 features to boost your <br />
                                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-600">job search success</span>
                             </h2>
-                            <p className="text-lg text-slate-600 max-w-2xl">
+                            <p className="text-lg text-slate-600 max-w-2xl font-medium">
                                 Powerful tools designed to help you build, optimize, and track your professional identity.
                             </p>
                         </div>

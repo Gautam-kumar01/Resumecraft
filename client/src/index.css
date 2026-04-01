@@ -107,13 +107,27 @@
   --color-purple-700: #7e22ce;
   --color-purple-800: #6b21a8;
   --color-purple-900: #581c87;
+
+  /* Global Fonts */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Inter', sans-serif;
+  --font-serif: 'Libre Baskerville', serif;
+  --font-display: 'Playfair Display', serif;
 }
 
 @layer base {
   body {
     @apply text-slate-900 antialiased;
+    font-family: var(--font-sans);
     background: #ffffff;
     min-height: 100vh;
+    letter-spacing: -0.011em;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.025em;
+    font-weight: 800;
   }
 }
 
