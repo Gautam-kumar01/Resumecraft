@@ -25,7 +25,7 @@ const ResumePreview = ({ resume }) => {
         <div className="bg-white p-12 min-h-[1000px]" id="resume-preview-modern" style={{ fontFamily: "'Inter', sans-serif" }}>
             <header className="border-b-2 border-slate-900 pb-8 mb-8 flex flex-row justify-between items-center gap-6 text-slate-900">
                 <div className="flex-1">
-                    <h1 className="text-5xl font-extrabold uppercase tracking-tight mb-2 text-slate-900">{personalInfo?.fullName || 'Your Name'}</h1>
+                    <h1 className="text-5xl font-extrabold uppercase tracking-normal mb-2 text-slate-900">{personalInfo?.fullName || 'Your Name'}</h1>
                     {resume.title && <p className="text-xl text-orange-600 font-semibold mb-6 tracking-wide italic">{resume.title}</p>}
 
                     <div className="flex flex-wrap gap-4 text-sm text-slate-500 font-medium">
@@ -48,14 +48,14 @@ const ResumePreview = ({ resume }) => {
                 <div className="col-span-2 space-y-12">
                     {summary && (
                         <section>
-                            <h2 className="text-xs font-black uppercase tracking-[0.3em] mb-4 text-orange-600 border-b-2 border-orange-100 pb-2 inline-block">Professional Summary</h2>
+                            <h2 className="text-xs font-black uppercase tracking-widest mb-4 text-orange-600 border-b-2 border-orange-100 pb-2 inline-block">Professional Summary</h2>
                             <p className="text-slate-700 leading-relaxed text-justify text-[15px] font-medium">{summary}</p>
                         </section>
                     )}
 
                     {experience?.length > 0 && (
                         <section>
-                            <h2 className="text-xs font-black uppercase tracking-[0.3em] mb-6 text-orange-600 border-b-2 border-orange-100 pb-2 inline-block">Work Experience</h2>
+                            <h2 className="text-xs font-black uppercase tracking-widest mb-6 text-orange-600 border-b-2 border-orange-100 pb-2 inline-block">Work Experience</h2>
                             <div className="space-y-10">
                                 {experience.map((job, i) => (
                                     <div key={i} className="group">
@@ -78,13 +78,13 @@ const ResumePreview = ({ resume }) => {
                 <div className="space-y-12">
                     {education?.length > 0 && (
                         <section>
-                            <h2 className="text-xs font-black uppercase tracking-[0.3em] mb-6 text-orange-600 border-b-2 border-orange-100 pb-2 inline-block">Education</h2>
+                            <h2 className="text-xs font-black uppercase tracking-widest mb-6 text-orange-600 border-b-2 border-orange-100 pb-2 inline-block">Education</h2>
                             <div className="space-y-8">
                                 {education.map((edu, i) => (
                                     <div key={i}>
                                         <div className="font-bold text-slate-900 mb-1">{edu.school}</div>
                                         <div className="text-orange-500 text-sm font-bold italic mb-2">{edu.degree}</div>
-                                        <div className="text-[11px] font-black text-slate-400 uppercase tracking-tighter mb-3">{edu.startDate} - {edu.endDate}</div>
+                                        <div className="text-[11px] font-black text-slate-400 uppercase tracking-normal mb-3">{edu.startDate} - {edu.endDate}</div>
                                         {edu.description && <p className="text-[13px] text-slate-500 leading-snug">{edu.description}</p>}
                                     </div>
                                 ))}
@@ -94,7 +94,7 @@ const ResumePreview = ({ resume }) => {
 
                     {projects?.length > 0 && (
                         <section>
-                            <h2 className="text-xs font-black uppercase tracking-[0.3em] mb-6 text-orange-600 border-b-2 border-orange-100 pb-2 inline-block">Projects</h2>
+                            <h2 className="text-xs font-black uppercase tracking-widest mb-6 text-orange-600 border-b-2 border-orange-100 pb-2 inline-block">Projects</h2>
                             <div className="space-y-8">
                                 {projects.map((proj, i) => (
                                     <div key={i} className="bg-slate-50/50 p-4 rounded-xl border border-slate-100/50">
@@ -111,7 +111,7 @@ const ResumePreview = ({ resume }) => {
 
                     {skills?.length > 0 && (
                         <section>
-                            <h2 className="text-xs font-black uppercase tracking-[0.3em] mb-6 text-orange-600 border-b-2 border-orange-100 pb-2 inline-block">Expertise</h2>
+                            <h2 className="text-xs font-black uppercase tracking-widest mb-6 text-orange-600 border-b-2 border-orange-100 pb-2 inline-block">Expertise</h2>
                             <div className="flex flex-wrap gap-2.5">
                                 {skills.map((skill, i) => (
                                     <span key={i} className="px-3.5 py-1.5 bg-white text-slate-800 border border-slate-200 rounded-lg text-[13px] font-bold shadow-sm hover:border-orange-500 transition-colors">{skill}</span>
@@ -138,13 +138,13 @@ const ResumePreview = ({ resume }) => {
                                 <User className="h-16 w-16 text-slate-600" />
                             </div>
                         )}
-                        <h1 className="text-3xl font-black uppercase tracking-tighter mb-2" style={{ fontFamily: "'Montserrat', sans-serif" }}>{personalInfo?.fullName || 'Your Name'}</h1>
+                        <h1 className="text-3xl font-black uppercase tracking-normal mb-2" style={{ fontFamily: "'Montserrat', sans-serif" }}>{personalInfo?.fullName || 'Your Name'}</h1>
                         <div className="h-1.5 w-16 bg-orange-500 mx-auto rounded-full mb-6"></div>
                         {resume.title && <p className="text-orange-400 font-extrabold text-[11px] uppercase tracking-[0.25em] leading-relaxed px-4">{resume.title}</p>}
                     </div>
 
                     <div className="space-y-8">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 border-b border-slate-800 pb-3" style={{ fontFamily: "'Montserrat', sans-serif" }}>Contact Details</h3>
+                        <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-500 border-b border-slate-800 pb-3" style={{ fontFamily: "'Montserrat', sans-serif" }}>Contact Details</h3>
                         <div className="space-y-5 text-[13px] text-slate-300 font-medium">
                             {personalInfo?.email && <div className="flex items-center group"><div className="p-2 bg-slate-800 rounded-lg mr-3 group-hover:bg-orange-500 transition-colors"><Mail className="h-3.5 w-3.5 text-white shrink-0" /></div><span className="truncate">{personalInfo.email}</span></div>}
                             {personalInfo?.phone && <div className="flex items-center group"><div className="p-2 bg-slate-800 rounded-lg mr-3 group-hover:bg-orange-500 transition-colors"><Phone className="h-3.5 w-3.5 text-white shrink-0" /></div>{personalInfo.phone}</div>}
@@ -154,7 +154,7 @@ const ResumePreview = ({ resume }) => {
                     </div>
 
                     <div className="space-y-8">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 border-b border-slate-800 pb-3" style={{ fontFamily: "'Montserrat', sans-serif" }}>Expertise</h3>
+                        <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-500 border-b border-slate-800 pb-3" style={{ fontFamily: "'Montserrat', sans-serif" }}>Expertise</h3>
                         <div className="space-y-5">
                             {skills?.map((skill, i) => (
                                 <div key={i} className="flex flex-col space-y-2">
@@ -178,7 +178,7 @@ const ResumePreview = ({ resume }) => {
                             <section>
                                 <div className="flex items-center space-x-4 mb-8">
                                     <div className="p-3 bg-orange-50 rounded-2xl text-orange-600 shadow-sm"><Award className="h-6 w-6" /></div>
-                                    <h2 className="text-2xl font-black uppercase tracking-tight text-slate-900" style={{ fontFamily: "'Montserrat', sans-serif" }}>Professional Profile</h2>
+                                    <h2 className="text-2xl font-black uppercase tracking-normal text-slate-900" style={{ fontFamily: "'Montserrat', sans-serif" }}>Professional Profile</h2>
                                 </div>
                                 <div className="relative">
                                     <div className="absolute -left-6 top-0 bottom-0 w-1.5 bg-orange-500 rounded-full"></div>
@@ -193,7 +193,7 @@ const ResumePreview = ({ resume }) => {
                             <section>
                                 <div className="flex items-center space-x-4 mb-10">
                                     <div className="p-3 bg-orange-50 rounded-2xl text-orange-600 shadow-sm"><Briefcase className="h-6 w-6" /></div>
-                                    <h2 className="text-2xl font-black uppercase tracking-tight text-slate-900" style={{ fontFamily: "'Montserrat', sans-serif" }}>Experience History</h2>
+                                    <h2 className="text-2xl font-black uppercase tracking-normal text-slate-900" style={{ fontFamily: "'Montserrat', sans-serif" }}>Experience History</h2>
                                 </div>
                                 <div className="relative border-l-2 border-slate-100 ml-4 space-y-14">
                                     {experience.map((job, i) => (
@@ -217,7 +217,7 @@ const ResumePreview = ({ resume }) => {
                             <section>
                                 <div className="flex items-center space-x-4 mb-8">
                                     <div className="p-3 bg-orange-50 rounded-2xl text-orange-600 shadow-sm"><GraduationCap className="h-6 w-6" /></div>
-                                    <h2 className="text-2xl font-black uppercase tracking-tight text-slate-900" style={{ fontFamily: "'Montserrat', sans-serif" }}>Academic Background</h2>
+                                    <h2 className="text-2xl font-black uppercase tracking-normal text-slate-900" style={{ fontFamily: "'Montserrat', sans-serif" }}>Academic Background</h2>
                                 </div>
                                 <div className="grid grid-cols-2 gap-6">
                                     {education.map((edu, i) => (
@@ -236,7 +236,7 @@ const ResumePreview = ({ resume }) => {
                             <section>
                                 <div className="flex items-center space-x-4 mb-8">
                                     <div className="p-3 bg-orange-50 rounded-2xl text-orange-600 shadow-sm"><Code2 className="h-6 w-6" /></div>
-                                    <h2 className="text-2xl font-black uppercase tracking-tight text-slate-900" style={{ fontFamily: "'Montserrat', sans-serif" }}>Key Projects</h2>
+                                    <h2 className="text-2xl font-black uppercase tracking-normal text-slate-900" style={{ fontFamily: "'Montserrat', sans-serif" }}>Key Projects</h2>
                                 </div>
                                 <div className="space-y-8">
                                     {projects.map((proj, i) => (
@@ -261,7 +261,7 @@ const ResumePreview = ({ resume }) => {
     const ElegantTemplate = () => (
         <div className="bg-white p-16 min-h-[1000px] max-w-4xl mx-auto shadow-2xl" id="resume-preview-elegant" style={{ fontFamily: "'Libre Baskerville', serif" }}>
             <div className="text-center mb-16 border-b-2 border-slate-100 pb-16">
-                <h1 className="text-6xl font-black tracking-tighter text-slate-900 mb-6" style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo?.fullName || 'Your Name'}</h1>
+                <h1 className="text-6xl font-black tracking-normal text-slate-900 mb-6" style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo?.fullName || 'Your Name'}</h1>
                 <div className="flex justify-center items-center space-x-8 text-sm text-slate-400 italic mb-8">
                     {personalInfo?.email && <span className="flex items-center"><Mail className="h-3 w-3 mr-2 text-orange-500" />{personalInfo.email}</span>}
                     {personalInfo?.phone && <span className="flex items-center"><Phone className="h-3 w-3 mr-2 text-orange-500" />{personalInfo.phone}</span>}
@@ -284,7 +284,7 @@ const ResumePreview = ({ resume }) => {
                         <div className="space-y-14">
                             {experience.map((job, i) => (
                                 <div key={i} className="text-center group">
-                                    <div className="text-[10px] text-orange-500 font-black mb-3 uppercase tracking-[0.3em] bg-orange-50 inline-block px-4 py-1.5 rounded-full">{job.startDate} — {job.endDate}</div>
+                                    <div className="text-[10px] text-orange-500 font-black mb-3 uppercase tracking-widest bg-orange-50 inline-block px-4 py-1.5 rounded-full">{job.startDate} — {job.endDate}</div>
                                     <h3 className="text-2xl font-bold text-slate-900 mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>{job.position}</h3>
                                     <div className="text-slate-400 font-bold italic mb-6 tracking-widest">{job.company}</div>
                                     <p className="text-slate-600 max-w-2xl mx-auto whitespace-pre-wrap text-[15px] leading-loose group-hover:text-slate-900 transition-colors">{job.description}</p>
@@ -300,7 +300,7 @@ const ResumePreview = ({ resume }) => {
                         <div className="space-y-12">
                             {education.map((edu, i) => (
                                 <div key={i} className="text-center">
-                                    <div className="text-[10px] text-slate-400 font-black mb-3 uppercase tracking-[0.3em]">{edu.startDate} — {edu.endDate}</div>
+                                    <div className="text-[10px] text-slate-400 font-black mb-3 uppercase tracking-widest">{edu.startDate} — {edu.endDate}</div>
                                     <h3 className="text-2xl font-bold text-slate-900 mb-1" style={{ fontFamily: "'Playfair Display', serif" }}>{edu.school}</h3>
                                     <div className="text-orange-600 font-bold italic mb-4 tracking-widest">{edu.degree}</div>
                                     {edu.description && <p className="text-slate-500 max-w-2xl mx-auto whitespace-pre-wrap text-sm leading-relaxed">{edu.description}</p>}
@@ -343,7 +343,7 @@ const ResumePreview = ({ resume }) => {
     const GovernmentTemplate = () => (
         <div className="bg-white p-14 min-h-[1000px] text-black border-[1px] border-slate-200 shadow-sm" id="resume-preview-government" style={{ fontFamily: "'Libre Baskerville', serif" }}>
             <div className="text-center border-b-4 border-black pb-6 mb-8">
-                <h1 className="text-4xl font-bold uppercase mb-3 tracking-tight" style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo?.fullName || 'YOUR NAME'}</h1>
+                <h1 className="text-4xl font-bold uppercase mb-3 tracking-normal" style={{ fontFamily: "'Playfair Display', serif" }}>{personalInfo?.fullName || 'YOUR NAME'}</h1>
                 <div className="flex justify-center flex-wrap gap-x-6 gap-y-2 text-[13px] font-medium italic">
                     {personalInfo?.address && <span className="flex items-center"><MapPin className="h-3 w-3 mr-1.5" />{personalInfo.address}</span>}
                     {personalInfo?.email && <span className="flex items-center"><Mail className="h-3 w-3 mr-1.5" />{personalInfo.email}</span>}
@@ -410,7 +410,7 @@ const ResumePreview = ({ resume }) => {
         <div className="bg-white p-14 min-h-[1000px]" id="resume-preview-internship" style={{ fontFamily: "'Inter', sans-serif" }}>
             <header className="flex items-start justify-between border-b-[6px] border-orange-500 pb-8 mb-10">
                 <div>
-                    <h1 className="text-5xl font-black text-slate-900 mb-2 tracking-tighter">{personalInfo?.fullName || 'Your Name'}</h1>
+                    <h1 className="text-5xl font-black text-slate-900 mb-2 tracking-normal">{personalInfo?.fullName || 'Your Name'}</h1>
                     {resume.title && <p className="text-xl text-orange-600 font-bold tracking-wide uppercase">{resume.title}</p>}
                 </div>
                 <div className="text-right text-[13px] text-slate-500 space-y-2 font-bold uppercase tracking-widest">
@@ -443,7 +443,7 @@ const ResumePreview = ({ resume }) => {
                                         <div className="absolute -left-[7px] top-1.5 w-3 h-3 rounded-full bg-white border-2 border-orange-500 group-hover:bg-orange-500 transition-colors"></div>
                                         <h3 className="font-black text-xl text-slate-900 mb-1">{edu.school}</h3>
                                         <div className="text-orange-600 font-extrabold text-sm mb-2 italic">{edu.degree}</div>
-                                        <div className="text-[11px] font-black text-slate-400 mb-4 bg-slate-50 inline-block px-3 py-1 rounded-full uppercase tracking-tighter">{edu.startDate} - {edu.endDate}</div>
+                                        <div className="text-[11px] font-black text-slate-400 mb-4 bg-slate-50 inline-block px-3 py-1 rounded-full uppercase tracking-normal">{edu.startDate} - {edu.endDate}</div>
                                         {edu.description && <p className="text-[14px] text-slate-500 leading-relaxed font-medium">{edu.description}</p>}
                                     </div>
                                 ))}

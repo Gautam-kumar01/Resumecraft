@@ -194,9 +194,10 @@ const Editor = () => {
                         el.style.textRendering = 'auto';
                         el.style.WebkitFontSmoothing = 'antialiased';
                         
-                        // Overlapping Fix: Force zero spacing and normal rendering
-                        el.style.letterSpacing = '0px';
-                        el.style.wordSpacing = '0px';
+                        // Fix for character drift and overlapping in some renderers
+                        el.style.letterSpacing = 'normal';
+                        el.style.wordSpacing = 'normal';
+                        el.style.fontFeatureSettings = '"kern" 1, "liga" 1';
                         
                         // Ensure text-justify is off as it's a major cause of character drift
                         if (el.style.textAlign === 'justify') {
