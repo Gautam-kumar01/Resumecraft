@@ -172,16 +172,16 @@ const Editor = () => {
 
             // ─── Capture with html2canvas ──────────────────────────────────────────
             const canvas = await html2canvas(offscreen, {
-                scale: 3, // High resolution
+                scale: 4, // Even higher resolution
                 useCORS: true,
                 backgroundColor: '#ffffff',
                 logging: false,
                 width: A4_W,
                 height: offscreen.scrollHeight,
-                windowWidth: 1200, // Force a desktop-like viewport width for style calculations
+                windowWidth: 1400, // Force a desktop-like viewport width for style calculations
                 scrollX: 0,
                 scrollY: 0,
-                imageTimeout: 20000,
+                imageTimeout: 30000,
                 onclone: (clonedDoc) => {
                     // Force a deep reset of all text-related styles that cause overlapping
                     const all = clonedDoc.getElementsByTagName('*');
@@ -191,31 +191,34 @@ const Editor = () => {
                         // Disable advanced typography features that canvas renderers often fail at
                         el.style.fontVariantLigatures = 'none';
                         el.style.fontKerning = 'none';
-                        el.style.textRendering = 'auto';
+                        el.style.textRendering = 'geometricPrecision'; // Better for PDF
                         el.style.WebkitFontSmoothing = 'antialiased';
                         
                         // Fix for character drift and overlapping in some renderers
-                        el.style.letterSpacing = 'normal';
-                        el.style.wordSpacing = 'normal';
-                        el.style.fontFeatureSettings = '"kern" 1, "liga" 1';
+                        el.style.letterSpacing = '0.03em'; // Increased for PDF
+                        el.style.wordSpacing = '0.12em';   // Increased for PDF
+                        el.style.fontFeatureSettings = '"kern" 0, "liga" 0, "clig" 0, "calt" 0';
                         
                         // Ensure text-justify is off as it's a major cause of character drift
-                        if (el.style.textAlign === 'justify') {
+                        if (el.style.textAlign === 'justify' || window.getComputedStyle(el).textAlign === 'justify') {
                             el.style.textAlign = 'left';
                         }
 
                         // Maintain consistent line height for all text containers
-                        if (['P', 'LI', 'SPAN', 'H1', 'H2', 'H3', 'H4'].includes(el.tagName)) {
-                            el.style.lineHeight = '1.4';
+                        if (['P', 'LI', 'SPAN', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'].includes(el.tagName)) {
+                            el.style.lineHeight = '1.6'; // Increased for PDF
                         }
 
                         // Force standard font sizes if they were shrunk by mobile CSS
-                        // This is a safety measure
                         if (el.classList.contains('text-xs')) el.style.fontSize = '12px';
                         if (el.classList.contains('text-sm')) el.style.fontSize = '14px';
                         if (el.classList.contains('text-base')) el.style.fontSize = '16px';
                         if (el.classList.contains('text-lg')) el.style.fontSize = '18px';
                         if (el.classList.contains('text-xl')) el.style.fontSize = '20px';
+                        if (el.classList.contains('text-2xl')) el.style.fontSize = '24px';
+                        if (el.classList.contains('text-3xl')) el.style.fontSize = '30px';
+                        if (el.classList.contains('text-4xl')) el.style.fontSize = '36px';
+                        if (el.classList.contains('text-5xl')) el.style.fontSize = '48px';
                     }
                 }
             });

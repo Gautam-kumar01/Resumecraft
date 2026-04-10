@@ -121,13 +121,13 @@
     font-family: var(--font-sans);
     background: #ffffff;
     min-height: 100vh;
-    letter-spacing: normal;
-    word-spacing: 0.02em;
+    letter-spacing: 0.01em;
+    word-spacing: 0.05em;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
-    letter-spacing: normal;
+    letter-spacing: 0.02em;
     font-weight: 800;
   }
 }
