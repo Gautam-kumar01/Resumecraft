@@ -22,52 +22,52 @@ const ResumePreview = ({ resume }) => {
 
     // --- Template 1: MODERN (Original) ---
     const ModernTemplate = () => (
-        <div className="bg-white p-12 min-h-[1000px]" id="resume-preview-modern" style={{ fontFamily: "'Inter', sans-serif", wordSpacing: '0.05em' }}>
-            <header className="border-b-2 border-slate-900 pb-8 mb-8 flex flex-row justify-between items-center gap-6 text-slate-900">
+        <div className="bg-white p-8 min-h-[1000px]" id="resume-preview-modern" style={{ fontFamily: "'Inter', sans-serif", wordSpacing: '0.02em' }}>
+            <header className="border-b-2 border-slate-900 pb-6 mb-6 flex flex-row justify-between items-center gap-6 text-slate-900">
                 <div className="flex-1">
-                    <h1 className="text-5xl font-black uppercase tracking-wide mb-2 text-slate-900 leading-[1.2]">{personalInfo?.fullName || 'Your Name'}</h1>
-                    {resume.title && <p className="text-xl text-orange-600 font-bold mb-6 tracking-widest italic uppercase">{resume.title}</p>}
+                    <h1 className="text-4xl font-black uppercase tracking-wide mb-1 text-slate-900 leading-tight">{personalInfo?.fullName || 'Your Name'}</h1>
+                    {resume.title && <p className="text-lg text-orange-600 font-bold mb-4 tracking-widest italic uppercase">{resume.title}</p>}
 
-                    <div className="flex flex-wrap gap-5 text-sm text-slate-500 font-semibold tracking-wider">
-                        {personalInfo?.email && <span className="flex items-center"><Mail className="h-3.5 w-3.5 mr-1.5 text-orange-500" />{personalInfo.email}</span>}
-                        {personalInfo?.phone && <span className="border-l border-slate-300 pl-4 flex items-center"><Phone className="h-3.5 w-3.5 mr-1.5 text-orange-500" />{personalInfo.phone}</span>}
-                        {personalInfo?.address && <span className="border-l border-slate-300 pl-4 flex items-center"><MapPin className="h-3.5 w-3.5 mr-1.5 text-orange-500" />{personalInfo.address}</span>}
+                    <div className="flex flex-wrap gap-4 text-[13px] text-slate-500 font-semibold tracking-wide">
+                        {personalInfo?.email && <span className="flex items-center"><Mail className="h-3 w-3 mr-1.5 text-orange-500" />{personalInfo.email}</span>}
+                        {personalInfo?.phone && <span className="border-l border-slate-300 pl-4 flex items-center"><Phone className="h-3 w-3 mr-1.5 text-orange-500" />{personalInfo.phone}</span>}
+                        {personalInfo?.address && <span className="border-l border-slate-300 pl-4 flex items-center"><MapPin className="h-3 w-3 mr-1.5 text-orange-500" />{personalInfo.address}</span>}
                     </div>
                 </div>
 
                 {personalInfo?.profilePicture && (
                     <div className="shrink-0">
-                        <div className="w-36 h-36 rounded-2xl border-4 border-slate-50 shadow-2xl overflow-hidden rotate-2">
+                        <div className="w-28 h-28 rounded-2xl border-4 border-slate-50 shadow-xl overflow-hidden rotate-2">
                             <img src={personalInfo.profilePicture} alt="Profile" className="w-full h-full object-cover" />
                         </div>
                     </div>
                 )}
             </header>
 
-            <div className="grid grid-cols-3 gap-12">
-                <div className="col-span-2 space-y-12">
+            <div className="grid grid-cols-3 gap-8">
+                <div className="col-span-2 space-y-8">
                     {summary && (
                         <section>
-                            <h2 className="text-xs font-black uppercase tracking-[0.25em] mb-4 text-orange-600 border-b-2 border-orange-100 pb-2 inline-block">Professional Summary</h2>
-                            <p className="text-slate-700 leading-relaxed text-left text-[15px] font-medium tracking-wider">{summary}</p>
+                            <h2 className="text-[10px] font-black uppercase tracking-[0.2em] mb-3 text-orange-600 border-b border-orange-100 pb-1 inline-block">Professional Summary</h2>
+                            <p className="text-slate-700 leading-relaxed text-left text-[14px] font-medium">{summary}</p>
                         </section>
                     )}
 
                     {experience?.length > 0 && (
                         <section>
-                            <h2 className="text-xs font-black uppercase tracking-[0.2em] mb-6 text-orange-600 border-b-2 border-orange-100 pb-2 inline-block">Work Experience</h2>
-                            <div className="space-y-10">
+                            <h2 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-orange-600 border-b border-orange-100 pb-1 inline-block">Work Experience</h2>
+                            <div className="space-y-6">
                                 {experience.map((job, i) => (
                                     <div key={i} className="group">
-                                        <div className="flex justify-between items-baseline mb-1">
-                                            <h3 className="font-bold text-xl text-slate-900 group-hover:text-orange-600 transition-colors tracking-wide">{job.position}</h3>
-                                            <span className="text-sm font-bold text-slate-400 bg-slate-50 px-3 py-1 rounded-full">{job.startDate} - {job.endDate}</span>
+                                        <div className="flex justify-between items-baseline mb-0.5">
+                                            <h3 className={`font-bold ${job.position.length > 40 ? 'text-base' : 'text-lg'} text-slate-900 group-hover:text-orange-600 transition-colors tracking-wide leading-snug`}>{job.position}</h3>
+                                            <span className="text-[11px] font-bold text-slate-400 bg-slate-50 px-2.5 py-0.5 rounded-full shrink-0 ml-4">{job.startDate} - {job.endDate}</span>
                                         </div>
-                                        <div className="text-orange-500 font-bold mb-4 flex items-center tracking-wider uppercase text-xs">
+                                        <div className="text-orange-500 font-bold mb-2 flex items-center tracking-wider uppercase text-[10px]">
                                             <span className="w-1.5 h-1.5 bg-orange-500 rounded-full mr-2"></span>
                                             {job.company}
                                         </div>
-                                        <p className="text-slate-600 whitespace-pre-wrap text-[14px] leading-relaxed border-l-2 border-slate-100 pl-6 py-1 tracking-wider">{job.description}</p>
+                                        <p className="text-slate-600 whitespace-pre-wrap text-[13px] leading-relaxed border-l-2 border-slate-100 pl-4 py-0.5">{job.description}</p>
                                     </div>
                                 ))}
                             </div>
@@ -75,17 +75,17 @@ const ResumePreview = ({ resume }) => {
                     )}
                 </div>
 
-                <div className="space-y-12">
+                <div className="space-y-8">
                     {education?.length > 0 && (
                         <section>
-                            <h2 className="text-xs font-black uppercase tracking-[0.2em] mb-6 text-orange-600 border-b-2 border-orange-100 pb-2 inline-block">Education</h2>
-                            <div className="space-y-8">
+                            <h2 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-orange-600 border-b border-orange-100 pb-1 inline-block">Education</h2>
+                            <div className="space-y-6">
                                 {education.map((edu, i) => (
                                     <div key={i}>
-                                        <div className="font-bold text-slate-900 mb-1 tracking-wide">{edu.school}</div>
-                                        <div className="text-orange-500 text-sm font-bold italic mb-2 tracking-wide">{edu.degree}</div>
-                                        <div className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-3">{edu.startDate} - {edu.endDate}</div>
-                                        {edu.description && <p className="text-[13px] text-slate-500 leading-snug tracking-wide">{edu.description}</p>}
+                                        <div className="font-bold text-slate-900 text-sm mb-0.5 tracking-wide">{edu.school}</div>
+                                        <div className="text-orange-500 text-xs font-bold italic mb-1 tracking-wide">{edu.degree}</div>
+                                        <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">{edu.startDate} - {edu.endDate}</div>
+                                        {edu.description && <p className="text-[12px] text-slate-500 leading-snug">{edu.description}</p>}
                                     </div>
                                 ))}
                             </div>
@@ -94,15 +94,15 @@ const ResumePreview = ({ resume }) => {
 
                     {projects?.length > 0 && (
                         <section>
-                            <h2 className="text-xs font-black uppercase tracking-[0.2em] mb-6 text-orange-600 border-b-2 border-orange-100 pb-2 inline-block">Projects</h2>
-                            <div className="space-y-8">
+                            <h2 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-orange-600 border-b border-orange-100 pb-1 inline-block">Projects</h2>
+                            <div className="space-y-6">
                                 {projects.map((proj, i) => (
-                                    <div key={i} className="bg-slate-50/50 p-4 rounded-xl border border-slate-100/50">
-                                        <div className="flex justify-between items-baseline mb-2">
-                                            <div className="font-bold text-slate-900 tracking-wide">{proj.name}</div>
-                                            {proj.link && <span className="text-[10px] font-bold text-orange-600 uppercase tracking-widest">{proj.link}</span>}
+                                    <div key={i} className="bg-slate-50/50 p-3 rounded-xl border border-slate-100/50">
+                                        <div className="flex justify-between items-baseline mb-1">
+                                            <div className="font-bold text-slate-900 text-sm tracking-wide">{proj.name}</div>
+                                            {proj.link && <span className="text-[9px] font-bold text-orange-600 uppercase tracking-widest">{proj.link}</span>}
                                         </div>
-                                        <p className="text-[13px] text-slate-600 leading-relaxed italic tracking-wide">{proj.description}</p>
+                                        <p className="text-[12px] text-slate-600 leading-relaxed italic">{proj.description}</p>
                                     </div>
                                 ))}
                             </div>
@@ -111,10 +111,10 @@ const ResumePreview = ({ resume }) => {
 
                     {skills?.length > 0 && (
                         <section>
-                            <h2 className="text-xs font-black uppercase tracking-[0.2em] mb-6 text-orange-600 border-b-2 border-orange-100 pb-2 inline-block">Expertise</h2>
-                            <div className="flex flex-wrap gap-2.5">
+                            <h2 className="text-[10px] font-black uppercase tracking-[0.2em] mb-4 text-orange-600 border-b border-orange-100 pb-1 inline-block">Expertise</h2>
+                            <div className="flex flex-wrap gap-2">
                                 {skills.map((skill, i) => (
-                                    <span key={i} className="px-3.5 py-1.5 bg-white text-slate-800 border border-slate-200 rounded-lg text-[13px] font-bold shadow-sm hover:border-orange-500 transition-colors tracking-wide">{skill}</span>
+                                    <span key={i} className="px-3 py-1 bg-slate-50 text-slate-700 border border-slate-200 rounded-md text-[11px] font-bold shadow-sm hover:border-orange-500 hover:bg-white transition-all tracking-wide">{skill}</span>
                                 ))}
                             </div>
                         </section>

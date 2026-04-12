@@ -191,12 +191,12 @@ const Editor = () => {
                         // Disable advanced typography features that canvas renderers often fail at
                         el.style.fontVariantLigatures = 'none';
                         el.style.fontKerning = 'none';
-                        el.style.textRendering = 'geometricPrecision'; // Better for PDF
+                        el.style.textRendering = 'optimizeLegibility'; 
                         el.style.WebkitFontSmoothing = 'antialiased';
                         
-                        // Fix for character drift and overlapping in some renderers
-                        el.style.letterSpacing = '0.03em'; // Increased for PDF
-                        el.style.wordSpacing = '0.12em';   // Increased for PDF
+                        // Reduced to prevent excessive text expansion that causes extra pages
+                        el.style.letterSpacing = 'normal'; 
+                        el.style.wordSpacing = 'normal';
                         el.style.fontFeatureSettings = '"kern" 0, "liga" 0, "clig" 0, "calt" 0';
                         
                         // Ensure text-justify is off as it's a major cause of character drift
@@ -204,21 +204,21 @@ const Editor = () => {
                             el.style.textAlign = 'left';
                         }
 
-                        // Maintain consistent line height for all text containers
+                        // Maintain consistent line height for all text containers - but not too big
                         if (['P', 'LI', 'SPAN', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'].includes(el.tagName)) {
-                            el.style.lineHeight = '1.6'; // Increased for PDF
+                            el.style.lineHeight = '1.4'; 
                         }
 
                         // Force standard font sizes if they were shrunk by mobile CSS
-                        if (el.classList.contains('text-xs')) el.style.fontSize = '12px';
-                        if (el.classList.contains('text-sm')) el.style.fontSize = '14px';
-                        if (el.classList.contains('text-base')) el.style.fontSize = '16px';
-                        if (el.classList.contains('text-lg')) el.style.fontSize = '18px';
-                        if (el.classList.contains('text-xl')) el.style.fontSize = '20px';
-                        if (el.classList.contains('text-2xl')) el.style.fontSize = '24px';
-                        if (el.classList.contains('text-3xl')) el.style.fontSize = '30px';
-                        if (el.classList.contains('text-4xl')) el.style.fontSize = '36px';
-                        if (el.classList.contains('text-5xl')) el.style.fontSize = '48px';
+                        if (el.classList.contains('text-xs')) el.style.fontSize = '11px';
+                        if (el.classList.contains('text-sm')) el.style.fontSize = '13px';
+                        if (el.classList.contains('text-base')) el.style.fontSize = '15px';
+                        if (el.classList.contains('text-lg')) el.style.fontSize = '17px';
+                        if (el.classList.contains('text-xl')) el.style.fontSize = '19px';
+                        if (el.classList.contains('text-2xl')) el.style.fontSize = '22px';
+                        if (el.classList.contains('text-3xl')) el.style.fontSize = '28px';
+                        if (el.classList.contains('text-4xl')) el.style.fontSize = '34px';
+                        if (el.classList.contains('text-5xl')) el.style.fontSize = '44px';
                     }
                 }
             });
@@ -232,17 +232,22 @@ const Editor = () => {
 
             const pageW = pdf.internal.pageSize.getWidth();   // 210 mm
             const pageH = pdf.internal.pageSize.getHeight();  // 297 mm
-            const imgH  = (canvas.height / canvas.width) * pageW;
+            let imgH  = (canvas.height / canvas.width) * pageW;
 
-            // If resume is longer than one page, add extra pages
-            let remaining = imgH;
-            let yOffset   = 0;
-            while (remaining > 0) {
-                if (yOffset > 0) pdf.addPage();
-                const sliceH = Math.min(remaining, pageH);
-                pdf.addImage(imgData, 'JPEG', 0, -yOffset, pageW, imgH, '', 'FAST');
-                yOffset   += pageH;
-                remaining -= pageH;
+            // Fit to single page if it's close enough (up to 1.3 pages)
+            // This satisfies the user's request "adjust in single page"
+            if (imgH > pageH && imgH < pageH * 1.3) {
+                pdf.addImage(imgData, 'JPEG', 0, 0, pageW, pageH, '', 'FAST');
+            } else {
+                // If it's way too long, use multiple pages
+                let remaining = imgH;
+                let yOffset   = 0;
+                while (remaining > 0) {
+                    if (yOffset > 0) pdf.addPage();
+                    pdf.addImage(imgData, 'JPEG', 0, -yOffset, pageW, imgH, '', 'FAST');
+                    yOffset   += pageH;
+                    remaining -= pageH;
+                }
             }
 
             pdf.save(`${resume.title || 'Resume'}.pdf`);
