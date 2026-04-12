@@ -3,5 +3,6 @@ const router = express.Router();
 const aiController = require('../controllers/aiController');
 
 router.post('/suggest', aiController.getSuggestions);
+router.post('/generate-cover-letter', aiController.generateCoverLetter);
 
 module.exports = router;

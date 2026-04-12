@@ -96,3 +96,38 @@ exports.getSuggestions = async (req, res) => {
         });
     }
 };
+
+exports.generateCoverLetter = async (req, res) => {
+    const { jobRole, jobDescription, tone } = req.body;
+
+    if (!jobRole) {
+        return res.status(400).json({ message: "Job role is required" });
+    }
+
+    if (!process.env.GEMINI_API_KEY) {
+        return res.status(500).json({ message: "Gemini API Key is missing" });
+    }
+
+    try {
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+        const prompt = `You are a professional career coach. Write a compelling cover letter for a user applying for the position of "${jobRole}".
+        ${jobDescription ? `The job requirements are: "${jobDescription}".` : ''}
+        The tone of the letter should be "${tone || 'Professional'}".
+        Make it persuasive, highlight relevant skills for this role, and keep it under 300 words.
+        Return ONLY the cover letter text, no markdown, no placeholders like [Your Name] unless absolutely necessary for contact info.`;
+
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+
+        res.json({ coverLetter: text.trim() });
+    } catch (error) {
+        console.error("Cover Letter Generation Error:", error.message || error);
+        res.status(500).json({ 
+            message: "Failed to generate cover letter", 
+            error: error.message 
+        });
+    }
+};

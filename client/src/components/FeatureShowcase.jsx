@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import api from '../api/axios';
 import {
   X, FileText, Cpu, Eye, MessageSquare, Globe, BarChart3,
   ChevronRight, Sparkles, CheckCircle2, Layout, Search,
   ArrowRight, Mail, PieChart, TrendingUp, Users, Zap,
-  Download, Award, Target
+  Download, Award, Target, Loader2
 } from 'lucide-react';
 
 const FeatureShowcase = ({ isOpen, onClose, initialFeature = 0 }) => {
@@ -493,6 +494,10 @@ const ReviewWorkspace = () => {
 const CoverLetterWorkspace = () => {
   const [step, setStep] = useState(1);
   const [activeTone, setActiveTone] = useState('Professional');
+  const [jobRole, setJobRole] = useState('');
+  const [jobDescription, setJobDescription] = useState('');
+  const [generatedLetter, setGeneratedLetter] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const tones = [
     { name: 'Professional', icon: <Award className="w-4 h-4" /> },
@@ -500,6 +505,25 @@ const CoverLetterWorkspace = () => {
     { name: 'Creative', icon: <Zap className="w-4 h-4" /> },
     { name: 'Concise', icon: <Target className="w-4 h-4" /> }
   ];
+
+  const handleGenerate = async () => {
+    if (!jobRole) return alert("Please enter a target role");
+    setLoading(true);
+    try {
+      const { data } = await api.post('/ai/generate-cover-letter', {
+        jobRole,
+        jobDescription,
+        tone: activeTone
+      });
+      setGeneratedLetter(data.coverLetter);
+      setStep(3);
+    } catch (error) {
+      console.error("CL Error:", error);
+      alert("Failed to generate cover letter. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 h-full flex flex-col">
@@ -544,6 +568,8 @@ const CoverLetterWorkspace = () => {
                 <div className="space-y-2">
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-4">Target Role</label>
                   <input
+                    value={jobRole}
+                    onChange={(e) => setJobRole(e.target.value)}
                     placeholder="e.g. Senior Frontend Architect at Vercel"
                     className="w-full px-8 py-5 bg-slate-50 rounded-[24px] outline-none focus:ring-2 focus:ring-orange-500/10 focus:bg-white border-2 border-transparent focus:border-orange-100 transition-all font-medium"
                   />
@@ -551,6 +577,8 @@ const CoverLetterWorkspace = () => {
                 <div className="space-y-2">
                   <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-4">Job Requirements</label>
                   <textarea
+                    value={jobDescription}
+                    onChange={(e) => setJobDescription(e.target.value)}
                     rows={6}
                     placeholder="Paste the key requirements from the job posting..."
                     className="w-full px-8 py-5 bg-slate-50 rounded-[32px] outline-none focus:ring-2 focus:ring-orange-500/10 focus:bg-white border-2 border-transparent focus:border-orange-100 transition-all font-medium resize-none"
@@ -592,15 +620,16 @@ const CoverLetterWorkspace = () => {
                     key={tone.name}
                     onClick={() => {
                       setActiveTone(tone.name);
-                      setStep(3);
+                      handleGenerate();
                     }}
+                    disabled={loading}
                     className={`p-8 rounded-[32px] font-bold text-lg transition-all flex flex-col items-center space-y-4 border-2 ${activeTone === tone.name
                         ? 'bg-orange-500 text-white border-orange-400 shadow-xl shadow-orange-500/20'
                         : 'bg-slate-50 text-slate-600 border-transparent hover:border-orange-200 hover:bg-white'
-                      }`}
+                      } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     <div className={`p-3 rounded-2xl ${activeTone === tone.name ? 'bg-white/20' : 'bg-white shadow-sm'}`}>
-                      {tone.icon}
+                      {loading && activeTone === tone.name ? <Loader2 className="w-4 h-4 animate-spin" /> : tone.icon}
                     </div>
                     <span>{tone.name}</span>
                   </button>
@@ -630,8 +659,16 @@ const CoverLetterWorkspace = () => {
                     <p className="text-slate-500 text-sm">Generated with <span className="text-orange-500 font-bold">{activeTone}</span> tone</p>
                   </div>
                   <div className="flex space-x-2">
-                    <button className="p-4 hover:bg-slate-50 rounded-2xl transition-all group border border-slate-100">
-                      <Sparkles className="w-5 h-5 text-slate-400 group-hover:text-orange-500" />
+                    <button 
+                      onClick={handleGenerate}
+                      disabled={loading}
+                      className="p-4 hover:bg-slate-50 rounded-2xl transition-all group border border-slate-100 disabled:opacity-50"
+                    >
+                      {loading ? (
+                        <Loader2 className="w-5 h-5 text-orange-500 animate-spin" />
+                      ) : (
+                        <Sparkles className="w-5 h-5 text-slate-400 group-hover:text-orange-500" />
+                      )}
                     </button>
                   </div>
                 </div>
@@ -640,13 +677,7 @@ const CoverLetterWorkspace = () => {
                   <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
                     <span className="px-3 py-1 bg-white rounded-full text-[10px] font-bold text-slate-400 shadow-sm border border-slate-100">EDITABLE DRAFT</span>
                   </div>
-                  Dear Hiring Manager,
-
-                  I am writing to express my strong interest in the Senior Frontend Architect position. With over 8 years of experience building scalable web applications and leading engineering teams, I am confident in my ability to drive technical excellence at Vercel.
-
-                  My background in performance optimization and design systems aligns perfectly with your requirements for...
-
-                  [AI Content Continued with precision...]
+                  {generatedLetter}
                 </div>
 
                 <div className="flex gap-4">
