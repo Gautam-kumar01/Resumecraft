@@ -20,6 +20,29 @@ const ResumePreview = ({ resume }) => {
 
     const { personalInfo, summary, education, experience, skills, projects, templateId = 'modern' } = resume;
 
+    // Helper to render summary as points
+    const renderSummaryPoints = (text, className = "text-slate-700 text-[14px] font-medium leading-relaxed", bulletColor = "bg-orange-500") => {
+        if (!text) return null;
+        
+        // Split by newlines first. If it's just one line, try splitting by dots to create points.
+        let points = text.split('\n').filter(p => p.trim());
+        
+        if (points.length === 1 && text.includes('.') && text.length > 100) {
+            points = text.split('.').filter(p => p.trim().length > 10).map(p => p.trim() + '.');
+        }
+
+        return (
+            <ul className="space-y-2 text-left">
+                {points.map((point, i) => (
+                    <li key={i} className={`flex items-start ${className}`}>
+                        <span className={`w-1.5 h-1.5 ${bulletColor} rounded-full mt-1.5 mr-3 shrink-0`}></span>
+                        <span>{point.trim().replace(/^[•\-\*]\s*/, '')}</span>
+                    </li>
+                ))}
+            </ul>
+        );
+    };
+
     // --- Template 1: MODERN (Original) ---
     const ModernTemplate = () => (
         <div className="bg-white p-8 min-h-[1000px]" id="resume-preview-modern" style={{ fontFamily: "'Inter', sans-serif", wordSpacing: '0.02em' }}>
@@ -49,7 +72,7 @@ const ResumePreview = ({ resume }) => {
                     {summary && (
                         <section>
                             <h2 className="text-[10px] font-black uppercase tracking-[0.2em] mb-3 text-orange-600 border-b border-orange-100 pb-1 inline-block">Professional Summary</h2>
-                            <p className="text-slate-700 leading-relaxed text-left text-[14px] font-medium">{summary}</p>
+                            {renderSummaryPoints(summary)}
                         </section>
                     )}
 
@@ -180,11 +203,9 @@ const ResumePreview = ({ resume }) => {
                                     <div className="p-3 bg-orange-50 rounded-2xl text-orange-600 shadow-sm"><Award className="h-6 w-6" /></div>
                                     <h2 className="text-2xl font-black uppercase tracking-normal text-slate-900" style={{ fontFamily: "'Montserrat', sans-serif" }}>Professional Profile</h2>
                                 </div>
-                                <div className="relative">
-                                    <div className="absolute -left-6 top-0 bottom-0 w-1.5 bg-orange-500 rounded-full"></div>
-                                    <p className="text-slate-600 leading-relaxed text-lg font-medium pl-4 italic">
-                                        "{summary}"
-                                    </p>
+                                <div className="relative pl-4">
+                                    <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-orange-500 rounded-full"></div>
+                                    {renderSummaryPoints(summary, "text-slate-600 text-[15px] font-medium leading-relaxed italic")}
                                 </div>
                             </section>
                         )}
@@ -274,7 +295,9 @@ const ResumePreview = ({ resume }) => {
                 {summary && (
                     <section>
                         <h2 className="text-xs font-black text-slate-300 uppercase tracking-[0.5em] text-center mb-10 italic">Professional Narrative</h2>
-                        <p className="text-slate-700 leading-[2] text-center max-w-3xl mx-auto text-lg italic">"{summary}"</p>
+                        <div className="max-w-3xl mx-auto">
+                            {renderSummaryPoints(summary, "text-slate-700 text-lg italic")}
+                        </div>
                     </section>
                 )}
 
@@ -355,7 +378,9 @@ const ResumePreview = ({ resume }) => {
                 {summary && (
                     <section>
                         <h2 className="text-sm font-black uppercase border-b-2 border-black mb-3 pb-1 tracking-widest" style={{ fontFamily: "'Playfair Display', serif" }}>Statement of Objective</h2>
-                        <p className="text-[14px] leading-relaxed text-left tracking-wide">{summary}</p>
+                        <div className="max-w-none">
+                            {renderSummaryPoints(summary, "text-[14px] text-black", "bg-black")}
+                        </div>
                     </section>
                 )}
 
@@ -428,7 +453,9 @@ const ResumePreview = ({ resume }) => {
                             <h2 className="text-sm font-black text-slate-900 uppercase mb-5 flex items-center tracking-[0.2em]">
                                 <span className="w-2.5 h-6 bg-orange-500 mr-4 rounded-full shadow-[0_0_10px_rgba(249,115,22,0.3)]"></span> Professional Narrative
                             </h2>
-                            <p className="text-slate-600 leading-relaxed bg-slate-50/50 p-6 rounded-2xl border border-slate-100 italic font-medium text-[15px]">"{summary}"</p>
+                            <div className="bg-slate-50/50 p-6 rounded-2xl border border-slate-100">
+                                {renderSummaryPoints(summary, "text-slate-600 italic font-medium text-[15px]")}
+                            </div>
                         </section>
                     )}
 
