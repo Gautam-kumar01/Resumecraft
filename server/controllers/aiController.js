@@ -18,8 +18,8 @@ exports.getSuggestions = async (req, res) => {
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
         // Use strictly valid model IDs for the current SDK version
-        // Prioritizing gemini-2.5-flash which is confirmed fully functional with the API Key
-        const modelsToTry = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"];
+        // Prioritizing stable models
+        const modelsToTry = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"];
         let result = null;
         let lastError = null;
 
@@ -110,15 +110,42 @@ exports.generateCoverLetter = async (req, res) => {
 
     try {
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-        const prompt = `You are a professional career coach. Write a compelling cover letter for a user applying for the position of "${jobRole}".
-        ${jobDescription ? `The job requirements are: "${jobDescription}".` : ''}
-        The tone of the letter should be "${tone || 'Professional'}".
-        Make it persuasive, highlight relevant skills for this role, and keep it under 300 words.
-        Return ONLY the cover letter text, no markdown, no placeholders like [Your Name] unless absolutely necessary for contact info.`;
+        // Try the same models as getSuggestions for consistency and robustness
+        const modelsToTry = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"];
+        let result = null;
+        let lastError = null;
 
-        const result = await model.generateContent(prompt);
+        for (const modelName of modelsToTry) {
+            try {
+                console.log(`AI (CL): Attempting generation with model: ${modelName}...`);
+                const model = genAI.getGenerativeModel({ model: modelName });
+
+                const prompt = `You are a professional career coach. Write a compelling cover letter for a user applying for the position of "${jobRole}".
+                ${jobDescription ? `The job requirements are: "${jobDescription}".` : ''}
+                The tone of the letter should be "${tone || 'Professional'}".
+                Make it persuasive, highlight relevant skills for this role, and keep it under 300 words.
+                Return ONLY the cover letter text, no markdown, no placeholders like [Your Name] unless absolutely necessary for contact info.`;
+
+                result = await model.generateContent(prompt);
+                
+                if (result && result.response) {
+                    console.log(`AI (CL): Success with model: ${modelName}`);
+                    break;
+                }
+            } catch (err) {
+                lastError = err;
+                console.error(`AI (CL): Attempt with ${modelName} failed:`, err.message);
+                if (err.message.includes('429') || err.message.includes('quota') || err.message.includes('403') || err.message.includes('API key')) {
+                    break;
+                }
+            }
+        }
+
+        if (!result) {
+            throw lastError || new Error("All AI models failed to generate content");
+        }
+
         const response = await result.response;
         const text = response.text();
 
