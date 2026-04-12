@@ -17,18 +17,26 @@ exports.getSuggestions = async (req, res) => {
     try {
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-        // Use strictly valid model IDs for the current SDK version
-        // Prioritizing stable models
-        const modelsToTry = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"];
+        // Even more robust model list including older stable versions
+        const modelsToTry = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro", "gemini-pro", "gemini-1.0-pro"];
         let result = null;
         let lastError = null;
+
+        // Safety settings to prevent false positive blocks for professional content
+        const safetySettings = [
+            { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_ONLY_HIGH" },
+            { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_ONLY_HIGH" },
+            { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_ONLY_HIGH" },
+            { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_ONLY_HIGH" },
+        ];
 
         for (const modelName of modelsToTry) {
             try {
                 console.log(`AI: Attempting generation with model: ${modelName}...`);
-                
-                // Get the model
-                const model = genAI.getGenerativeModel({ model: modelName });
+                const model = genAI.getGenerativeModel({ 
+                    model: modelName,
+                    safetySettings 
+                });
 
                 const prompt = `You are a professional resume writer. The user is applying for a job as a "${jobRole}".
                 Return a JSON object with this exact structure:
@@ -49,9 +57,8 @@ exports.getSuggestions = async (req, res) => {
                 lastError = err;
                 console.error(`AI: Attempt with ${modelName} failed:`, err.message);
                 
-                // If the error is a Quota/Rate Limit (429) or API Key Issue (400, 403), stop trying other models
+                // If it's a critical auth/quota issue, no point trying other models
                 if (err.message.includes('429') || err.message.includes('quota') || err.message.includes('403') || err.message.includes('API key')) {
-                    console.error("Critical API Error encountered (Quota/Auth). Aborting model fallback.");
                     break;
                 }
             }
@@ -112,14 +119,25 @@ exports.generateCoverLetter = async (req, res) => {
         const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
         // Try the same models as getSuggestions for consistency and robustness
-        const modelsToTry = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"];
+        const modelsToTry = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro", "gemini-pro", "gemini-1.0-pro"];
         let result = null;
         let lastError = null;
+
+        // Safety settings to prevent false positive blocks for professional content
+        const safetySettings = [
+            { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_ONLY_HIGH" },
+            { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_ONLY_HIGH" },
+            { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_ONLY_HIGH" },
+            { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_ONLY_HIGH" },
+        ];
 
         for (const modelName of modelsToTry) {
             try {
                 console.log(`AI (CL): Attempting generation with model: ${modelName}...`);
-                const model = genAI.getGenerativeModel({ model: modelName });
+                const model = genAI.getGenerativeModel({ 
+                    model: modelName,
+                    safetySettings 
+                });
 
                 const prompt = `You are a professional career coach. Write a compelling cover letter for a user applying for the position of "${jobRole}".
                 ${jobDescription ? `The job requirements are: "${jobDescription}".` : ''}

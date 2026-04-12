@@ -519,7 +519,8 @@ const CoverLetterWorkspace = () => {
       setStep(3);
     } catch (error) {
       console.error("CL Error:", error);
-      alert("Failed to generate cover letter. Please try again.");
+      const errorMsg = error.response?.data?.error || error.message || "Unknown error";
+      alert(`Failed to generate cover letter: ${errorMsg}. Please try again.`);
     } finally {
       setLoading(false);
     }
