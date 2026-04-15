@@ -210,15 +210,15 @@ const Editor = () => {
                         }
 
                         // Force standard font sizes if they were shrunk by mobile CSS
-                        if (el.classList.contains('text-xs')) el.style.fontSize = '11px';
-                        if (el.classList.contains('text-sm')) el.style.fontSize = '13px';
-                        if (el.classList.contains('text-base')) el.style.fontSize = '15px';
-                        if (el.classList.contains('text-lg')) el.style.fontSize = '17px';
-                        if (el.classList.contains('text-xl')) el.style.fontSize = '19px';
-                        if (el.classList.contains('text-2xl')) el.style.fontSize = '22px';
-                        if (el.classList.contains('text-3xl')) el.style.fontSize = '28px';
-                        if (el.classList.contains('text-4xl')) el.style.fontSize = '34px';
-                        if (el.classList.contains('text-5xl')) el.style.fontSize = '44px';
+                        if (el.classList.contains('text-xs')) el.style.fontSize = '13px';
+                        if (el.classList.contains('text-sm')) el.style.fontSize = '15px';
+                        if (el.classList.contains('text-base')) el.style.fontSize = '17px';
+                        if (el.classList.contains('text-lg')) el.style.fontSize = '19px';
+                        if (el.classList.contains('text-xl')) el.style.fontSize = '22px';
+                        if (el.classList.contains('text-2xl')) el.style.fontSize = '26px';
+                        if (el.classList.contains('text-3xl')) el.style.fontSize = '32px';
+                        if (el.classList.contains('text-4xl')) el.style.fontSize = '40px';
+                        if (el.classList.contains('text-5xl')) el.style.fontSize = '50px';
                     }
                 }
             });
