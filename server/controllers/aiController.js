@@ -1,17 +1,18 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const dotenv = require('dotenv');
-const axios = require('axios');
+const https = require('https');
 
 dotenv.config();
 
-// Helper to call DeepSeek API
+// Helper to call DeepSeek API using built-in https module to avoid dependency issues
 const callDeepSeek = async (prompt, isJson = true) => {
     const apiKey = process.env.DEEPSEEK_API_KEY;
     if (!apiKey) throw new Error("DeepSeek API Key is missing");
 
-    try {
+    return new Promise((resolve, reject) => {
         console.log("AI: Attempting generation with DeepSeek (deepseek-chat)...");
-        const response = await axios.post('https://api.deepseek.com/chat/completions', {
+        
+        const data = JSON.stringify({
             model: "deepseek-chat",
             messages: [
                 { role: "system", content: "You are a professional resume writer and career coach." },
@@ -19,20 +20,46 @@ const callDeepSeek = async (prompt, isJson = true) => {
             ],
             response_format: isJson ? { type: "json_object" } : { type: "text" },
             temperature: 0.7
-        }, {
-            headers: {
-                'Authorization': `Bearer ${apiKey}`,
-                'Content-Type': 'application/json'
-            },
-            timeout: 30000 // 30s timeout
         });
 
-        const text = response.data.choices[0].message.content;
-        return text;
-    } catch (error) {
-        console.error("DeepSeek Error:", error.response?.data || error.message);
-        throw new Error(`DeepSeek API failed: ${error.response?.data?.error?.message || error.message}`);
-    }
+        const options = {
+            hostname: 'api.deepseek.com',
+            path: '/chat/completions',
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json',
+                'Content-Length': data.length
+            },
+            timeout: 30000
+        };
+
+        const req = https.request(options, (res) => {
+            let body = '';
+            res.on('data', (chunk) => body += chunk);
+            res.on('end', () => {
+                try {
+                    const response = JSON.parse(body);
+                    if (res.statusCode >= 200 && res.statusCode < 300) {
+                        resolve(response.choices[0].message.content);
+                    } else {
+                        reject(new Error(`DeepSeek API failed (${res.statusCode}): ${response.error?.message || body}`));
+                    }
+                } catch (e) {
+                    reject(new Error(`Failed to parse DeepSeek response: ${e.message}`));
+                }
+            });
+        });
+
+        req.on('error', (e) => reject(new Error(`DeepSeek Request Error: ${e.message}`)));
+        req.on('timeout', () => {
+            req.destroy();
+            reject(new Error('DeepSeek Request Timeout'));
+        });
+        
+        req.write(data);
+        req.end();
+    });
 };
 
 // Helper to call Gemini API

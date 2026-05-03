@@ -56,24 +56,47 @@ module.exports = async (req, res) => {
         // Test DeepSeek
         if (process.env.DEEPSEEK_API_KEY) {
             try {
-                const axios = require('axios');
-                const dsResponse = await axios.post('https://api.deepseek.com/chat/completions', {
-                    model: "deepseek-chat",
-                    messages: [{ role: "user", content: "hi" }],
-                    max_tokens: 5
-                }, {
-                    headers: { 'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}` },
-                    timeout: 5000
+                const https = require('https');
+                const dsStatus = await new Promise((resolve, reject) => {
+                    const data = JSON.stringify({
+                        model: "deepseek-chat",
+                        messages: [{ role: "user", content: "hi" }],
+                        max_tokens: 5
+                    });
+
+                    const options = {
+                        hostname: 'api.deepseek.com',
+                        path: '/chat/completions',
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}`,
+                            'Content-Type': 'application/json',
+                            'Content-Length': data.length
+                        },
+                        timeout: 5000
+                    };
+
+                    const req = https.request(options, (res) => {
+                        let body = '';
+                        res.on('data', (chunk) => body += chunk);
+                        res.on('end', () => {
+                            if (res.statusCode >= 200 && res.statusCode < 300) {
+                                resolve('working');
+                            } else {
+                                resolve(`error_${res.statusCode}`);
+                            }
+                        });
+                    });
+
+                    req.on('error', (e) => resolve(`error_${e.message}`));
+                    req.on('timeout', () => { req.destroy(); resolve('timeout'); });
+                    req.write(data);
+                    req.end();
                 });
-                
-                if (dsResponse.data && dsResponse.data.choices) {
-                    deepseekStatus = 'working';
-                } else {
-                    deepseekStatus = 'invalid_response';
-                }
+                deepseekStatus = dsStatus;
             } catch (err) {
                 deepseekStatus = 'error';
-                deepseekError = err.response?.data?.error?.message || err.message;
+                deepseekError = err.message;
             }
         } else {
             deepseekStatus = 'missing_key';
