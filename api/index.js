@@ -8,18 +8,22 @@ module.exports = async (req, res) => {
         return res.status(200).end();
     }
 
-    // Health check - with live Gemini test
+    // Health check - with live Gemini & DeepSeek test
     if (req.url === '/api/health' || req.url === '/api/health/') {
         let geminiStatus = 'not_tested';
         let geminiError = null;
+        let deepseekStatus = 'not_tested';
+        let deepseekError = null;
 
+        const dotenv = require('dotenv');
+        dotenv.config();
+
+        // Test Gemini
         if (process.env.GEMINI_API_KEY) {
             try {
                 const { GoogleGenerativeAI } = require('@google/generative-ai');
                 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
-                // Try a few common models to see which one is active
-                const modelsToTry = ["gemini-2.5-flash", "gemini-2.0-flash"];
+                const modelsToTry = ["gemini-1.5-flash", "gemini-2.0-flash"];
                 let successModel = null;
 
                 for (const modelName of modelsToTry) {
@@ -28,7 +32,6 @@ module.exports = async (req, res) => {
                         const result = await model.generateContent("hi");
                         if (result.response) {
                             successModel = modelName;
-                            geminiStatus = 'working';
                             break;
                         }
                     } catch (e) {
@@ -38,7 +41,7 @@ module.exports = async (req, res) => {
 
                 if (successModel) {
                     geminiStatus = `working (${successModel})`;
-                    geminiError = null; // Clear errors if at least one worked
+                    geminiError = null;
                 } else {
                     geminiStatus = 'error';
                 }
@@ -48,6 +51,32 @@ module.exports = async (req, res) => {
             }
         } else {
             geminiStatus = 'missing_key';
+        }
+
+        // Test DeepSeek
+        if (process.env.DEEPSEEK_API_KEY) {
+            try {
+                const axios = require('axios');
+                const dsResponse = await axios.post('https://api.deepseek.com/chat/completions', {
+                    model: "deepseek-chat",
+                    messages: [{ role: "user", content: "hi" }],
+                    max_tokens: 5
+                }, {
+                    headers: { 'Authorization': `Bearer ${process.env.DEEPSEEK_API_KEY}` },
+                    timeout: 5000
+                });
+                
+                if (dsResponse.data && dsResponse.data.choices) {
+                    deepseekStatus = 'working';
+                } else {
+                    deepseekStatus = 'invalid_response';
+                }
+            } catch (err) {
+                deepseekStatus = 'error';
+                deepseekError = err.response?.data?.error?.message || err.message;
+            }
+        } else {
+            deepseekStatus = 'missing_key';
         }
 
         return res.status(200).json({
@@ -60,6 +89,10 @@ module.exports = async (req, res) => {
                 gemini: {
                     status: geminiStatus,
                     error: geminiError
+                },
+                deepseek: {
+                    status: deepseekStatus,
+                    error: deepseekError
                 }
             }
         });

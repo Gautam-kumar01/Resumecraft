@@ -13,6 +13,7 @@ console.log('JWT_SECRET:', process.env.JWT_SECRET ? 'SET' : 'MISSING');
 console.log('EMAIL_USER:', process.env.EMAIL_USER ? 'SET' : 'MISSING');
 console.log('EMAIL_PASS:', process.env.EMAIL_PASS ? 'SET' : 'MISSING');
 console.log('GEMINI_API_KEY:', process.env.GEMINI_API_KEY ? 'SET' : 'MISSING');
+console.log('DEEPSEEK_API_KEY:', process.env.DEEPSEEK_API_KEY ? 'SET' : 'MISSING');
 console.log('-------------------------------');
 
 const app = express();
@@ -62,13 +63,18 @@ app.get('/api/health', (req, res) => {
       hasJwt: !!process.env.JWT_SECRET,
       hasEmailUser: !!process.env.EMAIL_USER,
       hasEmailPass: !!process.env.EMAIL_PASS,
+      hasGemini: !!process.env.GEMINI_API_KEY,
+      hasDeepseek: !!process.env.DEEPSEEK_API_KEY,
       nodeEnv: process.env.NODE_ENV
     },
-    tip: 'If any "hasX" is false, add that variable in Vercel Dashboard > Settings > Environment Variables.'
+    tip: 'If any "hasX" is false, add that variable in your .env file or Vercel Dashboard.'
   });
 });
 
-// Middleware to ensure DB connection before processing requests
+// Routes that don't need DB
+app.use('/api/ai', require('./routes/ai'));
+
+// Middleware to ensure DB connection before processing other requests
 const ensureDb = async (req, res, next) => {
   if (mongoose.connection.readyState !== 1) {
     await connectDB();
@@ -84,7 +90,6 @@ const ensureDb = async (req, res, next) => {
 
 app.use('/api/auth', ensureDb, require('./routes/auth'));
 app.use('/api/resumes', ensureDb, require('./routes/resume'));
-app.use('/api/ai', ensureDb, require('./routes/ai'));
 
 app.get('/', (req, res) => {
   res.send('ResumeCraft API is running...');
