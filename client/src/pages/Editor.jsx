@@ -7,7 +7,8 @@ import AuthContext from '../context/AuthContext';
 import ResumePreview from '../components/ResumePreview';
 import LoginModal from '../components/LoginModal';
 import SEO from '../components/SEO';
-import { Save, Download, Eye, ArrowLeft, Plus, Trash2, User, Upload, Sparkles } from 'lucide-react';
+import { Save, Download, Eye, ArrowLeft, Plus, Trash2, User, Upload, Sparkles, FileText, Smartphone } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 
 const initialResumeState = {
@@ -42,6 +43,7 @@ const Editor = () => {
     const [activeSection, setActiveSection] = useState('personal');
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [pendingAction, setPendingAction] = useState(null); // 'download' or 'save'
+    const [isMobilePreview, setIsMobilePreview] = useState(false);
 
     // AI State
     const [aiJobRole, setAiJobRole] = useState('');
@@ -382,7 +384,12 @@ const Editor = () => {
     if (!resume) return <div className="p-10 text-center">Resume not found</div>;
 
     return (
-        <div className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] h-auto overflow-y-auto md:overflow-hidden relative">
+        <motion.div 
+            initial={{ opacity: 0, rotateY: 15, perspective: 1200 }}
+            animate={{ opacity: 1, rotateY: 0 }}
+            transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
+            className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] h-screen overflow-hidden relative bg-slate-50 font-sans"
+        >
             <SEO
                 title={resume.title ? `${resume.title} - Editor` : "Resume Editor"}
                 description="Edit and customize your professional resume. Choose from multiple ATS-friendly templates."
@@ -395,348 +402,424 @@ const Editor = () => {
                 subtitle="Login or sign up to download and save your resume."
             />
 
-            {/* Sidebar / Form Area */}
-            <div className="w-full md:w-1/2 bg-white border-r border-slate-200 overflow-y-auto p-4 md:p-8 h-auto md:h-full order-2 md:order-1">
-                <div className="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <button onClick={() => navigate(user ? '/dashboard' : '/')} className="flex items-center text-slate-500 hover:text-slate-700">
-                        <ArrowLeft className="h-4 w-4 mr-1" /> {user ? 'Dashboard' : 'Home'}
-                    </button>
-                    <div className="flex space-x-2 w-full md:w-auto">
-                        <button onClick={handleSave} disabled={saving} className="flex-1 md:flex-none justify-center flex items-center px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 disabled:opacity-50">
-                            <Save className="h-4 w-4 mr-2" />
-                            {saving ? 'Saving...' : 'Save'}
-                        </button>
-                        <button
-                            onClick={handleDownload}
-                            disabled={downloading}
-                            className="flex-1 md:flex-none justify-center flex items-center px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 disabled:opacity-50"
+            {/* Main Content Area */}
+            <div className="flex-1 flex flex-col md:flex-row h-full overflow-hidden relative">
+                
+                {/* Form Area - Visible on desktop, or on mobile when not in preview mode */}
+                <div className={`w-full md:w-1/2 bg-white border-r border-slate-200 overflow-y-auto h-full flex flex-col transition-all duration-300 ${isMobilePreview ? 'hidden md:flex' : 'flex'}`}>
+                    
+                    {/* Header with Navigation */}
+                    <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-slate-100 p-4 flex items-center justify-between">
+                        <button 
+                            onClick={() => navigate(user ? '/dashboard' : '/')} 
+                            className="flex items-center text-slate-500 hover:text-slate-900 transition-colors font-medium text-sm group"
                         >
-                            <Download className={`h-4 w-4 mr-2 ${downloading ? 'animate-bounce' : ''}`} />
-                            {downloading ? 'Generating...' : 'Download PDF'}
+                            <ArrowLeft className="h-4 w-4 mr-1.5 group-hover:-translate-x-1 transition-transform" /> 
+                            {user ? 'Dashboard' : 'Home'}
                         </button>
-                    </div>
-                </div>
-
-                <div className="mb-6">
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Resume Title</label>
-                    <input
-                        type="text"
-                        value={resume.title}
-                        onChange={(e) => setResume({ ...resume, title: e.target.value })}
-                        className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none"
-                    />
-                </div>
-
-                {/* Section Tabs */}
-                <div className="flex space-x-2 overflow-x-auto pb-4 mb-6 border-b border-slate-100 no-scrollbar">
-                    {['ai', 'personal', 'summary', 'experience', 'education', 'skills', 'projects', 'templates'].map(sec => (
-                        <button
-                            key={sec}
-                            onClick={() => setActiveSection(sec)}
-                            className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap capitalize flex items-center ${activeSection === sec
-                                ? 'bg-orange-100 text-orange-600'
-                                : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
-                                }`}
-                        >
-                            {sec === 'ai' && <Sparkles className="h-3 w-3 mr-1" />}
-                            {sec === 'ai' ? 'AI Assistant' : sec}
-                        </button>
-                    ))}
-                </div>
-
-                {/* Forms */}
-                <div className="space-y-6">
-                    {activeSection === 'ai' && (
-                        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                            <div className="bg-gradient-to-r from-orange-500 to-orange-700 rounded-2xl p-6 text-white shadow-lg">
-                                <h3 className="text-xl font-bold mb-2 flex items-center">
-                                    <Sparkles className="h-5 w-5 mr-2" /> AI Resume Assistant
-                                </h3>
-                                <p className="text-orange-50 text-sm mb-6">
-                                    Enter your target job role, and our AI will generate professional summaries, skills, and bullet points for you.
-                                </p>
-
-                                <div className="flex space-x-2">
-                                    <input
-                                        type="text"
-                                        placeholder="e.g. Full Stack Developer, Accountant"
-                                        value={aiJobRole}
-                                        onChange={(e) => setAiJobRole(e.target.value)}
-                                        className="flex-1 px-4 py-3 rounded-xl text-slate-900 focus:outline-none focus:ring-2 focus:ring-white/50"
-                                        onKeyDown={(e) => e.key === 'Enter' && handleAIGenerate()}
-                                    />
-                                    <button
-                                        onClick={handleAIGenerate}
-                                        disabled={aiLoading}
-                                        className="bg-white text-orange-600 px-6 py-3 rounded-xl font-bold hover:bg-orange-50 disabled:opacity-50 transition-colors"
-                                    >
-                                        {aiLoading ? 'Thinking...' : 'Generate'}
-                                    </button>
-                                </div>
-                            </div>
-
-                            {aiSuggestions && (
-                                <div className="space-y-6">
-                                    {/* Summary Suggestion */}
-                                    <div className="p-5 border border-slate-200 rounded-xl bg-slate-50">
-                                        <div className="flex justify-between items-start mb-3">
-                                            <h4 className="font-bold text-slate-800">Suggested Summary</h4>
-                                            <button onClick={() => applySuggestion('summary', aiSuggestions.summary)} className="text-xs bg-slate-900 text-white px-3 py-1 rounded-full hover:bg-slate-700">Apply</button>
-                                        </div>
-                                        <p className="text-sm text-slate-600 leading-relaxed">{aiSuggestions.summary}</p>
-                                    </div>
-
-                                    {/* Skills Suggestion */}
-                                    <div className="p-5 border border-slate-200 rounded-xl bg-slate-50">
-                                        <div className="flex justify-between items-start mb-3">
-                                            <h4 className="font-bold text-slate-800">Suggested Skills</h4>
-                                            <button onClick={() => applySuggestion('skills', aiSuggestions.skills)} className="text-xs bg-slate-900 text-white px-3 py-1 rounded-full hover:bg-slate-700">Add All</button>
-                                        </div>
-                                        <div className="flex flex-wrap gap-2">
-                                            {aiSuggestions.skills.map((skill, i) => (
-                                                <span key={i} className="px-2 py-1 bg-white border border-slate-200 rounded text-xs text-slate-600">{skill}</span>
-                                            ))}
-                                        </div>
-                                    </div>
-
-                                    {/* Graphic Bullet Points */}
-                                    <div className="p-5 border border-slate-200 rounded-xl bg-slate-50">
-                                        <div className="flex justify-between items-start mb-3">
-                                            <h4 className="font-bold text-slate-800">Sample Accomplishments</h4>
-                                            <button onClick={() => applySuggestion('experience', aiSuggestions.bullets)} className="text-xs bg-slate-900 text-white px-3 py-1 rounded-full hover:bg-slate-700">Add as Experience</button>
-                                        </div>
-                                        <ul className="list-disc pl-5 space-y-2">
-                                            {aiSuggestions.bullets.map((bullet, i) => (
-                                                <li key={i} className="text-sm text-slate-600">{bullet}</li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                </div>
-                            )}
+                        
+                        <div className="flex items-center space-x-2">
+                            <button 
+                                onClick={handleSave} 
+                                disabled={saving} 
+                                className="hidden md:flex items-center px-4 py-2 bg-slate-900 text-white rounded-xl hover:bg-slate-800 disabled:opacity-50 transition-all text-sm font-bold shadow-sm"
+                            >
+                                <Save className="h-4 w-4 mr-2" />
+                                {saving ? 'Saving...' : 'Save'}
+                            </button>
+                            <button
+                                onClick={handleDownload}
+                                disabled={downloading}
+                                className="hidden md:flex items-center px-4 py-2 bg-orange-500 text-white rounded-xl hover:bg-orange-600 disabled:opacity-50 transition-all text-sm font-bold shadow-lg shadow-orange-200"
+                            >
+                                <Download className={`h-4 w-4 mr-2 ${downloading ? 'animate-bounce' : ''}`} />
+                                {downloading ? 'Processing...' : 'Download PDF'}
+                            </button>
                         </div>
-                    )}
-                    {activeSection === 'templates' && (
-                        <div className="space-y-6">
-                            <h3 className="text-lg font-bold text-slate-900">Choose Resume Template</h3>
-                            <div className="grid grid-cols-1 gap-4">
-                                {[
-                                    { id: 'modern', name: 'Professional Modern', desc: 'Sleek two-column layout with a clean header.' },
-                                    { id: 'visual', name: 'High-Impact Visual', desc: 'Eye-catching design with progress bars and bold sidebar.' },
-                                    { id: 'elegant', name: 'Classic Elegant', desc: 'Minimalist single-column serif design for senior roles.' },
-                                    { id: 'government', name: 'Government Standard', desc: 'Strict, formal, and authoritative format for public sector jobs.' },
-                                    { id: 'internship', name: 'Internship Ready', desc: 'Clean layout emphasizing education and skills for students.' }
-                                ].map(tpl => (
+                    </div>
+
+                    <div className="p-4 md:p-8 pt-6 max-w-2xl mx-auto w-full space-y-8">
+                        <div>
+                            <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Resume Title</label>
+                            <input
+                                type="text"
+                                placeholder="e.g. My Modern Resume"
+                                value={resume.title}
+                                onChange={(e) => setResume({ ...resume, title: e.target.value })}
+                                className="w-full px-5 py-3 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-orange-500 rounded-2xl outline-none transition-all font-bold text-slate-800"
+                            />
+                        </div>
+
+                        {/* Section Navigation - Better Tabs */}
+                        <div className="sticky top-[-1px] z-10 py-2 -mx-4 px-4 bg-white">
+                            <div className="flex space-x-2 overflow-x-auto pb-2 no-scrollbar">
+                                {['ai', 'personal', 'summary', 'experience', 'education', 'skills', 'projects', 'templates'].map(sec => (
                                     <button
-                                        key={tpl.id}
-                                        onClick={() => setResume({ ...resume, templateId: tpl.id })}
-                                        className={`p-6 rounded-2xl border-2 text-left transition-all ${resume.templateId === tpl.id
-                                            ? 'border-orange-500 bg-orange-50 ring-4 ring-orange-100'
-                                            : 'border-slate-100 hover:border-slate-200 hover:bg-slate-50'
+                                        key={sec}
+                                        onClick={() => setActiveSection(sec)}
+                                        className={`px-5 py-2.5 rounded-2xl text-xs font-black whitespace-nowrap capitalize flex items-center transition-all ${activeSection === sec
+                                            ? 'bg-orange-500 text-white shadow-lg shadow-orange-200 ring-4 ring-orange-100'
+                                            : 'bg-slate-50 text-slate-500 hover:bg-slate-100'
                                             }`}
                                     >
-                                        <div className="flex justify-between items-center mb-2">
-                                            <span className="font-bold text-slate-900">{tpl.name}</span>
-                                            {resume.templateId === tpl.id && (
-                                                <div className="bg-orange-500 text-white p-1 rounded-full"><Eye className="h-3 w-3" /></div>
-                                            )}
-                                        </div>
-                                        <p className="text-sm text-slate-500">{tpl.desc}</p>
+                                        {sec === 'ai' && <Sparkles className="h-3.5 w-3.5 mr-1.5" />}
+                                        {sec === 'ai' ? 'AI Assistant' : sec}
                                     </button>
                                 ))}
                             </div>
                         </div>
-                    )}
-                    {activeSection === 'personal' && (
-                        <div className="space-y-6">
-                            <h3 className="text-lg font-bold text-slate-900">Personal Information</h3>
 
-                            {/* Photo Upload */}
-                            <div className="flex items-center space-x-6">
-                                <div className="relative group shrink-0">
-                                    <div className="w-24 h-24 rounded-full border-2 border-slate-100 bg-slate-50 flex items-center justify-center overflow-hidden">
-                                        {resume.personalInfo?.profilePicture ? (
-                                            <img src={resume.personalInfo.profilePicture} alt="Profile" className="w-full h-full object-cover" />
-                                        ) : (
-                                            <User className="h-10 w-10 text-slate-300" />
-                                        )}
-                                    </div>
-                                    <label className="absolute bottom-0 right-0 p-1.5 bg-orange-500 text-white rounded-full cursor-pointer hover:bg-orange-600 transition-colors shadow-lg">
-                                        <Upload className="h-3.5 w-3.5" />
-                                        <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
-                                    </label>
-                                </div>
-                                <div className="space-y-1">
-                                    <p className="text-sm font-semibold text-slate-900">Profile Photo</p>
-                                    <p className="text-xs text-slate-500">Upload a professional headshot. Max 1MB.</p>
-                                    {resume.personalInfo?.profilePicture && (
-                                        <button
-                                            onClick={() => handleChange('personalInfo', 'profilePicture', null)}
-                                            className="text-xs text-red-500 font-medium hover:underline"
-                                        >
-                                            Remove photo
-                                        </button>
+                        {/* Animated Form Sections */}
+                        <div className="pb-24 md:pb-8">
+                            <AnimatePresence mode="wait">
+                                <motion.div
+                                    key={activeSection}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    transition={{ duration: 0.2 }}
+                                    className="space-y-8"
+                                >
+                                    {activeSection === 'ai' && (
+                                        <div className="space-y-6">
+                                            <div className="bg-gradient-to-br from-indigo-600 via-indigo-700 to-indigo-900 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden group">
+                                                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
+                                                <div className="relative z-10">
+                                                    <div className="flex items-center space-x-2 mb-4">
+                                                        <div className="bg-white/20 p-2 rounded-xl backdrop-blur-md">
+                                                            <Sparkles className="h-5 w-5 text-indigo-100" />
+                                                        </div>
+                                                        <h3 className="text-xl font-black">AI Career Coach</h3>
+                                                    </div>
+                                                    <p className="text-indigo-100 text-sm mb-8 leading-relaxed opacity-90">
+                                                        Describe your target role, and our advanced AI will craft a high-impact professional summary and targeted experience for you.
+                                                    </p>
+
+                                                    <div className="flex flex-col space-y-3">
+                                                        <input
+                                                            type="text"
+                                                            placeholder="Target Role (e.g. Senior Product Designer)"
+                                                            value={aiJobRole}
+                                                            onChange={(e) => setAiJobRole(e.target.value)}
+                                                            className="w-full px-5 py-4 rounded-2xl text-slate-900 bg-white border-none shadow-inner focus:ring-4 focus:ring-indigo-400/30 outline-none font-bold"
+                                                            onKeyDown={(e) => e.key === 'Enter' && handleAIGenerate()}
+                                                        />
+                                                        <button
+                                                            onClick={handleAIGenerate}
+                                                            disabled={aiLoading}
+                                                            className="w-full bg-white text-indigo-700 px-6 py-4 rounded-2xl font-black hover:bg-indigo-50 disabled:opacity-50 transition-all shadow-lg active:scale-[0.98] flex items-center justify-center"
+                                                        >
+                                                            {aiLoading ? (
+                                                                <>
+                                                                    <div className="animate-spin h-4 w-4 border-2 border-indigo-700 border-t-transparent rounded-full mr-3"></div>
+                                                                    Analyzing...
+                                                                </>
+                                                            ) : 'Generate Content'}
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {aiSuggestions && (
+                                                <div className="space-y-6">
+                                                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-6 border-2 border-slate-100 rounded-3xl bg-slate-50/50">
+                                                        <div className="flex justify-between items-start mb-4">
+                                                            <div className="flex items-center text-slate-800"><FileText className="h-4 w-4 mr-2" /><h4 className="font-black text-sm uppercase tracking-wider">Suggested Summary</h4></div>
+                                                            <button onClick={() => applySuggestion('summary', aiSuggestions.summary)} className="text-xs bg-slate-900 text-white px-4 py-1.5 rounded-full font-bold hover:bg-slate-700 transition-colors">Apply</button>
+                                                        </div>
+                                                        <p className="text-sm text-slate-600 leading-relaxed font-medium">{aiSuggestions.summary}</p>
+                                                    </motion.div>
+
+                                                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="p-6 border-2 border-slate-100 rounded-3xl bg-slate-50/50">
+                                                        <div className="flex justify-between items-start mb-4">
+                                                            <div className="flex items-center text-slate-800"><Sparkles className="h-4 w-4 mr-2" /><h4 className="font-black text-sm uppercase tracking-wider">Suggested Skills</h4></div>
+                                                            <button onClick={() => applySuggestion('skills', aiSuggestions.skills)} className="text-xs bg-slate-900 text-white px-4 py-1.5 rounded-full font-bold hover:bg-slate-700 transition-colors">Add All</button>
+                                                        </div>
+                                                        <div className="flex flex-wrap gap-2">
+                                                            {aiSuggestions.skills.map((skill, i) => (
+                                                                <span key={i} className="px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-600 shadow-sm">{skill}</span>
+                                                            ))}
+                                                        </div>
+                                                    </motion.div>
+
+                                                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="p-6 border-2 border-slate-100 rounded-3xl bg-slate-50/50">
+                                                        <div className="flex justify-between items-start mb-4">
+                                                            <div className="flex items-center text-slate-800"><Briefcase className="h-4 w-4 mr-2" /><h4 className="font-black text-sm uppercase tracking-wider">Experience Bullets</h4></div>
+                                                            <button onClick={() => applySuggestion('experience', aiSuggestions.bullets)} className="text-xs bg-slate-900 text-white px-4 py-1.5 rounded-full font-bold hover:bg-slate-700 transition-colors">Add as Role</button>
+                                                        </div>
+                                                        <ul className="space-y-3">
+                                                            {aiSuggestions.bullets.map((bullet, i) => (
+                                                                <li key={i} className="flex items-start text-sm text-slate-600 font-medium leading-relaxed">
+                                                                    <div className="h-1.5 w-1.5 bg-indigo-500 rounded-full mt-1.5 mr-3 shrink-0"></div>
+                                                                    {bullet}
+                                                                </li>
+                                                            ))}
+                                                        </ul>
+                                                    </motion.div>
+                                                </div>
+                                            )}
+                                        </div>
                                     )}
-                                </div>
-                            </div>
 
-                            <div className="grid grid-cols-2 gap-4">
-                                <input
-                                    placeholder="Full Name"
-                                    value={resume.personalInfo?.fullName || ''}
-                                    onChange={(e) => handleChange('personalInfo', 'fullName', e.target.value)}
-                                    className="col-span-2 px-4 py-2 border rounded-lg w-full"
-                                />
-                                <input
-                                    placeholder="Email"
-                                    value={resume.personalInfo?.email || ''}
-                                    onChange={(e) => handleChange('personalInfo', 'email', e.target.value)}
-                                    className="px-4 py-2 border rounded-lg w-full"
-                                />
-                                <input
-                                    placeholder="Phone"
-                                    value={resume.personalInfo?.phone || ''}
-                                    onChange={(e) => handleChange('personalInfo', 'phone', e.target.value)}
-                                    className="px-4 py-2 border rounded-lg w-full"
-                                />
-                                <input
-                                    placeholder="Address"
-                                    value={resume.personalInfo?.address || ''}
-                                    onChange={(e) => handleChange('personalInfo', 'address', e.target.value)}
-                                    className="col-span-2 px-4 py-2 border rounded-lg w-full"
-                                />
-                                <input
-                                    placeholder="LinkedIn URL"
-                                    value={resume.personalInfo?.linkedin || ''}
-                                    onChange={(e) => handleChange('personalInfo', 'linkedin', e.target.value)}
-                                    className="px-4 py-2 border rounded-lg w-full"
-                                />
-                                <input
-                                    placeholder="GitHub URL"
-                                    value={resume.personalInfo?.github || ''}
-                                    onChange={(e) => handleChange('personalInfo', 'github', e.target.value)}
-                                    className="px-4 py-2 border rounded-lg w-full"
-                                />
-                                <input
-                                    placeholder="Portfolio Website"
-                                    value={resume.personalInfo?.website || ''}
-                                    onChange={(e) => handleChange('personalInfo', 'website', e.target.value)}
-                                    className="col-span-2 px-4 py-2 border rounded-lg w-full"
-                                />
-                            </div>
-                        </div>
-                    )}
+                                    {activeSection === 'templates' && (
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            {[
+                                                { id: 'modern', name: 'Modern', desc: 'Sleek & Clean' },
+                                                { id: 'visual', name: 'High-Impact', desc: 'Creative Sidebar' },
+                                                { id: 'elegant', name: 'Elegant', desc: 'Classic Serif' },
+                                                { id: 'government', name: 'Formal', desc: 'Strict Standard' },
+                                                { id: 'internship', name: 'Academic', desc: 'Education Focus' }
+                                            ].map(tpl => (
+                                                <button
+                                                    key={tpl.id}
+                                                    onClick={() => setResume({ ...resume, templateId: tpl.id })}
+                                                    className={`group p-5 rounded-3xl border-2 text-left transition-all ${resume.templateId === tpl.id
+                                                        ? 'border-orange-500 bg-orange-50 ring-4 ring-orange-100 shadow-xl'
+                                                        : 'border-slate-100 hover:border-slate-200 hover:bg-slate-50'
+                                                        }`}
+                                                >
+                                                    <div className="flex justify-between items-center mb-1">
+                                                        <span className="font-black text-slate-900 text-sm tracking-wide">{tpl.name}</span>
+                                                        {resume.templateId === tpl.id && (
+                                                            <div className="bg-orange-500 text-white p-1.5 rounded-full shadow-lg shadow-orange-200"><Eye className="h-3 w-3" /></div>
+                                                        )}
+                                                    </div>
+                                                    <p className="text-xs text-slate-500 font-medium">{tpl.desc}</p>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
 
-                    {activeSection === 'summary' && (
-                        <div className="space-y-4">
-                            <h3 className="text-lg font-bold text-slate-900">Professional Summary</h3>
-                            <textarea
-                                rows={6}
-                                value={resume.summary || ''}
-                                onChange={(e) => setResume({ ...resume, summary: e.target.value })}
-                                className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none"
-                                placeholder="Write a compelling summary about yourself..."
-                            />
-                        </div>
-                    )}
+                                    {activeSection === 'personal' && (
+                                        <div className="space-y-8">
+                                            <div className="flex flex-col sm:flex-row items-center sm:space-x-8 space-y-4 sm:space-y-0">
+                                                <div className="relative group shrink-0">
+                                                    <div className="w-28 h-28 rounded-3xl border-4 border-slate-50 bg-slate-50 flex items-center justify-center overflow-hidden shadow-xl transition-all group-hover:scale-105 group-hover:rotate-3">
+                                                        {resume.personalInfo?.profilePicture ? (
+                                                            <img src={resume.personalInfo.profilePicture} alt="Profile" className="w-full h-full object-cover" />
+                                                        ) : (
+                                                            <User className="h-12 w-12 text-slate-300" />
+                                                        )}
+                                                    </div>
+                                                    <label className="absolute -bottom-2 -right-2 p-2.5 bg-indigo-600 text-white rounded-2xl cursor-pointer hover:bg-indigo-700 transition-all shadow-xl active:scale-90">
+                                                        <Upload className="h-4 w-4" />
+                                                        <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
+                                                    </label>
+                                                </div>
+                                                <div className="text-center sm:text-left space-y-1">
+                                                    <p className="text-base font-black text-slate-900 tracking-wide">Professional Photo</p>
+                                                    <p className="text-xs text-slate-500 font-medium leading-relaxed max-w-[200px]">A high-quality headshot increases response rates by 20%.</p>
+                                                    {resume.personalInfo?.profilePicture && (
+                                                        <button onClick={() => handleChange('personalInfo', 'profilePicture', null)} className="text-xs text-red-500 font-black hover:underline mt-2">Remove photo</button>
+                                                    )}
+                                                </div>
+                                            </div>
 
-                    {activeSection === 'experience' && (
-                        <div className="space-y-6">
-                            <div className="flex justify-between items-center">
-                                <h3 className="text-lg font-bold text-slate-900">Work Experience</h3>
-                                <button onClick={() => addItem('experience', { company: '', position: '', startDate: '', endDate: '', description: '' })} className="text-sm text-orange-600 font-medium hover:underline flex items-center">
-                                    <Plus className="h-4 w-4 mr-1" /> Add Position
-                                </button>
-                            </div>
-                            {resume.experience?.map((exp, index) => (
-                                <div key={index} className="p-4 bg-slate-50 rounded-xl border border-slate-100 space-y-3 relative group">
-                                    <button onClick={() => removeItem('experience', index)} className="absolute top-4 right-4 text-slate-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <Trash2 className="h-4 w-4" />
-                                    </button>
-                                    <div className="grid grid-cols-2 gap-3">
-                                        <input placeholder="Company" value={exp.company} onChange={(e) => handleArrayChange('experience', index, 'company', e.target.value)} className="px-3 py-2 border rounded-lg bg-white" />
-                                        <input placeholder="Position" value={exp.position} onChange={(e) => handleArrayChange('experience', index, 'position', e.target.value)} className="px-3 py-2 border rounded-lg bg-white" />
-                                        <input placeholder="Start Date" value={exp.startDate} onChange={(e) => handleArrayChange('experience', index, 'startDate', e.target.value)} className="px-3 py-2 border rounded-lg bg-white" />
-                                        <input placeholder="End Date" value={exp.endDate} onChange={(e) => handleArrayChange('experience', index, 'endDate', e.target.value)} className="px-3 py-2 border rounded-lg bg-white" />
-                                    </div>
-                                    <textarea placeholder="Description" rows={3} value={exp.description} onChange={(e) => handleArrayChange('experience', index, 'description', e.target.value)} className="w-full px-3 py-2 border rounded-lg bg-white" />
-                                </div>
-                            ))}
-                        </div>
-                    )}
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                <div className="sm:col-span-2">
+                                                    <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1 mb-1 block">Full Name</label>
+                                                    <input placeholder="Gautam Kumar" value={resume.personalInfo?.fullName || ''} onChange={(e) => handleChange('personalInfo', 'fullName', e.target.value)} className="w-full px-5 py-3.5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-indigo-500 rounded-2xl transition-all font-bold" />
+                                                </div>
+                                                <div>
+                                                    <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1 mb-1 block">Email</label>
+                                                    <input placeholder="hello@example.com" value={resume.personalInfo?.email || ''} onChange={(e) => handleChange('personalInfo', 'email', e.target.value)} className="w-full px-5 py-3.5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-indigo-500 rounded-2xl transition-all font-bold" />
+                                                </div>
+                                                <div>
+                                                    <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1 mb-1 block">Phone</label>
+                                                    <input placeholder="+91 98765 43210" value={resume.personalInfo?.phone || ''} onChange={(e) => handleChange('personalInfo', 'phone', e.target.value)} className="w-full px-5 py-3.5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-indigo-500 rounded-2xl transition-all font-bold" />
+                                                </div>
+                                                <div className="sm:col-span-2">
+                                                    <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1 mb-1 block">Location</label>
+                                                    <input placeholder="New Delhi, India" value={resume.personalInfo?.address || ''} onChange={(e) => handleChange('personalInfo', 'address', e.target.value)} className="w-full px-5 py-3.5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-indigo-500 rounded-2xl transition-all font-bold" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
 
-                    {activeSection === 'education' && (
-                        <div className="space-y-6">
-                            <div className="flex justify-between items-center">
-                                <h3 className="text-lg font-bold text-slate-900">Education</h3>
-                                <button onClick={() => addItem('education', { school: '', degree: '', startDate: '', endDate: '', description: '' })} className="text-sm text-orange-600 font-medium hover:underline flex items-center">
-                                    <Plus className="h-4 w-4 mr-1" /> Add Education
-                                </button>
-                            </div>
-                            {resume.education?.map((edu, index) => (
-                                <div key={index} className="p-4 bg-slate-50 rounded-xl border border-slate-100 space-y-3 relative group">
-                                    <button onClick={() => removeItem('education', index)} className="absolute top-4 right-4 text-slate-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <Trash2 className="h-4 w-4" />
-                                    </button>
-                                    <div className="grid grid-cols-2 gap-3">
-                                        <input placeholder="School" value={edu.school} onChange={(e) => handleArrayChange('education', index, 'school', e.target.value)} className="px-3 py-2 border rounded-lg bg-white" />
-                                        <input placeholder="Degree" value={edu.degree} onChange={(e) => handleArrayChange('education', index, 'degree', e.target.value)} className="px-3 py-2 border rounded-lg bg-white" />
-                                        <input placeholder="Start Date" value={edu.startDate} onChange={(e) => handleArrayChange('education', index, 'startDate', e.target.value)} className="px-3 py-2 border rounded-lg bg-white" />
-                                        <input placeholder="End Date" value={edu.endDate} onChange={(e) => handleArrayChange('education', index, 'endDate', e.target.value)} className="px-3 py-2 border rounded-lg bg-white" />
-                                    </div>
-                                    <textarea placeholder="Description" rows={3} value={edu.description} onChange={(e) => handleArrayChange('education', index, 'description', e.target.value)} className="w-full px-3 py-2 border rounded-lg bg-white" />
-                                </div>
-                            ))}
-                        </div>
-                    )}
+                                    {activeSection === 'summary' && (
+                                        <div className="space-y-4">
+                                            <div className="flex items-center justify-between">
+                                                <h3 className="text-lg font-black text-slate-900 tracking-wide">Professional Summary</h3>
+                                                <div className="bg-orange-50 text-orange-600 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Recommended</div>
+                                            </div>
+                                            <textarea
+                                                rows={8}
+                                                value={resume.summary || ''}
+                                                onChange={(e) => setResume({ ...resume, summary: e.target.value })}
+                                                className="w-full px-6 py-5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-orange-500 rounded-3xl outline-none transition-all font-medium text-slate-700 leading-relaxed text-sm"
+                                                placeholder="Seasoned software engineer with 5+ years of experience in..."
+                                            />
+                                        </div>
+                                    )}
 
-                    {activeSection === 'skills' && (
-                        <div className="space-y-6">
-                            <h3 className="text-lg font-bold text-slate-900">Skills</h3>
-                            <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
-                                <p className="text-sm text-slate-500 mb-2">Separate skills with commas</p>
-                                <textarea
-                                    rows={4}
-                                    value={resume.skills?.join(', ') || ''}
-                                    onChange={(e) => setResume({ ...resume, skills: e.target.value.split(',').map(s => s.trim()) })}
-                                    className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-200 focus:border-orange-500 outline-none"
-                                    placeholder="Java, Python, React, Team Leadership..."
-                                />
-                            </div>
-                        </div>
-                    )}
+                                    {activeSection === 'experience' && (
+                                        <div className="space-y-6">
+                                            <div className="flex justify-between items-center bg-white sticky top-0 py-2 z-10">
+                                                <h3 className="text-lg font-black text-slate-900 tracking-wide">Work History</h3>
+                                                <button onClick={() => addItem('experience', { company: '', position: '', startDate: '', endDate: '', description: '' })} className="bg-orange-500 text-white px-4 py-2 rounded-xl font-bold hover:bg-orange-600 transition-all text-xs flex items-center shadow-lg shadow-orange-100 active:scale-95">
+                                                    <Plus className="h-4 w-4 mr-1" /> Add Role
+                                                </button>
+                                            </div>
+                                            <div className="space-y-4">
+                                                {resume.experience?.map((exp, index) => (
+                                                    <motion.div 
+                                                        key={index} 
+                                                        layout
+                                                        initial={{ opacity: 0, scale: 0.95 }}
+                                                        animate={{ opacity: 1, scale: 1 }}
+                                                        className="p-6 bg-white border-2 border-slate-100 rounded-3xl space-y-4 relative group shadow-sm hover:shadow-md transition-all"
+                                                    >
+                                                        <button onClick={() => removeItem('experience', index)} className="absolute top-4 right-4 text-slate-300 hover:text-red-500 transition-colors p-2 hover:bg-red-50 rounded-xl">
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </button>
+                                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+                                                            <input placeholder="Company" value={exp.company} onChange={(e) => handleArrayChange('experience', index, 'company', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-xl font-bold text-sm transition-all outline-none" />
+                                                            <input placeholder="Role" value={exp.position} onChange={(e) => handleArrayChange('experience', index, 'position', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-xl font-bold text-sm transition-all outline-none" />
+                                                            <input placeholder="Start Date" value={exp.startDate} onChange={(e) => handleArrayChange('experience', index, 'startDate', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-xl font-bold text-sm transition-all outline-none" />
+                                                            <input placeholder="End Date" value={exp.endDate} onChange={(e) => handleArrayChange('experience', index, 'endDate', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-xl font-bold text-sm transition-all outline-none" />
+                                                        </div>
+                                                        <textarea placeholder="Key accomplishments and responsibilities..." rows={4} value={exp.description} onChange={(e) => handleArrayChange('experience', index, 'description', e.target.value)} className="w-full px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-xl font-medium text-sm transition-all outline-none leading-relaxed" />
+                                                    </motion.div>
+                                                ))}
+                                                {resume.experience?.length === 0 && (
+                                                    <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-3xl">
+                                                        <Briefcase className="h-10 w-10 text-slate-200 mx-auto mb-4" />
+                                                        <p className="text-sm font-bold text-slate-400">No experience added yet.</p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
 
-                    {activeSection === 'projects' && (
-                        <div className="space-y-6">
-                            <div className="flex justify-between items-center">
-                                <h3 className="text-lg font-bold text-slate-900">Projects</h3>
-                                <button onClick={() => addItem('projects', { name: '', description: '', link: '' })} className="text-sm text-orange-600 font-medium hover:underline flex items-center">
-                                    <Plus className="h-4 w-4 mr-1" /> Add Project
-                                </button>
-                            </div>
-                            {resume.projects?.map((proj, index) => (
-                                <div key={index} className="p-4 bg-slate-50 rounded-xl border border-slate-100 space-y-3 relative group">
-                                    <button onClick={() => removeItem('projects', index)} className="absolute top-4 right-4 text-slate-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <Trash2 className="h-4 w-4" />
-                                    </button>
-                                    <div className="grid grid-cols-2 gap-3">
-                                        <input placeholder="Project Name" value={proj.name} onChange={(e) => handleArrayChange('projects', index, 'name', e.target.value)} className="px-3 py-2 border rounded-lg bg-white" />
-                                        <input placeholder="Link (Optional)" value={proj.link} onChange={(e) => handleArrayChange('projects', index, 'link', e.target.value)} className="px-3 py-2 border rounded-lg bg-white" />
-                                    </div>
-                                    <textarea placeholder="Description" rows={3} value={proj.description} onChange={(e) => handleArrayChange('projects', index, 'description', e.target.value)} className="w-full px-3 py-2 border rounded-lg bg-white" />
-                                </div>
-                            ))}
+                                    {/* Repeat similar styling for other sections... */}
+                                    {activeSection === 'education' && (
+                                        <div className="space-y-6">
+                                            <div className="flex justify-between items-center bg-white sticky top-0 py-2 z-10">
+                                                <h3 className="text-lg font-black text-slate-900 tracking-wide">Education</h3>
+                                                <button onClick={() => addItem('education', { school: '', degree: '', startDate: '', endDate: '', description: '' })} className="bg-indigo-600 text-white px-4 py-2 rounded-xl font-bold hover:bg-indigo-700 transition-all text-xs flex items-center shadow-lg shadow-indigo-100 active:scale-95">
+                                                    <Plus className="h-4 w-4 mr-1" /> Add Education
+                                                </button>
+                                            </div>
+                                            <div className="space-y-4">
+                                                {resume.education?.map((edu, index) => (
+                                                    <motion.div layout key={index} className="p-6 bg-white border-2 border-slate-100 rounded-3xl space-y-4 relative group shadow-sm hover:shadow-md transition-all">
+                                                        <button onClick={() => removeItem('education', index)} className="absolute top-4 right-4 text-slate-300 hover:text-red-500 transition-colors p-2 hover:bg-red-50 rounded-xl">
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </button>
+                                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+                                                            <input placeholder="Institution" value={edu.school} onChange={(e) => handleArrayChange('education', index, 'school', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-xl font-bold text-sm transition-all outline-none" />
+                                                            <input placeholder="Degree" value={edu.degree} onChange={(e) => handleArrayChange('education', index, 'degree', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-xl font-bold text-sm transition-all outline-none" />
+                                                            <input placeholder="Start Date" value={edu.startDate} onChange={(e) => handleArrayChange('education', index, 'startDate', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-xl font-bold text-sm transition-all outline-none" />
+                                                            <input placeholder="End Date" value={edu.endDate} onChange={(e) => handleArrayChange('education', index, 'endDate', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-xl font-bold text-sm transition-all outline-none" />
+                                                        </div>
+                                                    </motion.div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {activeSection === 'skills' && (
+                                        <div className="space-y-6">
+                                            <h3 className="text-lg font-black text-slate-900 tracking-wide">Technical Skills</h3>
+                                            <div className="p-8 bg-slate-50 rounded-[2.5rem] border-2 border-transparent focus-within:bg-white focus-within:border-orange-500 transition-all">
+                                                <p className="text-xs font-bold text-slate-400 mb-4 uppercase tracking-[0.2em] text-center">Separate skills with commas</p>
+                                                <textarea
+                                                    rows={6}
+                                                    value={resume.skills?.join(', ') || ''}
+                                                    onChange={(e) => setResume({ ...resume, skills: e.target.value.split(',').map(s => s.trim()) })}
+                                                    className="w-full bg-transparent outline-none font-bold text-slate-800 text-center leading-loose text-lg"
+                                                    placeholder="React, Node.js, Python, Figma..."
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {activeSection === 'projects' && (
+                                        <div className="space-y-6">
+                                            <div className="flex justify-between items-center bg-white sticky top-0 py-2 z-10">
+                                                <h3 className="text-lg font-black text-slate-900 tracking-wide">Key Projects</h3>
+                                                <button onClick={() => addItem('projects', { name: '', description: '', link: '' })} className="bg-indigo-600 text-white px-4 py-2 rounded-xl font-bold hover:bg-indigo-700 transition-all text-xs flex items-center shadow-lg shadow-indigo-100 active:scale-95">
+                                                    <Plus className="h-4 w-4 mr-1" /> Add Project
+                                                </button>
+                                            </div>
+                                            <div className="space-y-4">
+                                                {resume.projects?.map((proj, index) => (
+                                                    <motion.div layout key={index} className="p-6 bg-white border-2 border-slate-100 rounded-3xl space-y-4 relative group shadow-sm hover:shadow-md transition-all">
+                                                        <button onClick={() => removeItem('projects', index)} className="absolute top-4 right-4 text-slate-300 hover:text-red-500 transition-colors p-2 hover:bg-red-50 rounded-xl">
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </button>
+                                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+                                                            <input placeholder="Project Name" value={proj.name} onChange={(e) => handleArrayChange('projects', index, 'name', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-xl font-bold text-sm transition-all outline-none" />
+                                                            <input placeholder="Link (Optional)" value={proj.link} onChange={(e) => handleArrayChange('projects', index, 'link', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-xl font-bold text-sm transition-all outline-none" />
+                                                        </div>
+                                                        <textarea placeholder="Tell us about the project's impact..." rows={3} value={proj.description} onChange={(e) => handleArrayChange('projects', index, 'description', e.target.value)} className="w-full px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-xl font-medium text-sm transition-all outline-none leading-relaxed" />
+                                                    </motion.div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+                                </motion.div>
+                            </AnimatePresence>
                         </div>
-                    )}
+                    </div>
+                </div>
+
+                {/* Preview Area - Full screen on mobile preview mode, or right side on desktop */}
+                <div className={`w-full md:w-1/2 bg-slate-50 h-full overflow-y-auto flex items-start justify-center p-4 md:p-12 transition-all duration-300 ${!isMobilePreview ? 'hidden md:flex' : 'flex'}`}>
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        id={`resume-preview-${resume.templateId || 'modern'}`} 
+                        className="resume-print-area w-full max-w-[210mm] bg-white shadow-2xl min-h-[297mm] origin-top transform transition-transform"
+                        style={{
+                            transform: `scale(${window.innerWidth < 640 ? 0.45 : window.innerWidth < 768 ? 0.6 : window.innerWidth < 1024 ? 0.75 : 0.95})`
+                        }}
+                    >
+                        <ResumePreview resume={resume} />
+                    </motion.div>
                 </div>
             </div>
 
-            {/* Preview Area */}
-            <div className="w-full md:w-1/2 bg-slate-100 p-4 md:p-8 h-[50vh] md:h-full overflow-y-auto flex items-start justify-center order-1 md:order-2">
-                <div id={`resume-preview-${resume.templateId || 'modern'}`} className="resume-print-area w-full max-w-[210mm] bg-white shadow-xl min-h-[297mm] origin-top transform scale-[0.6] sm:scale-[0.7] md:scale-[0.8] lg:scale-[0.9] xl:scale-100 transition-transform">
-                    <ResumePreview resume={resume} />
+            {/* Mobile Navigation Bar - Fixed Bottom with Glassmorphism */}
+            <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/70 backdrop-blur-2xl border-t border-slate-100/50 p-4 pb-safe-offset-4 flex items-center justify-around">
+                <button 
+                    onClick={() => setIsMobilePreview(false)}
+                    className={`flex flex-col items-center space-y-1 transition-all duration-300 ${!isMobilePreview ? 'text-indigo-600 scale-110' : 'text-slate-400'}`}
+                >
+                    <div className={`p-2 rounded-xl transition-colors ${!isMobilePreview ? 'bg-indigo-50' : 'bg-transparent'}`}>
+                        <Smartphone className="h-5 w-5" />
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-widest">Edit</span>
+                </button>
+                
+                <div className="flex space-x-3 -mt-16">
+                    <button 
+                        onClick={handleSave} 
+                        disabled={saving}
+                        className="w-14 h-14 bg-slate-900 text-white rounded-2xl shadow-2xl flex items-center justify-center active:scale-90 transition-all disabled:opacity-50 ring-4 ring-white"
+                    >
+                        {saving ? <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div> : <Save className="h-5 w-5" />}
+                    </button>
+                    <button 
+                        onClick={handleDownload} 
+                        disabled={downloading}
+                        className="w-14 h-14 bg-orange-500 text-white rounded-2xl shadow-2xl shadow-orange-200 flex items-center justify-center active:scale-90 transition-all disabled:opacity-50 ring-4 ring-white"
+                    >
+                        {downloading ? <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div> : <Download className="h-5 w-5" />}
+                    </button>
                 </div>
+
+                <button 
+                    onClick={() => setIsMobilePreview(true)}
+                    className={`flex flex-col items-center space-y-1 transition-all duration-300 ${isMobilePreview ? 'text-indigo-600 scale-110' : 'text-slate-400'}`}
+                >
+                    <div className={`p-2 rounded-xl transition-colors ${isMobilePreview ? 'bg-indigo-50' : 'bg-transparent'}`}>
+                        <Eye className="h-5 w-5" />
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-widest">Preview</span>
+                </button>
             </div>
-        </div>
+        </motion.div>
     );
 };
 

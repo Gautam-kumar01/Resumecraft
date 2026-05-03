@@ -104,7 +104,12 @@ const Home = () => {
     ];
 
     return (
-        <div className="bg-white">
+        <motion.div 
+            initial={{ opacity: 0, rotateY: 10, perspective: 1000 }}
+            animate={{ opacity: 1, rotateY: 0 }}
+            transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
+            className="bg-white"
+        >
             <SEO
                 title="Free Resume Builder & Resume Making Online Tool"
                 description="The best free resume making online tool. Build your professional resume in minutes with our AI resume builder. ATS-friendly templates approved by top MNCs."
@@ -525,7 +530,7 @@ const Home = () => {
                     </div>
                 </div>
             </footer>
-        </div>
+        </motion.div>
     );
 };
 

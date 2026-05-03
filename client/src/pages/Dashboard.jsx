@@ -5,6 +5,7 @@ import api from '../api/axios';
 import AuthContext from '../context/AuthContext';
 import SEO from '../components/SEO';
 import { Plus, FileText, Trash2, Edit, ExternalLink, Download, Sparkles, ArrowRight, Copy, Search, Filter, BarChart, Briefcase } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const Dashboard = () => {
     const [resumes, setResumes] = useState([]);
@@ -125,7 +126,12 @@ const Dashboard = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 pt-20 pb-10 px-4 sm:px-6 lg:px-8">
+        <motion.div 
+            initial={{ opacity: 0, rotateY: 15, perspective: 1000 }}
+            animate={{ opacity: 1, rotateY: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="min-h-screen bg-gray-50 pt-20 pb-10 px-4 sm:px-6 lg:px-8"
+        >
             <SEO
                 title="Dashboard | ResumeCraft - MNC Resume Templates"
                 description="Access professional MNC-approved resume templates. Filter by industry, experience level, and ATS score to create your perfect resume."
@@ -434,7 +440,7 @@ const Dashboard = () => {
                     ))}
                 </div>
             )}
-        </div>
+        </motion.div>
     );
 };
 
