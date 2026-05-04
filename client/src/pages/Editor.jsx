@@ -482,36 +482,35 @@ const Editor = () => {
                                 >
                                     {activeSection === 'ai' && (
                                         <div className="space-y-6">
-                                            <div className="bg-gradient-to-br from-indigo-600 via-indigo-700 to-indigo-900 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden group">
-                                                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
+                                            <div className="glass-effect bg-gradient-to-br from-orange-500/20 via-rose-500/10 to-white rounded-3xl p-8 text-slate-800 shadow-xl relative overflow-hidden group border-2 border-orange-100/50">
+                                                <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full -mr-16 -mt-16 blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
                                                 <div className="relative z-10">
                                                     <div className="flex items-center space-x-2 mb-4">
-                                                        <div className="bg-white/20 p-2 rounded-xl backdrop-blur-md">
-                                                            <Sparkles className="h-5 w-5 text-indigo-100" />
+                                                        <div className="bg-orange-500 p-2 rounded-xl shadow-lg shadow-orange-200">
+                                                            <Sparkles className="h-5 w-5 text-white" />
                                                         </div>
-                                                        <h3 className="text-xl font-black">AI Career Coach</h3>
+                                                        <h3 className="text-xl font-black text-slate-900">AI Career Coach</h3>
                                                     </div>
-                                                    <p className="text-indigo-100 text-sm mb-8 leading-relaxed opacity-90">
+                                                    <p className="text-slate-600 text-sm mb-8 leading-relaxed font-medium">
                                                         Describe your target role, and our advanced AI will craft a high-impact professional summary and targeted experience for you.
                                                     </p>
-
                                                     <div className="flex flex-col space-y-3">
                                                         <input
                                                             type="text"
                                                             placeholder="Target Role (e.g. Senior Product Designer)"
                                                             value={aiJobRole}
                                                             onChange={(e) => setAiJobRole(e.target.value)}
-                                                            className="w-full px-5 py-4 rounded-2xl text-slate-900 bg-white border-none shadow-inner focus:ring-4 focus:ring-indigo-400/30 outline-none font-bold"
+                                                            className="w-full px-5 py-4 rounded-2xl text-slate-900 bg-white/80 backdrop-blur-md border-2 border-orange-100 shadow-inner focus:ring-4 focus:ring-orange-400/20 focus:border-orange-500 outline-none font-bold placeholder:text-slate-400"
                                                             onKeyDown={(e) => e.key === 'Enter' && handleAIGenerate()}
                                                         />
                                                         <button
                                                             onClick={handleAIGenerate}
                                                             disabled={aiLoading}
-                                                            className="w-full bg-white text-indigo-700 px-6 py-4 rounded-2xl font-black hover:bg-indigo-50 disabled:opacity-50 transition-all shadow-lg active:scale-[0.98] flex items-center justify-center"
+                                                            className="w-full bg-orange-500 text-white px-6 py-4 rounded-2xl font-black hover:bg-orange-600 disabled:opacity-50 transition-all shadow-lg shadow-orange-200 active:scale-[0.98] flex items-center justify-center"
                                                         >
                                                             {aiLoading ? (
                                                                 <>
-                                                                    <div className="animate-spin h-4 w-4 border-2 border-indigo-700 border-t-transparent rounded-full mr-3"></div>
+                                                                    <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mr-3"></div>
                                                                     Analyzing...
                                                                 </>
                                                             ) : 'Generate Content'}
@@ -601,7 +600,7 @@ const Editor = () => {
                                                             <User className="h-12 w-12 text-slate-300" />
                                                         )}
                                                     </div>
-                                                    <label className="absolute -bottom-2 -right-2 p-2.5 bg-indigo-600 text-white rounded-2xl cursor-pointer hover:bg-indigo-700 transition-all shadow-xl active:scale-90">
+                                                    <label className="absolute -bottom-2 -right-2 p-2.5 bg-orange-500 text-white rounded-2xl cursor-pointer hover:bg-orange-600 transition-all shadow-xl active:scale-90">
                                                         <Upload className="h-4 w-4" />
                                                         <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
                                                     </label>
@@ -618,19 +617,19 @@ const Editor = () => {
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                 <div className="sm:col-span-2">
                                                     <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1 mb-1 block">Full Name</label>
-                                                    <input placeholder="Gautam Kumar" value={resume.personalInfo?.fullName || ''} onChange={(e) => handleChange('personalInfo', 'fullName', e.target.value)} className="w-full px-5 py-3.5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-indigo-500 rounded-2xl transition-all font-bold" />
+                                                    <input placeholder="Gautam Kumar" value={resume.personalInfo?.fullName || ''} onChange={(e) => handleChange('personalInfo', 'fullName', e.target.value)} className="w-full px-5 py-3.5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-orange-500 rounded-2xl transition-all font-bold" />
                                                 </div>
                                                 <div>
                                                     <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1 mb-1 block">Email</label>
-                                                    <input placeholder="hello@example.com" value={resume.personalInfo?.email || ''} onChange={(e) => handleChange('personalInfo', 'email', e.target.value)} className="w-full px-5 py-3.5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-indigo-500 rounded-2xl transition-all font-bold" />
+                                                    <input placeholder="hello@example.com" value={resume.personalInfo?.email || ''} onChange={(e) => handleChange('personalInfo', 'email', e.target.value)} className="w-full px-5 py-3.5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-orange-500 rounded-2xl transition-all font-bold" />
                                                 </div>
                                                 <div>
                                                     <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1 mb-1 block">Phone</label>
-                                                    <input placeholder="+91 98765 43210" value={resume.personalInfo?.phone || ''} onChange={(e) => handleChange('personalInfo', 'phone', e.target.value)} className="w-full px-5 py-3.5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-indigo-500 rounded-2xl transition-all font-bold" />
+                                                    <input placeholder="+91 98765 43210" value={resume.personalInfo?.phone || ''} onChange={(e) => handleChange('personalInfo', 'phone', e.target.value)} className="w-full px-5 py-3.5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-orange-500 rounded-2xl transition-all font-bold" />
                                                 </div>
                                                 <div className="sm:col-span-2">
                                                     <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1 mb-1 block">Location</label>
-                                                    <input placeholder="New Delhi, India" value={resume.personalInfo?.address || ''} onChange={(e) => handleChange('personalInfo', 'address', e.target.value)} className="w-full px-5 py-3.5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-indigo-500 rounded-2xl transition-all font-bold" />
+                                                    <input placeholder="New Delhi, India" value={resume.personalInfo?.address || ''} onChange={(e) => handleChange('personalInfo', 'address', e.target.value)} className="w-full px-5 py-3.5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-orange-500 rounded-2xl transition-all font-bold" />
                                                 </div>
                                             </div>
                                         </div>
@@ -673,12 +672,12 @@ const Editor = () => {
                                                             <Trash2 className="h-4 w-4" />
                                                         </button>
                                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-                                                            <input placeholder="Company" value={exp.company} onChange={(e) => handleArrayChange('experience', index, 'company', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-xl font-bold text-sm transition-all outline-none" />
-                                                            <input placeholder="Role" value={exp.position} onChange={(e) => handleArrayChange('experience', index, 'position', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-xl font-bold text-sm transition-all outline-none" />
-                                                            <input placeholder="Start Date" value={exp.startDate} onChange={(e) => handleArrayChange('experience', index, 'startDate', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-xl font-bold text-sm transition-all outline-none" />
-                                                            <input placeholder="End Date" value={exp.endDate} onChange={(e) => handleArrayChange('experience', index, 'endDate', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-xl font-bold text-sm transition-all outline-none" />
+                                                            <input placeholder="Company" value={exp.company} onChange={(e) => handleArrayChange('experience', index, 'company', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-bold text-sm transition-all outline-none" />
+                                                            <input placeholder="Role" value={exp.position} onChange={(e) => handleArrayChange('experience', index, 'position', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-bold text-sm transition-all outline-none" />
+                                                            <input placeholder="Start Date" value={exp.startDate} onChange={(e) => handleArrayChange('experience', index, 'startDate', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-bold text-sm transition-all outline-none" />
+                                                            <input placeholder="End Date" value={exp.endDate} onChange={(e) => handleArrayChange('experience', index, 'endDate', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-bold text-sm transition-all outline-none" />
                                                         </div>
-                                                        <textarea placeholder="Key accomplishments and responsibilities..." rows={4} value={exp.description} onChange={(e) => handleArrayChange('experience', index, 'description', e.target.value)} className="w-full px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-xl font-medium text-sm transition-all outline-none leading-relaxed" />
+                                                        <textarea placeholder="Key accomplishments and responsibilities..." rows={4} value={exp.description} onChange={(e) => handleArrayChange('experience', index, 'description', e.target.value)} className="w-full px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-medium text-sm transition-all outline-none leading-relaxed" />
                                                     </motion.div>
                                                 ))}
                                                 {resume.experience?.length === 0 && (
@@ -696,7 +695,7 @@ const Editor = () => {
                                         <div className="space-y-6">
                                             <div className="flex justify-between items-center bg-white sticky top-0 py-2 z-10">
                                                 <h3 className="text-lg font-black text-slate-900 tracking-wide">Education</h3>
-                                                <button onClick={() => addItem('education', { school: '', degree: '', startDate: '', endDate: '', description: '' })} className="bg-indigo-600 text-white px-4 py-2 rounded-xl font-bold hover:bg-indigo-700 transition-all text-xs flex items-center shadow-lg shadow-indigo-100 active:scale-95">
+                                                <button onClick={() => addItem('education', { school: '', degree: '', startDate: '', endDate: '', description: '' })} className="bg-orange-500 text-white px-4 py-2 rounded-xl font-bold hover:bg-orange-600 transition-all text-xs flex items-center shadow-lg shadow-orange-100 active:scale-95">
                                                     <Plus className="h-4 w-4 mr-1" /> Add Education
                                                 </button>
                                             </div>
@@ -707,10 +706,10 @@ const Editor = () => {
                                                             <Trash2 className="h-4 w-4" />
                                                         </button>
                                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-                                                            <input placeholder="Institution" value={edu.school} onChange={(e) => handleArrayChange('education', index, 'school', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-xl font-bold text-sm transition-all outline-none" />
-                                                            <input placeholder="Degree" value={edu.degree} onChange={(e) => handleArrayChange('education', index, 'degree', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-xl font-bold text-sm transition-all outline-none" />
-                                                            <input placeholder="Start Date" value={edu.startDate} onChange={(e) => handleArrayChange('education', index, 'startDate', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-xl font-bold text-sm transition-all outline-none" />
-                                                            <input placeholder="End Date" value={edu.endDate} onChange={(e) => handleArrayChange('education', index, 'endDate', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-xl font-bold text-sm transition-all outline-none" />
+                                                            <input placeholder="Institution" value={edu.school} onChange={(e) => handleArrayChange('education', index, 'school', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-bold text-sm transition-all outline-none" />
+                                                            <input placeholder="Degree" value={edu.degree} onChange={(e) => handleArrayChange('education', index, 'degree', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-bold text-sm transition-all outline-none" />
+                                                            <input placeholder="Start Date" value={edu.startDate} onChange={(e) => handleArrayChange('education', index, 'startDate', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-bold text-sm transition-all outline-none" />
+                                                            <input placeholder="End Date" value={edu.endDate} onChange={(e) => handleArrayChange('education', index, 'endDate', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-bold text-sm transition-all outline-none" />
                                                         </div>
                                                     </motion.div>
                                                 ))}
@@ -738,7 +737,7 @@ const Editor = () => {
                                         <div className="space-y-6">
                                             <div className="flex justify-between items-center bg-white sticky top-0 py-2 z-10">
                                                 <h3 className="text-lg font-black text-slate-900 tracking-wide">Key Projects</h3>
-                                                <button onClick={() => addItem('projects', { name: '', description: '', link: '' })} className="bg-indigo-600 text-white px-4 py-2 rounded-xl font-bold hover:bg-indigo-700 transition-all text-xs flex items-center shadow-lg shadow-indigo-100 active:scale-95">
+                                                <button onClick={() => addItem('projects', { name: '', description: '', link: '' })} className="bg-orange-500 text-white px-4 py-2 rounded-xl font-bold hover:bg-orange-600 transition-all text-xs flex items-center shadow-lg shadow-orange-100 active:scale-95">
                                                     <Plus className="h-4 w-4 mr-1" /> Add Project
                                                 </button>
                                             </div>
@@ -749,10 +748,10 @@ const Editor = () => {
                                                             <Trash2 className="h-4 w-4" />
                                                         </button>
                                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-                                                            <input placeholder="Project Name" value={proj.name} onChange={(e) => handleArrayChange('projects', index, 'name', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-xl font-bold text-sm transition-all outline-none" />
-                                                            <input placeholder="Link (Optional)" value={proj.link} onChange={(e) => handleArrayChange('projects', index, 'link', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-xl font-bold text-sm transition-all outline-none" />
+                                                            <input placeholder="Project Name" value={proj.name} onChange={(e) => handleArrayChange('projects', index, 'name', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-bold text-sm transition-all outline-none" />
+                                                            <input placeholder="Link (Optional)" value={proj.link} onChange={(e) => handleArrayChange('projects', index, 'link', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-bold text-sm transition-all outline-none" />
                                                         </div>
-                                                        <textarea placeholder="Tell us about the project's impact..." rows={3} value={proj.description} onChange={(e) => handleArrayChange('projects', index, 'description', e.target.value)} className="w-full px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-500 rounded-xl font-medium text-sm transition-all outline-none leading-relaxed" />
+                                                        <textarea placeholder="Tell us about the project's impact..." rows={3} value={proj.description} onChange={(e) => handleArrayChange('projects', index, 'description', e.target.value)} className="w-full px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-medium text-sm transition-all outline-none leading-relaxed" />
                                                     </motion.div>
                                                 ))}
                                             </div>
@@ -784,9 +783,9 @@ const Editor = () => {
             <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/70 backdrop-blur-2xl border-t border-slate-100/50 p-4 pb-safe-offset-4 flex items-center justify-around">
                 <button 
                     onClick={() => setIsMobilePreview(false)}
-                    className={`flex flex-col items-center space-y-1 transition-all duration-300 ${!isMobilePreview ? 'text-indigo-600 scale-110' : 'text-slate-400'}`}
+                    className={`flex flex-col items-center space-y-1 transition-all duration-300 ${!isMobilePreview ? 'text-orange-600 scale-110' : 'text-slate-400'}`}
                 >
-                    <div className={`p-2 rounded-xl transition-colors ${!isMobilePreview ? 'bg-indigo-50' : 'bg-transparent'}`}>
+                    <div className={`p-2 rounded-xl transition-colors ${!isMobilePreview ? 'bg-orange-50' : 'bg-transparent'}`}>
                         <Smartphone className="h-5 w-5" />
                     </div>
                     <span className="text-[10px] font-black uppercase tracking-widest">Edit</span>
@@ -811,9 +810,9 @@ const Editor = () => {
 
                 <button 
                     onClick={() => setIsMobilePreview(true)}
-                    className={`flex flex-col items-center space-y-1 transition-all duration-300 ${isMobilePreview ? 'text-indigo-600 scale-110' : 'text-slate-400'}`}
+                    className={`flex flex-col items-center space-y-1 transition-all duration-300 ${isMobilePreview ? 'text-orange-600 scale-110' : 'text-slate-400'}`}
                 >
-                    <div className={`p-2 rounded-xl transition-colors ${isMobilePreview ? 'bg-indigo-50' : 'bg-transparent'}`}>
+                    <div className={`p-2 rounded-xl transition-colors ${isMobilePreview ? 'bg-orange-50' : 'bg-transparent'}`}>
                         <Eye className="h-5 w-5" />
                     </div>
                     <span className="text-[10px] font-black uppercase tracking-widest">Preview</span>
