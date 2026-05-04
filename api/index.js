@@ -14,6 +14,7 @@ module.exports = async (req, res) => {
         let geminiError = null;
         let deepseekStatus = 'not_tested';
         let deepseekError = null;
+        let groqStatusResult = 'not_tested';
 
         const dotenv = require('dotenv');
         dotenv.config();
@@ -102,6 +103,54 @@ module.exports = async (req, res) => {
             deepseekStatus = 'missing_key';
         }
 
+        // Test Groq
+        if (process.env.GROQ_API_KEY) {
+            try {
+                const https = require('https');
+                const groqStatus = await new Promise((resolve) => {
+                    const data = JSON.stringify({
+                        model: "llama-3.3-70b-versatile",
+                        messages: [{ role: "user", content: "hi" }],
+                        max_tokens: 5
+                    });
+
+                    const options = {
+                        hostname: 'api.groq.com',
+                        path: '/openai/v1/chat/completions',
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${process.env.GROQ_API_KEY}`,
+                            'Content-Type': 'application/json',
+                            'Content-Length': data.length
+                        },
+                        timeout: 5000
+                    };
+
+                    const req = https.request(options, (res) => {
+                        let body = '';
+                        res.on('data', (chunk) => body += chunk);
+                        res.on('end', () => {
+                            if (res.statusCode >= 200 && res.statusCode < 300) {
+                                resolve('working');
+                            } else {
+                                resolve(`error_${res.statusCode}`);
+                            }
+                        });
+                    });
+
+                    req.on('error', (e) => resolve(`error_${e.message}`));
+                    req.on('timeout', () => { req.destroy(); resolve('timeout'); });
+                    req.write(data);
+                    req.end();
+                });
+                groqStatusResult = groqStatus;
+            } catch (err) {
+                groqStatusResult = 'error';
+            }
+        } else {
+            groqStatusResult = 'missing_key';
+        }
+
         return res.status(200).json({
             status: 'alive',
             timestamp: new Date().toISOString(),
@@ -116,6 +165,9 @@ module.exports = async (req, res) => {
                 deepseek: {
                     status: deepseekStatus,
                     error: deepseekError
+                },
+                groq: {
+                    status: groqStatusResult
                 }
             }
         });

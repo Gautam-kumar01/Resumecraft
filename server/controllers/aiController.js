@@ -62,6 +62,64 @@ const callDeepSeek = async (prompt, isJson = true) => {
     });
 };
 
+// Helper to call Groq API
+const callGroq = async (prompt, isJson = true) => {
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey) throw new Error("Groq API Key is missing");
+
+    return new Promise((resolve, reject) => {
+        console.log("AI: Attempting generation with Groq (llama-3.3-70b-versatile)...");
+        
+        const data = JSON.stringify({
+            model: "llama-3.3-70b-versatile",
+            messages: [
+                { role: "system", content: "You are a professional resume writer and career coach." },
+                { role: "user", content: prompt }
+            ],
+            response_format: isJson ? { type: "json_object" } : { type: "text" },
+            temperature: 0.7
+        });
+
+        const options = {
+            hostname: 'api.groq.com',
+            path: '/openai/v1/chat/completions',
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json',
+                'Content-Length': data.length
+            },
+            timeout: 30000
+        };
+
+        const req = https.request(options, (res) => {
+            let body = '';
+            res.on('data', (chunk) => body += chunk);
+            res.on('end', () => {
+                try {
+                    const response = JSON.parse(body);
+                    if (res.statusCode >= 200 && res.statusCode < 300) {
+                        resolve(response.choices[0].message.content);
+                    } else {
+                        reject(new Error(`Groq API failed (${res.statusCode}): ${response.error?.message || body}`));
+                    }
+                } catch (e) {
+                    reject(new Error(`Failed to parse Groq response: ${e.message}`));
+                }
+            });
+        });
+
+        req.on('error', (e) => reject(new Error(`Groq Request Error: ${e.message}`)));
+        req.on('timeout', () => {
+            req.destroy();
+            reject(new Error('Groq Request Timeout'));
+        });
+        
+        req.write(data);
+        req.end();
+    });
+};
+
 // Helper to call Gemini API
 const callGemini = async (prompt) => {
     if (!process.env.GEMINI_API_KEY) throw new Error("Gemini API Key is missing");
@@ -123,8 +181,14 @@ exports.getSuggestions = async (req, res) => {
             text = await callGemini(prompt);
         } catch (geminiError) {
             console.log("AI: Gemini failed, falling back to DeepSeek...");
-            // Fallback to DeepSeek
-            text = await callDeepSeek(prompt, true);
+            try {
+                // Fallback to DeepSeek
+                text = await callDeepSeek(prompt, true);
+            } catch (deepSeekError) {
+                console.log("AI: DeepSeek failed, falling back to Groq...");
+                // Fallback to Groq
+                text = await callGroq(prompt, true);
+            }
         }
 
         // Clean up text if it contains markdown code blocks (sometimes LLMs ignore instructions)
@@ -172,8 +236,14 @@ exports.generateCoverLetter = async (req, res) => {
             text = await callGemini(prompt);
         } catch (geminiError) {
             console.log("AI: Gemini failed, falling back to DeepSeek...");
-            // Fallback to DeepSeek
-            text = await callDeepSeek(prompt, false);
+            try {
+                // Fallback to DeepSeek
+                text = await callDeepSeek(prompt, false);
+            } catch (deepSeekError) {
+                console.log("AI: DeepSeek failed, falling back to Groq...");
+                // Fallback to Groq
+                text = await callGroq(prompt, false);
+            }
         }
 
         res.json({ coverLetter: text.trim() });
