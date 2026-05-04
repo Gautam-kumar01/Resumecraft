@@ -7,7 +7,7 @@ import AuthContext from '../context/AuthContext';
 import ResumePreview from '../components/ResumePreview';
 import LoginModal from '../components/LoginModal';
 import SEO from '../components/SEO';
-import { Save, Download, Eye, ArrowLeft, Plus, Trash2, User, Upload, Sparkles, FileText, Smartphone } from 'lucide-react';
+import { Save, Download, Eye, ArrowLeft, Plus, Trash2, User, Upload, Sparkles, FileText, Smartphone, Briefcase } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 
@@ -324,7 +324,7 @@ const Editor = () => {
     };
 
     const handleArrayChange = (section, index, field, value) => {
-        const newArray = [...resume[section]];
+        const newArray = [...(resume[section] || [])];
         newArray[index] = { ...newArray[index], [field]: value };
         setResume(prev => ({ ...prev, [section]: newArray }));
     };
@@ -338,7 +338,7 @@ const Editor = () => {
     };
 
     const removeItem = (section, index) => {
-        const newArray = [...resume[section]];
+        const newArray = [...(resume[section] || [])];
         newArray.splice(index, 1);
         setResume(prev => ({ ...prev, [section]: newArray }));
     };
