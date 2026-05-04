@@ -35,11 +35,11 @@ const Logo = ({ className = "", showText = true, size = "md" }) => {
                 </div>
 
                 {/* Floating Accents */}
-                <div className={`absolute -top-1 -right-1 bg-white rounded-full p-1 shadow-lg transform transition-all duration-300 group-hover:scale-125 group-hover:-translate-y-1 z-20`}>
+                <div className={`absolute -top-1 -right-1 bg-white dark:bg-slate-800 rounded-full p-1 shadow-lg transform transition-all duration-300 group-hover:scale-125 group-hover:-translate-y-1 z-20`}>
                     <Sparkles className={`${currentSize.spark} text-orange-500 fill-orange-500`} />
                 </div>
 
-                <div className={`absolute -bottom-1 -left-1 bg-white rounded-full p-0.5 shadow-md transform transition-all duration-300 group-hover:rotate-12 z-20`}>
+                <div className={`absolute -bottom-1 -left-1 bg-white dark:bg-slate-800 rounded-full p-0.5 shadow-md transform transition-all duration-300 group-hover:rotate-12 z-20`}>
                     <Zap className="h-2 w-2 text-amber-500 fill-amber-500" />
                 </div>
             </div>
@@ -48,7 +48,7 @@ const Logo = ({ className = "", showText = true, size = "md" }) => {
             {showText && (
                 <div className="flex flex-col">
                     <span className={`${currentSize.text} font-black tracking-tighter leading-none`}>
-                        <span className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 bg-clip-text text-transparent group-hover:from-orange-500 group-hover:to-orange-600 transition-all duration-500">
+                        <span className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 dark:from-white dark:via-slate-200 dark:to-white bg-clip-text text-transparent group-hover:from-orange-500 group-hover:to-orange-600 transition-all duration-500">
                             Resume
                         </span>
                         <span className="bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 bg-clip-text text-transparent italic ml-0.5">
