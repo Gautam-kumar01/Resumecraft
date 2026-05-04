@@ -549,7 +549,7 @@ const Editor = () => {
                                                         <ul className="space-y-3">
                                                             {aiSuggestions.bullets.map((bullet, i) => (
                                                                 <li key={i} className="flex items-start text-sm text-slate-600 font-medium leading-relaxed">
-                                                                    <div className="h-1.5 w-1.5 bg-indigo-500 rounded-full mt-1.5 mr-3 shrink-0"></div>
+                                                                    <div className="h-1.5 w-1.5 bg-orange-500 rounded-full mt-1.5 mr-3 shrink-0"></div>
                                                                     {bullet}
                                                                 </li>
                                                             ))}
