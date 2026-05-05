@@ -8,220 +8,9 @@ import {
   Download, Award, Target, Loader2
 } from 'lucide-react';
 
-const FeatureShowcase = ({ isOpen, onClose, initialFeature = 0 }) => {
-  const [activeFeature, setActiveFeature] = useState(initialFeature);
-
-  const features = [
-    {
-      id: 0,
-      title: "35+ Template Designs",
-      icon: <FileText className="w-6 h-6" />,
-      color: "from-orange-500 to-orange-600",
-      description: "Extensive library of high-fidelity, MNC-focused resume layouts."
-    },
-    {
-      id: 1,
-      title: "Enhance with AI",
-      icon: <Cpu className="w-6 h-6" />,
-      color: "from-orange-600 to-orange-700",
-      description: "AI-powered suggestions for your bullets and professional summary."
-    },
-    {
-      id: 2,
-      title: "Resume Review",
-      icon: <Eye className="w-6 h-6" />,
-      color: "from-orange-400 to-orange-500",
-      description: "Instant feedback on your resume clarity, grammar, and ATS impact."
-    },
-    {
-      id: 3,
-      title: "AI Cover Letter Builder",
-      icon: <MessageSquare className="w-6 h-6" />,
-      color: "from-orange-500 to-orange-600",
-      description: "Generate matching cover letters in seconds with our smart engine."
-    },
-    {
-      id: 4,
-      title: "Resume Website",
-      icon: <Globe className="w-6 h-6" />,
-      color: "from-orange-600 to-orange-700",
-      description: "Host your professional portfolio with a unique, shareable public link."
-    },
-    {
-      id: 5,
-      title: "Resume Tracking",
-      icon: <BarChart3 className="w-6 h-6" />,
-      color: "from-orange-400 to-orange-500",
-      description: "Insights into how many people viewed your professional profile."
-    }
-  ];
-
-  useEffect(() => {
-    if (isOpen) {
-      setActiveFeature(initialFeature);
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-  }, [isOpen, initialFeature]);
-
-  const modalVariants = {
-    hidden: { opacity: 0, scale: 0.95, y: 20 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] }
-    },
-    exit: {
-      opacity: 0,
-      scale: 0.95,
-      y: 20,
-      transition: { duration: 0.3 }
-    }
-  };
-
-  const overlayVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-    exit: { opacity: 0 }
-  };
-
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8">
-          {/* Overlay */}
-          <motion.div
-            variants={overlayVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            onClick={onClose}
-            className="absolute inset-0 bg-slate-900/60 backdrop-blur-md"
-          />
-
-          {/* Modal Container */}
-          <motion.div
-            variants={modalVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className="relative w-full max-w-7xl h-[90vh] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row border border-white/20"
-          >
-            {/* Sidebar */}
-            <div className="w-full md:w-80 bg-slate-50 border-r border-slate-100 flex flex-col shrink-0">
-              <div className="p-6 border-b border-slate-100 flex justify-between items-center">
-                <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
-                    <Sparkles className="w-5 h-5 text-white" />
-                  </div>
-                  <span className="font-bold text-slate-900">Features</span>
-                </div>
-                <button onClick={onClose} className="md:hidden p-2 hover:bg-slate-200 rounded-full transition-colors">
-                  <X className="w-5 h-5 text-slate-500" />
-                </button>
-              </div>
-
-              <div className="flex-1 overflow-y-auto p-4 space-y-2">
-                {features.map((feature) => (
-                  <button
-                    key={feature.id}
-                    onClick={() => setActiveFeature(feature.id)}
-                    className={`w-full flex items-center space-x-4 p-4 rounded-2xl transition-all duration-300 text-left group ${activeFeature === feature.id
-                        ? 'bg-white shadow-lg shadow-slate-200/50 scale-[1.02] border border-slate-100'
-                        : 'hover:bg-slate-100/80 text-slate-500'
-                      }`}
-                  >
-                    <div className={`p-2.5 rounded-xl bg-gradient-to-br ${feature.color} text-white shadow-lg shadow-current/10 group-hover:scale-110 transition-transform duration-300`}>
-                      {feature.icon}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className={`font-bold text-sm truncate ${activeFeature === feature.id ? 'text-slate-900' : 'text-slate-600'}`}>
-                        {feature.title}
-                      </div>
-                      {activeFeature === feature.id && (
-                        <motion.div
-                          layoutId="activeIndicator"
-                          className="text-[10px] text-slate-400 font-medium mt-0.5"
-                        >
-                          ACTIVE WORKSPACE
-                        </motion.div>
-                      )}
-                    </div>
-                    <ChevronRight className={`w-4 h-4 transition-transform duration-300 ${activeFeature === feature.id ? 'translate-x-0 opacity-100' : '-translate-x-2 opacity-0'}`} />
-                  </button>
-                ))}
-              </div>
-
-              <div className="p-6 border-t border-slate-100 bg-white/50">
-                <button
-                  onClick={onClose}
-                  className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition-all flex items-center justify-center space-x-2"
-                >
-                  <span>Close Workspace</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Main Content Area */}
-            <div className="flex-1 overflow-hidden relative bg-white flex flex-col">
-              {/* Top Header (Desktop) */}
-              <div className="hidden md:flex p-6 border-b border-slate-50 justify-between items-center bg-white/80 backdrop-blur-sm z-10">
-                <div className="flex items-center space-x-4">
-                  <h2 className="text-xl font-extrabold text-slate-900">
-                    {features[activeFeature].title}
-                  </h2>
-                  <div className="px-3 py-1 bg-slate-100 rounded-full text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                    Premium Feature
-                  </div>
-                </div>
-                <button
-                  onClick={onClose}
-                  className="p-2 hover:bg-slate-100 rounded-full transition-all group"
-                >
-                  <X className="w-6 h-6 text-slate-400 group-hover:text-slate-900 transition-colors" />
-                </button>
-              </div>
-
-              {/* Workspace Render */}
-              <div className="flex-1 overflow-y-auto bg-slate-50/30 p-4 md:p-8">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={activeFeature}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.3, ease: "easeOut" }}
-                    className="h-full"
-                  >
-                    {renderWorkspace(activeFeature)}
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      )}
-    </AnimatePresence>
-  );
-};
-
-const renderWorkspace = (id) => {
-  switch (id) {
-    case 0: return <TemplateWorkspace />;
-    case 1: return <AIWorkspace />;
-    case 2: return <ReviewWorkspace />;
-    case 3: return <CoverLetterWorkspace />;
-    case 4: return <WebsiteWorkspace />;
-    case 5: return <TrackingWorkspace />;
-    default: return null;
-  }
-};
-
 /* --- Workspace Sub-components --- */
 
-const TemplateWorkspace = () => {
+function TemplateWorkspace() {
   const [selected, setSelected] = useState('modern');
   const templates = [
     { id: 'modern', name: 'Modern Professional', img: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?w=400' },
@@ -280,9 +69,9 @@ const TemplateWorkspace = () => {
       </div>
     </div>
   );
-};
+}
 
-const AIWorkspace = () => {
+function AIWorkspace() {
   const [messages, setMessages] = useState([
     { role: 'ai', content: "Hello! I'm your AI career assistant. I can help you optimize your bullet points or write a powerful professional summary. What would you like to work on?" }
   ]);
@@ -298,7 +87,6 @@ const AIWorkspace = () => {
     setTyping(true);
 
     try {
-      // Basic logic to handle specific keywords for Software Engineer
       let aiResponse = "";
       const lowerMsg = userMessage.toLowerCase();
 
@@ -325,11 +113,6 @@ const AIWorkspace = () => {
   return (
     <div className="max-w-4xl mx-auto h-full flex flex-col space-y-6">
       <div className="flex-1 bg-white rounded-[32px] shadow-sm border border-slate-100 overflow-hidden flex flex-col relative group">
-        {/* Shimmer effect overlay */}
-        <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-10 transition-opacity duration-1000">
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-100 to-transparent -translate-x-full animate-[shimmer_2s_infinite]"></div>
-        </div>
-
         <div className="p-6 border-b border-slate-50 flex items-center justify-between bg-slate-50/50 backdrop-blur-md">
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 bg-gradient-to-br from-orange-600 to-orange-700 rounded-2xl flex items-center justify-center shadow-xl shadow-orange-600/20 group-hover:scale-110 transition-transform">
@@ -412,9 +195,9 @@ const AIWorkspace = () => {
       </div>
     </div>
   );
-};
+}
 
-const ReviewWorkspace = () => {
+function ReviewWorkspace() {
   const score = 84;
   return (
     <div className="max-w-5xl mx-auto grid lg:grid-cols-3 gap-8">
@@ -474,13 +257,13 @@ const ReviewWorkspace = () => {
             transition={{ delay: i * 0.1 }}
             className="bg-white p-6 rounded-2xl border border-slate-100 flex items-start space-x-4 hover:shadow-md transition-shadow"
           >
-            <div className={`p-2 rounded-xl bg-${tip.color}-50 text-${tip.color}-500 shrink-0`}>
+            <div className={`p-2 rounded-xl bg-${tip.color === 'emerald' ? 'emerald' : 'orange'}-50 text-${tip.color === 'emerald' ? 'emerald' : 'orange'}-500 shrink-0`}>
               {tip.status === 'Perfect' ? <CheckCircle2 className="w-5 h-5" /> : <TrendingUp className="w-5 h-5" />}
             </div>
             <div className="flex-1">
               <div className="flex justify-between items-center mb-1">
                 <span className="font-bold text-slate-900">{tip.title}</span>
-                <span className={`text-[10px] font-black px-2 py-0.5 rounded bg-${tip.color}-50 text-${tip.color}-600 uppercase`}>{tip.status}</span>
+                <span className={`text-[10px] font-black px-2 py-0.5 rounded bg-${tip.color === 'emerald' ? 'emerald' : 'orange'}-50 text-${tip.color === 'emerald' ? 'emerald' : 'orange'}-600 uppercase`}>{tip.status}</span>
               </div>
               <p className="text-sm text-slate-500">{tip.desc}</p>
             </div>
@@ -489,9 +272,9 @@ const ReviewWorkspace = () => {
       </div>
     </div>
   );
-};
+}
 
-const CoverLetterWorkspace = () => {
+function CoverLetterWorkspace() {
   const [step, setStep] = useState(1);
   const [activeTone, setActiveTone] = useState('Professional');
   const [jobRole, setJobRole] = useState('');
@@ -699,9 +482,9 @@ const CoverLetterWorkspace = () => {
       </div>
     </div>
   );
-};
+}
 
-const WebsiteWorkspace = () => {
+function WebsiteWorkspace() {
   const [activeSection, setActiveSection] = useState('home');
   return (
     <div className="flex flex-col h-full space-y-8">
@@ -792,9 +575,9 @@ const WebsiteWorkspace = () => {
       </div>
     </div>
   );
-};
+}
 
-const TrackingWorkspace = () => {
+function TrackingWorkspace() {
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -890,6 +673,217 @@ const TrackingWorkspace = () => {
         </div>
       </div>
     </div>
+  );
+}
+
+function Workspace({ id }) {
+  switch (id) {
+    case 0: return <TemplateWorkspace />;
+    case 1: return <AIWorkspace />;
+    case 2: return <ReviewWorkspace />;
+    case 3: return <CoverLetterWorkspace />;
+    case 4: return <WebsiteWorkspace />;
+    case 5: return <TrackingWorkspace />;
+    default: return null;
+  }
+}
+
+const FeatureShowcase = ({ isOpen, onClose, initialFeature = 0 }) => {
+  const [activeFeature, setActiveFeature] = useState(initialFeature);
+
+  const features = [
+    {
+      id: 0,
+      title: "35+ Template Designs",
+      icon: <FileText className="w-6 h-6" />,
+      color: "from-orange-500 to-orange-600",
+      description: "Extensive library of high-fidelity, MNC-focused resume layouts."
+    },
+    {
+      id: 1,
+      title: "Enhance with AI",
+      icon: <Cpu className="w-6 h-6" />,
+      color: "from-orange-600 to-orange-700",
+      description: "AI-powered suggestions for your bullets and professional summary."
+    },
+    {
+      id: 2,
+      title: "Resume Review",
+      icon: <Eye className="w-6 h-6" />,
+      color: "from-orange-400 to-orange-500",
+      description: "Instant feedback on your resume clarity, grammar, and ATS impact."
+    },
+    {
+      id: 3,
+      title: "AI Cover Letter Builder",
+      icon: <MessageSquare className="w-6 h-6" />,
+      color: "from-orange-500 to-orange-600",
+      description: "Generate matching cover letters in seconds with our smart engine."
+    },
+    {
+      id: 4,
+      title: "Resume Website",
+      icon: <Globe className="w-6 h-6" />,
+      color: "from-orange-600 to-orange-700",
+      description: "Host your professional portfolio with a unique, shareable public link."
+    },
+    {
+      id: 5,
+      title: "Resume Tracking",
+      icon: <BarChart3 className="w-6 h-6" />,
+      color: "from-orange-400 to-orange-500",
+      description: "Insights into how many people viewed your professional profile."
+    }
+  ];
+
+  useEffect(() => {
+    if (isOpen) {
+      setActiveFeature(initialFeature);
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [isOpen, initialFeature]);
+
+  const modalVariants = {
+    hidden: { opacity: 0, scale: 0.95, y: 20 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] }
+    },
+    exit: {
+      opacity: 0,
+      scale: 0.95,
+      y: 20,
+      transition: { duration: 0.3 }
+    }
+  };
+
+  const overlayVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+    exit: { opacity: 0 }
+  };
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8">
+          {/* Overlay */}
+          <motion.div
+            variants={overlayVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            onClick={onClose}
+            className="absolute inset-0 bg-slate-900/60 backdrop-blur-md"
+          />
+
+          {/* Modal Container */}
+          <motion.div
+            variants={modalVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="relative w-full max-w-7xl h-[90vh] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row border border-white/20"
+          >
+            {/* Sidebar */}
+            <div className="w-full md:w-80 bg-slate-50 border-r border-slate-100 flex flex-col shrink-0">
+              <div className="p-6 border-b border-slate-100 flex justify-between items-center">
+                <div className="flex items-center space-x-2">
+                  <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
+                    <Sparkles className="w-5 h-5 text-white" />
+                  </div>
+                  <span className="font-bold text-slate-900">Features</span>
+                </div>
+                <button onClick={onClose} className="md:hidden p-2 hover:bg-slate-200 rounded-full transition-colors">
+                  <X className="w-5 h-5 text-slate-500" />
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                {features.map((feature) => (
+                  <button
+                    key={feature.id}
+                    onClick={() => setActiveFeature(feature.id)}
+                    className={`w-full flex items-center space-x-4 p-4 rounded-2xl transition-all duration-300 text-left group ${activeFeature === feature.id
+                        ? 'bg-white shadow-lg shadow-slate-200/50 scale-[1.02] border border-slate-100'
+                        : 'hover:bg-slate-100/80 text-slate-500'
+                      }`}
+                  >
+                    <div className={`p-2.5 rounded-xl bg-gradient-to-br ${feature.color} text-white shadow-lg shadow-current/10 group-hover:scale-110 transition-transform duration-300`}>
+                      {feature.icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className={`font-bold text-sm truncate ${activeFeature === feature.id ? 'text-slate-900' : 'text-slate-600'}`}>
+                        {feature.title}
+                      </div>
+                      {activeFeature === feature.id && (
+                        <motion.div
+                          layoutId="activeIndicator"
+                          className="text-[10px] text-slate-400 font-medium mt-0.5"
+                        >
+                          ACTIVE WORKSPACE
+                        </motion.div>
+                      )}
+                    </div>
+                    <ChevronRight className={`w-4 h-4 transition-transform duration-300 ${activeFeature === feature.id ? 'translate-x-0 opacity-100' : '-translate-x-2 opacity-0'}`} />
+                  </button>
+                ))}
+              </div>
+
+              <div className="p-6 border-t border-slate-100 bg-white/50">
+                <button
+                  onClick={onClose}
+                  className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition-all flex items-center justify-center space-x-2"
+                >
+                  <span>Close Workspace</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Main Content Area */}
+            <div className="flex-1 overflow-hidden relative bg-white flex flex-col">
+              {/* Top Header (Desktop) */}
+              <div className="hidden md:flex p-6 border-b border-slate-50 justify-between items-center bg-white/80 backdrop-blur-sm z-10">
+                <div className="flex items-center space-x-4">
+                  <h2 className="text-xl font-extrabold text-slate-900">
+                    {features[activeFeature].title}
+                  </h2>
+                  <div className="px-3 py-1 bg-slate-100 rounded-full text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                    Premium Feature
+                  </div>
+                </div>
+                <button
+                  onClick={onClose}
+                  className="p-2 hover:bg-slate-100 rounded-full transition-all group"
+                >
+                  <X className="w-6 h-6 text-slate-400 group-hover:text-slate-900 transition-colors" />
+                </button>
+              </div>
+
+              {/* Workspace Render */}
+              <div className="flex-1 overflow-y-auto bg-slate-50/30 p-4 md:p-8">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeFeature}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                    className="h-full"
+                  >
+                    <Workspace id={activeFeature} />
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
   );
 };
 

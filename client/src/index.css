@@ -117,7 +117,9 @@
 
 @layer base {
   body {
-    @apply text-slate-900 antialiased;
+    color: var(--color-slate-900);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     font-family: var(--font-sans);
     background: #ffffff;
     min-height: 100vh;
@@ -133,7 +135,7 @@
 
   /* Dark Mode Base */
   .dark body {
-    @apply text-slate-100;
+    color: var(--color-slate-100);
     background: #020617; /* slate-950 */
   }
 
