@@ -765,15 +765,9 @@ const FeatureShowcase = ({ isOpen, onClose, initialFeature = 0 }) => {
   }
 
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+    document.body.style.overflow = 'hidden';
     return () => { document.body.style.overflow = 'unset'; };
-  }, [isOpen]);
-
-  if (!isOpen) return null;
+  }, []);
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 overflow-hidden">

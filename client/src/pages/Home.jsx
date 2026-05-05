@@ -17,7 +17,7 @@ import {
     ChevronRight
 } from 'lucide-react';
 import Logo from '../components/Logo';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import FeatureShowcase from '../components/FeatureShowcase';
 
 const Home = () => {
@@ -444,11 +444,15 @@ const Home = () => {
                 </div>
             </section>
 
-            <FeatureShowcase
-                isOpen={showcaseOpen}
-                onClose={() => setShowcaseOpen(false)}
-                initialFeature={activeFeature}
-            />
+            <AnimatePresence>
+                {showcaseOpen && (
+                    <FeatureShowcase
+                        isOpen={showcaseOpen}
+                        onClose={() => setShowcaseOpen(false)}
+                        initialFeature={activeFeature}
+                    />
+                )}
+            </AnimatePresence>
 
             {/* Partners / Companies Section */}
             <section className="py-24 bg-slate-900 relative overflow-hidden">
