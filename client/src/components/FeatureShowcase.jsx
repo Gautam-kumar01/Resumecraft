@@ -688,6 +688,28 @@ function Workspace({ id }) {
   }
 }
 
+const overlayVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 },
+  exit: { opacity: 0 }
+};
+
+const modalVariants = {
+  hidden: { opacity: 0, scale: 0.95, y: 20 },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] }
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.95,
+    y: 20,
+    transition: { duration: 0.3 }
+  }
+};
+
 const FeatureShowcase = ({ isOpen, onClose, initialFeature = 0 }) => {
   const [activeFeature, setActiveFeature] = useState(initialFeature);
 
@@ -736,58 +758,40 @@ const FeatureShowcase = ({ isOpen, onClose, initialFeature = 0 }) => {
     }
   ];
 
+  const [prevInitialFeature, setPrevInitialFeature] = useState(initialFeature);
+  if (initialFeature !== prevInitialFeature) {
+    setActiveFeature(initialFeature);
+    setPrevInitialFeature(initialFeature);
+  }
+
   useEffect(() => {
     if (isOpen) {
-      setActiveFeature(initialFeature);
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
     }
-  }, [isOpen, initialFeature]);
-
-  const modalVariants = {
-    hidden: { opacity: 0, scale: 0.95, y: 20 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] }
-    },
-    exit: {
-      opacity: 0,
-      scale: 0.95,
-      y: 20,
-      transition: { duration: 0.3 }
-    }
-  };
-
-  const overlayVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1 },
-    exit: { opacity: 0 }
-  };
+  }, [isOpen]);
 
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8"
+        >
           {/* Overlay */}
           <motion.div
             variants={overlayVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
             onClick={onClose}
-            className="absolute inset-0 bg-slate-900/60 backdrop-blur-md"
+            className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
           />
 
           {/* Modal Container */}
           <motion.div
             variants={modalVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className="relative w-full max-w-7xl h-[90vh] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row border border-white/20"
+            className="relative z-10 w-full max-w-7xl h-[90vh] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row border border-white/20"
           >
             {/* Sidebar */}
             <div className="w-full md:w-80 bg-slate-50 border-r border-slate-100 flex flex-col shrink-0">
@@ -846,7 +850,7 @@ const FeatureShowcase = ({ isOpen, onClose, initialFeature = 0 }) => {
 
             {/* Main Content Area */}
             <div className="flex-1 overflow-hidden relative bg-white flex flex-col">
-              {/* Top Header (Desktop) */}
+              {/* Header (Desktop) */}
               <div className="hidden md:flex p-6 border-b border-slate-50 justify-between items-center bg-white/80 backdrop-blur-sm z-10">
                 <div className="flex items-center space-x-4">
                   <h2 className="text-xl font-extrabold text-slate-900">
@@ -881,7 +885,7 @@ const FeatureShowcase = ({ isOpen, onClose, initialFeature = 0 }) => {
               </div>
             </div>
           </motion.div>
-        </div>
+        </motion.div>
       )}
     </AnimatePresence>
   );
