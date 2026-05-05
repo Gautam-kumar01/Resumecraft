@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '../api/axios';
 import {
@@ -769,7 +770,7 @@ const FeatureShowcase = ({ isOpen, onClose, initialFeature = 0 }) => {
     return () => { document.body.style.overflow = 'unset'; };
   }, []);
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 overflow-hidden">
       {/* Overlay */}
       <motion.div
@@ -881,7 +882,8 @@ const FeatureShowcase = ({ isOpen, onClose, initialFeature = 0 }) => {
           </div>
         </div>
       </motion.div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
