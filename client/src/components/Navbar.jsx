@@ -40,7 +40,10 @@ const Navbar = () => {
                     {/* Desktop Menu */}
                     <div className="hidden md:flex items-center space-x-6">
                         <Link to="/templates" className="text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors font-medium">
-                            Templates
+                            Resume Templates
+                        </Link>
+                        <Link to="/cover-letter-templates" className="text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors font-medium">
+                            Cover Letters
                         </Link>
                         
                         {/* Dark Mode Toggle */}
@@ -112,7 +115,14 @@ const Navbar = () => {
                             className="text-slate-600 dark:text-slate-300 hover:text-orange-500 font-medium px-2 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
                             onClick={() => setIsMenuOpen(false)}
                         >
-                            Templates
+                            Resume Templates
+                        </Link>
+                        <Link
+                            to="/cover-letter-templates"
+                            className="text-slate-600 dark:text-slate-300 hover:text-orange-500 font-medium px-2 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                            onClick={() => setIsMenuOpen(false)}
+                        >
+                            Cover Letters
                         </Link>
                         {user ? (
                             <>

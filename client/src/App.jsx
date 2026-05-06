@@ -10,6 +10,8 @@ import Dashboard from './pages/Dashboard';
 import Editor from './pages/Editor';
 import PublicResume from './pages/PublicResume';
 import Templates from './pages/Templates';
+import CoverLetterTemplates from './pages/CoverLetterTemplates';
+import CoverLetterEditor from './pages/CoverLetterEditor';
 import Contact from './pages/Contact';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
@@ -51,6 +53,18 @@ function App() {
                 <Route path="/templates" element={
                   <ProtectedRoute>
                     <Templates />
+                  </ProtectedRoute>
+                } />
+
+                <Route path="/cover-letter-templates" element={
+                  <ProtectedRoute>
+                    <CoverLetterTemplates />
+                  </ProtectedRoute>
+                } />
+
+                <Route path="/cover-letter-editor/:id?" element={
+                  <ProtectedRoute>
+                    <CoverLetterEditor />
                   </ProtectedRoute>
                 } />
 

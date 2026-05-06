@@ -9,6 +9,7 @@ import { motion } from 'framer-motion';
 
 const Dashboard = () => {
     const [resumes, setResumes] = useState([]);
+    const [coverLetters, setCoverLetters] = useState([]);
     const [starters, setStarters] = useState([]);
     const [loading, setLoading] = useState(true);
     const [creating, setCreating] = useState(null);
@@ -25,12 +26,14 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [resumesRes, startersRes] = await Promise.all([
+                const [resumesRes, startersRes, coverLettersRes] = await Promise.all([
                     api.get('/resumes'),
-                    api.get('/resumes/starters')
+                    api.get('/resumes/starters'),
+                    api.get('/cover-letters')
                 ]);
                 setResumes(resumesRes.data);
                 setStarters(startersRes.data);
+                setCoverLetters(coverLettersRes.data);
             } catch (error) {
                 console.error('Failed to fetch data', error);
             } finally {
@@ -86,6 +89,17 @@ const Dashboard = () => {
                 setResumes(resumes.filter(resume => resume._id !== id));
             } catch (error) {
                 console.error('Failed to delete resume', error);
+            }
+        }
+    };
+
+    const handleDeleteCoverLetter = async (id) => {
+        if (window.confirm('Are you sure you want to delete this cover letter?')) {
+            try {
+                await api.delete(`/cover-letters/${id}`);
+                setCoverLetters(coverLetters.filter(cl => cl._id !== id));
+            } catch (error) {
+                console.error('Failed to delete cover letter', error);
             }
         }
     };
@@ -434,6 +448,80 @@ const Dashboard = () => {
                                             <Download className="h-5 w-5" />
                                         </Link>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {/* My Cover Letters Section */}
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 mt-16 pt-8 border-t border-slate-100 gap-4">
+                <div>
+                    <h1 className="text-2xl font-bold text-slate-900">My Cover Letters</h1>
+                    <p className="mt-1 text-slate-500">Your professional stories, ready to send.</p>
+                </div>
+                <Link
+                    to="/cover-letter-templates"
+                    className="flex items-center space-x-2 bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-full font-medium transition-all shadow-lg shadow-slate-900/20 w-full sm:w-auto justify-center"
+                >
+                    <Plus className="h-5 w-5" />
+                    <span>New Cover Letter</span>
+                </Link>
+            </div>
+
+            {coverLetters.length === 0 ? (
+                <div className="text-center py-20 bg-white rounded-2xl border border-slate-200 border-dashed">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-100 mb-4">
+                        <Mail className="h-8 w-8 text-slate-400" />
+                    </div>
+                    <h3 className="text-lg font-medium text-slate-900">No cover letters yet</h3>
+                    <p className="mt-1 text-slate-500 max-w-sm mx-auto">
+                        A great cover letter can be your secret weapon. Start with a template or create your own.
+                    </p>
+                    <div className="mt-6">
+                        <Link
+                            to="/cover-letter-templates"
+                            className="text-orange-600 hover:text-orange-700 font-medium"
+                        >
+                            Browse templates &rarr;
+                        </Link>
+                    </div>
+                </div>
+            ) : (
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {coverLetters.map((cl) => (
+                        <div key={cl._id} className="group bg-white rounded-2xl border border-slate-200 hover:border-orange-500/50 hover:shadow-xl transition-all duration-300 overflow-hidden">
+                            <div className="p-6">
+                                <div className="flex justify-between items-start mb-2">
+                                    <h3 className="text-lg font-bold text-slate-900 truncate pr-4">{cl.title}</h3>
+                                </div>
+                                <p className="text-sm text-slate-600 mb-1">{cl.companyName || 'Unknown Company'}</p>
+                                <p className="text-xs text-slate-500 mb-6">Last updated: {new Date(cl.updatedAt).toLocaleDateString()}</p>
+
+                                <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+                                    <div className="flex space-x-2">
+                                        <Link
+                                            to={`/cover-letter-editor/${cl._id}`}
+                                            className="p-2 text-slate-500 hover:text-orange-500 hover:bg-orange-500/5 rounded-lg transition-colors"
+                                            title="Edit"
+                                        >
+                                            <Edit className="h-5 w-5" />
+                                        </Link>
+                                        <button
+                                            onClick={() => handleDeleteCoverLetter(cl._id)}
+                                            className="p-2 text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                                            title="Delete"
+                                        >
+                                            <Trash2 className="h-5 w-5" />
+                                        </button>
+                                    </div>
+                                    <Link
+                                        to={`/cover-letter-editor/${cl._id}`}
+                                        className="p-2 text-slate-500 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
+                                    >
+                                        <ArrowRight className="h-5 w-5" />
+                                    </Link>
                                 </div>
                             </div>
                         </div>
