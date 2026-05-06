@@ -88,10 +88,10 @@ const Footer = () => {
                     <div>
                         <h4 className="font-bold text-slate-900 dark:text-white mb-6 uppercase tracking-wider text-xs">Resources</h4>
                         <ul className="space-y-4 text-sm">
-                            <li><Link to="/resource/resume-examples" className="hover:text-orange-500 transition-colors">Resume Examples</Link></li>
-                            <li><Link to="/resource/resume-examples" className="hover:text-orange-500 transition-colors">Cover Letter Examples</Link></li>
+                            <li><Link to="/templates" className="hover:text-orange-500 transition-colors">Resume Examples</Link></li>
+                            <li><Link to="/cover-letter-templates" className="hover:text-orange-500 transition-colors">Cover Letter Examples</Link></li>
                             <li><Link to="/resource/career-advice" className="hover:text-orange-500 transition-colors">Career Advice</Link></li>
-                            <li><Link to="/resource/resume-formats" className="hover:text-orange-500 transition-colors">Resume Formats</Link></li>
+                            <li><Link to="/about" className="hover:text-orange-500 transition-colors font-bold">About Us</Link></li>
                             <li><Link to="/contact" className="hover:text-orange-500 transition-colors">Help Center</Link></li>
                         </ul>
                     </div>

@@ -175,6 +175,10 @@ const Navbar = () => {
                             </div>
                         </div>
 
+                        <Link to="/about" className="text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors font-medium px-4">
+                            About Us
+                        </Link>
+
                         <Link to="/contact" className="text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors font-medium px-4">
                             Contact Us
                         </Link>
