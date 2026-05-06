@@ -97,19 +97,14 @@ const Footer = () => {
                     </div>
 
                     <div>
-                        <h4 className="font-bold text-slate-900 dark:text-white mb-6 uppercase tracking-wider text-xs">Contact Us</h4>
+                        <h4 className="font-bold text-slate-900 dark:text-white mb-6 uppercase tracking-wider text-xs">Support</h4>
                         <ul className="space-y-4 text-sm">
                             <li className="flex items-start space-x-3 text-slate-500 dark:text-slate-400">
                                 <Mail className="h-5 w-5 text-orange-500 shrink-0" />
-                                <span>support@resumecraft.com</span>
+                                <a href="mailto:support.resumecraft@gmail.com" className="hover:text-orange-500 transition-colors">support.resumecraft@gmail.com</a>
                             </li>
-                            <li className="flex items-start space-x-3 text-slate-500 dark:text-slate-400">
-                                <Phone className="h-5 w-5 text-orange-500 shrink-0" />
-                                <span>+1 (555) 000-0000</span>
-                            </li>
-                            <li className="flex items-start space-x-3 text-slate-500 dark:text-slate-400">
-                                <MapPin className="h-5 w-5 text-orange-500 shrink-0" />
-                                <span>123 Design Street, Creative Valley, CA 94043</span>
+                            <li className="flex items-start space-x-3 text-slate-500 dark:text-slate-400 text-xs">
+                                <span>Get 24/7 assistance with your resume and career questions.</span>
                             </li>
                         </ul>
                     </div>
