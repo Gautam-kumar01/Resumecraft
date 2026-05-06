@@ -16,6 +16,7 @@ import Contact from './pages/Contact';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import { AuthProvider } from './context/AuthContext';
+import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
@@ -75,6 +76,7 @@ function App() {
                 <Route path="/p/:id" element={<PublicResume />} />
               </Routes>
             </main>
+            <Footer />
           </div>
         </AuthProvider>
       </GoogleOAuthProvider>

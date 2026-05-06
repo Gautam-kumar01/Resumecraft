@@ -474,66 +474,6 @@ const Home = () => {
                     </div>
                 </div>
             </section>
-
-            {/* Footer */}
-            <footer className="bg-white pt-24 pb-12 border-t border-slate-100 text-slate-600">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-20">
-                        <div className="col-span-2">
-                            <Logo size="md" className="mb-6" />
-                            <p className="max-w-xs mb-6">
-                                The world's most intuitive resume builder designed to help you land your dream job at record speed.
-                            </p>
-                            <div className="flex space-x-4">
-                                {/* Social icons placeholders */}
-                                <div className="h-10 w-10 bg-slate-100 rounded-full"></div>
-                                <div className="h-10 w-10 bg-slate-100 rounded-full"></div>
-                                <div className="h-10 w-10 bg-slate-100 rounded-full"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <h4 className="font-bold text-slate-900 mb-6">About Us</h4>
-                            <ul className="space-y-4">
-                                <li><Link to="/terms">Terms & Conditions</Link></li>
-                                <li><Link to="/privacy">Privacy Policy</Link></li>
-                                <li><Link to="/terms">Affiliates</Link></li>
-                                <li><Link to="/contact">Contact Us</Link></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 className="font-bold text-slate-900 mb-6">Resources</h4>
-                            <ul className="space-y-4">
-                                <li><Link to="/terms">Faqs</Link></li>
-                                <li><Link to="/terms">Accessibility</Link></li>
-                                <li><Link to="/privacy">Cookies Policy</Link></li>
-                                <li><Link to="/terms">Sitemap</Link></li>
-                            </ul>
-                        </div>
-                        <div>
-                            <h4 className="font-bold text-slate-900 mb-6">Product</h4>
-                            <ul className="space-y-4">
-                                <li><Link to="/register">AI Resume Builder</Link></li>
-                                <li><Link to="/login">Pricing</Link></li>
-                                <li><Link to="/templates">MNC Templates</Link></li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div className="pt-12 border-t border-slate-100">
-                        <p className="text-xs text-slate-400 mb-6 leading-relaxed italic">
-                            1 Based on a survey of 300 respondents who reported finding a job with ResumeCraft's help. Calculation was made based on the average time it took respondents to get hired.
-                        </p>
-                        <div className="flex flex-col md:flex-row justify-between items-center text-sm gap-4">
-                            <p>©2026, NOW Limited. All rights reserved.</p>
-                            <div className="flex space-x-6">
-                                <Link to="#">Twitter</Link>
-                                <Link to="#">LinkedIn</Link>
-                                <Link to="#">YouTube</Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </footer>
         </motion.div>
     );
 };
