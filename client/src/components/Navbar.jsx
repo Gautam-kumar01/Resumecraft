@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useContext, useState, useEffect } from 'react';
 import AuthContext from '../context/AuthContext';
-import { LogOut, User, Menu, X, Sun, Moon } from 'lucide-react';
+import { LogOut, User, Menu, X, Sun, Moon, Star, FileText } from 'lucide-react';
 import Logo from './Logo';
 
 const Navbar = () => {
