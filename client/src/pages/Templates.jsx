@@ -50,8 +50,8 @@ const Templates = () => {
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <SEO
-                title="Free Resume Templates & Formats for Online Resume Making"
-                description="Choose from our collection of free resume templates. Perfect for online resume making with our AI resume builder. ATS-friendly and MNC-approved."
+                title="Free Resume Templates & Formats | Online CV Maker & AI Builder"
+                description="Browse India's best free resume templates and formats. ATS-friendly, MNC-ready layouts for freshers and experienced professionals. Build your CV online for free."
             />
             <div className="text-center mb-20">
                 <div className="inline-flex items-center space-x-2 px-3 py-1 bg-orange-500/10 border border-orange-500/20 rounded-full text-orange-600 text-xs font-bold uppercase tracking-widest mb-6">

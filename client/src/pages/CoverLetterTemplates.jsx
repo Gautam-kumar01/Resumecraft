@@ -103,8 +103,8 @@ const CoverLetterTemplates = () => {
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <SEO
-                title="Professional Cover Letter Templates | ResumeCraft"
-                description="Choose from our collection of professional cover letter templates or create one with AI."
+                title="Free Cover Letter Maker Online | Professional Templates & AI Builder"
+                description="Create a job-winning cover letter in minutes with our free online cover letter maker. Use professional templates or generate a custom letter with AI."
             />
             
             {/* Header Section */}

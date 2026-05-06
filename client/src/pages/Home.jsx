@@ -111,8 +111,8 @@ const Home = () => {
             className="bg-white"
         >
             <SEO
-                title="Free Resume Builder & Resume Making Online Tool"
-                description="The best free resume making online tool. Build your professional resume in minutes with our AI resume builder. ATS-friendly templates approved by top MNCs."
+                title="Best Free Resume Maker Online | AI Resume Builder India"
+                description="Use India's #1 free AI resume builder to create ATS-friendly resumes and CVs. Expert-approved MNC formats, online CV maker, and professional resume generator."
             />
             {/* Hero Section */}
             <section className="relative pt-20 pb-16 lg:pt-32 lg:pb-24 overflow-hidden">

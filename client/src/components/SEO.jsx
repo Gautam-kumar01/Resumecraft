@@ -1,24 +1,24 @@
 import { Helmet } from 'react-helmet-async';
 
-const SEO = ({ 
-    title, 
-    description, 
-    keywords, 
-    image, 
+const SEO = ({
+    title,
+    description,
+    keywords,
+    image,
     url,
     type = 'website'
 }) => {
-    const siteTitle = "ResumeCraft – Free Resume Maker Online | AI Resume Builder India";
-    const defaultDescription = "ResumeCraft.co.in is a free online resume maker and AI resume builder. Create professional, ATS-friendly resumes in minutes with MNC-ready templates and instant download.";
-    const defaultKeywords = "resume maker, free resume builder, AI resume builder, CV maker online, ATS friendly resume, professional resume, Indian resume builder, job resume maker, online resume generator, free CV templates, MNC resume formats, fresher resume builder, experience resume maker, resume builder india";
-    const siteUrl = "https://resumecraft.co.in/";
+    const siteTitle = "ResumeCraft – Best Free Resume Maker Online | AI Resume Builder India";
+    const defaultDescription = "Create professional, ATS-friendly resumes and cover letters in minutes with ResumeCraft, India's #1 free AI resume builder. Recruiters-approved MNC templates, CV maker online, and job-winning formats.";
+    const defaultKeywords = "cover letter, resume making, resume maker, cv maker, resume, free resume builder, AI resume builder, CV maker online, ATS friendly resume, professional resume, Indian resume builder, job resume maker, online resume generator, free CV templates, MNC resume formats, fresher resume builder, experience resume maker, resume builder india";
+    const siteUrl = "https://resumecraft.co.in/"; // Updating to a more likely current URL
     const defaultImage = "https://resumecraft.co.in/og-image.png";
 
     const metaTitle = title ? `${title} | ResumeCraft` : siteTitle;
     const metaDescription = description || defaultDescription;
     const metaKeywords = keywords || defaultKeywords;
     const metaImage = image || defaultImage;
-    
+
     // Ensure URL doesn't start with a slash if siteUrl has a trailing slash
     const cleanUrl = url ? (url.startsWith('/') ? url.substring(1) : url) : '';
     const metaUrl = `${siteUrl}${cleanUrl}`;
@@ -44,7 +44,7 @@ const SEO = ({
             <meta name="twitter:title" content={metaTitle} />
             <meta name="twitter:description" content={metaDescription} />
             <meta name="twitter:image" content={metaImage} />
-            
+
             {/* Google Site Name Schema */}
             <script type="application/ld+json">
                 {JSON.stringify({
@@ -55,7 +55,7 @@ const SEO = ({
                     "url": siteUrl
                 })}
             </script>
-            
+
             {/* Schema.org JSON-LD for Software Application */}
             <script type="application/ld+json">
                 {JSON.stringify({

@@ -1,50 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://resumecraft.co.in/</loc>
-    <lastmod>2026-03-19</lastmod>
+    <loc>https://resumecraft.vercel.app/</loc>
+    <lastmod>2026-05-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url> 
-    <loc>https://resumecraft.co.in/templates</loc>
-    <lastmod>2026-03-19</lastmod>
+    <loc>https://resumecraft.vercel.app/templates</loc>
+    <lastmod>2026-05-06</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url> 
+    <loc>https://resumecraft.vercel.app/cover-letter-templates</loc>
+    <lastmod>2026-05-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://resumecraft.co.in/editor</loc>
-    <lastmod>2026-03-19</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://resumecraft.co.in/contact</loc>
-    <lastmod>2026-03-19</lastmod>
-    <changefreq>monthly</changefreq>
+    <loc>https://resumecraft.vercel.app/resource/resume-formats</loc>
+    <lastmod>2026-05-06</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://resumecraft.co.in/login</loc>
-    <lastmod>2026-03-19</lastmod>
+    <loc>https://resumecraft.vercel.app/resource/resume-examples</loc>
+    <lastmod>2026-05-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://resumecraft.vercel.app/resource/how-to-write-a-resume</loc>
+    <lastmod>2026-05-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://resumecraft.vercel.app/resource/career-advice</loc>
+    <lastmod>2026-05-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://resumecraft.vercel.app/resource/interview-tips</loc>
+    <lastmod>2026-05-06</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://resumecraft.vercel.app/contact</loc>
+    <lastmod>2026-05-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://resumecraft.co.in/register</loc>
-    <lastmod>2026-03-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://resumecraft.co.in/terms</loc>
-    <lastmod>2026-03-19</lastmod>
+    <loc>https://resumecraft.vercel.app/terms</loc>
+    <lastmod>2026-05-06</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://resumecraft.co.in/privacy</loc>
-    <lastmod>2026-03-19</lastmod>
+    <loc>https://resumecraft.vercel.app/privacy</loc>
+    <lastmod>2026-05-06</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
