@@ -1,0 +1,258 @@
+
+const starterCoverLetters = [
+    {
+        id: 'software-engineer-cl',
+        role: 'Software Engineer',
+        title: 'Professional Tech Blueprint',
+        industry: 'Technology',
+        description: 'A clean, impact-oriented cover letter template for software engineers and developers.',
+        imageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=800&auto=format&fit=crop',
+        content: {
+            recipientName: 'Hiring Manager',
+            companyName: 'Tech Innovations Inc.',
+            companyAddress: '123 Tech Lane, San Francisco, CA',
+            date: new Date().toLocaleDateString(),
+            subject: 'Application for Software Engineer Position',
+            salutation: 'Dear Hiring Manager,',
+            introduction: 'I am writing to express my strong interest in the Software Engineer position at Tech Innovations Inc., as advertised on your careers page. With a solid foundation in full-stack development and a passion for building scalable applications, I am confident that my technical skills and innovative mindset would make me a valuable asset to your engineering team.',
+            bodyParagraph1: 'During my previous role at CodeStream Solutions, I led the development of a cloud-native microservices architecture that improved system reliability by 40%. My expertise in React, Node.js, and AWS allowed me to streamline deployment pipelines and enhance user experiences for over 100,000 monthly active users.',
+            bodyParagraph2: 'What draws me to Tech Innovations Inc. is your commitment to pushing the boundaries of AI-driven solutions. I have been following your recent projects in natural language processing and am eager to contribute my experience in machine learning integration to help your team achieve its upcoming milestones.',
+            conclusion: 'I am excited about the possibility of bringing my unique blend of technical expertise and creative problem-solving to your company. Thank you for your time and consideration. I look forward to the opportunity to discuss how my background aligns with the needs of your team.',
+            closing: 'Sincerely,',
+            userName: 'Alex Dev',
+            userTitle: 'Full-Stack Developer'
+        }
+    },
+    {
+        id: 'data-scientist-cl',
+        role: 'Data Scientist',
+        title: 'Analytical Excellence',
+        industry: 'Data Science',
+        description: 'Focuses on analytical achievements and data-driven decision-making capabilities.',
+        imageUrl: 'https://images.unsplash.com/photo-1551288560-66936b61ee2b?q=80&w=800&auto=format&fit=crop',
+        content: {
+            recipientName: 'Director of Analytics',
+            companyName: 'DataSphere Solutions',
+            companyAddress: '456 Insight Road, Seattle, WA',
+            date: new Date().toLocaleDateString(),
+            subject: 'Data Scientist Role Application',
+            salutation: 'Dear Director of Analytics,',
+            introduction: 'I am thrilled to apply for the Data Scientist position at DataSphere Solutions. Having closely followed your company\'s leadership in predictive modeling, I am eager to bring my expertise in statistical analysis and machine learning to your world-class data team.',
+            bodyParagraph1: 'In my current role at Insightful Metrics, I developed a customer churn prediction model that reduced attrition by 25% within the first six months of implementation. By leveraging advanced Python libraries and SQL optimization, I was able to extract actionable insights from multi-terabyte datasets, directly impacting the company\'s bottom line.',
+            bodyParagraph2: 'DataSphere\'s focus on ethical AI and transparent data practices resonates deeply with my professional values. I am particularly impressed by your recent work on automated bias detection in financial models and would welcome the chance to apply my research background in this area to your ongoing projects.',
+            conclusion: 'I am confident that my data-driven approach and technical proficiency would allow me to make immediate contributions to DataSphere Solutions. I have attached my resume for your review and look forward to the possibility of an interview.',
+            closing: 'Best regards,',
+            userName: 'Sarah Data',
+            userTitle: 'Senior Data Scientist'
+        }
+    },
+    {
+        id: 'product-manager-cl',
+        role: 'Product Manager',
+        title: 'Strategic Leadership',
+        industry: 'Product Management',
+        description: 'Emphasizes leadership, product vision, and cross-functional collaboration.',
+        imageUrl: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop',
+        content: {
+            recipientName: 'Head of Product',
+            companyName: 'Visionary Apps',
+            companyAddress: '789 Creative Plaza, Austin, TX',
+            date: new Date().toLocaleDateString(),
+            subject: 'Product Manager Position Application',
+            salutation: 'Dear Head of Product,',
+            introduction: 'With a proven track record of launching successful user-centric products and leading cross-functional teams, I am excited to apply for the Product Manager role at Visionary Apps. Your mission to simplify complex workflows through intuitive design perfectly aligns with my product philosophy.',
+            bodyParagraph1: 'As a Product Manager at AlphaStream, I spearheaded the development of a new mobile interface that saw a 50% increase in user engagement within three months. My ability to translate user feedback into actionable product requirements and manage agile sprints has consistently led to on-time and high-quality product releases.',
+            bodyParagraph2: 'I admire Visionary Apps\' commitment to data-informed decision-making and rapid iteration. My experience in A/B testing and market analysis would enable me to contribute effectively to your product roadmap and help define the future of your platform.',
+            conclusion: 'I would love the opportunity to discuss how my strategic vision and collaborative approach can help Visionary Apps reach its growth targets. Thank you for considering my application.',
+            closing: 'Sincerely,',
+            userName: 'Marcus Lead',
+            userTitle: 'Product Manager'
+        }
+    },
+    {
+        id: 'marketing-manager-cl',
+        role: 'Marketing Manager',
+        title: 'Creative Growth',
+        industry: 'Marketing',
+        description: 'Ideal for marketing professionals focusing on brand growth and digital strategy.',
+        imageUrl: 'https://images.unsplash.com/photo-1557838923-2985c318be48?q=80&w=800&auto=format&fit=crop',
+        content: {
+            recipientName: 'VP of Marketing',
+            companyName: 'BrightScale Media',
+            companyAddress: 'Marketing Hub, New York, NY',
+            date: new Date().toLocaleDateString(),
+            subject: 'Application for Marketing Manager',
+            salutation: 'Dear VP of Marketing,',
+            introduction: 'I am writing to express my enthusiasm for the Marketing Manager position at BrightScale Media. As a results-driven marketer with over six years of experience in digital acquisition and brand storytelling, I am eager to help your team reach its ambitious growth targets.',
+            bodyParagraph1: 'At my previous company, GrowthGen, I managed a $1M annual ad budget and increased ROAS by 35% through rigorous A/B testing and audience segmentation. I also launched a content series that went viral, generating over 500k organic impressions and significantly boosting brand awareness in our target demographic.',
+            bodyParagraph2: 'I have long admired BrightScale Media\'s innovative approach to influencer partnerships and community-led growth. I am particularly excited about the possibility of applying my expertise in lifecycle marketing to further enhance your customer retention strategies.',
+            conclusion: 'I am confident that my creative thinking and analytical skills would make me a valuable addition to your marketing team. Thank you for your time, and I look forward to hearing from you.',
+            closing: 'Best regards,',
+            userName: 'Emma Brand',
+            userTitle: 'Marketing Specialist'
+        }
+    },
+    {
+        id: 'graphic-designer-cl',
+        role: 'Graphic Designer',
+        title: 'Visual Storyteller',
+        industry: 'Design',
+        description: 'A visually-oriented template that highlights creative flair and technical design skills.',
+        imageUrl: 'https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=800&auto=format&fit=crop',
+        content: {
+            recipientName: 'Creative Director',
+            companyName: 'Pixel Perfect Studios',
+            companyAddress: 'Artistic Blvd, Los Angeles, CA',
+            date: new Date().toLocaleDateString(),
+            subject: 'Graphic Designer Application',
+            salutation: 'Dear Creative Director,',
+            introduction: 'As a passionate Graphic Designer with a keen eye for detail and a love for minimalist aesthetics, I am excited to apply for the open position at Pixel Perfect Studios. I have been a fan of your studio\'s work for years, especially your recent rebranding for Global Green.',
+            bodyParagraph1: 'In my four years at Creative Loft, I designed visual identities for over 20 clients, ranging from tech startups to boutique lifestyle brands. I am proficient in the Adobe Creative Suite and have a strong understanding of typography, color theory, and user experience design.',
+            bodyParagraph2: 'I believe that good design is about more than just looks; it\'s about communicating a message effectively. I am eager to bring my unique perspective and collaborative spirit to Pixel Perfect Studios and help create visuals that resonate with your diverse clientele.',
+            conclusion: 'Thank you for considering my application and reviewing my portfolio. I am looking forward to the possibility of discussing how my skills align with your creative vision.',
+            closing: 'Sincerely,',
+            userName: 'Liam Visuals',
+            userTitle: 'Graphic Designer'
+        }
+    },
+    {
+        id: 'financial-analyst-cl',
+        role: 'Financial Analyst',
+        title: 'Precision Finance',
+        industry: 'Finance',
+        description: 'Focuses on numerical accuracy, financial modeling, and strategic reporting.',
+        imageUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop',
+        content: {
+            recipientName: 'CFO',
+            companyName: 'Global Equity Partners',
+            companyAddress: 'Finance Tower, London, UK',
+            date: new Date().toLocaleDateString(),
+            subject: 'Application for Financial Analyst Role',
+            salutation: 'Dear CFO,',
+            introduction: 'I am writing to formally apply for the Financial Analyst position at Global Equity Partners. With a strong background in financial modeling and a dedication to data integrity, I am confident in my ability to provide the insights your firm needs to make sound investment decisions.',
+            bodyParagraph1: 'During my tenure at Capital Trust, I developed automated reporting tools that reduced monthly closing time by 15%. I also conducted deep-dive market analysis that identified a $2M cost-saving opportunity in our supply chain operations, which was subsequently implemented with great success.',
+            bodyParagraph2: 'Global Equity Partners\' reputation for excellence in emerging markets is what drew me to this role. I am eager to apply my skills in DCF modeling and risk assessment to help your team evaluate new opportunities and drive long-term value for your stakeholders.',
+            conclusion: 'I am excited about the potential to join your esteemed team and contribute to your firm\'s continued success. Thank you for your consideration.',
+            closing: 'Respectfully,',
+            userName: 'James Finance',
+            userTitle: 'Financial Analyst'
+        }
+    },
+    {
+        id: 'customer-success-cl',
+        role: 'Customer Success Manager',
+        title: 'Client Champion',
+        industry: 'Sales & Support',
+        description: 'Highlights relationship-building skills and a focus on customer satisfaction and retention.',
+        imageUrl: 'https://images.unsplash.com/photo-1556745753-b2904692b3cd?q=80&w=800&auto=format&fit=crop',
+        content: {
+            recipientName: 'Head of Customer Success',
+            companyName: 'SaaS Solutions Inc.',
+            companyAddress: 'Cloud City, Denver, CO',
+            date: new Date().toLocaleDateString(),
+            subject: 'Customer Success Manager Application',
+            salutation: 'Dear Head of Customer Success,',
+            introduction: 'I am thrilled to apply for the Customer Success Manager position at SaaS Solutions Inc. I have used your platform in my previous roles and have always been impressed by its intuitive design and the quality of your support team.',
+            bodyParagraph1: 'In my previous role at ClientFirst, I managed a portfolio of 50+ enterprise accounts and maintained a 98% retention rate. I pride myself on my ability to understand a client\'s unique needs and help them derive maximum value from our products, leading to increased upsell opportunities and long-term loyalty.',
+            bodyParagraph2: 'I am passionate about building strong, lasting relationships and am eager to bring my empathetic approach and problem-solving skills to SaaS Solutions Inc. I look forward to helping your customers achieve their goals and contributing to your company\'s growth.',
+            conclusion: 'Thank you for your time and for considering my application. I am eager to discuss how my background and passion for customer success can benefit your team.',
+            closing: 'Best regards,',
+            userName: 'Sarah Support',
+            userTitle: 'Customer Success Lead'
+        }
+    },
+    {
+        id: 'project-manager-cl',
+        role: 'Project Manager',
+        title: 'Operational Excellence',
+        industry: 'Management',
+        description: 'Focuses on organization, team coordination, and on-time delivery of complex projects.',
+        imageUrl: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=800&auto=format&fit=crop',
+        content: {
+            recipientName: 'Operations Director',
+            companyName: 'BuildRight Construction',
+            companyAddress: 'Contractor Plaza, Chicago, IL',
+            date: new Date().toLocaleDateString(),
+            subject: 'Project Manager Position Application',
+            salutation: 'Dear Operations Director,',
+            introduction: 'With a decade of experience in managing large-scale construction projects and a commitment to safety and quality, I am excited to apply for the Project Manager role at BuildRight Construction.',
+            bodyParagraph1: 'I have successfully overseen over 50 projects from inception to completion, always staying within budget and meeting tight deadlines. My ability to coordinate with subcontractors, manage materials, and ensure compliance with all regulations has been key to my success in this field.',
+            bodyParagraph2: 'BuildRight Construction\'s reputation for building sustainable and innovative structures is what motivates me to join your team. I am eager to bring my leadership skills and technical expertise to your upcoming projects and help you continue to set the standard for excellence in the industry.',
+            conclusion: 'I am confident that my experience and dedication would make me an asset to BuildRight Construction. Thank you for your consideration, and I look forward to the possibility of an interview.',
+            closing: 'Sincerely,',
+            userName: 'David Builder',
+            userTitle: 'Senior Project Manager'
+        }
+    },
+    {
+        id: 'hr-manager-cl',
+        role: 'HR Manager',
+        title: 'People First',
+        industry: 'Human Resources',
+        description: 'Emphasizes talent acquisition, employee relations, and culture building.',
+        imageUrl: 'https://images.unsplash.com/photo-1521737706045-366367724c32?q=80&w=800&auto=format&fit=crop',
+        content: {
+            recipientName: 'CEO',
+            companyName: 'InnovaCorp',
+            companyAddress: 'Corporate Way, Seattle, WA',
+            date: new Date().toLocaleDateString(),
+            subject: 'Application for HR Manager',
+            salutation: 'Dear CEO,',
+            introduction: 'I am writing to express my strong interest in the HR Manager position at InnovaCorp. As an HR professional with a focus on building inclusive cultures and attracting top talent, I am eager to help your company grow and thrive.',
+            bodyParagraph1: 'At my previous company, PeopleFirst, I implemented a new recruitment strategy that reduced time-to-hire by 20% while increasing the diversity of our applicant pool. I also launched an employee wellness program that resulted in a 15% increase in overall job satisfaction scores.',
+            bodyParagraph2: 'InnovaCorp\'s commitment to innovation and employee development aligns perfectly with my professional goals. I am eager to bring my expertise in conflict resolution and organizational development to your team and help you build a world-class workforce.',
+            conclusion: 'I am confident that my skills and passion for people would make me a valuable addition to your leadership team. Thank you for your consideration.',
+            closing: 'Sincerely,',
+            userName: 'Jessica People',
+            userTitle: 'HR Specialist'
+        }
+    },
+    {
+        id: 'content-writer-cl',
+        role: 'Content Writer',
+        title: 'Narrative Architect',
+        industry: 'Writing & Media',
+        description: 'Showcases storytelling ability, SEO knowledge, and versatile writing styles.',
+        imageUrl: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=800&auto=format&fit=crop',
+        content: {
+            recipientName: 'Editor-in-Chief',
+            companyName: 'Modern Media Group',
+            companyAddress: 'Journalism Lane, New York, NY',
+            date: new Date().toLocaleDateString(),
+            subject: 'Content Writer Application',
+            salutation: 'Dear Editor-in-Chief,',
+            introduction: 'As a versatile Content Writer with a passion for storytelling and a deep understanding of SEO, I am excited to apply for the open position at Modern Media Group. I have been a regular reader of your publications and admire your commitment to high-quality, long-form journalism.',
+            bodyParagraph1: 'In my three years as a freelance writer, I have produced content for a wide range of clients, from tech blogs to lifestyle magazines. I am adept at tailoring my voice to suit different audiences and am experienced in conducting thorough research to ensure accuracy and depth in my writing.',
+            bodyParagraph2: 'I believe that great content should not only inform but also engage and inspire. I am eager to bring my creative energy and dedication to excellence to Modern Media Group and help you continue to produce stories that matter to your readers.',
+            conclusion: 'Thank you for your time and for reviewing my portfolio. I am looking forward to the possibility of discussing how my writing can contribute to your publication.',
+            closing: 'Sincerely,',
+            userName: 'Noah Scribe',
+            userTitle: 'Content Strategist'
+        }
+    },
+    {
+        id: 'sales-executive-cl',
+        role: 'Sales Executive',
+        title: 'Revenue Driver',
+        industry: 'Sales',
+        description: 'Highlights target achievement, negotiation skills, and market expansion capabilities.',
+        imageUrl: 'https://images.unsplash.com/photo-1552581234-26160f608093?q=80&w=800&auto=format&fit=crop',
+        content: {
+            recipientName: 'Sales Director',
+            companyName: 'GrowthX Systems',
+            companyAddress: 'Success Tower, Chicago, IL',
+            date: new Date().toLocaleDateString(),
+            subject: 'Sales Executive Application',
+            salutation: 'Dear Sales Director,',
+            introduction: 'I am writing to apply for the Sales Executive position at GrowthX Systems. With a proven track record of exceeding sales targets and a passion for building high-performance teams, I am confident in my ability to drive revenue growth for your company.',
+            bodyParagraph1: 'In my previous role at SalesPro, I consistently ranked as a top performer, exceeding my annual quota by at least 20% for three consecutive years. I am skilled in lead generation, relationship management, and closing complex deals, and I am always looking for new ways to expand our market share.',
+            bodyParagraph2: 'GrowthX Systems\' innovative approach to CRM technology is what drew me to this role. I am eager to apply my expertise in consultative selling to help your clients solve their business challenges and contribute to your company\'s continued success.',
+            conclusion: 'I am excited about the potential to join your team and help you reach new heights. Thank you for your consideration, and I look forward to hearing from you.',
+            closing: 'Sincerely,',
+            userName: 'Mark Sales',
+            userTitle: 'Senior Sales Executive'
+        }
+    }
+];
+
+module.exports = starterCoverLetters;

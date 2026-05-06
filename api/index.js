@@ -58,6 +58,7 @@ const withDB = async (req, res, next) => {
 
 app.use('/api/auth', withDB, require('../server/routes/auth'));
 app.use('/api/resumes', withDB, require('../server/routes/resume'));
+app.use('/api/cover-letters', withDB, require('../server/routes/coverLetter'));
 
 // Root path
 app.get('/', (req, res) => res.send('ResumeCraft API is operational.'));

@@ -461,13 +461,22 @@ const Dashboard = () => {
                     <h1 className="text-2xl font-bold text-slate-900">My Cover Letters</h1>
                     <p className="mt-1 text-slate-500">Your professional stories, ready to send.</p>
                 </div>
-                <Link
-                    to="/cover-letter-templates"
-                    className="flex items-center space-x-2 bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-full font-medium transition-all shadow-lg shadow-slate-900/20 w-full sm:w-auto justify-center"
-                >
-                    <Plus className="h-5 w-5" />
-                    <span>New Cover Letter</span>
-                </Link>
+                <div className="flex space-x-4">
+                    <Link
+                        to="/cover-letter-templates"
+                        className="flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-5 py-2.5 rounded-full font-medium transition-all shadow-lg shadow-orange-500/30 w-full sm:w-auto justify-center"
+                    >
+                        <Brain className="h-5 w-5" />
+                        <span>AI Cover Letter</span>
+                    </Link>
+                    <Link
+                        to="/cover-letter-templates"
+                        className="flex items-center space-x-2 bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-full font-medium transition-all shadow-lg shadow-slate-900/20 w-full sm:w-auto justify-center"
+                    >
+                        <Plus className="h-5 w-5" />
+                        <span>New Cover Letter</span>
+                    </Link>
+                </div>
             </div>
 
             {coverLetters.length === 0 ? (

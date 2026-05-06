@@ -3,12 +3,20 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import SEO from '../components/SEO';
-import { Sparkles, ArrowRight, Globe, ShieldCheck, Mail, FileText, Send } from 'lucide-react';
+import { Sparkles, ArrowRight, Mail, FileText, Send, Brain, Plus, X, Wand2 } from 'lucide-react';
 
 const CoverLetterTemplates = () => {
     const [starters, setStarters] = useState([]);
     const [loading, setLoading] = useState(true);
     const [creating, setCreating] = useState(null);
+    const [showAiModal, setShowAiModal] = useState(false);
+    const [aiData, setAiData] = useState({
+        jobRole: '',
+        companyName: '',
+        jobDescription: '',
+        tone: 'Professional'
+    });
+    const [generatingAi, setGeneratingAi] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -18,6 +26,17 @@ const CoverLetterTemplates = () => {
                 setStarters(data);
             } catch (error) {
                 console.error('Failed to fetch starters', error);
+                // Fallback starters if API fails
+                setStarters([
+                    {
+                        id: 'software-engineer-cl',
+                        role: 'Software Engineer',
+                        industry: 'Technology',
+                        description: 'A clean, impact-oriented cover letter template for software engineers.',
+                        imageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=800&auto=format&fit=crop',
+                        content: { title: 'Software Engineer Blueprint' }
+                    }
+                ]);
             } finally {
                 setLoading(false);
             }
@@ -30,12 +49,46 @@ const CoverLetterTemplates = () => {
         setCreating(template.id);
         try {
             const { id, ...coverLetterData } = template;
-            const { data } = await api.post('/cover-letters', coverLetterData.content);
+            const { data } = await api.post('/cover-letters', {
+                ...coverLetterData.content,
+                title: template.title || `${template.role} Cover Letter`
+            });
             navigate(`/cover-letter-editor/${data._id}`);
         } catch (error) {
             console.error('Failed to create cover letter from template', error);
         } finally {
             setCreating(null);
+        }
+    };
+
+    const handleCreateScratch = async () => {
+        setCreating('scratch');
+        try {
+            const { data } = await api.post('/cover-letters', { title: 'Untitled Cover Letter' });
+            navigate(`/cover-letter-editor/${data._id}`);
+        } catch (error) {
+            console.error('Failed to create blank cover letter', error);
+        } finally {
+            setCreating(null);
+        }
+    };
+
+    const handleAiGenerate = async (e) => {
+        e.preventDefault();
+        setGeneratingAi(true);
+        try {
+            const { data: aiContent } = await api.post('/ai/generate-cover-letter', aiData);
+            const { data } = await api.post('/cover-letters', {
+                ...aiContent,
+                title: `AI Generated: ${aiData.jobRole}`,
+                companyName: aiData.companyName
+            });
+            navigate(`/cover-letter-editor/${data._id}`);
+        } catch (error) {
+            console.error('Failed to generate AI cover letter', error);
+        } finally {
+            setGeneratingAi(false);
+            setShowAiModal(false);
         }
     };
 
@@ -51,9 +104,11 @@ const CoverLetterTemplates = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <SEO
                 title="Professional Cover Letter Templates | ResumeCraft"
-                description="Choose from our collection of professional cover letter templates. Tailored for various industries and optimized to get you noticed."
+                description="Choose from our collection of professional cover letter templates or create one with AI."
             />
-            <div className="text-center mb-20">
+            
+            {/* Header Section */}
+            <div className="text-center mb-16">
                 <div className="inline-flex items-center space-x-2 px-3 py-1 bg-orange-500/10 border border-orange-500/20 rounded-full text-orange-600 text-xs font-bold uppercase tracking-widest mb-6">
                     <Send className="h-3.5 w-3.5" />
                     <span>Get Noticed Faster</span>
@@ -66,69 +121,60 @@ const CoverLetterTemplates = () => {
                 </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-12">
-                {starters.map((template) => (
-                    <div key={template.id} className="group flex flex-col md:flex-row glass-effect rounded-[2.5rem] border border-white/80 hover:border-orange-500/40 transition-all duration-700 hover:shadow-2xl hover:shadow-orange-500/10 overflow-hidden">
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-20">
+                <button
+                    onClick={() => setShowAiModal(true)}
+                    className="flex items-center space-x-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-4 rounded-2xl font-bold shadow-xl shadow-orange-500/20 hover:scale-105 transition-all"
+                >
+                    <Brain className="h-5 w-5" />
+                    <span>Create with AI</span>
+                </button>
+                <button
+                    onClick={handleCreateScratch}
+                    disabled={creating === 'scratch'}
+                    className="flex items-center space-x-3 bg-white text-slate-900 border border-slate-200 px-8 py-4 rounded-2xl font-bold hover:bg-slate-50 transition-all shadow-sm"
+                >
+                    {creating === 'scratch' ? <div className="w-5 h-5 border-2 border-slate-900/20 border-t-slate-900 rounded-full animate-spin" /> : <Plus className="h-5 w-5" />}
+                    <span>Create from Scratch</span>
+                </button>
+            </div>
 
-                        {/* Visual Preview Side */}
-                        <div className="md:w-[45%] h-64 md:h-auto p-0 relative overflow-hidden shrink-0">
+            {/* Templates Grid */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {starters.map((template) => (
+                    <div key={template.id} className="group glass-effect rounded-[2.5rem] border border-white/80 hover:border-orange-500/40 transition-all duration-500 hover:shadow-2xl overflow-hidden flex flex-col h-full">
+                        <div className="h-48 relative overflow-hidden shrink-0">
                             <img
                                 src={template.imageUrl}
-                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-90 group-hover:opacity-100"
+                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                 alt={template.role}
                             />
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/20 blur-[80px] rounded-full group-hover:bg-orange-500/30 transition-colors duration-700"></div>
-                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-80"></div>
-
-                            <div className="absolute bottom-10 left-10 z-10">
-                                <div className="text-white/50 text-[10px] font-bold uppercase tracking-wider mb-2">Industry</div>
-                                <div className="inline-flex items-center px-4 py-2 rounded-2xl bg-white/10 border border-white/20 text-white text-[11px] font-bold backdrop-blur-md">
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent" />
+                            <div className="absolute bottom-4 left-6">
+                                <span className="bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
                                     {template.industry}
-                                </div>
+                                </span>
                             </div>
                         </div>
 
-                        {/* Content Side */}
-                        <div className="md:w-[55%] p-10 md:p-12 flex flex-col justify-between bg-white/40">
-                            <div>
-                                <h3 className="text-3xl font-black text-slate-900 mb-3 group-hover:text-orange-500 transition-colors duration-500 tracking-tight">{template.role}</h3>
-                                <p className="text-slate-500 text-sm mb-8 leading-relaxed font-medium">
-                                    {template.description}
-                                </p>
-
-                                <div className="mb-10">
-                                    <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center">
-                                        <FileText className="h-3.5 w-3.5 mr-1.5 text-orange-500" />
-                                        Key Highlights
-                                    </div>
-                                    <div className="space-y-2">
-                                        <div className="flex items-center text-xs text-slate-600">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-orange-500 mr-2"></div>
-                                            Professional formatting
-                                        </div>
-                                        <div className="flex items-center text-xs text-slate-600">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-orange-500 mr-2"></div>
-                                            Impact-oriented language
-                                        </div>
-                                        <div className="flex items-center text-xs text-slate-600">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-orange-500 mr-2"></div>
-                                            Easy to customize
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div className="p-8 flex flex-col flex-1">
+                            <h3 className="text-2xl font-bold text-slate-900 mb-2 group-hover:text-orange-500 transition-colors">{template.role}</h3>
+                            <p className="text-slate-500 text-sm mb-8 line-clamp-2">
+                                {template.description}
+                            </p>
 
                             <button
                                 onClick={() => useTemplate(template)}
                                 disabled={creating === template.id}
-                                className="w-full flex items-center justify-center space-x-3 bg-slate-950 hover:bg-orange-500 text-white py-5 rounded-[1.25rem] font-black transition-all transform active:scale-[0.97] disabled:opacity-50 shadow-2xl shadow-slate-950/20 hover:shadow-orange-500/30 text-xs uppercase tracking-widest"
+                                className="mt-auto w-full flex items-center justify-center space-x-3 bg-slate-900 hover:bg-orange-500 text-white py-4 rounded-xl font-bold transition-all disabled:opacity-50"
                             >
                                 {creating === template.id ? (
-                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                                 ) : (
                                     <>
                                         <Mail className="h-4 w-4" />
-                                        <span>Use This Template</span>
+                                        <span>Use Template</span>
                                         <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                                     </>
                                 )}
@@ -137,6 +183,94 @@ const CoverLetterTemplates = () => {
                     </div>
                 ))}
             </div>
+
+            {/* AI Generation Modal */}
+            {showAiModal && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 bg-slate-900/60 backdrop-blur-sm">
+                    <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden relative">
+                        <button 
+                            onClick={() => setShowAiModal(false)}
+                            className="absolute top-4 right-4 p-2 hover:bg-slate-100 rounded-full transition-colors"
+                        >
+                            <X className="h-5 w-5 text-slate-400" />
+                        </button>
+
+                        <div className="p-8">
+                            <div className="flex items-center space-x-3 mb-6">
+                                <div className="p-2 bg-orange-500/10 rounded-lg">
+                                    <Brain className="h-6 w-6 text-orange-600" />
+                                </div>
+                                <h2 className="text-2xl font-bold text-slate-900">AI Cover Letter</h2>
+                            </div>
+
+                            <form onSubmit={handleAiGenerate} className="space-y-5">
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Target Job Role</label>
+                                    <input
+                                        required
+                                        type="text"
+                                        placeholder="e.g. Senior Software Engineer"
+                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all"
+                                        value={aiData.jobRole}
+                                        onChange={(e) => setAiData({...aiData, jobRole: e.target.value})}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Company Name</label>
+                                    <input
+                                        type="text"
+                                        placeholder="e.g. Google"
+                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all"
+                                        value={aiData.companyName}
+                                        onChange={(e) => setAiData({...aiData, companyName: e.target.value})}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Job Description / Requirements (Optional)</label>
+                                    <textarea
+                                        rows="3"
+                                        placeholder="Paste key requirements to tailor the letter..."
+                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all resize-none"
+                                        value={aiData.jobDescription}
+                                        onChange={(e) => setAiData({...aiData, jobDescription: e.target.value})}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Tone</label>
+                                    <select
+                                        className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 outline-none transition-all"
+                                        value={aiData.tone}
+                                        onChange={(e) => setAiData({...aiData, tone: e.target.value})}
+                                    >
+                                        <option value="Professional">Professional</option>
+                                        <option value="Creative">Creative</option>
+                                        <option value="Enthusiastic">Enthusiastic</option>
+                                        <option value="Confident">Confident</option>
+                                    </select>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    disabled={generatingAi}
+                                    className="w-full flex items-center justify-center space-x-3 bg-slate-900 hover:bg-orange-500 text-white py-4 rounded-xl font-bold transition-all shadow-lg hover:shadow-orange-500/20 disabled:opacity-50"
+                                >
+                                    {generatingAi ? (
+                                        <>
+                                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                            <span>AI is writing...</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Wand2 className="h-5 w-5" />
+                                            <span>Generate with AI</span>
+                                        </>
+                                    )}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

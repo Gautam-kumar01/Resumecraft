@@ -217,17 +217,30 @@ exports.getSuggestions = async (req, res) => {
 };
 
 exports.generateCoverLetter = async (req, res) => {
-    const { jobRole, jobDescription, tone } = req.body;
+    const { jobRole, jobDescription, tone, userName, userTitle, companyName } = req.body;
 
     if (!jobRole) {
         return res.status(400).json({ message: "Job role is required" });
     }
 
-    const prompt = `You are a professional career coach. Write a compelling cover letter for a user applying for the position of "${jobRole}".
-    ${jobDescription ? `The job requirements are: "${jobDescription}".` : ''}
-    The tone of the letter should be "${tone || 'Professional'}".
-    Make it persuasive, highlight relevant skills for this role, and keep it under 300 words.
-    Return ONLY the cover letter text, no markdown.`;
+    const prompt = `You are a professional career coach. Write a compelling, structured cover letter for a user applying for the position of "${jobRole}".
+    ${userName ? `User's Name: ${userName}` : ''}
+    ${userTitle ? `User's Current Title: ${userTitle}` : ''}
+    ${companyName ? `Target Company: ${companyName}` : ''}
+    ${jobDescription ? `Job Description: "${jobDescription}"` : ''}
+    Tone: ${tone || 'Professional'}
+
+    Return a JSON object with this exact structure:
+    {
+      "subject": "Subject line for the application",
+      "salutation": "Formal salutation (e.g., Dear Hiring Manager,)",
+      "introduction": "Engaging first paragraph expressing interest and enthusiasm",
+      "bodyParagraph1": "Focus on key skills and professional achievements relevant to the role",
+      "bodyParagraph2": "Explain why the candidate is a great fit for this specific company",
+      "conclusion": "Summary and call to action for an interview",
+      "closing": "Professional sign-off (e.g., Sincerely,)"
+    }
+    Return ONLY the JSON object, no markdown, no preamble.`;
 
     try {
         let text;
@@ -238,15 +251,39 @@ exports.generateCoverLetter = async (req, res) => {
             console.log("AI: Gemini failed, falling back to DeepSeek...");
             try {
                 // Fallback to DeepSeek
-                text = await callDeepSeek(prompt, false);
+                text = await callDeepSeek(prompt, true);
             } catch (deepSeekError) {
                 console.log("AI: DeepSeek failed, falling back to Groq...");
                 // Fallback to Groq
-                text = await callGroq(prompt, false);
+                text = await callGroq(prompt, true);
             }
         }
 
-        res.json({ coverLetter: text.trim() });
+        // Clean up text if it contains markdown code blocks
+        let jsonStr = text;
+        if (text.includes('```')) {
+            const matches = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+            jsonStr = matches ? matches[1] : text.replace(/```json/gi, '').replace(/```/g, '').trim();
+        }
+        
+        jsonStr = jsonStr.trim();
+
+        try {
+            const data = JSON.parse(jsonStr);
+            res.json(data);
+        } catch (parseError) {
+            console.error("JSON Parse Error:", parseError.message);
+            // Fallback for non-JSON responses
+            res.json({
+                subject: `Application for ${jobRole}`,
+                salutation: "Dear Hiring Manager,",
+                introduction: text.substring(0, 200) + "...",
+                bodyParagraph1: "...",
+                bodyParagraph2: "...",
+                conclusion: "...",
+                closing: "Sincerely,"
+            });
+        }
     } catch (error) {
         console.error("Cover Letter Generation Error:", error.message);
         res.status(500).json({ 

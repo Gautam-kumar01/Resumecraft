@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
-import { Save, Download, ArrowLeft, Send, User, Building, Calendar, FileText, Type } from 'lucide-react';
+import { Save, Download, ArrowLeft, Send, User, Building, Calendar, FileText, Type, Wand2, Sparkles, Brain } from 'lucide-react';
 
 const CoverLetterEditor = () => {
     const { id } = useParams();
@@ -67,6 +67,35 @@ const CoverLetterEditor = () => {
 
     const handleDownload = () => {
         window.print();
+    };
+
+    const handleAiRewrite = async (section) => {
+        const sectionLabels = {
+            introduction: 'Introduction',
+            bodyParagraph1: 'Experience Paragraph',
+            bodyParagraph2: 'Company Fit Paragraph',
+            conclusion: 'Conclusion'
+        };
+
+        try {
+            const { data } = await api.post('/ai/generate-cover-letter', {
+                jobRole: coverLetter.userTitle || 'Professional',
+                companyName: coverLetter.companyName,
+                tone: 'Professional',
+                section: section // Customizing the prompt for specific section if needed
+            });
+
+            // The AI currently returns a full object, we can pick the relevant part or 
+            // since our AI endpoint returns a full structure, we'll just use the specific part
+            if (data[section]) {
+                setCoverLetter(prev => ({ ...prev, [section]: data[section] }));
+            } else {
+                // If the AI returns a generic response, use the corresponding field
+                setCoverLetter(prev => ({ ...prev, [section]: data.introduction || data.bodyParagraph1 || data.conclusion }));
+            }
+        } catch (error) {
+            console.error(`Failed to rewrite ${section}`, error);
+        }
     };
 
     if (loading) {
@@ -217,8 +246,17 @@ const CoverLetterEditor = () => {
                                     placeholder="Dear Hiring Manager,"
                                 />
                             </div>
-                            <div>
-                                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Introduction</label>
+                            <div className="relative group/field">
+                                <div className="flex justify-between items-center mb-2">
+                                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">Introduction</label>
+                                    <button 
+                                        onClick={() => handleAiRewrite('introduction')}
+                                        className="text-[10px] font-bold text-orange-600 hover:text-orange-700 flex items-center space-x-1 opacity-0 group-hover/field:opacity-100 transition-opacity"
+                                    >
+                                        <Wand2 className="h-3 w-3" />
+                                        <span>AI Rewrite</span>
+                                    </button>
+                                </div>
                                 <textarea
                                     name="introduction"
                                     value={coverLetter.introduction}
@@ -228,8 +266,17 @@ const CoverLetterEditor = () => {
                                     placeholder="I am writing to express my interest..."
                                 />
                             </div>
-                            <div>
-                                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Body Paragraph 1 (Experience)</label>
+                            <div className="relative group/field">
+                                <div className="flex justify-between items-center mb-2">
+                                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">Body Paragraph 1 (Experience)</label>
+                                    <button 
+                                        onClick={() => handleAiRewrite('bodyParagraph1')}
+                                        className="text-[10px] font-bold text-orange-600 hover:text-orange-700 flex items-center space-x-1 opacity-0 group-hover/field:opacity-100 transition-opacity"
+                                    >
+                                        <Wand2 className="h-3 w-3" />
+                                        <span>AI Rewrite</span>
+                                    </button>
+                                </div>
                                 <textarea
                                     name="bodyParagraph1"
                                     value={coverLetter.bodyParagraph1}
@@ -239,8 +286,17 @@ const CoverLetterEditor = () => {
                                     placeholder="In my previous role..."
                                 />
                             </div>
-                            <div>
-                                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Body Paragraph 2 (Why This Company?)</label>
+                            <div className="relative group/field">
+                                <div className="flex justify-between items-center mb-2">
+                                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">Body Paragraph 2 (Why This Company?)</label>
+                                    <button 
+                                        onClick={() => handleAiRewrite('bodyParagraph2')}
+                                        className="text-[10px] font-bold text-orange-600 hover:text-orange-700 flex items-center space-x-1 opacity-0 group-hover/field:opacity-100 transition-opacity"
+                                    >
+                                        <Wand2 className="h-3 w-3" />
+                                        <span>AI Rewrite</span>
+                                    </button>
+                                </div>
                                 <textarea
                                     name="bodyParagraph2"
                                     value={coverLetter.bodyParagraph2}
@@ -250,8 +306,17 @@ const CoverLetterEditor = () => {
                                     placeholder="Your company stands out because..."
                                 />
                             </div>
-                            <div>
-                                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Conclusion</label>
+                            <div className="relative group/field">
+                                <div className="flex justify-between items-center mb-2">
+                                    <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider">Conclusion</label>
+                                    <button 
+                                        onClick={() => handleAiRewrite('conclusion')}
+                                        className="text-[10px] font-bold text-orange-600 hover:text-orange-700 flex items-center space-x-1 opacity-0 group-hover/field:opacity-100 transition-opacity"
+                                    >
+                                        <Wand2 className="h-3 w-3" />
+                                        <span>AI Rewrite</span>
+                                    </button>
+                                </div>
                                 <textarea
                                     name="conclusion"
                                     value={coverLetter.conclusion}
