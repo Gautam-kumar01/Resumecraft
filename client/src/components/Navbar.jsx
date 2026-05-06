@@ -244,71 +244,103 @@ const Navbar = () => {
                 </div>
             </div>
 
-            {/* Mobile Menu */}
-            {isMenuOpen && (
-                <div className="md:hidden bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800 px-4 pt-2 pb-6 shadow-xl">
-                    <div className="flex flex-col space-y-4">
-                        <Link
-                            to="/templates"
-                            className="text-slate-600 dark:text-slate-300 hover:text-orange-500 font-medium px-2 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
+            {/* Mobile Menu Overlay */}
+            <AnimatePresence>
+                {isMenuOpen && (
+                    <>
+                        <motion.div 
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
                             onClick={() => setIsMenuOpen(false)}
+                            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 md:hidden"
+                        />
+                        <motion.div 
+                            initial={{ x: '100%' }}
+                            animate={{ x: 0 }}
+                            exit={{ x: '100%' }}
+                            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                            className="fixed right-0 top-0 bottom-0 w-[80%] max-w-sm bg-white dark:bg-slate-900 z-50 md:hidden shadow-2xl overflow-y-auto"
                         >
-                            Resume Templates
-                        </Link>
-                        <Link
-                            to="/cover-letter-templates"
-                            className="text-slate-600 dark:text-slate-300 hover:text-orange-500 font-medium px-2 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
-                            onClick={() => setIsMenuOpen(false)}
-                        >
-                            Cover Letters
-                        </Link>
-                        {user ? (
-                            <>
-                                <div className="flex items-center space-x-3 px-2 py-3 bg-slate-50 dark:bg-slate-800 rounded-lg">
-                                    <div className="bg-orange-500/10 p-2 rounded-full">
-                                        <User className="h-5 w-5 text-orange-600 dark:text-orange-400" />
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-bold text-slate-900 dark:text-white">{user.name}</p>
-                                        <p className="text-xs text-slate-500 dark:text-slate-400">{user.email}</p>
-                                    </div>
+                            <div className="p-6">
+                                <div className="flex items-center justify-between mb-8">
+                                    <Logo size="sm" />
+                                    <button onClick={() => setIsMenuOpen(false)} className="p-2 text-slate-500">
+                                        <X className="h-6 w-6" />
+                                    </button>
                                 </div>
-                                <Link
-                                    to="/dashboard"
-                                    className="text-slate-600 dark:text-slate-300 hover:text-orange-500 font-medium px-2 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
-                                    onClick={() => setIsMenuOpen(false)}
-                                >
-                                    Dashboard
-                                </Link>
-                                <button
-                                    onClick={handleLogout}
-                                    className="flex items-center space-x-2 text-slate-500 hover:text-red-500 font-medium px-2 py-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors w-full text-left"
-                                >
-                                    <LogOut className="h-4 w-4" />
-                                    <span>Logout</span>
-                                </button>
-                            </>
-                        ) : (
-                            <>
-                                <Link
-                                    to="/login"
-                                    className="text-slate-600 dark:text-slate-300 hover:text-orange-500 font-medium px-2 py-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
-                                    onClick={() => setIsMenuOpen(false)}
-                                >
-                                    Login
-                                </Link>
-                                <Link
-                                    to="/templates"
-                                    className="bg-orange-500 text-white px-4 py-3 rounded-xl font-bold text-center shadow-lg shadow-orange-500/20"
-                                    onClick={() => setIsMenuOpen(false)}
-                                >
-                                    Get Started
-                                </Link>
-                            </>
-                        )}
-                    </div>
-                </div>
-            )}
+
+                                <div className="space-y-6">
+                                    {/* User Section */}
+                                    {user ? (
+                                        <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
+                                            <div className="flex items-center space-x-3 mb-4">
+                                                <div className="bg-orange-500 text-white p-2 rounded-full">
+                                                    <User className="h-5 w-5" />
+                                                </div>
+                                                <div>
+                                                    <p className="text-sm font-bold text-slate-900 dark:text-white truncate max-w-[150px]">{user.name}</p>
+                                                    <p className="text-xs text-slate-500 truncate max-w-[150px]">{user.email}</p>
+                                                </div>
+                                            </div>
+                                            <Link to="/dashboard" onClick={() => setIsMenuOpen(false)} className="block w-full text-center py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-300">
+                                                Dashboard
+                                            </Link>
+                                        </div>
+                                    ) : (
+                                        <div className="grid grid-cols-2 gap-3">
+                                            <Link to="/login" onClick={() => setIsMenuOpen(false)} className="py-3 text-center border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-slate-600 dark:text-slate-400 text-sm">
+                                                Login
+                                            </Link>
+                                            <Link to="/templates" onClick={() => setIsMenuOpen(false)} className="py-3 text-center bg-orange-500 text-white rounded-xl font-bold text-sm">
+                                                Join Free
+                                            </Link>
+                                        </div>
+                                    )}
+
+                                    {/* Links */}
+                                    <nav className="space-y-2">
+                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2 mb-2">Main Menu</p>
+                                        <Link to="/templates" onClick={() => setIsMenuOpen(false)} className="flex items-center space-x-3 p-3 hover:bg-orange-50 dark:hover:bg-orange-900/10 rounded-xl text-slate-700 dark:text-slate-300 font-bold">
+                                            <FileText className="h-5 w-5 text-orange-500" />
+                                            <span>Resume Templates</span>
+                                        </Link>
+                                        <Link to="/cover-letter-templates" onClick={() => setIsMenuOpen(false)} className="flex items-center space-x-3 p-3 hover:bg-orange-50 dark:hover:bg-orange-900/10 rounded-xl text-slate-700 dark:text-slate-300 font-bold">
+                                            <Star className="h-5 w-5 text-orange-500" />
+                                            <span>Cover Letters</span>
+                                        </Link>
+                                        <Link to="/about" onClick={() => setIsMenuOpen(false)} className="flex items-center space-x-3 p-3 hover:bg-orange-50 dark:hover:bg-orange-900/10 rounded-xl text-slate-700 dark:text-slate-300 font-bold">
+                                            <User className="h-5 w-5 text-orange-500" />
+                                            <span>About Us</span>
+                                        </Link>
+                                        <Link to="/contact" onClick={() => setIsMenuOpen(false)} className="flex items-center space-x-3 p-3 hover:bg-orange-50 dark:hover:bg-orange-900/10 rounded-xl text-slate-700 dark:text-slate-300 font-bold">
+                                            <Mail className="h-5 w-5 text-orange-500" />
+                                            <span>Contact Support</span>
+                                        </Link>
+                                    </nav>
+
+                                    <nav className="space-y-2 pt-4 border-t border-slate-100 dark:border-slate-800">
+                                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2 mb-2">Resources</p>
+                                        <Link to="/resource/resume-formats" onClick={() => setIsMenuOpen(false)} className="block p-3 text-slate-600 dark:text-slate-400 text-sm font-medium">Resume Formats</Link>
+                                        <Link to="/resource/career-advice" onClick={() => setIsMenuOpen(false)} className="block p-3 text-slate-600 dark:text-slate-400 text-sm font-medium">Career Advice</Link>
+                                        <Link to="/resource/interview-tips" onClick={() => setIsMenuOpen(false)} className="block p-3 text-slate-600 dark:text-slate-400 text-sm font-medium">Interview Tips</Link>
+                                    </nav>
+
+                                    {user && (
+                                        <button 
+                                            onClick={handleLogout}
+                                            className="w-full flex items-center space-x-3 p-3 text-red-500 font-bold mt-8 border-t border-slate-100 dark:border-slate-800"
+                                        >
+                                            <LogOut className="h-5 w-5" />
+                                            <span>Sign Out</span>
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
         </nav>
     );
 };

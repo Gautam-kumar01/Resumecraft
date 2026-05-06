@@ -92,7 +92,7 @@ const About = () => {
                         {/* Circular Animated Glow */}
                         <div className="absolute -inset-4 bg-gradient-to-r from-orange-500 via-purple-500 to-orange-600 rounded-full blur-2xl opacity-20 animate-pulse"></div>
                         
-                        <div className="relative h-80 w-80 md:h-[450px] md:w-[450px] rounded-full p-2 bg-gradient-to-tr from-orange-500 to-purple-600 shadow-2xl">
+                        <div className="relative h-64 w-64 md:h-[450px] md:w-[450px] rounded-full p-1.5 md:p-2 bg-gradient-to-tr from-orange-500 to-purple-600 shadow-2xl">
                             <div className="h-full w-full rounded-full overflow-hidden border-4 border-white dark:border-slate-800 bg-white dark:bg-slate-800">
                                 <img
                                     src="/images/gautam.jpg"
@@ -106,13 +106,13 @@ const About = () => {
                         </div>
                         
                         {/* Status Indicator with Audio Visualizer Style */}
-                        <div className="absolute -bottom-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md px-6 py-3 rounded-full border border-orange-500/20 shadow-2xl flex items-center space-x-4">
-                            <div className="flex items-end space-x-1 h-4">
-                                <motion.div animate={{ height: [4, 16, 8, 12, 4] }} transition={{ repeat: Infinity, duration: 1 }} className="w-1 bg-green-500 rounded-full"></motion.div>
-                                <motion.div animate={{ height: [8, 4, 16, 6, 8] }} transition={{ repeat: Infinity, duration: 0.8 }} className="w-1 bg-green-500 rounded-full"></motion.div>
-                                <motion.div animate={{ height: [12, 8, 4, 16, 12] }} transition={{ repeat: Infinity, duration: 1.2 }} className="w-1 bg-green-500 rounded-full"></motion.div>
+                        <div className="absolute -bottom-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md px-4 md:px-6 py-2 md:py-3 rounded-full border border-orange-500/20 shadow-2xl flex items-center space-x-3 md:space-x-4">
+                            <div className="flex items-end space-x-1 h-3 md:h-4">
+                                <motion.div animate={{ height: [3, 12, 6, 9, 3] }} transition={{ repeat: Infinity, duration: 1 }} className="w-0.5 md:w-1 bg-green-500 rounded-full"></motion.div>
+                                <motion.div animate={{ height: [6, 3, 12, 5, 6] }} transition={{ repeat: Infinity, duration: 0.8 }} className="w-0.5 md:w-1 bg-green-500 rounded-full"></motion.div>
+                                <motion.div animate={{ height: [9, 6, 3, 12, 9] }} transition={{ repeat: Infinity, duration: 1.2 }} className="w-0.5 md:w-1 bg-green-500 rounded-full"></motion.div>
                             </div>
-                            <span className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-[0.2em]">Always Live</span>
+                            <span className="text-[10px] md:text-xs font-black text-slate-900 dark:text-white uppercase tracking-[0.1em] md:tracking-[0.2em]">Always Live</span>
                         </div>
                     </motion.div>
                 </div>
@@ -146,7 +146,7 @@ const About = () => {
                 </div>
 
                 {/* Technical Ecosystem Section */}
-                <div className="bg-slate-950 rounded-[5rem] p-12 md:p-24 text-white relative overflow-hidden shadow-2xl">
+                <div className="bg-slate-950 rounded-[3rem] md:rounded-[5rem] p-8 md:p-24 text-white relative overflow-hidden shadow-2xl">
                     <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-orange-600/10 blur-[120px] rounded-full"></div>
                     <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-purple-600/10 blur-[100px] rounded-full"></div>
                     
@@ -176,14 +176,14 @@ const About = () => {
                 </div>
 
                 {/* Closing Commitment */}
-                <div className="mt-32 text-center max-w-4xl mx-auto py-20 px-8 bg-orange-500/5 rounded-[4rem] border border-orange-500/10">
+                <div className="mt-32 text-center max-w-4xl mx-auto py-12 md:py-20 px-6 md:px-8 bg-orange-500/5 rounded-[3rem] md:rounded-[4rem] border border-orange-500/10">
                     <div className="flex justify-center space-x-2 mb-10">
                         <div className="h-2 w-2 bg-orange-500 rounded-full animate-bounce"></div>
                         <div className="h-2 w-2 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                         <div className="h-2 w-2 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
                     </div>
-                    <h2 className="text-4xl font-black text-slate-900 dark:text-white mb-8">Engineering for the Next Decade</h2>
-                    <p className="text-xl text-slate-600 dark:text-slate-400 font-light leading-relaxed italic">
+                    <h2 className="text-3xl md:text-4xl font-black text-slate-900 dark:text-white mb-8">Engineering for the Next Decade</h2>
+                    <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 font-light leading-relaxed italic">
                         "I don't just write code; I architect solutions that empower ambition. ResumeCraft is the embodiment of my passion for technical perfection."
                     </p>
                     <div className="mt-12 text-sm font-bold text-orange-600 uppercase tracking-widest">— Gautam Kumar</div>

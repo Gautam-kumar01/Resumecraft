@@ -123,13 +123,13 @@ const Home = () => {
                                 <Award className="h-4 w-4" />
                                 <span>#1 Resume Making Online Tool</span>
                             </div>
-                            <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-slate-900 leading-[1.05] mb-6 tracking-tight">
+                            <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-slate-900 leading-[1.1] mb-6 tracking-tight">
                                 Free Online <br />
                                 <span className="bg-gradient-to-r from-orange-500 via-orange-400 to-orange-600 bg-clip-text text-transparent">
                                     Resume Builder.
                                 </span>
                             </h1>
-                            <p className="text-xl text-slate-600 mb-10 max-w-lg leading-relaxed font-medium">
+                            <p className="text-lg md:text-xl text-slate-600 mb-10 max-w-lg leading-relaxed font-medium">
                                 Experience the easiest <strong>resume making online</strong>. Use our <strong>AI resume builder</strong> with recruiter-approved templates to create your professional CV in minutes.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4">
@@ -171,14 +171,14 @@ const Home = () => {
                             <motion.div
                                 whileHover={{ scale: 1.02, rotate: 0 }}
                                 onClick={handleCreateNew}
-                                className="relative glass-effect p-4 rounded-3xl border border-white shadow-2xl rotate-2 cursor-pointer transition-all duration-500"
+                                className="relative glass-effect p-4 rounded-3xl border border-white shadow-2xl rotate-2 cursor-pointer transition-all duration-500 hidden sm:block"
                             >
                                 <img
                                     src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&q=80&w=800"
                                     alt="Resume Preview"
                                     className="rounded-2xl shadow-lg border border-slate-100"
                                 />
-                                <div className="absolute -left-10 bottom-20 bg-white p-4 rounded-2xl shadow-xl border border-slate-100 animate-bounce [animation-duration:3s]">
+                                <div className="absolute -left-10 bottom-20 bg-white p-4 rounded-2xl shadow-xl border border-slate-100 animate-bounce [animation-duration:3s] hidden lg:block">
                                     <div className="flex items-center space-x-3">
                                         <div className="bg-green-100 p-2 rounded-full">
                                             <CheckCircle2 className="h-5 w-5 text-green-600" />
