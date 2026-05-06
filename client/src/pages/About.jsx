@@ -1,13 +1,13 @@
 
 import React from 'react';
-import { 
-    Code2, 
-    Globe, 
-    Cpu, 
-    Layers, 
-    Sparkles, 
-    Github, 
-    Linkedin, 
+import {
+    Code2,
+    Globe,
+    Cpu,
+    Layers,
+    Sparkles,
+    Github,
+    Linkedin,
     Mail,
     Terminal,
     Database,
@@ -31,15 +31,15 @@ const About = () => {
 
     return (
         <div className="min-h-screen pt-32 pb-24 bg-white dark:bg-slate-900">
-            <SEO 
-                title="About the Founder | Gautam Kumar" 
+            <SEO
+                title="About the Founder | Gautam Kumar"
                 description="Learn about the journey behind ResumeCraft and the full-stack expertise of Gautam Kumar."
             />
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Hero Section */}
                 <div className="grid lg:grid-cols-2 gap-16 items-center mb-32">
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, x: -30 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
@@ -69,19 +69,39 @@ const About = () => {
 
                     <motion.div 
                         initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.8 }}
-                        className="relative"
+                        animate={{ 
+                            opacity: 1, 
+                            scale: 1,
+                            y: [0, -10, 0]
+                        }}
+                        transition={{ 
+                            duration: 0.8,
+                            y: {
+                                duration: 4,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                            }
+                        }}
+                        className="relative group"
                     >
-                        <div className="aspect-[4/5] rounded-[3rem] overflow-hidden shadow-2xl shadow-orange-500/20 border-8 border-white dark:border-slate-800">
-                            <img 
-                                src="/images/gautam.jpg" 
-                                alt="Gautam Kumar" 
-                                className="w-full h-full object-cover"
+                        {/* Animated Gradient Glow */}
+                        <div className="absolute -inset-1 bg-gradient-to-r from-orange-500 via-purple-500 to-orange-600 rounded-[3.5rem] blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200 animate-gradient-xy"></div>
+                        
+                        <div className="relative aspect-[4/5] rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white dark:border-slate-800 bg-white dark:bg-slate-800">
+                            <img
+                                src="/images/gautam.jpg"
+                                alt="Gautam Kumar"
+                                className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110"
                                 onError={(e) => {
                                     e.target.src = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop";
                                 }}
                             />
+                        </div>
+                        
+                        {/* Status Indicator */}
+                        <div className="absolute top-6 right-6 flex items-center space-x-2 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-orange-500/20 shadow-lg">
+                            <span className="h-2 w-2 bg-green-500 rounded-full animate-pulse"></span>
+                            <span className="text-[10px] font-bold text-slate-900 dark:text-white uppercase tracking-widest">Always Live</span>
                         </div>
                         {/* Decorative elements */}
                         <div className="absolute -bottom-6 -right-6 bg-orange-500 text-white p-8 rounded-3xl shadow-xl hidden md:block">
@@ -130,7 +150,7 @@ const About = () => {
 
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                             {skills.map((skill, idx) => (
-                                <motion.div 
+                                <motion.div
                                     key={idx}
                                     whileHover={{ y: -5 }}
                                     className="bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-3xl flex flex-col items-center text-center"
