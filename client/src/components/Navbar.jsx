@@ -64,7 +64,7 @@ const Navbar = () => {
                                                 <p className="text-xs text-slate-500 dark:text-slate-400">Choose a polished resume template to stand out.</p>
                                             </div>
                                         </Link>
-                                        <Link to="/templates" className="flex items-start space-x-3 group/item">
+                                        <Link to="/resource/resume-formats" className="flex items-start space-x-3 group/item">
                                             <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg group-hover/item:bg-blue-500 transition-colors">
                                                 <Menu className="h-5 w-5 text-blue-600 dark:text-blue-400 group-hover/item:text-white" />
                                             </div>
@@ -84,7 +84,7 @@ const Navbar = () => {
                                                 <p className="text-xs text-slate-500 dark:text-slate-400">Get inspired with sample resumes for various careers.</p>
                                             </div>
                                         </Link>
-                                        <Link to="/contact" className="flex items-start space-x-3 group/item">
+                                        <Link to="/resource/how-to-write-a-resume" className="flex items-start space-x-3 group/item">
                                             <div className="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg group-hover/item:bg-purple-500 transition-colors">
                                                 <X className="h-5 w-5 text-purple-600 dark:text-purple-400 group-hover/item:text-white" />
                                             </div>
@@ -121,7 +121,7 @@ const Navbar = () => {
                                                 <p className="text-xs text-slate-500 dark:text-slate-400">Choose a polished cover letter template.</p>
                                             </div>
                                         </Link>
-                                        <Link to="/cover-letter-templates" className="flex items-start space-x-3 group/item">
+                                        <Link to="/resource/resume-formats" className="flex items-start space-x-3 group/item">
                                             <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg group-hover/item:bg-blue-500 transition-colors">
                                                 <Menu className="h-5 w-5 text-blue-600 dark:text-blue-400 group-hover/item:text-white" />
                                             </div>
@@ -141,7 +141,7 @@ const Navbar = () => {
                                                 <p className="text-xs text-slate-500 dark:text-slate-400">Get inspired with sample cover letters.</p>
                                             </div>
                                         </Link>
-                                        <Link to="/contact" className="flex items-start space-x-3 group/item">
+                                        <Link to="/resource/how-to-write-a-resume" className="flex items-start space-x-3 group/item">
                                             <div className="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg group-hover/item:bg-purple-500 transition-colors">
                                                 <X className="h-5 w-5 text-purple-600 dark:text-purple-400 group-hover/item:text-white" />
                                             </div>
@@ -168,9 +168,9 @@ const Navbar = () => {
                             
                             <div className={`absolute top-full left-0 w-[250px] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-2xl rounded-2xl p-4 transition-all duration-300 transform origin-top-left ${activeDropdown === 'tips' ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
                                 <ul className="space-y-1">
-                                    <li><Link to="/contact" className="block px-4 py-2 text-sm text-slate-600 dark:text-slate-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 hover:text-orange-500 rounded-lg transition-colors">Career Advice</Link></li>
-                                    <li><Link to="/contact" className="block px-4 py-2 text-sm text-slate-600 dark:text-slate-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 hover:text-orange-500 rounded-lg transition-colors">Interview Tips</Link></li>
-                                    <li><Link to="/contact" className="block px-4 py-2 text-sm text-slate-600 dark:text-slate-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 hover:text-orange-500 rounded-lg transition-colors">Job Search Strategy</Link></li>
+                                    <li><Link to="/resource/career-advice" className="block px-4 py-2 text-sm text-slate-600 dark:text-slate-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 hover:text-orange-500 rounded-lg transition-colors">Career Advice</Link></li>
+                                    <li><Link to="/resource/interview-tips" className="block px-4 py-2 text-sm text-slate-600 dark:text-slate-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 hover:text-orange-500 rounded-lg transition-colors">Interview Tips</Link></li>
+                                    <li><Link to="/resource/career-advice" className="block px-4 py-2 text-sm text-slate-600 dark:text-slate-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 hover:text-orange-500 rounded-lg transition-colors">Job Search Strategy</Link></li>
                                 </ul>
                             </div>
                         </div>
