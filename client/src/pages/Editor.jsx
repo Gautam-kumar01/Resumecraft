@@ -43,7 +43,7 @@ const Editor = () => {
     const [activeSection, setActiveSection] = useState('personal');
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [pendingAction, setPendingAction] = useState(null); // 'download' or 'save'
-    const [isMobilePreview, setIsMobilePreview] = useState(false);
+    const [isMobilePreview, setIsMobilePreview] = useState(false); // Legacy state, kept for compatibility with other components if needed
 
     // AI State
     const [aiJobRole, setAiJobRole] = useState('');
@@ -403,8 +403,8 @@ const Editor = () => {
             {/* Main Content Area */}
             <div className="flex-1 flex flex-row h-full overflow-hidden relative">
 
-                {/* Form Area - Now on the left with horizontal tabs */}
-                <div className={`md:w-1/2 bg-white border-r border-slate-200 h-full flex flex-col transition-all duration-300 ${isMobilePreview ? 'hidden md:flex' : 'flex-1'}`}>
+                {/* Form Area - Now perfectly side-by-side on mobile */}
+                <div className="w-[60%] md:w-1/2 bg-white border-r border-slate-200 h-full flex flex-col transition-all duration-300">
                     
                     {/* Header with Navigation */}
                     <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-slate-100 p-3 md:p-4 flex items-center justify-between">
@@ -764,55 +764,27 @@ const Editor = () => {
                 </div>
             </div>
 
-                {/* Mobile Mini Preview - Now on the right with better width */}
+                {/* Mobile Mini Preview - Fixed Side-by-Side Workspace */}
                 <div 
-                    className={`md:hidden bg-slate-50 border-l border-slate-200 overflow-y-auto cursor-pointer relative transition-all duration-300 ${isMobilePreview ? 'w-full' : 'w-[160px] shrink-0 shadow-[-10px_0_15px_rgba(0,0,0,0.02)]'}`}
-                    onClick={() => !isMobilePreview && setIsMobilePreview(true)}
+                    className="md:hidden w-[40%] bg-slate-50 border-l border-slate-200 overflow-y-auto relative transition-all duration-300"
                 >
-                    {isMobilePreview && (
-                        <div className="sticky top-0 z-20 bg-white/90 backdrop-blur-md border-b border-slate-100 p-3 flex items-center justify-between">
-                            <button 
-                                onClick={(e) => { e.stopPropagation(); setIsMobilePreview(false); }}
-                                className="flex items-center text-slate-600 font-bold text-sm"
-                            >
-                                <ArrowLeft className="h-4 w-4 mr-1.5" /> Back to Edit
-                            </button>
-                            <div className="flex space-x-2">
-                                <button onClick={(e) => { e.stopPropagation(); handleSave(); }} disabled={saving} className="px-3 py-1.5 bg-slate-900 text-white rounded-lg text-xs font-bold">
-                                    {saving ? '...' : 'Save'}
-                                </button>
-                                <button onClick={(e) => { e.stopPropagation(); handleDownload(); }} disabled={downloading} className="px-3 py-1.5 bg-orange-500 text-white rounded-lg text-xs font-bold">
-                                    {downloading ? '...' : 'PDF'}
-                                </button>
-                            </div>
-                        </div>
-                    )}
-                    {!isMobilePreview && (
-                        <div className="sticky top-0 z-10 bg-slate-200/80 backdrop-blur-sm p-1.5 text-center">
-                            <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Live Preview</span>
-                        </div>
-                    )}
-                    <div className={`${isMobilePreview ? 'flex items-start justify-center p-4' : 'p-2'}`}>
+                    <div className="sticky top-0 z-10 bg-slate-200/80 backdrop-blur-sm p-2 text-center border-b border-slate-300">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-600">Workspace</span>
+                    </div>
+                    <div className="p-2 flex items-start justify-center min-h-full">
                         <div 
                             className="resume-print-area bg-white shadow-lg origin-top-left"
                             style={{
                                 width: '210mm',
                                 minHeight: '297mm',
-                                transform: isMobilePreview 
-                                    ? `scale(${Math.min((window.innerWidth - 32) / 793, 0.55)})` 
-                                    : `scale(${144 / 793})`, // Better scale for 160px width
-                                transformOrigin: isMobilePreview ? 'top center' : 'top left',
+                                transform: `scale(${(window.innerWidth * 0.4 - 16) / 793})`,
+                                transformOrigin: 'top center',
                             }}
                             id={`resume-preview-${resume.templateId || 'modern'}`}
                         >
                             <ResumePreview resume={resume} />
                         </div>
                     </div>
-                    {!isMobilePreview && (
-                        <div className="sticky bottom-0 bg-gradient-to-t from-slate-100 to-transparent p-3 text-center">
-                            <span className="text-[9px] font-black text-orange-500 uppercase tracking-widest animate-pulse">Tap to view</span>
-                        </div>
-                    )}
                 </div>
 
                 {/* Desktop Preview Area - right side on desktop only */}
