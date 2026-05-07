@@ -762,6 +762,7 @@ const Editor = () => {
                         </div>
                     </div>
                 </div>
+            </div>
 
                 {/* Mobile Mini Preview - Now on the right with better width */}
                 <div 
@@ -830,7 +831,6 @@ const Editor = () => {
                     </motion.div>
                 </div>
             </div>
-        </div>
 
             {/* Mobile Bottom Action Bar - Save & Download only */}
             <div className={`md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-2xl border-t border-slate-200 p-3 flex items-center justify-center space-x-3 ${isMobilePreview ? 'hidden' : ''}`}>
