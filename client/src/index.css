@@ -109,10 +109,10 @@
   --color-purple-900: #581c87;
 
   /* Global Fonts */
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-sans: 'Inter', 'Roboto', system-ui, -apple-system, sans-serif;
   --font-heading: 'Inter', sans-serif;
-  --font-serif: 'Libre Baskerville', serif;
-  --font-display: 'Playfair Display', serif;
+  --font-serif: 'Lora', 'Libre Baskerville', serif;
+  --font-display: 'Playfair Display', 'Merriweather', serif;
 }
 
 @layer base {

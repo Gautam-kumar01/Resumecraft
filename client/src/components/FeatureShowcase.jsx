@@ -5,7 +5,7 @@ import api from '../api/axios';
 import {
   X, FileText, Cpu, Eye, MessageSquare, Globe, BarChart3,
   ChevronRight, Sparkles, CheckCircle2, Layout, Search,
-  ArrowRight, Mail, PieChart, TrendingUp, Users, Zap,
+  ArrowRight, ArrowLeft, Mail, PieChart, TrendingUp, Users, Zap,
   Download, Award, Target, Loader2
 } from 'lucide-react';
 
@@ -713,6 +713,13 @@ const modalVariants = {
 
 const FeatureShowcase = ({ isOpen, onClose, initialFeature = 0 }) => {
   const [activeFeature, setActiveFeature] = useState(initialFeature);
+  const [mobileView, setMobileView] = useState('list'); // 'list' or 'workspace'
+
+  useEffect(() => {
+    if (initialFeature !== undefined) {
+      setMobileView('workspace');
+    }
+  }, [initialFeature]);
 
   const features = [
     {
@@ -788,99 +795,133 @@ const FeatureShowcase = ({ isOpen, onClose, initialFeature = 0 }) => {
         initial="hidden"
         animate="visible"
         exit="exit"
-        className="relative z-10 w-full max-w-7xl h-[90vh] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row border border-white/20"
+        className="relative z-10 w-full max-w-7xl h-[95vh] md:h-[90vh] bg-white rounded-t-[32px] md:rounded-3xl shadow-2xl overflow-hidden flex flex-row border border-white/20"
       >
-        {/* Sidebar */}
-        <div className="w-full md:w-80 bg-slate-50 border-r border-slate-100 flex flex-col shrink-0">
-          <div className="p-6 border-b border-slate-100 flex justify-between items-center">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-white" />
-              </div>
-              <span className="font-bold text-slate-900">Features</span>
-            </div>
-            <button onClick={onClose} className="md:hidden p-2 hover:bg-slate-200 rounded-full transition-colors">
-              <X className="w-5 h-5 text-slate-500" />
-            </button>
-          </div>
-
-          <div className="flex-1 overflow-y-auto p-4 space-y-2">
-            {features.map((feature) => (
-              <button
-                key={feature.id}
-                onClick={() => setActiveFeature(feature.id)}
-                className={`w-full flex items-center space-x-4 p-4 rounded-2xl transition-all duration-300 text-left group ${activeFeature === feature.id
-                  ? 'bg-white shadow-lg shadow-slate-200/50 scale-[1.02] border border-slate-100'
-                  : 'hover:bg-slate-100/80 text-slate-500'
-                  }`}
-              >
-                <div className={`p-2.5 rounded-xl bg-gradient-to-br ${feature.color} text-white shadow-lg shadow-current/10 group-hover:scale-110 transition-transform duration-300`}>
-                  {feature.icon}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className={`font-bold text-sm truncate ${activeFeature === feature.id ? 'text-slate-900' : 'text-slate-600'}`}>
-                    {feature.title}
+        <AnimatePresence mode="popLayout" initial={false}>
+          {/* Sidebar / Feature List */}
+          {(window.innerWidth >= 768 || mobileView === 'list') && (
+            <motion.div
+              key="sidebar"
+              initial={{ x: -320, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -320, opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="w-full md:w-80 bg-slate-50 border-r border-slate-100 flex flex-col shrink-0 h-full"
+            >
+              <div className="p-6 border-b border-slate-100 flex justify-between items-center">
+                <div className="flex items-center space-x-2">
+                  <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
+                    <Sparkles className="w-5 h-5 text-white" />
                   </div>
-                  {activeFeature === feature.id && (
-                    <motion.div
-                      layoutId="activeIndicator"
-                      className="text-[10px] text-slate-400 font-medium mt-0.5"
-                    >
-                      ACTIVE WORKSPACE
-                    </motion.div>
-                  )}
+                  <span className="font-bold text-slate-900">Features</span>
                 </div>
-                <ChevronRight className={`w-4 h-4 transition-transform duration-300 ${activeFeature === feature.id ? 'translate-x-0 opacity-100' : '-translate-x-2 opacity-0'}`} />
-              </button>
-            ))}
-          </div>
-
-          <div className="p-6 border-t border-slate-100 bg-white/50">
-            <button
-              onClick={onClose}
-              className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition-all flex items-center justify-center space-x-2"
-            >
-              <span>Close Workspace</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Main Content Area */}
-        <div className="flex-1 overflow-hidden relative bg-white flex flex-col">
-          {/* Header (Desktop) */}
-          <div className="hidden md:flex p-6 border-b border-slate-50 justify-between items-center bg-white/80 backdrop-blur-sm z-10">
-            <div className="flex items-center space-x-4">
-              <h2 className="text-xl font-extrabold text-slate-900">
-                {features[activeFeature].title}
-              </h2>
-              <div className="px-3 py-1 bg-slate-100 rounded-full text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                Premium Feature
+                <button onClick={onClose} className="md:hidden p-2 hover:bg-slate-200 rounded-full transition-colors">
+                  <X className="w-5 h-5 text-slate-500" />
+                </button>
               </div>
-            </div>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-slate-100 rounded-full transition-all group"
-            >
-              <X className="w-6 h-6 text-slate-400 group-hover:text-slate-900 transition-colors" />
-            </button>
-          </div>
 
-          {/* Workspace Render */}
-          <div className="flex-1 overflow-y-auto bg-slate-50/30 p-4 md:p-8">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeFeature}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                className="h-full"
-              >
-                <Workspace id={activeFeature} />
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </div>
+              <div className="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar">
+                {features.map((feature) => (
+                  <button
+                    key={feature.id}
+                    onClick={() => {
+                      setActiveFeature(feature.id);
+                      setMobileView('workspace');
+                    }}
+                    className={`w-full flex items-center space-x-4 p-4 rounded-2xl transition-all duration-300 text-left group ${activeFeature === feature.id
+                      ? 'bg-white shadow-lg shadow-slate-200/50 scale-[1.02] border border-slate-100'
+                      : 'hover:bg-slate-100/80 text-slate-500'
+                      }`}
+                  >
+                    <div className={`p-2.5 rounded-xl bg-gradient-to-br ${feature.color} text-white shadow-lg shadow-current/10 group-hover:scale-110 transition-transform duration-300`}>
+                      {feature.icon}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className={`font-bold text-sm truncate ${activeFeature === feature.id ? 'text-slate-900' : 'text-slate-600'}`}>
+                        {feature.title}
+                      </div>
+                      {activeFeature === feature.id && (
+                        <motion.div
+                          layoutId="activeIndicator"
+                          className="text-[10px] text-slate-400 font-medium mt-0.5"
+                        >
+                          ACTIVE WORKSPACE
+                        </motion.div>
+                      )}
+                    </div>
+                    <ChevronRight className={`w-4 h-4 transition-transform duration-300 ${activeFeature === feature.id ? 'translate-x-0 opacity-100' : '-translate-x-2 opacity-0'}`} />
+                  </button>
+                ))}
+              </div>
+
+              <div className="p-6 border-t border-slate-100 bg-white/50">
+                <button
+                  onClick={onClose}
+                  className="w-full py-3 bg-slate-900 text-white rounded-xl font-bold text-sm hover:bg-slate-800 transition-all flex items-center justify-center space-x-2"
+                >
+                  <span>Close Workspace</span>
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Main Content Area / Workspace */}
+          {(window.innerWidth >= 768 || mobileView === 'workspace') && (
+            <motion.div
+              key="content"
+              initial={{ x: 500, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: 500, opacity: 0 }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="flex-1 overflow-hidden relative bg-white flex flex-col h-full"
+            >
+              {/* Header (Mobile & Desktop) */}
+              <div className="flex p-4 md:p-6 border-b border-slate-50 justify-between items-center bg-white/80 backdrop-blur-sm z-10">
+                <div className="flex items-center space-x-3 md:space-x-4">
+                  <button 
+                    onClick={() => setMobileView('list')}
+                    className="md:hidden p-2 hover:bg-slate-100 rounded-full transition-colors"
+                  >
+                    <ArrowLeft className="w-5 h-5 text-slate-600" />
+                  </button>
+                  <div>
+                    <h2 className="text-lg md:text-xl font-extrabold text-slate-900 leading-tight">
+                      {features[activeFeature].title}
+                    </h2>
+                    <div className="md:hidden text-[9px] font-bold text-orange-500 uppercase tracking-widest">Workspace</div>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div className="hidden sm:block px-3 py-1 bg-slate-100 rounded-full text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                    Premium Feature
+                  </div>
+                  <button
+                    onClick={onClose}
+                    className="p-2 hover:bg-slate-100 rounded-full transition-all group"
+                  >
+                    <X className="w-6 h-6 text-slate-400 group-hover:text-slate-900 transition-colors" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Workspace Render */}
+              <div className="flex-1 overflow-y-auto bg-slate-50/30 p-4 md:p-8 no-scrollbar">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeFeature}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                    className="h-full"
+                  >
+                    <Workspace id={activeFeature} />
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </div>,
     document.body

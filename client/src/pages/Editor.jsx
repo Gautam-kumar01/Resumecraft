@@ -403,13 +403,64 @@ const Editor = () => {
             />
 
             {/* Main Content Area */}
-            <div className="flex-1 flex flex-col md:flex-row h-full overflow-hidden relative">
+            <div className="flex-1 flex flex-row h-full overflow-hidden relative">
+
+                {/* Mobile Mini Preview - always visible on left on small screens */}
+                <div 
+                    className={`md:hidden bg-slate-100 border-r border-slate-200 overflow-y-auto cursor-pointer relative transition-all duration-300 ${isMobilePreview ? 'w-full' : 'w-[120px] shrink-0'}`}
+                    onClick={() => !isMobilePreview && setIsMobilePreview(true)}
+                >
+                    {isMobilePreview && (
+                        <div className="sticky top-0 z-20 bg-white/90 backdrop-blur-md border-b border-slate-100 p-3 flex items-center justify-between">
+                            <button 
+                                onClick={(e) => { e.stopPropagation(); setIsMobilePreview(false); }}
+                                className="flex items-center text-slate-600 font-bold text-sm"
+                            >
+                                <ArrowLeft className="h-4 w-4 mr-1.5" /> Back to Edit
+                            </button>
+                            <div className="flex space-x-2">
+                                <button onClick={(e) => { e.stopPropagation(); handleSave(); }} disabled={saving} className="px-3 py-1.5 bg-slate-900 text-white rounded-lg text-xs font-bold">
+                                    {saving ? '...' : 'Save'}
+                                </button>
+                                <button onClick={(e) => { e.stopPropagation(); handleDownload(); }} disabled={downloading} className="px-3 py-1.5 bg-orange-500 text-white rounded-lg text-xs font-bold">
+                                    {downloading ? '...' : 'PDF'}
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                    {!isMobilePreview && (
+                        <div className="sticky top-0 z-10 bg-slate-200/80 backdrop-blur-sm p-1.5 text-center">
+                            <span className="text-[8px] font-black uppercase tracking-widest text-slate-500">Preview</span>
+                        </div>
+                    )}
+                    <div className={`${isMobilePreview ? 'flex items-start justify-center p-4' : 'p-1'}`}>
+                        <div 
+                            className="resume-print-area bg-white shadow-lg origin-top-left"
+                            style={{
+                                width: '210mm',
+                                minHeight: '297mm',
+                                transform: isMobilePreview 
+                                    ? `scale(${Math.min((window.innerWidth - 32) / 793, 0.55)})` 
+                                    : 'scale(0.14)',
+                                transformOrigin: isMobilePreview ? 'top center' : 'top left',
+                            }}
+                            id={`resume-preview-${resume.templateId || 'modern'}`}
+                        >
+                            <ResumePreview resume={resume} />
+                        </div>
+                    </div>
+                    {!isMobilePreview && (
+                        <div className="sticky bottom-0 bg-gradient-to-t from-slate-100 to-transparent p-2 text-center">
+                            <span className="text-[8px] font-bold text-orange-500 uppercase tracking-wider">Tap to expand</span>
+                        </div>
+                    )}
+                </div>
                 
-                {/* Form Area - Visible on desktop, or on mobile when not in preview mode */}
-                <div className={`w-full md:w-1/2 bg-white border-r border-slate-200 overflow-y-auto h-full flex flex-col transition-all duration-300 ${isMobilePreview ? 'hidden md:flex' : 'flex'}`}>
+                {/* Form Area */}
+                <div className={`md:w-1/2 bg-white border-r border-slate-200 overflow-y-auto h-full flex flex-col transition-all duration-300 ${isMobilePreview ? 'hidden md:flex' : 'flex-1'}`}>
                     
                     {/* Header with Navigation */}
-                    <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-slate-100 p-4 flex items-center justify-between">
+                    <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-slate-100 p-3 md:p-4 flex items-center justify-between">
                         <button 
                             onClick={() => navigate(user ? '/dashboard' : '/')} 
                             className="flex items-center text-slate-500 hover:text-slate-900 transition-colors font-medium text-sm group"
@@ -763,15 +814,16 @@ const Editor = () => {
                     </div>
                 </div>
 
-                {/* Preview Area - Full screen on mobile preview mode, or right side on desktop */}
-                <div className={`w-full md:w-1/2 bg-slate-50 h-full overflow-y-auto flex items-start justify-center p-4 md:p-12 transition-all duration-300 ${!isMobilePreview ? 'hidden md:flex' : 'flex'}`}>
+                {/* Desktop Preview Area - right side on desktop only */}
+                <div className="hidden md:flex md:w-1/2 bg-slate-50 h-full overflow-y-auto items-start justify-center p-12">
                     <motion.div 
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
-                        id={`resume-preview-${resume.templateId || 'modern'}`} 
+                        id={`resume-preview-desktop-${resume.templateId || 'modern'}`} 
                         className="resume-print-area w-full max-w-[210mm] bg-white shadow-2xl min-h-[297mm] origin-top transform transition-transform"
                         style={{
-                            transform: `scale(${window.innerWidth < 640 ? 0.45 : window.innerWidth < 768 ? 0.6 : window.innerWidth < 1024 ? 0.75 : 0.95})`
+                            transform: `scale(${window.innerWidth < 1024 ? 0.8 : 0.95})`,
+                            transformOrigin: 'top center'
                         }}
                     >
                         <ResumePreview resume={resume} />
@@ -779,43 +831,23 @@ const Editor = () => {
                 </div>
             </div>
 
-            {/* Mobile Navigation Bar - Fixed Bottom with Glassmorphism */}
-            <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/70 backdrop-blur-2xl border-t border-slate-100/50 p-4 pb-safe-offset-4 flex items-center justify-around">
+            {/* Mobile Bottom Action Bar - Save & Download only */}
+            <div className={`md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-2xl border-t border-slate-200 p-3 flex items-center justify-center space-x-3 ${isMobilePreview ? 'hidden' : ''}`}>
                 <button 
-                    onClick={() => setIsMobilePreview(false)}
-                    className={`flex flex-col items-center space-y-1 transition-all duration-300 ${!isMobilePreview ? 'text-orange-600 scale-110' : 'text-slate-400'}`}
+                    onClick={handleSave} 
+                    disabled={saving}
+                    className="flex-1 max-w-[140px] py-2.5 bg-slate-900 text-white rounded-xl shadow-lg flex items-center justify-center active:scale-95 transition-all disabled:opacity-50 text-xs font-bold"
                 >
-                    <div className={`p-2 rounded-xl transition-colors ${!isMobilePreview ? 'bg-orange-50' : 'bg-transparent'}`}>
-                        <Smartphone className="h-5 w-5" />
-                    </div>
-                    <span className="text-[10px] font-black uppercase tracking-widest">Edit</span>
+                    <Save className="h-4 w-4 mr-1.5" />
+                    {saving ? 'Saving...' : 'Save'}
                 </button>
-                
-                <div className="flex space-x-3 -mt-16">
-                    <button 
-                        onClick={handleSave} 
-                        disabled={saving}
-                        className="w-14 h-14 bg-slate-900 text-white rounded-2xl shadow-2xl flex items-center justify-center active:scale-90 transition-all disabled:opacity-50 ring-4 ring-white"
-                    >
-                        {saving ? <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div> : <Save className="h-5 w-5" />}
-                    </button>
-                    <button 
-                        onClick={handleDownload} 
-                        disabled={downloading}
-                        className="w-14 h-14 bg-orange-500 text-white rounded-2xl shadow-2xl shadow-orange-200 flex items-center justify-center active:scale-90 transition-all disabled:opacity-50 ring-4 ring-white"
-                    >
-                        {downloading ? <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div> : <Download className="h-5 w-5" />}
-                    </button>
-                </div>
-
                 <button 
-                    onClick={() => setIsMobilePreview(true)}
-                    className={`flex flex-col items-center space-y-1 transition-all duration-300 ${isMobilePreview ? 'text-orange-600 scale-110' : 'text-slate-400'}`}
+                    onClick={handleDownload} 
+                    disabled={downloading}
+                    className="flex-1 max-w-[140px] py-2.5 bg-orange-500 text-white rounded-xl shadow-lg shadow-orange-200 flex items-center justify-center active:scale-95 transition-all disabled:opacity-50 text-xs font-bold"
                 >
-                    <div className={`p-2 rounded-xl transition-colors ${isMobilePreview ? 'bg-orange-50' : 'bg-transparent'}`}>
-                        <Eye className="h-5 w-5" />
-                    </div>
-                    <span className="text-[10px] font-black uppercase tracking-widest">Preview</span>
+                    <Download className={`h-4 w-4 mr-1.5 ${downloading ? 'animate-bounce' : ''}`} />
+                    {downloading ? 'Processing...' : 'Download'}
                 </button>
             </div>
         </motion.div>

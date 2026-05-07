@@ -45,7 +45,7 @@ const ResumePreview = ({ resume }) => {
 
     // --- Template 1: MODERN (Original) ---
     const ModernTemplate = () => (
-        <div className="bg-white p-8 min-h-[1000px]" id="resume-preview-modern" style={{ fontFamily: "Arial, Helvetica, sans-serif", wordSpacing: '0.02em' }}>
+        <div className="bg-white p-8 min-h-[1000px]" id="resume-preview-modern" style={{ fontFamily: "var(--font-sans)", wordSpacing: '0.02em' }}>
             <header className="border-b-2 border-slate-900 pb-6 mb-6 flex flex-row justify-between items-center gap-6 text-slate-900">
                 <div className="flex-1">
                     <h1 className="text-4xl font-black uppercase tracking-wide mb-1 text-slate-900 leading-tight">{personalInfo?.fullName || 'Your Name'}</h1>
@@ -149,7 +149,7 @@ const ResumePreview = ({ resume }) => {
 
     // --- Template 2: VISUAL (Recruiter Eye-Catching) ---
     const VisualTemplate = () => (
-        <div className="bg-white min-h-[1000px] border-t-[12px] border-orange-500 shadow-2xl overflow-hidden" id="resume-preview-visual" style={{ fontFamily: "Arial, Helvetica, sans-serif" }}>
+        <div className="bg-white min-h-[1000px] border-t-[12px] border-orange-500 shadow-2xl overflow-hidden" id="resume-preview-visual" style={{ fontFamily: "var(--font-sans)" }}>
             <div className="flex flex-row h-full">
                 {/* Visual Sidebar */}
                 <div className="w-80 bg-slate-900 text-white p-10 space-y-12">
@@ -280,7 +280,7 @@ const ResumePreview = ({ resume }) => {
 
     // --- Template 3: ELEGANT (Classic Single Column) ---
     const ElegantTemplate = () => (
-        <div className="bg-white p-16 min-h-[1000px] max-w-4xl mx-auto shadow-2xl" id="resume-preview-elegant" style={{ fontFamily: "'Times New Roman', Times, serif", wordSpacing: '0.05em' }}>
+        <div className="bg-white p-16 min-h-[1000px] max-w-4xl mx-auto shadow-2xl" id="resume-preview-elegant" style={{ fontFamily: "var(--font-serif)", wordSpacing: '0.05em' }}>
             <div className="text-center mb-16 border-b-2 border-slate-100 pb-16">
                 <h1 className="text-6xl font-black tracking-wide text-slate-900 mb-6" style={{ fontFamily: "'Georgia', serif" }}>{personalInfo?.fullName || 'Your Name'}</h1>
                 <div className="flex justify-center items-center space-x-8 text-base text-slate-400 italic mb-8">
@@ -364,7 +364,7 @@ const ResumePreview = ({ resume }) => {
 
     // --- Template 4: GOVERNMENT (Formal, Strict, Dense) ---
     const GovernmentTemplate = () => (
-        <div className="bg-white p-14 min-h-[1000px] text-black border-[1px] border-slate-200 shadow-sm" id="resume-preview-government" style={{ fontFamily: "'Times New Roman', Times, serif", wordSpacing: '0.05em' }}>
+        <div className="bg-white p-14 min-h-[1000px] text-black border-[1px] border-slate-200 shadow-sm" id="resume-preview-government" style={{ fontFamily: "var(--font-serif)", wordSpacing: '0.05em' }}>
             <div className="text-center border-b-4 border-black pb-6 mb-8">
                 <h1 className="text-4xl font-bold uppercase mb-3 tracking-wide" style={{ fontFamily: "'Georgia', serif" }}>{personalInfo?.fullName || 'YOUR NAME'}</h1>
                 <div className="flex justify-center flex-wrap gap-x-6 gap-y-2 text-[15px] font-medium italic">
@@ -432,7 +432,7 @@ const ResumePreview = ({ resume }) => {
 
     // --- Template 5: INTERNSHIP (Education First, Clean) ---
     const InternshipTemplate = () => (
-        <div className="bg-white p-14 min-h-[1000px]" id="resume-preview-internship" style={{ fontFamily: "Arial, Helvetica, sans-serif", wordSpacing: '0.05em' }}>
+        <div className="bg-white p-14 min-h-[1000px]" id="resume-preview-internship" style={{ fontFamily: "var(--font-sans)", wordSpacing: '0.05em' }}>
             <header className="flex items-start justify-between border-b-[6px] border-orange-500 pb-8 mb-10">
                 <div>
                     <h1 className="text-5xl font-black text-slate-900 mb-2 tracking-wide">{personalInfo?.fullName || 'Your Name'}</h1>
