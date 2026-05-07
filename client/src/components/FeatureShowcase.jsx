@@ -4,8 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import api from '../api/axios';
 import {
   X, FileText, Cpu, Eye, MessageSquare, Globe, BarChart3,
-  ChevronRight, Sparkles, CheckCircle2, Layout, Search,
-  ArrowRight, ArrowLeft, Mail, PieChart, TrendingUp, Users, Zap,
+  ChevronRight, Sparkles, CheckCircle2, Layout,
+  ArrowRight, ArrowLeft, Mail, TrendingUp, Users, Zap,
   Download, Award, Target, Loader2
 } from 'lucide-react';
 
@@ -168,7 +168,7 @@ function AIWorkspace() {
               onChange={(e) => setInput(e.target.value)}
               placeholder="E.g. 'Help me optimize my project bullet points'..."
               className="w-full pl-8 pr-16 py-5 bg-slate-50 border-2 border-transparent focus:border-orange-100 focus:bg-white rounded-[24px] outline-none text-sm font-medium transition-all duration-300"
-              onKeyPress={(e) => e.key === 'Enter' && simulateAI()}
+              onKeyDown={(e) => e.key === 'Enter' && simulateAI()}
             />
             <button
               onClick={simulateAI}
