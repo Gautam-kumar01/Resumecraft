@@ -50,8 +50,6 @@ const Editor = () => {
     const [aiLoading, setAiLoading] = useState(false);
     const [aiSuggestions, setAiSuggestions] = useState(null);
 
-    const previewRef = useRef();
-
     // Load resume data
     useEffect(() => {
         const fetchResume = async () => {
@@ -405,94 +403,83 @@ const Editor = () => {
             {/* Main Content Area */}
             <div className="flex-1 flex flex-row h-full overflow-hidden relative">
 
-                {/* Form Area - Now on the left on mobile too */}
-                <div className={`md:w-1/2 bg-white border-r border-slate-200 h-full flex flex-row transition-all duration-300 ${isMobilePreview ? 'hidden md:flex' : 'flex-1'}`}>
+                {/* Form Area - Now on the left with horizontal tabs */}
+                <div className={`md:w-1/2 bg-white border-r border-slate-200 h-full flex flex-col transition-all duration-300 ${isMobilePreview ? 'hidden md:flex' : 'flex-1'}`}>
                     
-                    {/* Vertical Section Navigation */}
-                    <div className="w-16 md:w-20 bg-slate-50 border-r border-slate-100 flex flex-col items-center py-6 space-y-4 shrink-0 overflow-y-auto no-scrollbar">
-                        {[
-                            { id: 'ai', icon: <Sparkles />, label: 'AI' },
-                            { id: 'personal', icon: <User />, label: 'Info' },
-                            { id: 'summary', icon: <FileText />, label: 'Summary' },
-                            { id: 'experience', icon: <Briefcase />, label: 'Jobs' },
-                            { id: 'education', icon: <GraduationCap />, label: 'Edu' },
-                            { id: 'skills', icon: <Code />, label: 'Skills' },
-                            { id: 'projects', icon: <Folder />, label: 'Projects' },
-                            { id: 'templates', icon: <Layout />, label: 'Design' }
-                        ].map(sec => (
-                            <button
-                                key={sec.id}
-                                onClick={() => setActiveSection(sec.id)}
-                                className={`group flex flex-col items-center p-2 rounded-xl transition-all ${activeSection === sec.id
-                                    ? 'bg-orange-500 text-white shadow-lg shadow-orange-200'
-                                    : 'text-slate-400 hover:bg-slate-100 hover:text-slate-600'
-                                    }`}
-                            >
-                                <div className={`p-2 rounded-lg transition-transform ${activeSection === sec.id ? 'scale-110' : 'group-hover:scale-110'}`}>
-                                    {sec.icon}
-                                </div>
-                                <span className={`text-[9px] font-black mt-1 uppercase tracking-tighter ${activeSection === sec.id ? 'text-white' : 'text-slate-400'}`}>
-                                    {sec.label}
-                                </span>
+                    {/* Header with Navigation */}
+                    <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-slate-100 p-3 md:p-4 flex items-center justify-between">
+                        <button 
+                            onClick={() => navigate(user ? '/dashboard' : '/')} 
+                            className="flex items-center text-slate-500 hover:text-slate-900 transition-colors font-medium text-sm group"
+                        >
+                            <ArrowLeft className="h-4 w-4 mr-1.5" /> 
+                            {user ? 'Dashboard' : 'Home'}
+                        </button>
+                        
+                        <div className="flex items-center space-x-2">
+                            <button onClick={handleSave} disabled={saving} className="flex items-center px-3 py-1.5 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-all text-xs font-bold shadow-sm">
+                                <Save className="h-3 w-3 mr-1.5" />
+                                {saving ? '...' : 'Save'}
                             </button>
-                        ))}
+                            <button onClick={handleDownload} disabled={downloading} className="flex items-center px-3 py-1.5 bg-orange-500 text-white rounded-xl hover:bg-orange-600 transition-all text-xs font-bold shadow-lg shadow-orange-200">
+                                <Download className="h-3 w-3 mr-1.5" />
+                                {downloading ? '...' : 'PDF'}
+                            </button>
+                        </div>
                     </div>
 
-                    <div className="flex-1 flex flex-col h-full overflow-hidden">
-                        {/* Header with Navigation */}
-                        <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-slate-100 p-3 md:p-4 flex items-center justify-between">
-                            <button 
-                                onClick={() => navigate(user ? '/dashboard' : '/')} 
-                                className="flex items-center text-slate-500 hover:text-slate-900 transition-colors font-medium text-sm group"
-                            >
-                                <ArrowLeft className="h-4 w-4 mr-1.5 group-hover:-translate-x-1 transition-transform" /> 
-                                {user ? 'Dashboard' : 'Home'}
-                            </button>
-                            
-                            <div className="flex items-center space-x-2">
-                                <button 
-                                    onClick={handleSave} 
-                                    disabled={saving} 
-                                    className="hidden md:flex items-center px-4 py-2 bg-slate-900 text-white rounded-xl hover:bg-slate-800 disabled:opacity-50 transition-all text-sm font-bold shadow-sm"
-                                >
-                                    <Save className="h-4 w-4 mr-2" />
-                                    {saving ? 'Saving...' : 'Save'}
-                                </button>
-                                <button
-                                    onClick={handleDownload}
-                                    disabled={downloading}
-                                    className="hidden md:flex items-center px-4 py-2 bg-orange-500 text-white rounded-xl hover:bg-orange-600 disabled:opacity-50 transition-all text-sm font-bold shadow-lg shadow-orange-200"
-                                >
-                                    <Download className={`h-4 w-4 mr-2 ${downloading ? 'animate-bounce' : ''}`} />
-                                    {downloading ? 'Processing...' : 'Download PDF'}
-                                </button>
+                    <div className="flex-1 overflow-y-auto">
+                        <div className="p-4 md:p-8 pt-6 max-w-2xl mx-auto w-full space-y-6">
+                            <div>
+                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Resume Title</label>
+                                <input
+                                    type="text"
+                                    placeholder="e.g. My Modern Resume"
+                                    value={resume.title}
+                                    onChange={(e) => setResume({ ...resume, title: e.target.value })}
+                                    className="w-full px-5 py-3 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-orange-500 rounded-2xl outline-none transition-all font-bold text-slate-800"
+                                />
                             </div>
-                        </div>
 
-                        <div className="flex-1 overflow-y-auto">
-                            <div className="p-4 md:p-8 pt-6 max-w-2xl mx-auto w-full space-y-8">
-                                <div>
-                                    <label className="block text-xs font-black text-slate-400 uppercase tracking-widest mb-2">Resume Title</label>
-                                    <input
-                                        type="text"
-                                        placeholder="e.g. My Modern Resume"
-                                        value={resume.title}
-                                        onChange={(e) => setResume({ ...resume, title: e.target.value })}
-                                        className="w-full px-5 py-3 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-orange-500 rounded-2xl outline-none transition-all font-bold text-slate-800"
-                                    />
-                                </div>
-
-                                {/* Animated Form Sections */}
-                                <div className="pb-24 md:pb-8">
-                                    <AnimatePresence mode="wait">
-                                        <motion.div
-                                            key={activeSection}
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            exit={{ opacity: 0, y: -10 }}
-                                            transition={{ duration: 0.2 }}
-                                            className="space-y-8"
+                            {/* Section Navigation - Back to Horizontal Tabs for better mobile layout */}
+                            <div className="sticky top-[-1px] z-10 py-2 -mx-4 px-4 bg-white/95 backdrop-blur-sm">
+                                <div className="flex space-x-2 overflow-x-auto pb-2 no-scrollbar scroll-smooth">
+                                    {[
+                                        { id: 'ai', icon: <Sparkles className="h-3.5 w-3.5 mr-1.5" />, label: 'AI' },
+                                        { id: 'personal', icon: <User className="h-3.5 w-3.5 mr-1.5" />, label: 'Personal' },
+                                        { id: 'summary', icon: <FileText className="h-3.5 w-3.5 mr-1.5" />, label: 'Summary' },
+                                        { id: 'experience', icon: <Briefcase className="h-3.5 w-3.5 mr-1.5" />, label: 'Jobs' },
+                                        { id: 'education', icon: <GraduationCap className="h-3.5 w-3.5 mr-1.5" />, label: 'Edu' },
+                                        { id: 'skills', icon: <Code className="h-3.5 w-3.5 mr-1.5" />, label: 'Skills' },
+                                        { id: 'projects', icon: <Folder className="h-3.5 w-3.5 mr-1.5" />, label: 'Projects' },
+                                        { id: 'templates', icon: <Layout className="h-3.5 w-3.5 mr-1.5" />, label: 'Design' }
+                                    ].map(sec => (
+                                        <button
+                                            key={sec.id}
+                                            onClick={() => setActiveSection(sec.id)}
+                                            className={`px-4 py-2 rounded-xl text-xs font-black whitespace-nowrap flex items-center transition-all ${activeSection === sec.id
+                                                ? 'bg-orange-500 text-white shadow-lg shadow-orange-200'
+                                                : 'bg-slate-50 text-slate-500 hover:bg-slate-100'
+                                                }`}
                                         >
+                                            {sec.icon}
+                                            {sec.label}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Animated Form Sections */}
+                            <div className="pb-24 md:pb-8">
+                                <AnimatePresence mode="wait">
+                                    <motion.div
+                                        key={activeSection}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -10 }}
+                                        transition={{ duration: 0.2 }}
+                                        className="space-y-8"
+                                    >
                                     {activeSection === 'ai' && (
                                         <div className="space-y-6">
                                             <div className="glass-effect bg-gradient-to-br from-orange-500/20 via-rose-500/10 to-white rounded-3xl p-8 text-slate-800 shadow-xl relative overflow-hidden group border-2 border-orange-100/50">
@@ -776,9 +763,9 @@ const Editor = () => {
                     </div>
                 </div>
 
-                {/* Mobile Mini Preview - Now on the right on small screens */}
+                {/* Mobile Mini Preview - Now on the right with better width */}
                 <div 
-                    className={`md:hidden bg-slate-100 border-l border-slate-200 overflow-y-auto cursor-pointer relative transition-all duration-300 ${isMobilePreview ? 'w-full' : 'w-[120px] shrink-0'}`}
+                    className={`md:hidden bg-slate-50 border-l border-slate-200 overflow-y-auto cursor-pointer relative transition-all duration-300 ${isMobilePreview ? 'w-full' : 'w-[160px] shrink-0 shadow-[-10px_0_15px_rgba(0,0,0,0.02)]'}`}
                     onClick={() => !isMobilePreview && setIsMobilePreview(true)}
                 >
                     {isMobilePreview && (
@@ -801,10 +788,10 @@ const Editor = () => {
                     )}
                     {!isMobilePreview && (
                         <div className="sticky top-0 z-10 bg-slate-200/80 backdrop-blur-sm p-1.5 text-center">
-                            <span className="text-[8px] font-black uppercase tracking-widest text-slate-500">Preview</span>
+                            <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Live Preview</span>
                         </div>
                     )}
-                    <div className={`${isMobilePreview ? 'flex items-start justify-center p-4' : 'p-1'}`}>
+                    <div className={`${isMobilePreview ? 'flex items-start justify-center p-4' : 'p-2'}`}>
                         <div 
                             className="resume-print-area bg-white shadow-lg origin-top-left"
                             style={{
@@ -812,7 +799,7 @@ const Editor = () => {
                                 minHeight: '297mm',
                                 transform: isMobilePreview 
                                     ? `scale(${Math.min((window.innerWidth - 32) / 793, 0.55)})` 
-                                    : 'scale(0.14)',
+                                    : `scale(${144 / 793})`, // Better scale for 160px width
                                 transformOrigin: isMobilePreview ? 'top center' : 'top left',
                             }}
                             id={`resume-preview-${resume.templateId || 'modern'}`}
@@ -821,8 +808,8 @@ const Editor = () => {
                         </div>
                     </div>
                     {!isMobilePreview && (
-                        <div className="sticky bottom-0 bg-gradient-to-t from-slate-100 to-transparent p-2 text-center">
-                            <span className="text-[8px] font-bold text-orange-500 uppercase tracking-wider">Tap to expand</span>
+                        <div className="sticky bottom-0 bg-gradient-to-t from-slate-100 to-transparent p-3 text-center">
+                            <span className="text-[9px] font-black text-orange-500 uppercase tracking-widest animate-pulse">Tap to view</span>
                         </div>
                     )}
                 </div>
@@ -843,6 +830,7 @@ const Editor = () => {
                     </motion.div>
                 </div>
             </div>
+        </div>
 
             {/* Mobile Bottom Action Bar - Save & Download only */}
             <div className={`md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-2xl border-t border-slate-200 p-3 flex items-center justify-center space-x-3 ${isMobilePreview ? 'hidden' : ''}`}>

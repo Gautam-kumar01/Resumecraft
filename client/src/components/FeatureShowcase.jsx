@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '../api/axios';
@@ -711,12 +711,78 @@ const modalVariants = {
   }
 };
 
-const FeatureShowcase = ({ isOpen, onClose, initialFeature = 0 }) => {
+function Workspace({ id }) {
+  switch (id) {
+    case 0:
+      return <TemplateWorkspace />;
+    case 1:
+      return <AIWorkspace />;
+    case 2:
+      return <ReviewWorkspace />;
+    case 3:
+      return (
+        <div className="flex flex-col items-center justify-center h-full text-center space-y-4">
+          <div className="w-20 h-20 bg-orange-100 rounded-3xl flex items-center justify-center text-orange-500">
+            <MessageSquare className="w-10 h-10" />
+          </div>
+          <h3 className="text-xl font-bold text-slate-900">AI Cover Letter Builder</h3>
+          <p className="text-slate-500 max-w-md">Generate matching cover letters in seconds with our smart engine. (Coming Soon)</p>
+        </div>
+      );
+    case 4:
+      return (
+        <div className="flex flex-col items-center justify-center h-full text-center space-y-4">
+          <div className="w-20 h-20 bg-orange-100 rounded-3xl flex items-center justify-center text-orange-500">
+            <Globe className="w-10 h-10" />
+          </div>
+          <h3 className="text-xl font-bold text-slate-900">Resume Website</h3>
+          <p className="text-slate-500 max-w-md">Host your professional portfolio with a unique, shareable public link. (Coming Soon)</p>
+        </div>
+      );
+    case 5:
+      return (
+        <div className="flex flex-col items-center justify-center h-full text-center space-y-4">
+          <div className="w-20 h-20 bg-orange-100 rounded-3xl flex items-center justify-center text-orange-500">
+            <BarChart3 className="w-10 h-10" />
+          </div>
+          <h3 className="text-xl font-bold text-slate-900">Resume Tracking</h3>
+          <p className="text-slate-500 max-w-md">Insights into how many people viewed your professional profile. (Coming Soon)</p>
+        </div>
+      );
+    default:
+      return null;
+  }
+}
+
+const overlayVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 },
+  exit: { opacity: 0 }
+};
+
+const modalVariants = {
+  hidden: { opacity: 0, scale: 0.95, y: 20 },
+  visible: { 
+    opacity: 1, 
+    scale: 1, 
+    y: 0,
+    transition: { type: "spring", damping: 25, stiffness: 300 }
+  },
+  exit: { 
+    opacity: 0, 
+    scale: 0.95, 
+    y: 20,
+    transition: { duration: 0.3 }
+  }
+};
+
+const FeatureShowcase = ({ onClose, initialFeature = 0 }) => {
   const [activeFeature, setActiveFeature] = useState(initialFeature);
-  const [mobileView, setMobileView] = useState('list'); // 'list' or 'workspace'
+  const [mobileView, setMobileView] = useState(initialFeature !== undefined ? 'workspace' : 'list');
 
   useEffect(() => {
     if (initialFeature !== undefined) {
+      setActiveFeature(initialFeature);
       setMobileView('workspace');
     }
   }, [initialFeature]);
@@ -765,12 +831,6 @@ const FeatureShowcase = ({ isOpen, onClose, initialFeature = 0 }) => {
       description: "Insights into how many people viewed your professional profile."
     }
   ];
-
-  const [prevInitialFeature, setPrevInitialFeature] = useState(initialFeature);
-  if (initialFeature !== prevInitialFeature) {
-    setActiveFeature(initialFeature);
-    setPrevInitialFeature(initialFeature);
-  }
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
