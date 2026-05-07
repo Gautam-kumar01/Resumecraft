@@ -109,10 +109,10 @@
   --color-purple-900: #581c87;
 
   /* Global Fonts */
-  --font-sans: 'Inter', 'Roboto', system-ui, -apple-system, sans-serif;
-  --font-heading: 'Inter', sans-serif;
-  --font-serif: 'Lora', 'Libre Baskerville', serif;
-  --font-display: 'Playfair Display', 'Merriweather', serif;
+  --font-sans: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  --font-heading: 'Outfit', 'Montserrat', sans-serif;
+  --font-serif: 'EB Garamond', 'Merriweather', serif;
+  --font-display: 'Outfit', 'Montserrat', sans-serif;
 }
 
 @layer base {
@@ -123,14 +123,21 @@
     font-family: var(--font-sans);
     background: #ffffff;
     min-height: 100vh;
-    letter-spacing: 0.01em;
-    word-spacing: 0.05em;
+    letter-spacing: -0.01em;
+    word-spacing: 0.02em;
+    font-size: 16px;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
-    letter-spacing: 0.02em;
+    letter-spacing: -0.02em;
     font-weight: 800;
+  }
+
+  @media (max-width: 768px) {
+    body {
+      font-size: 14px;
+    }
   }
 
   /* Dark Mode Base */

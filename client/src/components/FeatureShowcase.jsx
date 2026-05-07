@@ -144,9 +144,9 @@ function AIWorkspace() {
             >
               <div className={`max-w-[85%] p-6 rounded-[24px] shadow-sm ${m.role === 'user'
                   ? 'bg-slate-900 text-white rounded-tr-none shadow-xl shadow-slate-900/10'
-                  : 'bg-slate-50 text-slate-800 rounded-tl-none border border-slate-100'
+                  : 'bg-slate-50 text-slate-900 rounded-tl-none border border-slate-100 font-bold'
                 }`}>
-                <p className="text-sm leading-relaxed font-medium">{m.content}</p>
+                <p className="text-sm leading-relaxed">{m.content}</p>
               </div>
             </motion.div>
           ))}
@@ -167,7 +167,7 @@ function AIWorkspace() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="E.g. 'Help me optimize my project bullet points'..."
-              className="w-full pl-8 pr-16 py-5 bg-slate-50 border-2 border-transparent focus:border-orange-100 focus:bg-white rounded-[24px] outline-none text-sm font-medium transition-all duration-300"
+              className="w-full pl-8 pr-16 py-5 bg-slate-50 border-2 border-transparent focus:border-orange-100 focus:bg-white rounded-[24px] outline-none text-sm font-bold text-slate-900 transition-all duration-300"
               onKeyDown={(e) => e.key === 'Enter' && simulateAI()}
             />
             <button
@@ -356,7 +356,7 @@ function CoverLetterWorkspace() {
                     value={jobRole}
                     onChange={(e) => setJobRole(e.target.value)}
                     placeholder="e.g. Senior Frontend Architect at Vercel"
-                    className="w-full px-8 py-5 bg-slate-50 rounded-[24px] outline-none focus:ring-2 focus:ring-orange-500/10 focus:bg-white border-2 border-transparent focus:border-orange-100 transition-all font-medium"
+                    className="w-full px-8 py-5 bg-slate-50 rounded-[24px] outline-none focus:ring-2 focus:ring-orange-500/10 focus:bg-white border-2 border-transparent focus:border-orange-100 transition-all font-bold text-slate-900"
                   />
                 </div>
                 <div className="space-y-2">
@@ -366,7 +366,7 @@ function CoverLetterWorkspace() {
                     onChange={(e) => setJobDescription(e.target.value)}
                     rows={6}
                     placeholder="Paste the key requirements from the job posting..."
-                    className="w-full px-8 py-5 bg-slate-50 rounded-[32px] outline-none focus:ring-2 focus:ring-orange-500/10 focus:bg-white border-2 border-transparent focus:border-orange-100 transition-all font-medium resize-none"
+                    className="w-full px-8 py-5 bg-slate-50 rounded-[32px] outline-none focus:ring-2 focus:ring-orange-500/10 focus:bg-white border-2 border-transparent focus:border-orange-100 transition-all font-bold text-slate-900 resize-none"
                   />
                 </div>
               </div>
@@ -458,9 +458,9 @@ function CoverLetterWorkspace() {
                   </div>
                 </div>
 
-                <div className="p-10 bg-slate-50 rounded-[32px] border border-slate-100 font-serif text-slate-700 leading-relaxed whitespace-pre-line text-lg relative group">
-                  <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span className="px-3 py-1 bg-white rounded-full text-[10px] font-bold text-slate-400 shadow-sm border border-slate-100">EDITABLE DRAFT</span>
+                <div className="p-10 bg-slate-50 rounded-[32px] border border-slate-100 font-serif text-slate-900 leading-[1.8] whitespace-pre-line text-xl relative group shadow-inner">
+                  <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span className="px-4 py-1.5 bg-white rounded-full text-[11px] font-black text-slate-400 shadow-sm border border-slate-100 tracking-widest uppercase">Draft Preview</span>
                   </div>
                   {generatedLetter}
                 </div>

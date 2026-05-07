@@ -431,13 +431,13 @@ const Editor = () => {
                     <div className="flex-1 overflow-y-auto">
                         <div className="p-4 md:p-8 pt-6 max-w-2xl mx-auto w-full space-y-6">
                             <div>
-                                <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Resume Title</label>
+                                <label className="block text-[11px] font-black text-slate-400 uppercase tracking-[0.15em] mb-2.5 ml-1">Resume Title</label>
                                 <input
                                     type="text"
-                                    placeholder="e.g. My Modern Resume"
+                                    placeholder="e.g. Senior Product Designer"
                                     value={resume.title}
                                     onChange={(e) => setResume({ ...resume, title: e.target.value })}
-                                    className="w-full px-5 py-3 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-orange-500 rounded-2xl outline-none transition-all font-bold text-slate-800"
+                                    className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-orange-500 rounded-2xl outline-none transition-all font-extrabold text-slate-900 text-base md:text-lg shadow-inner placeholder:text-slate-300"
                                 />
                             </div>
 
@@ -496,13 +496,13 @@ const Editor = () => {
                                                     </p>
                                                     <div className="flex flex-col space-y-3">
                                                         <input
-                                                            type="text"
-                                                            placeholder="Target Role (e.g. Senior Product Designer)"
-                                                            value={aiJobRole}
-                                                            onChange={(e) => setAiJobRole(e.target.value)}
-                                                            className="w-full px-5 py-4 rounded-2xl text-slate-900 bg-white/80 backdrop-blur-md border-2 border-orange-100 shadow-inner focus:ring-4 focus:ring-orange-400/20 focus:border-orange-500 outline-none font-bold placeholder:text-slate-400"
-                                                            onKeyDown={(e) => e.key === 'Enter' && handleAIGenerate()}
-                                                        />
+                                                                    type="text"
+                                                                    placeholder="Target Role (e.g. Senior Product Designer)"
+                                                                    value={aiJobRole}
+                                                                    onChange={(e) => setAiJobRole(e.target.value)}
+                                                                    className="w-full px-5 py-4 rounded-2xl text-slate-900 bg-white/80 backdrop-blur-md border-2 border-orange-100 shadow-inner focus:ring-4 focus:ring-orange-400/20 focus:border-orange-500 outline-none font-black placeholder:text-slate-400"
+                                                                    onKeyDown={(e) => e.key === 'Enter' && handleAIGenerate()}
+                                                                />
                                                         <button
                                                             onClick={handleAIGenerate}
                                                             disabled={aiLoading}
@@ -521,12 +521,12 @@ const Editor = () => {
 
                                             {aiSuggestions && (
                                                 <div className="space-y-6">
-                                                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-6 border-2 border-slate-100 rounded-3xl bg-slate-50/50">
-                                                        <div className="flex justify-between items-start mb-4">
-                                                            <div className="flex items-center text-slate-800"><FileText className="h-4 w-4 mr-2" /><h4 className="font-black text-sm uppercase tracking-wider">Suggested Summary</h4></div>
-                                                            <button onClick={() => applySuggestion('summary', aiSuggestions.summary)} className="text-xs bg-slate-900 text-white px-4 py-1.5 rounded-full font-bold hover:bg-slate-700 transition-colors">Apply</button>
+                                                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-7 border-2 border-slate-100 rounded-[32px] bg-slate-50/50 shadow-sm">
+                                                        <div className="flex justify-between items-start mb-5">
+                                                            <div className="flex items-center text-slate-800"><FileText className="h-4.5 w-4.5 mr-2.5 text-orange-500" /><h4 className="font-black text-xs uppercase tracking-wider">Suggested Summary</h4></div>
+                                                            <button onClick={() => applySuggestion('summary', aiSuggestions.summary)} className="text-[10px] bg-slate-900 text-white px-5 py-2 rounded-full font-black hover:bg-slate-700 transition-all uppercase tracking-wider shadow-lg shadow-slate-900/10">Apply</button>
                                                         </div>
-                                                        <p className="text-sm text-slate-600 leading-relaxed font-medium">{aiSuggestions.summary}</p>
+                                                        <p className="text-base text-slate-900 leading-[1.6] font-bold italic">{aiSuggestions.summary}</p>
                                                     </motion.div>
 
                                                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="p-6 border-2 border-slate-100 rounded-3xl bg-slate-50/50">
@@ -541,15 +541,15 @@ const Editor = () => {
                                                         </div>
                                                     </motion.div>
 
-                                                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="p-6 border-2 border-slate-100 rounded-3xl bg-slate-50/50">
-                                                        <div className="flex justify-between items-start mb-4">
-                                                            <div className="flex items-center text-slate-800"><Briefcase className="h-4 w-4 mr-2" /><h4 className="font-black text-sm uppercase tracking-wider">Experience Bullets</h4></div>
-                                                            <button onClick={() => applySuggestion('experience', aiSuggestions.bullets)} className="text-xs bg-slate-900 text-white px-4 py-1.5 rounded-full font-bold hover:bg-slate-700 transition-colors">Add as Role</button>
+                                                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="p-7 border-2 border-slate-100 rounded-[32px] bg-slate-50/50 shadow-sm">
+                                                        <div className="flex justify-between items-start mb-5">
+                                                            <div className="flex items-center text-slate-800"><Briefcase className="h-4.5 w-4.5 mr-2.5 text-orange-500" /><h4 className="font-black text-xs uppercase tracking-wider">Experience Bullets</h4></div>
+                                                            <button onClick={() => applySuggestion('experience', aiSuggestions.bullets)} className="text-[10px] bg-slate-900 text-white px-5 py-2 rounded-full font-black hover:bg-slate-700 transition-all uppercase tracking-wider shadow-lg shadow-slate-900/10">Add as Role</button>
                                                         </div>
-                                                        <ul className="space-y-3">
+                                                        <ul className="space-y-4">
                                                             {aiSuggestions.bullets.map((bullet, i) => (
-                                                                <li key={i} className="flex items-start text-sm text-slate-600 font-medium leading-relaxed">
-                                                                    <div className="h-1.5 w-1.5 bg-orange-500 rounded-full mt-1.5 mr-3 shrink-0"></div>
+                                                                <li key={i} className="flex items-start text-base text-slate-900 font-bold leading-relaxed">
+                                                                    <div className="h-2 w-2 bg-orange-500 rounded-full mt-2 mr-4 shrink-0 shadow-sm shadow-orange-200"></div>
                                                                     {bullet}
                                                                 </li>
                                                             ))}
@@ -617,19 +617,19 @@ const Editor = () => {
                                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                 <div className="sm:col-span-2">
                                                     <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1 mb-1 block">Full Name</label>
-                                                    <input placeholder="Gautam Kumar" value={resume.personalInfo?.fullName || ''} onChange={(e) => handleChange('personalInfo', 'fullName', e.target.value)} className="w-full px-5 py-3.5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-orange-500 rounded-2xl transition-all font-bold" />
+                                                    <input placeholder="Gautam Kumar" value={resume.personalInfo?.fullName || ''} onChange={(e) => handleChange('personalInfo', 'fullName', e.target.value)} className="w-full px-5 py-3.5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-orange-500 rounded-2xl transition-all font-black text-slate-900" />
                                                 </div>
                                                 <div>
                                                     <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1 mb-1 block">Email</label>
-                                                    <input placeholder="hello@example.com" value={resume.personalInfo?.email || ''} onChange={(e) => handleChange('personalInfo', 'email', e.target.value)} className="w-full px-5 py-3.5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-orange-500 rounded-2xl transition-all font-bold" />
+                                                    <input placeholder="hello@example.com" value={resume.personalInfo?.email || ''} onChange={(e) => handleChange('personalInfo', 'email', e.target.value)} className="w-full px-5 py-3.5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-orange-500 rounded-2xl transition-all font-black text-slate-900" />
                                                 </div>
                                                 <div>
                                                     <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1 mb-1 block">Phone</label>
-                                                    <input placeholder="+91 98765 43210" value={resume.personalInfo?.phone || ''} onChange={(e) => handleChange('personalInfo', 'phone', e.target.value)} className="w-full px-5 py-3.5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-orange-500 rounded-2xl transition-all font-bold" />
+                                                    <input placeholder="+91 98765 43210" value={resume.personalInfo?.phone || ''} onChange={(e) => handleChange('personalInfo', 'phone', e.target.value)} className="w-full px-5 py-3.5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-orange-500 rounded-2xl transition-all font-black text-slate-900" />
                                                 </div>
                                                 <div className="sm:col-span-2">
                                                     <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1 mb-1 block">Location</label>
-                                                    <input placeholder="New Delhi, India" value={resume.personalInfo?.address || ''} onChange={(e) => handleChange('personalInfo', 'address', e.target.value)} className="w-full px-5 py-3.5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-orange-500 rounded-2xl transition-all font-bold" />
+                                                    <input placeholder="New Delhi, India" value={resume.personalInfo?.address || ''} onChange={(e) => handleChange('personalInfo', 'address', e.target.value)} className="w-full px-5 py-3.5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-orange-500 rounded-2xl transition-all font-black text-slate-900" />
                                                 </div>
                                             </div>
                                         </div>
@@ -645,7 +645,7 @@ const Editor = () => {
                                                 rows={8}
                                                 value={resume.summary || ''}
                                                 onChange={(e) => setResume({ ...resume, summary: e.target.value })}
-                                                className="w-full px-6 py-5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-orange-500 rounded-3xl outline-none transition-all font-medium text-slate-700 leading-relaxed text-sm"
+                                                className="w-full px-6 py-5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-orange-500 rounded-3xl outline-none transition-all font-bold text-slate-900 leading-relaxed text-sm"
                                                 placeholder="Seasoned software engineer with 5+ years of experience in..."
                                             />
                                         </div>
@@ -672,12 +672,12 @@ const Editor = () => {
                                                             <Trash2 className="h-4 w-4" />
                                                         </button>
                                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-                                                            <input placeholder="Company" value={exp.company} onChange={(e) => handleArrayChange('experience', index, 'company', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-bold text-sm transition-all outline-none" />
-                                                            <input placeholder="Role" value={exp.position} onChange={(e) => handleArrayChange('experience', index, 'position', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-bold text-sm transition-all outline-none" />
-                                                            <input placeholder="Start Date" value={exp.startDate} onChange={(e) => handleArrayChange('experience', index, 'startDate', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-bold text-sm transition-all outline-none" />
-                                                            <input placeholder="End Date" value={exp.endDate} onChange={(e) => handleArrayChange('experience', index, 'endDate', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-bold text-sm transition-all outline-none" />
+                                                            <input placeholder="Company" value={exp.company} onChange={(e) => handleArrayChange('experience', index, 'company', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-black text-slate-900 text-sm transition-all outline-none" />
+                                                            <input placeholder="Role" value={exp.position} onChange={(e) => handleArrayChange('experience', index, 'position', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-black text-slate-900 text-sm transition-all outline-none" />
+                                                            <input placeholder="Start Date" value={exp.startDate} onChange={(e) => handleArrayChange('experience', index, 'startDate', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-black text-slate-900 text-sm transition-all outline-none" />
+                                                            <input placeholder="End Date" value={exp.endDate} onChange={(e) => handleArrayChange('experience', index, 'endDate', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-black text-slate-900 text-sm transition-all outline-none" />
                                                         </div>
-                                                        <textarea placeholder="Key accomplishments and responsibilities..." rows={4} value={exp.description} onChange={(e) => handleArrayChange('experience', index, 'description', e.target.value)} className="w-full px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-medium text-sm transition-all outline-none leading-relaxed" />
+                                                        <textarea placeholder="Key accomplishments and responsibilities..." rows={4} value={exp.description} onChange={(e) => handleArrayChange('experience', index, 'description', e.target.value)} className="w-full px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-bold text-slate-900 text-sm transition-all outline-none leading-relaxed" />
                                                     </motion.div>
                                                 ))}
                                                 {resume.experience?.length === 0 && (
