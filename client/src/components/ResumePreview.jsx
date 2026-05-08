@@ -534,12 +534,137 @@ const ResumePreview = ({ resume }) => {
         </div>
     );
 
+    // --- Template 6: EXECUTIVE (ATS Friendly, Corporate) ---
+    const ExecutiveTemplate = () => (
+        <div className="bg-white p-12 min-h-[1123px] max-w-[794px] mx-auto" id="resume-preview-executive" style={{ fontFamily: "var(--font-body)", color: "var(--color-executive-primary)" }}>
+            {/* Header */}
+            <header className="mb-8 border-b-2 border-executive-primary pb-8">
+                <h1 className="text-3xl font-bold uppercase tracking-tight mb-2" style={{ fontFamily: "var(--font-heading)", color: "var(--color-executive-primary)" }}>
+                    {personalInfo?.fullName || 'Your Name'}
+                </h1>
+                <div className="flex flex-wrap gap-y-2 gap-x-6 text-[12px] font-medium text-executive-secondary mb-4" style={{ fontFamily: "var(--font-accent)" }}>
+                    {personalInfo?.email && <span className="flex items-center"><Mail className="h-3.5 w-3.5 mr-2 text-executive-accent" />{personalInfo.email}</span>}
+                    {personalInfo?.phone && <span className="flex items-center"><Phone className="h-3.5 w-3.5 mr-2 text-executive-accent" />{personalInfo.phone}</span>}
+                    {personalInfo?.address && <span className="flex items-center"><MapPin className="h-3.5 w-3.5 mr-2 text-executive-accent" />{personalInfo.address}</span>}
+                    {personalInfo?.linkedin && <span className="flex items-center"><Linkedin className="h-3.5 w-3.5 mr-2 text-executive-accent" />LinkedIn</span>}
+                </div>
+                {resume.title && (
+                    <div className="inline-block bg-executive-primary text-white px-4 py-1.5 rounded-sm text-[11px] font-bold uppercase tracking-[0.2em]">
+                        {resume.title}
+                    </div>
+                )}
+            </header>
+
+            <div className="space-y-8">
+                {/* Summary */}
+                {summary && (
+                    <section>
+                        <h2 className="text-[13px] font-bold uppercase tracking-[0.2em] text-executive-accent mb-4 border-b border-executive-border pb-2">
+                            Professional Summary
+                        </h2>
+                        <div className="text-[12px] leading-[1.6] text-executive-primary font-normal">
+                            {renderSummaryPoints(summary, "text-executive-primary text-[12px] font-normal leading-[1.6]", "bg-executive-primary")}
+                        </div>
+                    </section>
+                )}
+
+                {/* Experience */}
+                {experience?.length > 0 && (
+                    <section>
+                        <h2 className="text-[13px] font-bold uppercase tracking-[0.2em] text-executive-accent mb-6 border-b border-executive-border pb-2">
+                            Professional Experience
+                        </h2>
+                        <div className="space-y-6">
+                            {experience.map((job, i) => (
+                                <div key={i} className="relative pl-0">
+                                    <div className="flex justify-between items-baseline mb-1.5">
+                                        <h3 className="text-[15px] font-bold text-executive-primary">{job.position}</h3>
+                                        <span className="text-[11px] font-bold text-executive-secondary bg-slate-50 px-3 py-1 rounded-md border border-executive-border">
+                                            {job.startDate} — {job.endDate}
+                                        </span>
+                                    </div>
+                                    <div className="text-executive-accent font-bold text-[13px] mb-3 uppercase tracking-wider">
+                                        {job.company}
+                                    </div>
+                                    <p className="text-[12px] text-executive-primary leading-[1.6] whitespace-pre-wrap pl-4 border-l-2 border-executive-border">
+                                        {job.description}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                <div className="grid grid-cols-2 gap-12">
+                    {/* Education */}
+                    {education?.length > 0 && (
+                        <section>
+                            <h2 className="text-[13px] font-bold uppercase tracking-[0.2em] text-executive-accent mb-6 border-b border-executive-border pb-2">
+                                Education
+                            </h2>
+                            <div className="space-y-5">
+                                {education.map((edu, i) => (
+                                    <div key={i}>
+                                        <h3 className="text-[14px] font-bold text-executive-primary mb-1">{edu.school}</h3>
+                                        <div className="text-executive-secondary text-[12px] font-bold mb-1">{edu.degree}</div>
+                                        <div className="text-[11px] text-slate-400 font-bold uppercase tracking-widest">
+                                            {edu.startDate} — {edu.endDate}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {/* Skills */}
+                    {skills?.length > 0 && (
+                        <section>
+                            <h2 className="text-[13px] font-bold uppercase tracking-[0.2em] text-executive-accent mb-6 border-b border-executive-border pb-2">
+                                Technical Expertise
+                            </h2>
+                            <div className="flex flex-wrap gap-2">
+                                {skills.map((skill, i) => (
+                                    <span key={i} className="px-3 py-1.5 bg-white text-executive-primary border border-executive-border rounded-md text-[11px] font-bold shadow-sm hover:border-executive-accent transition-colors tracking-wide">
+                                        {skill}
+                                    </span>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+                </div>
+
+                {/* Projects */}
+                {projects?.length > 0 && (
+                    <section>
+                        <h2 className="text-[13px] font-bold uppercase tracking-[0.2em] text-executive-accent mb-6 border-b border-executive-border pb-2">
+                            Signature Projects
+                        </h2>
+                        <div className="grid grid-cols-1 gap-4">
+                            {projects.map((proj, i) => (
+                                <div key={i} className="p-4 bg-slate-50/50 rounded-lg border border-executive-border group hover:bg-white transition-colors">
+                                    <div className="flex justify-between items-center mb-2">
+                                        <h4 className="font-bold text-[14px] text-executive-primary">{proj.name}</h4>
+                                        {proj.link && <span className="text-[10px] font-bold text-executive-accent uppercase tracking-widest">{proj.link}</span>}
+                                    </div>
+                                    <p className="text-[12px] text-executive-secondary leading-[1.6] italic">
+                                        {proj.description}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+            </div>
+        </div>
+    );
+
     // Render based on templateId
     switch (templateId) {
         case 'visual': return <VisualTemplate />;
         case 'elegant': return <ElegantTemplate />;
         case 'government': return <GovernmentTemplate />;
         case 'internship': return <InternshipTemplate />;
+        case 'executive': return <ExecutiveTemplate />;
         case 'modern':
         default: return <ModernTemplate />;
     }

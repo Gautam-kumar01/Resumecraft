@@ -110,9 +110,17 @@
 
   /* Global Fonts */
   --font-sans: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
-  --font-heading: 'Outfit', 'Montserrat', sans-serif;
+  --font-heading: 'Outfit', 'Montserrat', 'Poppins', sans-serif;
   --font-serif: 'EB Garamond', 'Merriweather', serif;
+  --font-accent: 'Nunito Sans', sans-serif;
   --font-display: 'Outfit', 'Montserrat', sans-serif;
+  --font-body: 'Inter', 'Lato', 'Open Sans', sans-serif;
+
+  /* Executive Palette (ATS Friendly) */
+  --color-executive-primary: #0F172A;
+  --color-executive-accent: #F97316;
+  --color-executive-secondary: #475569;
+  --color-executive-border: #E2E8F0;
 }
 
 @layer base {

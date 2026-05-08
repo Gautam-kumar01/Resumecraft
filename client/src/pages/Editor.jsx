@@ -590,6 +590,7 @@ const Editor = () => {
                                     {activeSection === 'templates' && (
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             {[
+                                                { id: 'executive', name: 'Executive', desc: 'Premium Corporate' },
                                                 { id: 'modern', name: 'Modern', desc: 'Sleek & Clean' },
                                                 { id: 'visual', name: 'High-Impact', desc: 'Creative Sidebar' },
                                                 { id: 'elegant', name: 'Elegant', desc: 'Classic Serif' },
