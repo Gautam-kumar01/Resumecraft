@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap');
 
 @theme {
   --color-primary: #f97316;
@@ -128,7 +129,7 @@
     color: var(--color-slate-900);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-family: var(--font-sans);
+    font-family: 'Inter', sans-serif;
     background: #ffffff;
     min-height: 100vh;
     letter-spacing: -0.01em;
@@ -137,9 +138,9 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading);
+    font-family: 'Poppins', sans-serif;
     letter-spacing: -0.02em;
-    font-weight: 800;
+    font-weight: 700;
   }
 
   @media (max-width: 768px) {
@@ -147,6 +148,20 @@
       font-size: 14px;
     }
   }
+}
+
+/* Resume Specific Typography */
+.resume-heading {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.resume-text {
+  font-family: 'Inter', sans-serif;
+  line-height: 1.6;
+  color: #334155;
+}
 
   /* Dark Mode Base */
   .dark body {
