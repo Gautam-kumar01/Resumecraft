@@ -219,6 +219,33 @@ const Editor = () => {
                         if (el.classList.contains('text-3xl')) el.style.fontSize = '32px';
                         if (el.classList.contains('text-4xl')) el.style.fontSize = '40px';
                         if (el.classList.contains('text-5xl')) el.style.fontSize = '50px';
+
+                        // ─── Sanitization: Remove modern color functions (oklch, oklab) ────────────────
+                        // These cause html2canvas to crash during download.
+                        // We replace them with their computed RGB/Hex equivalents.
+                        const styleProps = ['color', 'backgroundColor', 'borderColor', 'outlineColor', 'textDecorationColor', 'fill', 'stroke'];
+                        styleProps.forEach(prop => {
+                            try {
+                                const value = window.getComputedStyle(el)[prop];
+                                if (value && (value.includes('oklch') || value.includes('oklab'))) {
+                                    // Force convert to RGB using a temporary element
+                                    const temp = document.createElement('div');
+                                    temp.style.color = value;
+                                    document.body.appendChild(temp);
+                                    const rgbValue = window.getComputedStyle(temp).color;
+                                    document.body.removeChild(temp);
+                                    
+                                    if (rgbValue && !rgbValue.includes('okl')) {
+                                        el.style[prop] = rgbValue;
+                                    } else {
+                                        // Fallback to a safe color if conversion fails
+                                        el.style[prop] = prop === 'color' ? '#000000' : 'transparent';
+                                    }
+                                }
+                            } catch (e) {
+                                console.warn("Color conversion failed for", prop, e);
+                            }
+                        });
                     }
                 }
             });
