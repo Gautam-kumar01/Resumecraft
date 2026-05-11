@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useContext, useState, useEffect } from 'react';
 import AuthContext from '../context/AuthContext';
-import { LogOut, User, Menu, X, Sun, Moon, Star, FileText, Mail } from 'lucide-react';
+import { LogOut, User, Menu, X, Sun, Moon, Star, FileText, Mail, ChevronDown } from 'lucide-react';
 import Logo from './Logo';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -50,7 +50,7 @@ const Navbar = () => {
                         >
                             <button className="flex items-center space-x-1 px-4 py-2 text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors font-medium">
                                 <span>Resume</span>
-                                <Menu className={`h-4 w-4 transition-transform duration-300 ${activeDropdown === 'resume' ? 'rotate-180' : ''}`} />
+                                <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${activeDropdown === 'resume' ? 'rotate-180' : ''}`} />
                             </button>
                             
                             <div className={`absolute top-full left-0 w-[450px] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-2xl rounded-2xl p-6 transition-all duration-300 transform origin-top-left ${activeDropdown === 'resume' ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
@@ -107,7 +107,7 @@ const Navbar = () => {
                         >
                             <button className="flex items-center space-x-1 px-4 py-2 text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors font-medium">
                                 <span>Cover Letter</span>
-                                <Menu className={`h-4 w-4 transition-transform duration-300 ${activeDropdown === 'coverletter' ? 'rotate-180' : ''}`} />
+                                <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${activeDropdown === 'coverletter' ? 'rotate-180' : ''}`} />
                             </button>
                             
                             <div className={`absolute top-full left-0 w-[450px] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-2xl rounded-2xl p-6 transition-all duration-300 transform origin-top-left ${activeDropdown === 'coverletter' ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
@@ -164,7 +164,7 @@ const Navbar = () => {
                         >
                             <button className="flex items-center space-x-1 px-4 py-2 text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors font-medium">
                                 <span>Tips</span>
-                                <Menu className={`h-4 w-4 transition-transform duration-300 ${activeDropdown === 'tips' ? 'rotate-180' : ''}`} />
+                                <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${activeDropdown === 'tips' ? 'rotate-180' : ''}`} />
                             </button>
                             
                             <div className={`absolute top-full left-0 w-[250px] bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-2xl rounded-2xl p-4 transition-all duration-300 transform origin-top-left ${activeDropdown === 'tips' ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
@@ -237,7 +237,8 @@ const Navbar = () => {
                         </button>
                         <button
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white p-2"
+                            className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white p-2.5 bg-slate-50 dark:bg-slate-800/50 rounded-xl transition-all active:scale-95 touch-manipulation"
+                            aria-label="Toggle Menu"
                         >
                             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
                         </button>

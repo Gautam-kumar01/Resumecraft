@@ -38,7 +38,7 @@ const About = () => {
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Hero Section */}
-                <div className="grid lg:grid-cols-2 gap-16 items-center mb-32">
+                <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-32">
                     <motion.div 
                         initial={{ opacity: 0, x: -30 }}
                         animate={{ opacity: 1, x: 0 }}
@@ -51,9 +51,9 @@ const About = () => {
                         <h1 className="text-5xl md:text-7xl font-black text-slate-900 dark:text-white mb-8 tracking-tight">
                             Gautam <span className="text-orange-500">Kumar</span>
                         </h1>
-                        <div className="space-y-6 text-xl text-slate-600 dark:text-slate-400 leading-relaxed font-light">
+                        <div className="space-y-6 text-lg md:text-xl text-slate-600 dark:text-slate-400 leading-relaxed font-normal md:font-light">
                             <p>
-                                I am a <span className="font-bold text-slate-900 dark:text-white">Full Stack Developer</span> and software architect with a deep-rooted passion for algorithmic efficiency and clean code. My coding journey is driven by the thrill of turning complex logic into seamless, user-centric experiences.
+                                I am a <span className="font-bold text-slate-900 dark:text-white border-b-2 border-orange-500/30">Full Stack Developer</span> and software architect with a deep-rooted passion for algorithmic efficiency and clean code. My coding journey is driven by the thrill of turning complex logic into seamless, user-centric experiences.
                             </p>
                             <p>
                                 I specialize in building high-performance systems using <span className="text-orange-500 font-medium">Java, Python, and modern JavaScript</span> ecosystems. For me, coding isn't just about syntax—it's about solving real-world problems with elegant, scalable engineering. From designing low-latency backend APIs to crafting high-fidelity React interfaces, I thrive in the space where logic meets design.
