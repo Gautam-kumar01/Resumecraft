@@ -1,6 +1,8 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 import api from '../api/axios';
 import { Save, Download, ArrowLeft, Send, User, Building, Calendar, FileText, Type, Wand2, Sparkles, Brain } from 'lucide-react';
 
@@ -9,6 +11,7 @@ const CoverLetterEditor = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [downloading, setDownloading] = useState(false);
     const [coverLetter, setCoverLetter] = useState({
         title: 'Untitled Cover Letter',
         recipientName: '',
@@ -65,8 +68,43 @@ const CoverLetterEditor = () => {
         }
     };
 
-    const handleDownload = () => {
-        window.print();
+    const handleDownload = async () => {
+        setDownloading(true);
+        try {
+            const element = document.getElementById('cover-letter-preview');
+            if (!element) throw new Error('Preview element not found');
+
+            // Wait for fonts to be ready
+            await document.fonts.ready;
+
+            // Use the same robust logic as in Editor.jsx
+            const canvas = await html2canvas(element, {
+                scale: 3,
+                useCORS: true,
+                backgroundColor: '#ffffff',
+                logging: false,
+                windowWidth: 1200
+            });
+
+            const imgData = canvas.toDataURL('image/jpeg', 1.0);
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4'
+            });
+
+            const imgProps = pdf.getImageProperties(imgData);
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+            pdf.save(`${coverLetter.title || 'Cover_Letter'}.pdf`);
+        } catch (error) {
+            console.error('Download failed:', error);
+            alert('Failed to generate PDF. Please try again.');
+        } finally {
+            setDownloading(false);
+        }
     };
 
     const handleAiRewrite = async (section) => {
@@ -138,10 +176,11 @@ const CoverLetterEditor = () => {
                         </button>
                         <button
                             onClick={handleDownload}
-                            className="flex items-center space-x-2 px-4 py-2 bg-orange-500 text-white rounded-xl hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/20"
+                            disabled={downloading}
+                            className="flex items-center space-x-2 px-4 py-2 bg-orange-500 text-white rounded-xl hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/20 disabled:opacity-50"
                         >
                             <Download className="h-4 w-4" />
-                            <span>Download PDF</span>
+                            <span>{downloading ? 'Downloading...' : 'Download PDF'}</span>
                         </button>
                     </div>
                 </div>
@@ -345,7 +384,7 @@ const CoverLetterEditor = () => {
 
                 {/* Preview Side */}
                 <div className="sticky top-28 h-fit">
-                    <div id="cover-letter-preview" className="bg-white p-12 shadow-2xl rounded-sm min-h-[1056px] w-full text-slate-800 font-serif print:shadow-none print:p-0 print:m-0">
+                    <div id="cover-letter-preview" className="resume-print-area bg-white p-12 shadow-2xl rounded-sm min-h-[1056px] w-full text-slate-800 font-serif print:shadow-none print:p-0 print:m-0">
                         <div className="mb-12">
                             <h1 className="text-4xl font-bold text-slate-900 mb-1">{coverLetter.userName || 'Your Name'}</h1>
                             <p className="text-lg text-slate-600">{coverLetter.userTitle || 'Professional Title'}</p>
