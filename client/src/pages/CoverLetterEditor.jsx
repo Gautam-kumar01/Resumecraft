@@ -71,20 +71,60 @@ const CoverLetterEditor = () => {
     const handleDownload = async () => {
         setDownloading(true);
         try {
-            const element = document.getElementById('cover-letter-preview');
-            if (!element) throw new Error('Preview element not found');
-
             // Wait for fonts to be ready
             await document.fonts.ready;
 
-            // Use the same robust logic as in Editor.jsx
-            const canvas = await html2canvas(element, {
+            // Get the source element
+            const sourceEl = document.getElementById('cover-letter-preview');
+            if (!sourceEl) throw new Error('Preview element not found');
+
+            // ─── Build off-screen container (same as Editor.jsx for consistency) ───
+            const A4_W = 794; // A4 at 96 DPI
+            const offscreen = document.createElement('div');
+            offscreen.style.cssText = [
+                'position:fixed',
+                'top:0',
+                'left:-9999px',
+                `width:${A4_W}px`,
+                'background:#fff',
+                'z-index:-9999',
+                'transform:none',
+                'overflow:visible',
+            ].join(';');
+            document.body.appendChild(offscreen);
+
+            // Clone the element
+            const clone = sourceEl.cloneNode(true);
+            
+            // Cleanup clone styles for capture
+            [clone, ...clone.querySelectorAll('*')].forEach(el => {
+                el.style.transform = 'none';
+                el.style.transition = 'none';
+                el.style.animation = 'none';
+            });
+
+            clone.style.width = `${A4_W}px`;
+            clone.style.minHeight = '1123px'; // A4 Height
+            clone.style.boxShadow = 'none';
+            clone.style.margin = '0';
+            clone.style.padding = '48px'; // Match the p-12 (3rem = 48px)
+            offscreen.appendChild(clone);
+
+            // Give it a moment to render
+            await new Promise(r => setTimeout(r, 500));
+
+            const canvas = await html2canvas(offscreen, {
                 scale: 3,
                 useCORS: true,
                 backgroundColor: '#ffffff',
                 logging: false,
+                width: A4_W,
+                height: offscreen.scrollHeight,
                 windowWidth: 1200
             });
+
+            // Cleanup offscreen
+            document.body.removeChild(offscreen);
 
             const imgData = canvas.toDataURL('image/jpeg', 1.0);
             const pdf = new jsPDF({
@@ -93,11 +133,18 @@ const CoverLetterEditor = () => {
                 format: 'a4'
             });
 
-            const imgProps = pdf.getImageProperties(imgData);
             const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+            const imgH = (canvas.height / canvas.width) * pdfWidth;
 
-            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+            // If it fits in one page or slightly over, fit it to one page
+            if (imgH < pdfHeight * 1.1) {
+                pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+            } else {
+                // Otherwise let it flow (though cover letters should be 1 page)
+                pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, imgH);
+            }
+
             pdf.save(`${coverLetter.title || 'Cover_Letter'}.pdf`);
         } catch (error) {
             console.error('Download failed:', error);
