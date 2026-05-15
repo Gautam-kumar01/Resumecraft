@@ -9,9 +9,9 @@ const SEO = ({
     type = 'website',
     noindex = false
 }) => {
-    const siteTitle = "ResumeCraft – Best Free Resume Maker Online | AI Resume Builder India";
-    const defaultDescription = "Create professional, ATS-friendly resumes and cover letters in minutes with ResumeCraft, India's #1 free AI resume builder. Recruiters-approved MNC templates, CV maker online, and job-winning formats.";
-    const defaultKeywords = "cover letter, resume making, resume maker, cv maker, resume, free resume builder, AI resume builder, CV maker online, ATS friendly resume, professional resume, Indian resume builder, job resume maker, online resume generator, free CV templates, MNC resume formats, fresher resume builder, experience resume maker, resume builder india";
+    const siteTitle = "ResumeCraft – #1 Best Free Resume Maker Online 2026 | AI Resume Builder";
+    const defaultDescription = "Create professional, ATS-friendly resumes and cover letters in minutes with ResumeCraft. India's top-rated free AI resume builder with MNC-ready templates and instant PDF download.";
+    const defaultKeywords = "resume build, resume making, resume maker, cv maker, resume, free resume builder, AI resume builder, CV maker online, ATS friendly resume, professional resume, Indian resume builder, job resume maker, online resume generator, free CV templates, MNC resume formats, fresher resume builder, experience resume maker, resume builder india, best resume builder 2026, free cv maker india";
     const siteUrl = "https://resumecraft.co.in/"; // Updating to a more likely current URL
     const defaultImage = "https://resumecraft.co.in/og-image.png";
 

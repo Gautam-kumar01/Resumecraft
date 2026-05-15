@@ -175,7 +175,7 @@ const Home = () => {
                             >
                                 <img
                                     src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&q=80&w=800"
-                                    alt="Resume Preview"
+                                    alt="Modern ATS Friendly Resume Template Design"
                                     className="rounded-2xl shadow-lg border border-slate-100"
                                 />
                                 <div className="absolute -left-10 bottom-20 bg-white p-4 rounded-2xl shadow-xl border border-slate-100 animate-bounce [animation-duration:3s] hidden lg:block">
@@ -214,7 +214,7 @@ const Home = () => {
                                 <div className="h-40 bg-slate-900 relative overflow-hidden">
                                     <img
                                         src={card.image}
-                                        alt={card.company}
+                                        alt={`${card.company} Professional Resume Template for ${card.role}`}
                                         className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
                                         onError={(e) => {
                                             e.target.src = 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop';
@@ -453,6 +453,49 @@ const Home = () => {
                     />
                 )}
             </AnimatePresence>
+
+            {/* FAQ Section */}
+            <section className="py-24 bg-white">
+                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 className="text-3xl lg:text-5xl font-black text-slate-900 mb-12 text-center tracking-tight">
+                        Frequently Asked Questions
+                    </h2>
+                    <div className="space-y-6">
+                        {[
+                            {
+                                q: "Is this resume builder really free?",
+                                a: "Yes, ResumeCraft is a 100% free resume maker online. You can create, edit, and download your professional resume in PDF format without any hidden charges or subscriptions."
+                            },
+                            {
+                                q: "What is an ATS-friendly resume?",
+                                a: "An ATS-friendly resume is designed to be easily read by Applicant Tracking Systems (ATS) used by major MNCs. Our templates use standard fonts and layouts to ensure your resume passes these filters successfully."
+                            },
+                            {
+                                q: "Can I create a cover letter here?",
+                                a: "Absolutely! We provide an AI-powered cover letter builder that matches your resume design, ensuring a consistent and professional look for your entire application."
+                            },
+                            {
+                                q: "Do I need to sign up to use the resume maker?",
+                                a: "You can start building your resume as a guest, but we recommend creating a free account to save your progress and access your resumes from any device."
+                            },
+                            {
+                                q: "How many resume templates do you offer?",
+                                a: "We offer over 35+ professional, recruiter-approved resume templates designed for various industries including IT, Marketing, Finance, and for freshers."
+                            }
+                        ].map((faq, i) => (
+                            <div key={i} className="p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:border-orange-200 transition-all">
+                                <h3 className="text-xl font-bold text-slate-900 mb-3 flex items-start">
+                                    <span className="text-orange-500 mr-3">Q.</span>
+                                    {faq.q}
+                                </h3>
+                                <p className="text-slate-600 leading-relaxed pl-8">
+                                    {faq.a}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
 
             {/* Partners / Companies Section */}
             <section className="py-24 bg-slate-900 relative overflow-hidden">

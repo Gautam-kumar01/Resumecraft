@@ -61,24 +61,34 @@ const resourceContent = {
         ]
     },
     'how-to-write-a-resume': {
-        title: 'How To Write A Professional Resume',
-        description: 'A step-by-step guide to creating a resume that passes ATS filters and impresses hiring managers.',
+        title: 'The Ultimate Guide: How To Write A Resume in 2026',
+        description: 'Learn how to create a professional, job-winning resume that beats ATS filters and impresses top MNC recruiters. Our comprehensive guide covers everything from keywords to layout.',
         icon: <Lightbulb className="h-8 w-8 text-yellow-500" />,
         sections: [
             {
-                title: '1. Contact Information',
-                content: 'Include your full name, professional email, phone number, and LinkedIn profile.',
-                points: ['Use a professional email', 'Add your location (City, State)', 'Optional: Portfolio link']
+                title: '1. Master the ATS (Applicant Tracking System)',
+                content: 'Most MNCs use software to scan resumes before a human ever sees them. To pass, you must use standard headings, avoid complex graphics, and include industry-specific keywords found in the job description.',
+                points: ['Use standard fonts like Inter or Arial', 'Incorporate keywords naturally', 'Avoid images or icons for critical info']
             },
             {
-                title: '2. Professional Summary',
-                content: 'A 3-4 sentence hook that summarizes your years of experience and top achievements.',
-                points: ['Mention your current role', 'Highlight key skills', 'Quantify one major win']
+                title: '2. The "Power Summary" Technique',
+                content: 'Your summary is your elevator pitch. Instead of saying "looking for a job," focus on what you offer. Mention years of experience, top 3 skills, and your biggest professional achievement with data.',
+                points: ['Start with your professional title', 'Include a measurable achievement (e.g., 20% growth)', 'Keep it under 4 sentences']
             },
             {
-                title: '3. Experience with Impact',
-                content: 'Don\'t just list duties. Use action verbs and numbers to show your impact.',
-                points: ['Use the STAR method', 'Start with action verbs', 'Focus on results, not tasks']
+                title: '3. Experience: Focus on Impact, Not Tasks',
+                content: 'Recruiters don\'t want to see a list of your daily chores. They want to see results. Use action verbs like "Spearheaded," "Engineered," or "Optimized" followed by the specific outcome of your work.',
+                points: ['Use the STAR method (Situation, Task, Action, Result)', 'Include numbers, percentages, and currencies', 'Start every bullet with a strong action verb']
+            },
+            {
+                title: '4. Skill Section Optimization',
+                content: 'Divide your skills into "Hard Skills" (technical) and "Soft Skills" (interpersonal). This makes your resume readable and ensures you hit the technical keyword requirements of the job.',
+                points: ['Group skills by category', 'Include proficiency levels if relevant', 'Match skills to the specific job post']
+            },
+            {
+                title: '5. Resume vs. CV: Know the Difference',
+                content: 'In India, "Resume" and "CV" are often used interchangeably, but a Resume is typically 1-2 pages for private sector jobs, while a CV is a detailed multi-page document for academic or research roles.',
+                points: ['Stick to 1 page if experience < 5 years', 'Focus on relevance over length', 'Use MNC-ready clean layouts']
             }
         ]
     },

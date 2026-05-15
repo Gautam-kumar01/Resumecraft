@@ -1,5 +1,11 @@
 User-agent: *
 Allow: /
+Disallow: /login
+Disallow: /register
+Disallow: /dashboard
+Disallow: /editor
+Disallow: /forgot-password
+Disallow: /reset-password
 
 Sitemap: https://resumecraft.co.in/sitemap.xml 
 Host: https://resumecraft.co.in
