@@ -6,7 +6,8 @@ const SEO = ({
     keywords,
     image,
     url,
-    type = 'website'
+    type = 'website',
+    noindex = false
 }) => {
     const siteTitle = "ResumeCraft – Best Free Resume Maker Online | AI Resume Builder India";
     const defaultDescription = "Create professional, ATS-friendly resumes and cover letters in minutes with ResumeCraft, India's #1 free AI resume builder. Recruiters-approved MNC templates, CV maker online, and job-winning formats.";
@@ -29,6 +30,7 @@ const SEO = ({
             <title>{metaTitle}</title>
             <meta name="description" content={metaDescription} />
             <meta name="keywords" content={metaKeywords} />
+            {noindex && <meta name="robots" content="noindex, nofollow" />}
             <link rel="canonical" href={metaUrl} />
 
             {/* Open Graph / Facebook */}

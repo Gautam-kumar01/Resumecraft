@@ -53,17 +53,9 @@ function App() {
                   </ProtectedRoute>
                 } />
 
-                <Route path="/templates" element={
-                  <ProtectedRoute>
-                    <Templates />
-                  </ProtectedRoute>
-                } />
+                <Route path="/templates" element={<Templates />} />
 
-                <Route path="/cover-letter-templates" element={
-                  <ProtectedRoute>
-                    <CoverLetterTemplates />
-                  </ProtectedRoute>
-                } />
+                <Route path="/cover-letter-templates" element={<CoverLetterTemplates />} />
 
                 <Route path="/cover-letter-editor/:id?" element={
                   <ProtectedRoute>

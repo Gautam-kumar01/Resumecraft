@@ -33,6 +33,7 @@ const ForgotPassword = () => {
       <SEO
         title="Forgot Password - ResumeCraft"
         description="Reset your ResumeCraft account password."
+        noindex={true}
       />
       <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">

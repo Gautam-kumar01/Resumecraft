@@ -60,6 +60,7 @@ const Login = () => {
             <SEO
                 title="Login"
                 description="Sign in to ResumeCraft to continue building your professional resume."
+                noindex={true}
             />
 
             <motion.div

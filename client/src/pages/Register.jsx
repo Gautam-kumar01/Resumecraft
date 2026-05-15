@@ -107,6 +107,7 @@ const Register = () => {
             <SEO
                 title="Sign Up"
                 description="Create your free account on ResumeCraft. Build professional resumes with AI assistance and get hired faster."
+                noindex={true}
             />
             <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-xl border border-slate-100">
                 <div className="text-center">
