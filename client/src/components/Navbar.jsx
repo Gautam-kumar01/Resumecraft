@@ -33,8 +33,9 @@ const Navbar = () => {
     const [activeDropdown, setActiveDropdown] = useState(null);
 
     return (
-        <nav className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100 dark:border-slate-800">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <>
+            <nav className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100 dark:border-slate-800">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16 items-center">
                     <Link to="/">
                         <Logo size="md" />
@@ -246,6 +247,8 @@ const Navbar = () => {
                 </div>
             </div>
 
+            </nav>
+
             {/* Mobile Menu Overlay */}
             <AnimatePresence>
                 {isMenuOpen && (
@@ -255,14 +258,14 @@ const Navbar = () => {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setIsMenuOpen(false)}
-                            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 md:hidden"
+                            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] md:hidden"
                         />
                         <motion.div 
                             initial={{ x: '100%' }}
                             animate={{ x: 0 }}
                             exit={{ x: '100%' }}
                             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                            className="fixed right-0 top-0 bottom-0 w-[80%] max-w-sm bg-white dark:bg-slate-900 z-50 md:hidden shadow-2xl overflow-y-auto"
+                            className="fixed right-0 top-0 bottom-0 w-[80%] max-w-sm bg-white dark:bg-slate-900 z-[70] md:hidden shadow-2xl overflow-y-auto"
                         >
                             <div className="p-6">
                                 <div className="flex items-center justify-between mb-8">
@@ -343,7 +346,7 @@ const Navbar = () => {
                     </>
                 )}
             </AnimatePresence>
-        </nav>
+        </>
     );
 };
 
