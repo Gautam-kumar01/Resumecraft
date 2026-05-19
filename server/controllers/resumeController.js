@@ -60,7 +60,7 @@ const createResume = async (req, res) => {
 
         const resume = new Resume({
             userId: req.user._id,
-            title: title || 'Untitled Resume',
+            title: title || '',
             templateId: templateId || 'modern',
             personalInfo: personalInfo || {
                 fullName: req.user.name || '',
