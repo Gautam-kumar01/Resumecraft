@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import { useState, useEffect, useRef, useContext, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
@@ -594,13 +594,15 @@ const Editor = () => {
                         onToggle={() => setOpenSection(openSection === 'summary' ? '' : 'summary')}
                     >
                         <div className="quill-container">
-                            <ReactQuill 
-                                theme="snow" 
-                                value={resume.summary || ''} 
-                                onChange={(val) => setResume({ ...resume, summary: val })}
-                                modules={modules}
-                                className="bg-white rounded-xl overflow-hidden"
-                            />
+                            {openSection === 'summary' && (
+                                <ReactQuill 
+                                    theme="snow" 
+                                    value={resume.summary || ''} 
+                                    onChange={(val) => setResume({ ...resume, summary: val })}
+                                    modules={modules}
+                                    className="bg-white rounded-xl overflow-hidden"
+                                />
+                            )}
                         </div>
                     </AccordionItem>
 
@@ -664,13 +666,15 @@ const Editor = () => {
                                                             <div className="md:col-span-2">
                                                                 <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1 ml-1">Job Description</label>
                                                                 <div className="quill-container-small">
-                                                                    <ReactQuill 
-                                                                        theme="snow" 
-                                                                        value={exp.description || ''} 
-                                                                        onChange={(val) => handleArrayChange('experience', index, 'description', val)}
-                                                                        modules={modules}
-                                                                        className="bg-white rounded-lg"
-                                                                    />
+                                                                    {openSection === 'experience' && (
+                                                                        <ReactQuill 
+                                                                            theme="snow" 
+                                                                            value={exp.description || ''} 
+                                                                            onChange={(val) => handleArrayChange('experience', index, 'description', val)}
+                                                                            modules={modules}
+                                                                            className="bg-white rounded-lg"
+                                                                        />
+                                                                    )}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -805,13 +809,15 @@ const Editor = () => {
                                                             <div className="md:col-span-2">
                                                                 <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1 ml-1">Project Description</label>
                                                                 <div className="quill-container-small">
-                                                                    <ReactQuill 
-                                                                        theme="snow" 
-                                                                        value={proj.description || ''} 
-                                                                        onChange={(val) => handleArrayChange('projects', index, 'description', val)}
-                                                                        modules={modules}
-                                                                        className="bg-white rounded-lg"
-                                                                    />
+                                                                    {openSection === 'projects' && (
+                                                                        <ReactQuill 
+                                                                            theme="snow" 
+                                                                            value={proj.description || ''} 
+                                                                            onChange={(val) => handleArrayChange('projects', index, 'description', val)}
+                                                                            modules={modules}
+                                                                            className="bg-white rounded-lg"
+                                                                        />
+                                                                    )}
                                                                 </div>
                                                             </div>
                                                         </div>
