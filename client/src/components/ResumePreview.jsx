@@ -59,6 +59,9 @@ const ResumePreview = ({ resume }) => {
                         {personalInfo?.email && <span className="flex items-center"><Mail className="h-4 w-4 mr-2 text-orange-500" />{personalInfo.email}</span>}
                         {personalInfo?.phone && <span className="flex items-center"><Phone className="h-4 w-4 mr-2 text-orange-500" />{personalInfo.phone}</span>}
                         {personalInfo?.address && <span className="flex items-center"><MapPin className="h-4 w-4 mr-2 text-orange-500" />{personalInfo.address}</span>}
+                        {personalInfo?.linkedin && <span className="flex items-center"><Linkedin className="h-4 w-4 mr-2 text-orange-500" />{personalInfo.linkedin.replace(/^https?:\/\/(www\.)?/, '')}</span>}
+                        {personalInfo?.github && <span className="flex items-center"><Github className="h-4 w-4 mr-2 text-orange-500" />{personalInfo.github.replace(/^https?:\/\/(www\.)?/, '')}</span>}
+                        {personalInfo?.website && <span className="flex items-center"><Globe className="h-4 w-4 mr-2 text-orange-500" />{personalInfo.website.replace(/^https?:\/\/(www\.)?/, '')}</span>}
                     </div>
                 </div>
 
@@ -180,6 +183,9 @@ const ResumePreview = ({ resume }) => {
                             {personalInfo?.email && <div className="flex items-center group break-all"><div className="p-1.5 bg-slate-800 rounded-md mr-2.5 group-hover:bg-orange-500 transition-colors"><Mail className="h-3 w-3 text-white shrink-0" /></div><span>{personalInfo.email}</span></div>}
                             {personalInfo?.phone && <div className="flex items-center group"><div className="p-1.5 bg-slate-800 rounded-md mr-2.5 group-hover:bg-orange-500 transition-colors"><Phone className="h-3 w-3 text-white shrink-0" /></div>{personalInfo.phone}</div>}
                             {personalInfo?.address && <div className="flex items-center group"><div className="p-1.5 bg-slate-800 rounded-md mr-2.5 group-hover:bg-orange-500 transition-colors"><MapPin className="h-3 w-3 text-white shrink-0" /></div>{personalInfo.address}</div>}
+                            {personalInfo?.linkedin && <div className="flex items-center group"><div className="p-1.5 bg-slate-800 rounded-md mr-2.5 group-hover:bg-orange-500 transition-colors"><Linkedin className="h-3 w-3 text-white shrink-0" /></div><span className="truncate">{personalInfo.linkedin.replace(/^https?:\/\/(www\.)?/, '')}</span></div>}
+                            {personalInfo?.github && <div className="flex items-center group"><div className="p-1.5 bg-slate-800 rounded-md mr-2.5 group-hover:bg-orange-500 transition-colors"><Github className="h-3 w-3 text-white shrink-0" /></div><span className="truncate">{personalInfo.github.replace(/^https?:\/\/(www\.)?/, '')}</span></div>}
+                            {personalInfo?.website && <div className="flex items-center group"><div className="p-1.5 bg-slate-800 rounded-md mr-2.5 group-hover:bg-orange-500 transition-colors"><Globe className="h-3 w-3 text-white shrink-0" /></div><span className="truncate">{personalInfo.website.replace(/^https?:\/\/(www\.)?/, '')}</span></div>}
                         </div>
                     </div>
 
@@ -268,10 +274,13 @@ const ResumePreview = ({ resume }) => {
         <div className="bg-white p-12 w-full h-full shadow-inner" id="resume-preview-elegant" style={{ fontFamily: "var(--font-serif)", wordSpacing: '0.05em' }}>
             <div className="text-center mb-10 border-b border-slate-200 pb-10">
                 <h1 className="text-5xl font-black tracking-wide text-slate-900 mb-4" style={{ fontFamily: "'Georgia', serif" }}>{personalInfo?.fullName || 'Your Name'}</h1>
-                <div className="flex justify-center items-center space-x-6 text-[13px] text-slate-500 italic mb-5">
+                <div className="flex justify-center items-center space-x-6 text-[13px] text-slate-500 italic mb-5 flex-wrap gap-y-2">
                     {personalInfo?.email && <span className="flex items-center"><Mail className="h-3.5 w-3.5 mr-1.5 text-orange-500" />{personalInfo.email}</span>}
                     {personalInfo?.phone && <span className="flex items-center"><Phone className="h-3.5 w-3.5 mr-1.5 text-orange-500" />{personalInfo.phone}</span>}
                     {personalInfo?.address && <span className="flex items-center"><MapPin className="h-3.5 w-3.5 mr-1.5 text-orange-500" />{personalInfo.address}</span>}
+                    {personalInfo?.linkedin && <span className="flex items-center"><Linkedin className="h-3.5 w-3.5 mr-1.5 text-orange-500" />{personalInfo.linkedin.replace(/^https?:\/\/(www\.)?/, '')}</span>}
+                    {personalInfo?.github && <span className="flex items-center"><Github className="h-3.5 w-3.5 mr-1.5 text-orange-500" />{personalInfo.github.replace(/^https?:\/\/(www\.)?/, '')}</span>}
+                    {personalInfo?.website && <span className="flex items-center"><Globe className="h-3.5 w-3.5 mr-1.5 text-orange-500" />{personalInfo.website.replace(/^https?:\/\/(www\.)?/, '')}</span>}
                 </div>
                 {resume.title && <h3 className="text-[15px] text-orange-600 font-bold tracking-[0.3em] uppercase" style={{ fontFamily: "'Georgia', serif" }}>{resume.title}</h3>}
             </div>
@@ -508,6 +517,9 @@ const ResumePreview = ({ resume }) => {
                     {personalInfo?.email && <span className="flex items-center"><Mail className="h-3.5 w-3.5 mr-2 text-orange-500" />{personalInfo.email}</span>}
                     {personalInfo?.phone && <span className="flex items-center"><Phone className="h-3.5 w-3.5 mr-2 text-orange-500" />{personalInfo.phone}</span>}
                     {personalInfo?.address && <span className="flex items-center"><MapPin className="h-3.5 w-3.5 mr-2 text-orange-500" />{personalInfo.address}</span>}
+                    {personalInfo?.linkedin && <span className="flex items-center"><Linkedin className="h-3.5 w-3.5 mr-2 text-orange-500" />{personalInfo.linkedin.replace(/^https?:\/\/(www\.)?/, '')}</span>}
+                    {personalInfo?.github && <span className="flex items-center"><Github className="h-3.5 w-3.5 mr-2 text-orange-500" />{personalInfo.github.replace(/^https?:\/\/(www\.)?/, '')}</span>}
+                    {personalInfo?.website && <span className="flex items-center"><Globe className="h-3.5 w-3.5 mr-2 text-orange-500" />{personalInfo.website.replace(/^https?:\/\/(www\.)?/, '')}</span>}
                 </div>
             </header>
 
