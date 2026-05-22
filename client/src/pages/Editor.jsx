@@ -399,13 +399,13 @@ const Editor = () => {
         <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className={`flex flex-col md:flex-row h-screen overflow-hidden bg-slate-50 font-sans`}
+            className={`flex flex-row h-screen overflow-hidden bg-slate-50 font-sans`}
         >
             <SEO title={resume.title ? `${resume.title} - Editor` : "Resume Editor"} />
             <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} onSuccess={handleLoginSuccess} title="🎉 Your resume is ready!" subtitle="Login or sign up to download and save your resume." />
 
             {/* Left Panel: Form & Editor */}
-            <div className={`w-full md:w-[45%] lg:w-[40%] bg-slate-50 border-r border-slate-200 h-full flex flex-col z-10 transition-all duration-500 ${isMobilePreview ? '-translate-x-full absolute md:relative md:translate-x-0' : ''} ${isFullscreenPreview ? 'md:-translate-x-full md:absolute md:opacity-0' : 'md:translate-x-0 md:relative md:opacity-100'}`}>
+            <div className={`w-[60%] md:w-[45%] lg:w-[40%] bg-slate-50 border-r border-slate-200 h-full flex flex-col z-10 transition-all duration-500 ${isMobilePreview ? '-translate-x-full absolute md:relative md:translate-x-0' : ''} ${isFullscreenPreview ? 'md:-translate-x-full md:absolute md:opacity-0' : 'md:translate-x-0 md:relative md:opacity-100'}`}>
                 
                 {/* Header */}
                 <div className="bg-white border-b border-slate-200 p-4 flex items-center justify-between shrink-0 shadow-sm z-20 relative">
@@ -927,7 +927,7 @@ const Editor = () => {
             {/* Right Panel: Live Scaling Preview */}
             <div 
                 ref={previewContainerRef}
-                className={`w-full md:w-[55%] lg:w-[60%] bg-slate-200 h-full overflow-y-auto flex justify-center py-10 px-4 relative transition-all duration-500 ${!isMobilePreview ? 'hidden md:flex' : 'absolute inset-0 z-50 flex'}`}
+                className={`w-[40%] md:w-[55%] lg:w-[60%] bg-slate-200 h-full overflow-y-auto flex justify-center py-10 px-4 relative transition-all duration-500 ${!isMobilePreview ? 'flex' : 'absolute inset-0 z-50 flex'}`}
             >
                 {/* Floating controls for Fullscreen mode */}
                 {isFullscreenPreview && (

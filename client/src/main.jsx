@@ -1,25 +1,27 @@
+import * as ReactDOM from 'react-dom';
+import * as ReactDOMClient from 'react-dom/client';
+
+// ABSOLUTE TOP SHIM: Fix for React 19 findDOMNode removal
+const findDOMNodeShim = (instance) => {
+  if (!instance) return null;
+  if (instance instanceof HTMLElement) return instance;
+  return null;
+};
+
+// Patch the global ReactDOM object which legacy libraries look for
+// @ts-ignore
+const patched = { ...ReactDOM, findDOMNode: findDOMNodeShim };
+// @ts-ignore
+window.ReactDOM = patched;
+// @ts-ignore
+window.ReactDOM.default = patched;
+
 import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import * as ReactDOM from 'react-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import './index.css'
 import App from './App.jsx'
 
-// Fix for React 19 findDOMNode removal (required by legacy libraries like react-quill)
-if (!ReactDOM.findDOMNode) {
-  const shim = (instance) => {
-    if (!instance) return null;
-    if (instance instanceof HTMLElement) return instance;
-    return null;
-  };
-  // @ts-ignore
-  ReactDOM.findDOMNode = shim;
-  // Also attach to window for bundled libraries that might look for global ReactDOM
-  // @ts-ignore
-  window.ReactDOM = { ...ReactDOM, findDOMNode: shim };
-}
-
-createRoot(document.getElementById('root')).render(
+ReactDOMClient.createRoot(document.getElementById('root')).render(
   <StrictMode>
     <HelmetProvider>
       <App />
