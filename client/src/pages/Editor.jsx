@@ -7,9 +7,11 @@ import AuthContext from '../context/AuthContext';
 import ResumePreview from '../components/ResumePreview';
 import LoginModal from '../components/LoginModal';
 import SEO from '../components/SEO';
-import { Save, Download, Eye, ArrowLeft, Plus, Trash2, User, Upload, Sparkles, FileText, Smartphone, Briefcase, GraduationCap, Code, Folder, Layout } from 'lucide-react';
+import { Save, Download, Eye, ArrowLeft, Plus, Trash2, User, Upload, Sparkles, FileText, Briefcase, GraduationCap, Code, Folder, Layout, ChevronDown, ChevronUp, GripVertical, Settings } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const initialResumeState = {
     title: '',
@@ -31,6 +33,61 @@ const initialResumeState = {
     templateId: 'modern'
 };
 
+const modules = {
+    toolbar: [
+        ['bold', 'italic', 'underline'],
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        ['clean']
+    ],
+};
+
+const AccordionItem = ({ title, icon, isOpen, onToggle, children }) => (
+    <div className={`border rounded-2xl bg-white mb-4 overflow-hidden transition-all duration-300 ${isOpen ? 'border-orange-200 shadow-md ring-1 ring-orange-100' : 'border-slate-200 shadow-sm hover:shadow-md'}`}>
+        <button 
+            onClick={onToggle}
+            className={`w-full flex items-center justify-between p-5 transition-colors ${isOpen ? 'bg-orange-50/30' : 'bg-white hover:bg-slate-50'}`}
+        >
+            <div className="flex items-center space-x-3 text-slate-900 font-bold text-lg">
+                <div className={`p-2 rounded-xl transition-colors ${isOpen ? 'bg-orange-500 text-white' : 'bg-orange-50 text-orange-500'}`}>
+                    {icon}
+                </div>
+                <span className={isOpen ? 'text-orange-900' : 'text-slate-900'}>{title}</span>
+            </div>
+            {isOpen ? <ChevronUp className="text-orange-500" /> : <ChevronDown className="text-slate-400" />}
+        </button>
+        <AnimatePresence>
+            {isOpen && (
+                <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    className="border-t border-slate-100"
+                >
+                    <div className="p-6">
+                        {children}
+                    </div>
+                </motion.div>
+            )}
+        </AnimatePresence>
+    </div>
+);
+
+const FloatingInput = ({ label, value, onChange, placeholder = " ", type = "text", className = "" }) => (
+    <div className={`relative ${className}`}>
+        <input
+            type={type}
+            value={value}
+            onChange={onChange}
+            placeholder={placeholder}
+            className="peer w-full px-4 pt-6 pb-2 bg-slate-50 border border-slate-200 focus:border-orange-500 rounded-xl outline-none font-medium transition-all placeholder-transparent"
+        />
+        <label className="absolute left-4 top-2 text-[10px] font-bold text-slate-400 uppercase tracking-wide transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-4 peer-placeholder-shown:font-medium peer-placeholder-shown:text-slate-500 peer-focus:top-2 peer-focus:text-[10px] peer-focus:font-bold peer-focus:text-orange-500 pointer-events-none">
+            {label}
+        </label>
+    </div>
+);
+
 const Editor = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -40,21 +97,23 @@ const Editor = () => {
     const [loading, setLoading] = useState(true);
     const [downloading, setDownloading] = useState(false);
     const [saving, setSaving] = useState(false);
-    const [activeSection, setActiveSection] = useState('personal');
+    const [openSection, setOpenSection] = useState('personal');
     const [showLoginModal, setShowLoginModal] = useState(false);
-    const [pendingAction, setPendingAction] = useState(null); // 'download' or 'save'
-    const [isMobilePreview, setIsMobilePreview] = useState(false); // Legacy state, kept for compatibility with other components if needed
+    const [pendingAction, setPendingAction] = useState(null); 
+    const [isMobilePreview, setIsMobilePreview] = useState(false);
+    const [isFullscreenPreview, setIsFullscreenPreview] = useState(false);
+    
+    const previewContainerRef = useRef(null);
+    const [previewScale, setPreviewScale] = useState(1);
 
     // AI State
     const [aiJobRole, setAiJobRole] = useState('');
     const [aiLoading, setAiLoading] = useState(false);
     const [aiSuggestions, setAiSuggestions] = useState(null);
 
-    // Load resume data
     useEffect(() => {
         const fetchResume = async () => {
             if (id) {
-                // Editing existing resume from backend
                 try {
                     const { data } = await api.get(`/resumes/${id}`);
                     setResume(data);
@@ -65,7 +124,6 @@ const Editor = () => {
                     setLoading(false);
                 }
             } else {
-                // Guest mode or creating new
                 const savedDraft = localStorage.getItem('guest_resume_draft');
                 if (savedDraft) {
                     try {
@@ -79,16 +137,35 @@ const Editor = () => {
                 setLoading(false);
             }
         };
-
         fetchResume();
     }, [id, navigate]);
 
-    // Auto-save to local storage for guests
     useEffect(() => {
         if (!id && resume) {
             localStorage.setItem('guest_resume_draft', JSON.stringify(resume));
         }
     }, [resume, id]);
+
+    // Update preview scale based on container width
+    useEffect(() => {
+        const updateScale = () => {
+            if (previewContainerRef.current) {
+                const containerWidth = previewContainerRef.current.offsetWidth;
+                const containerHeight = previewContainerRef.current.offsetHeight;
+                
+                // A4 dimensions at 96dpi are 794x1123
+                const scaleW = (containerWidth - 64) / 794; // 32px padding on each side
+                const scaleH = (containerHeight - 64) / 1123;
+                
+                // Use the smaller scale to ensure it fits completely
+                setPreviewScale(Math.min(scaleW, scaleH, 1.2)); // Cap at 1.2x scale
+            }
+        };
+
+        updateScale();
+        window.addEventListener('resize', updateScale);
+        return () => window.removeEventListener('resize', updateScale);
+    }, [isMobilePreview]);
 
     const handleSave = async () => {
         if (!user) {
@@ -103,7 +180,6 @@ const Editor = () => {
                 await api.put(`/resumes/${id}`, resume);
             } else {
                 const { data } = await api.post('/resumes', resume);
-                // Clear draft and navigate to new ID
                 localStorage.removeItem('guest_resume_draft');
                 navigate(`/editor/${data._id}`, { replace: true });
             }
@@ -118,43 +194,25 @@ const Editor = () => {
         setDownloading(true);
         try {
             await document.fonts.ready;
-
-            // Get the source resume content
             const sourceEl = document.querySelector('.resume-print-area');
             if (!sourceEl) throw new Error('Resume content not found');
 
-            // A4 at 96 DPI = 794 x 1123 px
             const A4_W = 794;
-
-            // ─── Build off-screen container ───────────────────────────────────────
             const offscreen = document.createElement('div');
             offscreen.style.cssText = [
-                'position:fixed',
-                'top:0',
-                'left:-9999px',
-                `width:${A4_W}px`,
-                'background:#fff',
-                'z-index:-9999',
-                'transform:none',
-                'overflow:visible',
+                'position:fixed', 'top:0', 'left:-9999px', `width:${A4_W}px`,
+                'background:#fff', 'z-index:-9999', 'transform:none', 'overflow:visible',
             ].join(';');
             document.body.appendChild(offscreen);
 
-            // Deep-clone the resume into the off-screen container
             const clone = sourceEl.cloneNode(true);
-            // Strip any scale transforms from the clone and all its children
             [clone, ...clone.querySelectorAll('*')].forEach(el => {
                 el.style.transform = 'none';
                 el.style.transition = 'none';
                 el.style.animation = 'none';
-                
-                // Fix for overlapping text in html2canvas: 
-                // Sometimes it miscalculates letter-spacing or word-spacing
                 if (window.getComputedStyle(el).letterSpacing !== 'normal') {
                     el.style.letterSpacing = 'normal';
                 }
-                
-                // html2canvas struggles with text-justify
                 if (window.getComputedStyle(el).textAlign === 'justify') {
                     el.style.textAlign = 'left';
                 }
@@ -166,113 +224,47 @@ const Editor = () => {
             clone.style.padding = '0';
             offscreen.appendChild(clone);
 
-            // Wait for images and fonts to definitely load
             await document.fonts.ready;
             await new Promise(r => setTimeout(r, 1200));
 
-            // ─── Capture with html2canvas ──────────────────────────────────────────
             const canvas = await html2canvas(offscreen, {
-                scale: 4, // Even higher resolution
+                scale: 4, // High resolution for premium quality
                 useCORS: true,
                 backgroundColor: '#ffffff',
                 logging: false,
                 width: A4_W,
                 height: offscreen.scrollHeight,
-                windowWidth: 1400, // Force a desktop-like viewport width for style calculations
+                windowWidth: 1400, 
                 scrollX: 0,
                 scrollY: 0,
-                imageTimeout: 30000,
+                imageTimeout: 0,
                 onclone: (clonedDoc) => {
-                    // Force a deep reset of all text-related styles that cause overlapping
-                    const all = clonedDoc.getElementsByTagName('*');
-                    for (let i = 0; i < all.length; i++) {
-                        const el = all[i];
-                        
-                        // Disable advanced typography features that canvas renderers often fail at
-                        el.style.fontVariantLigatures = 'none';
-                        el.style.fontKerning = 'none';
-                        el.style.textRendering = 'optimizeLegibility'; 
-                        el.style.WebkitFontSmoothing = 'antialiased';
-                        
-                        // Reduced to prevent excessive text expansion that causes extra pages
-                        el.style.letterSpacing = 'normal'; 
-                        el.style.wordSpacing = 'normal';
-                        el.style.fontFeatureSettings = '"kern" 0, "liga" 0, "clig" 0, "calt" 0';
-                        
-                        // Ensure text-justify is off as it's a major cause of character drift
-                        if (el.style.textAlign === 'justify' || window.getComputedStyle(el).textAlign === 'justify') {
-                            el.style.textAlign = 'left';
-                        }
-
-                        // Maintain consistent line height for all text containers - but not too big
-                        if (['P', 'LI', 'SPAN', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'].includes(el.tagName)) {
-                            el.style.lineHeight = '1.4'; 
-                        }
-
-                        // Force standard font sizes if they were shrunk by mobile CSS
-                        if (el.classList.contains('text-xs')) el.style.fontSize = '13px';
-                        if (el.classList.contains('text-sm')) el.style.fontSize = '15px';
-                        if (el.classList.contains('text-base')) el.style.fontSize = '17px';
-                        if (el.classList.contains('text-lg')) el.style.fontSize = '19px';
-                        if (el.classList.contains('text-xl')) el.style.fontSize = '22px';
-                        if (el.classList.contains('text-2xl')) el.style.fontSize = '26px';
-                        if (el.classList.contains('text-3xl')) el.style.fontSize = '32px';
-                        if (el.classList.contains('text-4xl')) el.style.fontSize = '40px';
-                        if (el.classList.contains('text-5xl')) el.style.fontSize = '50px';
-
-                        // ─── Sanitization: Remove modern color functions (oklch, oklab) ────────────────
-                        // These cause html2canvas to crash during download.
-                        // We replace them with their computed RGB/Hex equivalents.
-                        const styleProps = ['color', 'backgroundColor', 'borderColor', 'outlineColor', 'textDecorationColor', 'fill', 'stroke'];
-                        styleProps.forEach(prop => {
-                            try {
-                                const value = window.getComputedStyle(el)[prop];
-                                if (value && (value.includes('oklch') || value.includes('oklab'))) {
-                                    // Force convert to RGB using a temporary element
-                                    const temp = document.createElement('div');
-                                    temp.style.color = value;
-                                    document.body.appendChild(temp);
-                                    const rgbValue = window.getComputedStyle(temp).color;
-                                    document.body.removeChild(temp);
-                                    
-                                    if (rgbValue && !rgbValue.includes('okl')) {
-                                        el.style[prop] = rgbValue;
-                                    } else {
-                                        // Fallback to a safe color if conversion fails
-                                        el.style[prop] = prop === 'color' ? '#000000' : 'transparent';
-                                    }
-                                }
-                            } catch (e) {
-                                console.warn("Color conversion failed for", prop, e);
-                            }
-                        });
+                    // Ensure all fonts and styles are applied in the clone
+                    const fonts = clonedDoc.fonts;
+                    if (fonts) {
+                        return fonts.ready;
                     }
                 }
             });
 
-            // Cleanup off-screen node
             document.body.removeChild(offscreen);
 
-            // ─── Build PDF ────────────────────────────────────────────────────────
             const imgData = canvas.toDataURL('image/jpeg', 0.98);
             const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
-            const pageW = pdf.internal.pageSize.getWidth();   // 210 mm
-            const pageH = pdf.internal.pageSize.getHeight();  // 297 mm
+            const pageW = pdf.internal.pageSize.getWidth();
+            const pageH = pdf.internal.pageSize.getHeight();
             let imgH  = (canvas.height / canvas.width) * pageW;
 
-            // Fit to single page if it's close enough (up to 1.3 pages)
-            // This satisfies the user's request "adjust in single page"
             if (imgH > pageH && imgH < pageH * 1.3) {
                 pdf.addImage(imgData, 'JPEG', 0, 0, pageW, pageH, '', 'FAST');
             } else {
-                // If it's way too long, use multiple pages
                 let remaining = imgH;
-                let yOffset   = 0;
+                let yOffset = 0;
                 while (remaining > 0) {
                     if (yOffset > 0) pdf.addPage();
                     pdf.addImage(imgData, 'JPEG', 0, -yOffset, pageW, imgH, '', 'FAST');
-                    yOffset   += pageH;
+                    yOffset += pageH;
                     remaining -= pageH;
                 }
             }
@@ -291,29 +283,15 @@ const Editor = () => {
     };
 
     const handleLoginSuccess = async () => {
-        // User just logged in. 
-        // 1. Save the guest resume to backend to create a record
-        // 2. Perform the pending action (download or just save)
-
         setSaving(true);
         try {
-            // Create the resume in backend
             const { data } = await api.post('/resumes', resume);
-
-            // Clear local draft
             localStorage.removeItem('guest_resume_draft');
-
-            // Update URL without page reload
             window.history.replaceState(null, '', `/editor/${data._id}`);
-
-            // If pending action was download, do it now
             if (pendingAction === 'download') {
                 await performDownload();
             }
-
-            // Navigate to proper URL (this might cause re-render but that's fine)
             navigate(`/editor/${data._id}`, { replace: true });
-
         } catch (error) {
             console.error("Error syncing guest resume:", error);
             alert("Resume saved locally but failed to sync. Please try saving again.");
@@ -358,7 +336,6 @@ const Editor = () => {
         setResume(prev => ({
             ...prev,
             [section]: [...(prev[section] || []), initialData]
-
         }));
     };
 
@@ -368,14 +345,20 @@ const Editor = () => {
         setResume(prev => ({ ...prev, [section]: newArray }));
     };
 
+    const onDragEnd = (result, section) => {
+        if (!result.destination) return;
+        const items = Array.from(resume[section] || []);
+        const [reorderedItem] = items.splice(result.source.index, 1);
+        items.splice(result.destination.index, 0, reorderedItem);
+        setResume(prev => ({ ...prev, [section]: items }));
+    };
+
     const handleAIGenerate = async () => {
         if (!aiJobRole.trim()) return alert("Please enter a job role");
 
         setAiLoading(true);
         try {
-            console.log("Requesting AI suggestions for:", aiJobRole);
             const { data } = await api.post('/ai/suggest', { jobRole: aiJobRole });
-            console.log("AI Suggestions received:", data);
             setAiSuggestions(data);
         } catch (error) {
             console.error("AI Error Full Object:", error);
@@ -393,462 +376,586 @@ const Editor = () => {
         } else if (type === 'skills') {
             setResume(prev => ({ ...prev, skills: [...(prev.skills || []), ...data] }));
         } else if (type === 'experience') {
-            // Add as a new experience entry draft
+            const bulletsHtml = `<ul>${data.map(b => `<li>${b}</li>`).join('')}</ul>`;
             addItem('experience', {
                 company: 'Sample Company',
                 position: aiJobRole,
                 startDate: '202X',
                 endDate: 'Present',
-                description: data.map(b => `• ${b}`).join('\n')
+                description: bulletsHtml
             });
         }
         alert("Applied to resume!");
     };
 
-    if (loading) return <div className="p-10 text-center">Loading...</div>;
+    if (loading) return <div className="h-screen flex items-center justify-center bg-slate-50"><div className="animate-spin h-8 w-8 border-4 border-orange-500 border-t-transparent rounded-full"></div></div>;
     if (!resume) return <div className="p-10 text-center">Resume not found</div>;
 
     return (
         <motion.div 
-            initial={{ opacity: 0, rotateY: 15, perspective: 1200 }}
-            animate={{ opacity: 1, rotateY: 0 }}
-            transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
-            className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] h-screen overflow-hidden relative bg-slate-50 font-sans"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex flex-col md:flex-row h-screen overflow-hidden bg-slate-50 font-sans"
         >
-            <SEO
-                title={resume.title ? `${resume.title} - Editor` : "Resume Editor"}
-                description="Edit and customize your professional resume. Choose from multiple ATS-friendly templates."
-            />
-            <LoginModal
-                isOpen={showLoginModal}
-                onClose={() => setShowLoginModal(false)}
-                onSuccess={handleLoginSuccess}
-                title="🎉 Your resume is ready!"
-                subtitle="Login or sign up to download and save your resume."
-            />
+            <SEO title={resume.title ? `${resume.title} - Editor` : "Resume Editor"} />
+            <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} onSuccess={handleLoginSuccess} title="🎉 Your resume is ready!" subtitle="Login or sign up to download and save your resume." />
 
-            {/* Main Content Area */}
-            <div className="flex-1 flex flex-row h-full overflow-hidden relative">
-
-                {/* Form Area - Now perfectly side-by-side on mobile */}
-                <div className="w-[60%] md:w-1/2 bg-white border-r border-slate-200 h-full flex flex-col transition-all duration-300">
-                    
-                    {/* Header with Navigation */}
-                    <div className="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-slate-100 p-3 md:p-4 flex items-center justify-between">
-                        <button 
-                            onClick={() => navigate(user ? '/dashboard' : '/')} 
-                            className="flex items-center text-slate-500 hover:text-slate-900 transition-colors font-medium text-sm group"
-                        >
-                            <ArrowLeft className="h-4 w-4 mr-1.5" /> 
-                            {user ? 'Dashboard' : 'Home'}
+            {/* Left Panel: Form & Editor */}
+            <div className={`w-full md:w-[45%] lg:w-[40%] bg-slate-50 border-r border-slate-200 h-full flex flex-col z-10 transition-all duration-500 ${isMobilePreview ? '-translate-x-full absolute md:relative md:translate-x-0' : ''} ${isFullscreenPreview ? 'md:-translate-x-full md:absolute md:opacity-0' : 'md:translate-x-0 md:relative md:opacity-100'}`}>
+                
+                {/* Header */}
+                <div className="bg-white border-b border-slate-200 p-4 flex items-center justify-between shrink-0 shadow-sm z-20 relative">
+                    <button onClick={() => navigate(user ? '/dashboard' : '/')} className="flex items-center text-slate-500 hover:text-orange-500 transition-colors font-bold text-sm">
+                        <ArrowLeft className="h-4 w-4 mr-2" /> 
+                        {user ? 'Dashboard' : 'Home'}
+                    </button>
+                    <div className="flex items-center space-x-3">
+                        <button onClick={() => setIsFullscreenPreview(!isFullscreenPreview)} className="hidden md:flex items-center px-4 py-2 bg-slate-100 text-slate-700 rounded-xl font-bold text-sm hover:bg-slate-200 transition-colors">
+                            {isFullscreenPreview ? <Layout className="h-4 w-4 mr-2" /> : <Eye className="h-4 w-4 mr-2" />}
+                            {isFullscreenPreview ? 'Show Editor' : 'Full Preview'}
                         </button>
-                        
-                        <div className="flex items-center space-x-2">
-                            <button onClick={handleSave} disabled={saving} className="flex items-center px-3 py-1.5 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-all text-xs font-bold shadow-sm">
-                                <Save className="h-3 w-3 mr-1.5" />
-                                {saving ? '...' : 'Save'}
-                            </button>
-                            <button onClick={handleDownload} disabled={downloading} className="flex items-center px-3 py-1.5 bg-orange-500 text-white rounded-xl hover:bg-orange-600 transition-all text-xs font-bold shadow-lg shadow-orange-200">
-                                <Download className="h-3 w-3 mr-1.5" />
-                                {downloading ? '...' : 'PDF'}
-                            </button>
-                        </div>
+                        <button onClick={() => setIsMobilePreview(true)} className="md:hidden flex items-center px-4 py-2 bg-slate-100 text-slate-700 rounded-xl font-bold text-sm">
+                            <Eye className="h-4 w-4 mr-2" /> Preview
+                        </button>
+                        <button onClick={handleSave} disabled={saving} className="hidden md:flex items-center px-4 py-2 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-colors font-bold shadow-sm disabled:opacity-70">
+                            <Save className="h-4 w-4 mr-2" /> {saving ? 'Saving...' : 'Save'}
+                        </button>
+                    </div>
+                </div>
+
+                {/* Main Scrollable Form Area */}
+                <div className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 space-y-6 scroll-smooth bg-[#f8fafc]">
+                    
+                    {/* Document Title */}
+                    <div className="mb-6">
+                        <input
+                            type="text"
+                            placeholder="Untitled Resume"
+                            value={resume.title}
+                            onChange={(e) => setResume({ ...resume, title: e.target.value })}
+                            className="w-full bg-transparent text-2xl md:text-3xl font-black text-slate-900 border-none outline-none placeholder:text-slate-300"
+                        />
                     </div>
 
-                    <div className="flex-1 overflow-y-auto">
-                        <div className="p-4 md:p-8 pt-6 max-w-2xl mx-auto w-full space-y-6">
-                            <div>
-                                <label className="block text-[11px] font-black text-slate-400 uppercase tracking-[0.15em] mb-2.5 ml-1">Resume Title</label>
+                    {/* AI Coach */}
+                    <AccordionItem 
+                        title="AI Career Coach" 
+                        icon={<Sparkles className="h-5 w-5" />}
+                        isOpen={openSection === 'ai'} 
+                        onToggle={() => setOpenSection(openSection === 'ai' ? '' : 'ai')}
+                    >
+                        <div className="space-y-4">
+                            <p className="text-slate-600 text-sm mb-2 font-medium">
+                                Describe your target role, and our AI will craft a high-impact summary and bullets.
+                            </p>
+                            <div className="flex space-x-2">
                                 <input
                                     type="text"
-                                    placeholder="e.g. Senior Product Designer"
-                                    value={resume.title}
-                                    onChange={(e) => setResume({ ...resume, title: e.target.value })}
-                                    className="w-full px-6 py-4 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-orange-500 rounded-2xl outline-none transition-all font-extrabold text-slate-900 text-base md:text-lg shadow-inner placeholder:text-slate-300"
+                                    placeholder="e.g. Senior Frontend Engineer"
+                                    value={aiJobRole}
+                                    onChange={(e) => setAiJobRole(e.target.value)}
+                                    className="flex-1 px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:border-orange-500 focus:ring-2 focus:ring-orange-100 outline-none font-medium"
+                                    onKeyDown={(e) => e.key === 'Enter' && handleAIGenerate()}
                                 />
+                                <button
+                                    onClick={handleAIGenerate}
+                                    disabled={aiLoading}
+                                    className="px-6 py-3 bg-orange-500 text-white rounded-xl font-bold hover:bg-orange-600 transition-colors disabled:opacity-50"
+                                >
+                                    {aiLoading ? '...' : 'Generate'}
+                                </button>
                             </div>
+                            {aiSuggestions && (
+                                <div className="space-y-4 mt-6 border-t border-slate-100 pt-6">
+                                    <div className="bg-orange-50 p-4 rounded-xl">
+                                        <div className="flex justify-between items-center mb-2">
+                                            <h4 className="font-bold text-orange-900">Summary</h4>
+                                            <button onClick={() => applySuggestion('summary', aiSuggestions.summary)} className="text-xs bg-orange-200 text-orange-900 px-3 py-1 rounded-full font-bold hover:bg-orange-300">Apply</button>
+                                        </div>
+                                        <p className="text-sm text-orange-800">{aiSuggestions.summary}</p>
+                                    </div>
+                                    <div className="bg-orange-50 p-4 rounded-xl">
+                                        <div className="flex justify-between items-center mb-2">
+                                            <h4 className="font-bold text-orange-900">Skills</h4>
+                                            <button onClick={() => applySuggestion('skills', aiSuggestions.skills)} className="text-xs bg-orange-200 text-orange-900 px-3 py-1 rounded-full font-bold hover:bg-orange-300">Add</button>
+                                        </div>
+                                        <div className="flex flex-wrap gap-2">
+                                            {aiSuggestions.skills.map((s, i) => <span key={i} className="text-xs bg-white px-2 py-1 rounded shadow-sm">{s}</span>)}
+                                        </div>
+                                    </div>
+                                    <div className="bg-orange-50 p-4 rounded-xl">
+                                        <div className="flex justify-between items-center mb-2">
+                                            <h4 className="font-bold text-orange-900">Experience Bullets</h4>
+                                            <button onClick={() => applySuggestion('experience', aiSuggestions.bullets)} className="text-xs bg-orange-200 text-orange-900 px-3 py-1 rounded-full font-bold hover:bg-orange-300">Add as Role</button>
+                                        </div>
+                                        <ul className="text-sm text-orange-800 space-y-1 list-disc pl-4">
+                                            {aiSuggestions.bullets.map((b, i) => <li key={i}>{b}</li>)}
+                                        </ul>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </AccordionItem>
 
-                            {/* Section Navigation - Back to Horizontal Tabs for better mobile layout */}
-                            <div className="sticky top-[-1px] z-10 py-2 -mx-4 px-4 bg-white/95 backdrop-blur-sm">
-                                <div className="flex space-x-2 overflow-x-auto pb-2 no-scrollbar scroll-smooth">
-                                    {[
-                                        { id: 'ai', icon: <Sparkles className="h-3.5 w-3.5 mr-1.5" />, label: 'AI' },
-                                        { id: 'personal', icon: <User className="h-3.5 w-3.5 mr-1.5" />, label: 'Personal' },
-                                        { id: 'summary', icon: <FileText className="h-3.5 w-3.5 mr-1.5" />, label: 'Summary' },
-                                        { id: 'experience', icon: <Briefcase className="h-3.5 w-3.5 mr-1.5" />, label: 'Jobs' },
-                                        { id: 'education', icon: <GraduationCap className="h-3.5 w-3.5 mr-1.5" />, label: 'Edu' },
-                                        { id: 'skills', icon: <Code className="h-3.5 w-3.5 mr-1.5" />, label: 'Skills' },
-                                        { id: 'projects', icon: <Folder className="h-3.5 w-3.5 mr-1.5" />, label: 'Projects' },
-                                        { id: 'templates', icon: <Layout className="h-3.5 w-3.5 mr-1.5" />, label: 'Design' }
-                                    ].map(sec => (
-                                        <button
-                                            key={sec.id}
-                                            onClick={() => setActiveSection(sec.id)}
-                                            className={`px-4 py-2 rounded-xl text-xs font-black whitespace-nowrap flex items-center transition-all ${activeSection === sec.id
-                                                ? 'bg-orange-500 text-white shadow-lg shadow-orange-200'
-                                                : 'bg-slate-50 text-slate-500 hover:bg-slate-100'
-                                                }`}
-                                        >
-                                            {sec.icon}
-                                            {sec.label}
-                                        </button>
-                                    ))}
+                    {/* Personal Details */}
+                    <AccordionItem 
+                        title="Personal Details" 
+                        icon={<User className="h-5 w-5" />}
+                        isOpen={openSection === 'personal'} 
+                        onToggle={() => setOpenSection(openSection === 'personal' ? '' : 'personal')}
+                    >
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="md:col-span-2 flex items-center space-x-6 mb-4">
+                                <div className="w-24 h-24 rounded-2xl bg-slate-100 flex items-center justify-center overflow-hidden border-2 border-dashed border-slate-300 relative group">
+                                    {resume.personalInfo?.profilePicture ? (
+                                        <>
+                                            <img src={resume.personalInfo.profilePicture} alt="Profile" className="w-full h-full object-cover" />
+                                            <div className="absolute inset-0 bg-black/50 hidden group-hover:flex items-center justify-center">
+                                                <Trash2 className="text-white h-6 w-6 cursor-pointer" onClick={() => handleChange('personalInfo', 'profilePicture', '')} />
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <User className="h-8 w-8 text-slate-400" />
+                                    )}
+                                </div>
+                                <div>
+                                    <label className="bg-white border border-slate-200 text-slate-700 px-4 py-2 rounded-xl font-bold text-sm cursor-pointer hover:bg-slate-50 shadow-sm">
+                                        Upload Photo
+                                        <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
+                                    </label>
                                 </div>
                             </div>
+                            <div className="md:col-span-2">
+                                <FloatingInput 
+                                    label="Full Name" 
+                                    value={resume.personalInfo?.fullName || ''} 
+                                    onChange={(e) => handleChange('personalInfo', 'fullName', e.target.value)} 
+                                />
+                            </div>
+                            <div>
+                                <FloatingInput 
+                                    label="Email Address" 
+                                    value={resume.personalInfo?.email || ''} 
+                                    onChange={(e) => handleChange('personalInfo', 'email', e.target.value)} 
+                                />
+                            </div>
+                            <div>
+                                <FloatingInput 
+                                    label="Phone Number" 
+                                    value={resume.personalInfo?.phone || ''} 
+                                    onChange={(e) => handleChange('personalInfo', 'phone', e.target.value)} 
+                                />
+                            </div>
+                            <div className="md:col-span-2">
+                                <FloatingInput 
+                                    label="Address / Location" 
+                                    value={resume.personalInfo?.address || ''} 
+                                    onChange={(e) => handleChange('personalInfo', 'address', e.target.value)} 
+                                />
+                            </div>
+                            <div>
+                                <FloatingInput 
+                                    label="LinkedIn Profile" 
+                                    value={resume.personalInfo?.linkedin || ''} 
+                                    onChange={(e) => handleChange('personalInfo', 'linkedin', e.target.value)} 
+                                />
+                            </div>
+                            <div>
+                                <FloatingInput 
+                                    label="GitHub / Portfolio" 
+                                    value={resume.personalInfo?.github || ''} 
+                                    onChange={(e) => handleChange('personalInfo', 'github', e.target.value)} 
+                                />
+                            </div>
+                        </div>
+                    </AccordionItem>
 
-                            {/* Animated Form Sections */}
-                            <div className="pb-24 md:pb-8">
-                                <AnimatePresence mode="wait">
-                                    <motion.div
-                                        key={activeSection}
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: -10 }}
-                                        transition={{ duration: 0.2 }}
-                                        className="space-y-8"
-                                    >
-                                    {activeSection === 'ai' && (
-                                        <div className="space-y-6">
-                                            <div className="glass-effect bg-gradient-to-br from-orange-500/20 via-rose-500/10 to-white rounded-3xl p-8 text-slate-800 shadow-xl relative overflow-hidden group border-2 border-orange-100/50">
-                                                <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/10 rounded-full -mr-16 -mt-16 blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
-                                                <div className="relative z-10">
-                                                    <div className="flex items-center space-x-2 mb-4">
-                                                        <div className="bg-orange-500 p-2 rounded-xl shadow-lg shadow-orange-200">
-                                                            <Sparkles className="h-5 w-5 text-white" />
-                                                        </div>
-                                                        <h3 className="text-xl font-black text-slate-900">AI Career Coach</h3>
-                                                    </div>
-                                                    <p className="text-slate-600 text-sm mb-8 leading-relaxed font-medium">
-                                                        Describe your target role, and our advanced AI will craft a high-impact professional summary and targeted experience for you.
-                                                    </p>
-                                                    <div className="flex flex-col space-y-3">
-                                                        <input
-                                                                    type="text"
-                                                                    placeholder="Target Role (e.g. Senior Product Designer)"
-                                                                    value={aiJobRole}
-                                                                    onChange={(e) => setAiJobRole(e.target.value)}
-                                                                    className="w-full px-5 py-4 rounded-2xl text-slate-900 bg-white/80 backdrop-blur-md border-2 border-orange-100 shadow-inner focus:ring-4 focus:ring-orange-400/20 focus:border-orange-500 outline-none font-black placeholder:text-slate-400"
-                                                                    onKeyDown={(e) => e.key === 'Enter' && handleAIGenerate()}
-                                                                />
-                                                        <button
-                                                            onClick={handleAIGenerate}
-                                                            disabled={aiLoading}
-                                                            className="w-full bg-orange-500 text-white px-6 py-4 rounded-2xl font-black hover:bg-orange-600 disabled:opacity-50 transition-all shadow-lg shadow-orange-200 active:scale-[0.98] flex items-center justify-center"
-                                                        >
-                                                            {aiLoading ? (
-                                                                <>
-                                                                    <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mr-3"></div>
-                                                                    Analyzing...
-                                                                </>
-                                                            ) : 'Generate Content'}
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
+                    {/* Professional Summary */}
+                    <AccordionItem 
+                        title="Professional Summary" 
+                        icon={<FileText className="h-5 w-5" />}
+                        isOpen={openSection === 'summary'} 
+                        onToggle={() => setOpenSection(openSection === 'summary' ? '' : 'summary')}
+                    >
+                        <div className="quill-container">
+                            <ReactQuill 
+                                theme="snow" 
+                                value={resume.summary || ''} 
+                                onChange={(val) => setResume({ ...resume, summary: val })}
+                                modules={modules}
+                                className="bg-white rounded-xl overflow-hidden"
+                            />
+                        </div>
+                    </AccordionItem>
 
-                                            {aiSuggestions && (
-                                                <div className="space-y-6">
-                                                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="p-7 border-2 border-slate-100 rounded-[32px] bg-slate-50/50 shadow-sm">
-                                                        <div className="flex justify-between items-start mb-5">
-                                                            <div className="flex items-center text-slate-800"><FileText className="h-4.5 w-4.5 mr-2.5 text-orange-500" /><h4 className="font-black text-xs uppercase tracking-wider">Suggested Summary</h4></div>
-                                                            <button onClick={() => applySuggestion('summary', aiSuggestions.summary)} className="text-[10px] bg-slate-900 text-white px-5 py-2 rounded-full font-black hover:bg-slate-700 transition-all uppercase tracking-wider shadow-lg shadow-slate-900/10">Apply</button>
-                                                        </div>
-                                                        <p className="text-base text-slate-900 leading-[1.6] font-bold italic">{aiSuggestions.summary}</p>
-                                                    </motion.div>
-
-                                                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="p-6 border-2 border-slate-100 rounded-3xl bg-slate-50/50">
-                                                        <div className="flex justify-between items-start mb-4">
-                                                            <div className="flex items-center text-slate-800"><Sparkles className="h-4 w-4 mr-2" /><h4 className="font-black text-sm uppercase tracking-wider">Suggested Skills</h4></div>
-                                                            <button onClick={() => applySuggestion('skills', aiSuggestions.skills)} className="text-xs bg-slate-900 text-white px-4 py-1.5 rounded-full font-bold hover:bg-slate-700 transition-colors">Add All</button>
-                                                        </div>
-                                                        <div className="flex flex-wrap gap-2">
-                                                            {aiSuggestions.skills.map((skill, i) => (
-                                                                <span key={i} className="px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-600 shadow-sm">{skill}</span>
-                                                            ))}
-                                                        </div>
-                                                    </motion.div>
-
-                                                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }} className="p-7 border-2 border-slate-100 rounded-[32px] bg-slate-50/50 shadow-sm">
-                                                        <div className="flex justify-between items-start mb-5">
-                                                            <div className="flex items-center text-slate-800"><Briefcase className="h-4.5 w-4.5 mr-2.5 text-orange-500" /><h4 className="font-black text-xs uppercase tracking-wider">Experience Bullets</h4></div>
-                                                            <button onClick={() => applySuggestion('experience', aiSuggestions.bullets)} className="text-[10px] bg-slate-900 text-white px-5 py-2 rounded-full font-black hover:bg-slate-700 transition-all uppercase tracking-wider shadow-lg shadow-slate-900/10">Add as Role</button>
-                                                        </div>
-                                                        <ul className="space-y-4">
-                                                            {aiSuggestions.bullets.map((bullet, i) => (
-                                                                <li key={i} className="flex items-start text-base text-slate-900 font-bold leading-relaxed">
-                                                                    <div className="h-2 w-2 bg-orange-500 rounded-full mt-2 mr-4 shrink-0 shadow-sm shadow-orange-200"></div>
-                                                                    {bullet}
-                                                                </li>
-                                                            ))}
-                                                        </ul>
-                                                    </motion.div>
-                                                </div>
-                                            )}
-                                        </div>
-                                    )}
-
-                                    {activeSection === 'templates' && (
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                            {[
-                                                { id: 'executive', name: 'Executive', desc: 'Premium Corporate' },
-                                                { id: 'modern', name: 'Modern', desc: 'Sleek & Clean' },
-                                                { id: 'visual', name: 'High-Impact', desc: 'Creative Sidebar' },
-                                                { id: 'elegant', name: 'Elegant', desc: 'Classic Serif' },
-                                                { id: 'government', name: 'Formal', desc: 'Strict Standard' },
-                                                { id: 'internship', name: 'Academic', desc: 'Education Focus' }
-                                            ].map(tpl => (
-                                                <button
-                                                    key={tpl.id}
-                                                    onClick={() => setResume({ ...resume, templateId: tpl.id })}
-                                                    className={`group p-5 rounded-3xl border-2 text-left transition-all ${resume.templateId === tpl.id
-                                                        ? 'border-orange-500 bg-orange-50 ring-4 ring-orange-100 shadow-xl'
-                                                        : 'border-slate-100 hover:border-slate-200 hover:bg-slate-50'
-                                                        }`}
-                                                >
-                                                    <div className="flex justify-between items-center mb-1">
-                                                        <span className="font-black text-slate-900 text-sm tracking-wide">{tpl.name}</span>
-                                                        {resume.templateId === tpl.id && (
-                                                            <div className="bg-orange-500 text-white p-1.5 rounded-full shadow-lg shadow-orange-200"><Eye className="h-3 w-3" /></div>
-                                                        )}
-                                                    </div>
-                                                    <p className="text-xs text-slate-500 font-medium">{tpl.desc}</p>
-                                                </button>
-                                            ))}
-                                        </div>
-                                    )}
-
-                                    {activeSection === 'personal' && (
-                                        <div className="space-y-8">
-                                            <div className="flex flex-col sm:flex-row items-center sm:space-x-8 space-y-4 sm:space-y-0">
-                                                <div className="relative group shrink-0">
-                                                    <div className="w-28 h-28 rounded-3xl border-4 border-slate-50 bg-slate-50 flex items-center justify-center overflow-hidden shadow-xl transition-all group-hover:scale-105 group-hover:rotate-3">
-                                                        {resume.personalInfo?.profilePicture ? (
-                                                            <img src={resume.personalInfo.profilePicture} alt="Profile" className="w-full h-full object-cover" />
-                                                        ) : (
-                                                            <User className="h-12 w-12 text-slate-300" />
-                                                        )}
-                                                    </div>
-                                                    <label className="absolute -bottom-2 -right-2 p-2.5 bg-orange-500 text-white rounded-2xl cursor-pointer hover:bg-orange-600 transition-all shadow-xl active:scale-90">
-                                                        <Upload className="h-4 w-4" />
-                                                        <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
-                                                    </label>
-                                                </div>
-                                                <div className="text-center sm:text-left space-y-1">
-                                                    <p className="text-base font-black text-slate-900 tracking-wide">Professional Photo</p>
-                                                    <p className="text-xs text-slate-500 font-medium leading-relaxed max-w-[200px]">A high-quality headshot increases response rates by 20%.</p>
-                                                    {resume.personalInfo?.profilePicture && (
-                                                        <button onClick={() => handleChange('personalInfo', 'profilePicture', null)} className="text-xs text-red-500 font-black hover:underline mt-2">Remove photo</button>
-                                                    )}
-                                                </div>
-                                            </div>
-
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                <div className="sm:col-span-2">
-                                                    <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1 mb-1 block">Full Name</label>
-                                                    <input placeholder="Gautam Kumar" value={resume.personalInfo?.fullName || ''} onChange={(e) => handleChange('personalInfo', 'fullName', e.target.value)} className="w-full px-5 py-3.5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-orange-500 rounded-2xl transition-all font-black text-slate-900" />
-                                                </div>
-                                                <div>
-                                                    <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1 mb-1 block">Email</label>
-                                                    <input placeholder="hello@example.com" value={resume.personalInfo?.email || ''} onChange={(e) => handleChange('personalInfo', 'email', e.target.value)} className="w-full px-5 py-3.5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-orange-500 rounded-2xl transition-all font-black text-slate-900" />
-                                                </div>
-                                                <div>
-                                                    <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1 mb-1 block">Phone</label>
-                                                    <input placeholder="+91 98765 43210" value={resume.personalInfo?.phone || ''} onChange={(e) => handleChange('personalInfo', 'phone', e.target.value)} className="w-full px-5 py-3.5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-orange-500 rounded-2xl transition-all font-black text-slate-900" />
-                                                </div>
-                                                <div className="sm:col-span-2">
-                                                    <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-1 mb-1 block">Location</label>
-                                                    <input placeholder="New Delhi, India" value={resume.personalInfo?.address || ''} onChange={(e) => handleChange('personalInfo', 'address', e.target.value)} className="w-full px-5 py-3.5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-orange-500 rounded-2xl transition-all font-black text-slate-900" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {activeSection === 'summary' && (
-                                        <div className="space-y-4">
-                                            <div className="flex items-center justify-between">
-                                                <h3 className="text-lg font-black text-slate-900 tracking-wide">Professional Summary</h3>
-                                                <div className="bg-orange-50 text-orange-600 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">Recommended</div>
-                                            </div>
-                                            <textarea
-                                                rows={8}
-                                                value={resume.summary || ''}
-                                                onChange={(e) => setResume({ ...resume, summary: e.target.value })}
-                                                className="w-full px-6 py-5 bg-slate-50 border-2 border-transparent focus:bg-white focus:border-orange-500 rounded-3xl outline-none transition-all font-bold text-slate-900 leading-relaxed text-sm"
-                                                placeholder="Seasoned software engineer with 5+ years of experience in..."
-                                            />
-                                        </div>
-                                    )}
-
-                                    {activeSection === 'experience' && (
-                                        <div className="space-y-6">
-                                            <div className="flex justify-between items-center bg-white sticky top-0 py-2 z-10">
-                                                <h3 className="text-lg font-black text-slate-900 tracking-wide">Work History</h3>
-                                                <button onClick={() => addItem('experience', { company: '', position: '', startDate: '', endDate: '', description: '' })} className="bg-orange-500 text-white px-4 py-2 rounded-xl font-bold hover:bg-orange-600 transition-all text-xs flex items-center shadow-lg shadow-orange-100 active:scale-95">
-                                                    <Plus className="h-4 w-4 mr-1" /> Add Role
-                                                </button>
-                                            </div>
-                                            <div className="space-y-4">
-                                                {resume.experience?.map((exp, index) => (
-                                                    <motion.div 
-                                                        key={index} 
-                                                        layout
-                                                        initial={{ opacity: 0, scale: 0.95 }}
-                                                        animate={{ opacity: 1, scale: 1 }}
-                                                        className="p-6 bg-white border-2 border-slate-100 rounded-3xl space-y-4 relative group shadow-sm hover:shadow-md transition-all"
+                    {/* Experience with Drag & Drop */}
+                    <AccordionItem 
+                        title="Work Experience" 
+                        icon={<Briefcase className="h-5 w-5" />}
+                        isOpen={openSection === 'experience'} 
+                        onToggle={() => setOpenSection(openSection === 'experience' ? '' : 'experience')}
+                    >
+                        <DragDropContext onDragEnd={(result) => onDragEnd(result, 'experience')}>
+                            <Droppable droppableId="experience-list">
+                                {(provided) => (
+                                    <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-4">
+                                        {resume.experience?.map((exp, index) => (
+                                            <Draggable key={`exp-${index}`} draggableId={`exp-${index}`} index={index}>
+                                                {(provided, snapshot) => (
+                                                    <div 
+                                                        ref={provided.innerRef} 
+                                                        {...provided.draggableProps} 
+                                                        className={`p-5 bg-slate-50 border ${snapshot.isDragging ? 'border-orange-500 shadow-xl' : 'border-slate-200'} rounded-2xl relative group`}
                                                     >
-                                                        <button onClick={() => removeItem('experience', index)} className="absolute top-4 right-4 text-slate-300 hover:text-red-500 transition-colors p-2 hover:bg-red-50 rounded-xl">
-                                                            <Trash2 className="h-4 w-4" />
-                                                        </button>
-                                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-                                                            <input placeholder="Company" value={exp.company} onChange={(e) => handleArrayChange('experience', index, 'company', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-black text-slate-900 text-sm transition-all outline-none" />
-                                                            <input placeholder="Role" value={exp.position} onChange={(e) => handleArrayChange('experience', index, 'position', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-black text-slate-900 text-sm transition-all outline-none" />
-                                                            <input placeholder="Start Date" value={exp.startDate} onChange={(e) => handleArrayChange('experience', index, 'startDate', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-black text-slate-900 text-sm transition-all outline-none" />
-                                                            <input placeholder="End Date" value={exp.endDate} onChange={(e) => handleArrayChange('experience', index, 'endDate', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-black text-slate-900 text-sm transition-all outline-none" />
+                                                        <div {...provided.dragHandleProps} className="absolute top-4 right-12 text-slate-400 hover:text-slate-600 cursor-grab">
+                                                            <GripVertical className="h-5 w-5" />
                                                         </div>
-                                                        <textarea placeholder="Key accomplishments and responsibilities..." rows={4} value={exp.description} onChange={(e) => handleArrayChange('experience', index, 'description', e.target.value)} className="w-full px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-bold text-slate-900 text-sm transition-all outline-none leading-relaxed" />
-                                                    </motion.div>
-                                                ))}
-                                                {resume.experience?.length === 0 && (
-                                                    <div className="text-center py-12 border-2 border-dashed border-slate-200 rounded-3xl">
-                                                        <Briefcase className="h-10 w-10 text-slate-200 mx-auto mb-4" />
-                                                        <p className="text-sm font-bold text-slate-400">No experience added yet.</p>
+                                                        <button onClick={() => removeItem('experience', index)} className="absolute top-4 right-4 text-slate-400 hover:text-red-500">
+                                                            <Trash2 className="h-5 w-5" />
+                                                        </button>
+                                                        
+                                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                                                            <div>
+                                                                <FloatingInput 
+                                                                    label="Job Title" 
+                                                                    value={exp.position} 
+                                                                    onChange={(e) => handleArrayChange('experience', index, 'position', e.target.value)} 
+                                                                />
+                                                            </div>
+                                                            <div>
+                                                                <FloatingInput 
+                                                                    label="Company" 
+                                                                    value={exp.company} 
+                                                                    onChange={(e) => handleArrayChange('experience', index, 'company', e.target.value)} 
+                                                                />
+                                                            </div>
+                                                            <div>
+                                                                <FloatingInput 
+                                                                    label="Start Date" 
+                                                                    value={exp.startDate} 
+                                                                    onChange={(e) => handleArrayChange('experience', index, 'startDate', e.target.value)} 
+                                                                    placeholder="e.g. Jan 2020"
+                                                                />
+                                                            </div>
+                                                            <div>
+                                                                <FloatingInput 
+                                                                    label="End Date" 
+                                                                    value={exp.endDate} 
+                                                                    onChange={(e) => handleArrayChange('experience', index, 'endDate', e.target.value)} 
+                                                                    placeholder="e.g. Present"
+                                                                />
+                                                            </div>
+                                                            <div className="md:col-span-2">
+                                                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1 ml-1">Job Description</label>
+                                                                <div className="quill-container-small">
+                                                                    <ReactQuill 
+                                                                        theme="snow" 
+                                                                        value={exp.description || ''} 
+                                                                        onChange={(val) => handleArrayChange('experience', index, 'description', val)}
+                                                                        modules={modules}
+                                                                        className="bg-white rounded-lg"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 )}
-                                            </div>
-                                        </div>
-                                    )}
+                                            </Draggable>
+                                        ))}
+                                        {provided.placeholder}
+                                    </div>
+                                )}
+                            </Droppable>
+                        </DragDropContext>
+                        <button onClick={() => addItem('experience', { company: '', position: '', startDate: '', endDate: '', description: '' })} className="mt-4 w-full py-3 border-2 border-dashed border-orange-200 text-orange-600 rounded-xl font-bold hover:bg-orange-50 hover:border-orange-300 transition-colors flex items-center justify-center">
+                            <Plus className="h-4 w-4 mr-2" /> Add Experience
+                        </button>
+                    </AccordionItem>
 
-                                    {/* Repeat similar styling for other sections... */}
-                                    {activeSection === 'education' && (
-                                        <div className="space-y-6">
-                                            <div className="flex justify-between items-center bg-white sticky top-0 py-2 z-10">
-                                                <h3 className="text-lg font-black text-slate-900 tracking-wide">Education</h3>
-                                                <button onClick={() => addItem('education', { school: '', degree: '', startDate: '', endDate: '', description: '' })} className="bg-orange-500 text-white px-4 py-2 rounded-xl font-bold hover:bg-orange-600 transition-all text-xs flex items-center shadow-lg shadow-orange-100 active:scale-95">
-                                                    <Plus className="h-4 w-4 mr-1" /> Add Education
-                                                </button>
-                                            </div>
-                                            <div className="space-y-4">
-                                                {resume.education?.map((edu, index) => (
-                                                    <motion.div layout key={index} className="p-6 bg-white border-2 border-slate-100 rounded-3xl space-y-4 relative group shadow-sm hover:shadow-md transition-all">
-                                                        <button onClick={() => removeItem('education', index)} className="absolute top-4 right-4 text-slate-300 hover:text-red-500 transition-colors p-2 hover:bg-red-50 rounded-xl">
-                                                            <Trash2 className="h-4 w-4" />
-                                                        </button>
-                                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-                                                            <input placeholder="Institution" value={edu.school} onChange={(e) => handleArrayChange('education', index, 'school', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-bold text-sm transition-all outline-none" />
-                                                            <input placeholder="Degree" value={edu.degree} onChange={(e) => handleArrayChange('education', index, 'degree', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-bold text-sm transition-all outline-none" />
-                                                            <input placeholder="Start Date" value={edu.startDate} onChange={(e) => handleArrayChange('education', index, 'startDate', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-bold text-sm transition-all outline-none" />
-                                                            <input placeholder="End Date" value={edu.endDate} onChange={(e) => handleArrayChange('education', index, 'endDate', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-bold text-sm transition-all outline-none" />
-                                                        </div>
-                                                    </motion.div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {activeSection === 'skills' && (
-                                        <div className="space-y-6">
-                                            <h3 className="text-lg font-black text-slate-900 tracking-wide">Technical Skills</h3>
-                                            <div className="p-8 bg-slate-50 rounded-[2.5rem] border-2 border-transparent focus-within:bg-white focus-within:border-orange-500 transition-all">
-                                                <p className="text-xs font-bold text-slate-400 mb-4 uppercase tracking-[0.2em] text-center">Separate skills with commas</p>
-                                                <textarea
-                                                    rows={6}
-                                                    value={resume.skills?.join(', ') || ''}
-                                                    onChange={(e) => setResume({ ...resume, skills: e.target.value.split(',').map(s => s.trim()) })}
-                                                    className="w-full bg-transparent outline-none font-bold text-slate-800 text-center leading-loose text-lg"
-                                                    placeholder="React, Node.js, Python, Figma..."
-                                                />
-                                            </div>
-                                        </div>
-                                    )}
-
-                                    {activeSection === 'projects' && (
-                                        <div className="space-y-6">
-                                            <div className="flex justify-between items-center bg-white sticky top-0 py-2 z-10">
-                                                <h3 className="text-lg font-black text-slate-900 tracking-wide">Key Projects</h3>
-                                                <button onClick={() => addItem('projects', { name: '', description: '', link: '' })} className="bg-orange-500 text-white px-4 py-2 rounded-xl font-bold hover:bg-orange-600 transition-all text-xs flex items-center shadow-lg shadow-orange-100 active:scale-95">
-                                                    <Plus className="h-4 w-4 mr-1" /> Add Project
-                                                </button>
-                                            </div>
-                                            <div className="space-y-4">
-                                                {resume.projects?.map((proj, index) => (
-                                                    <motion.div layout key={index} className="p-6 bg-white border-2 border-slate-100 rounded-3xl space-y-4 relative group shadow-sm hover:shadow-md transition-all">
-                                                        <button onClick={() => removeItem('projects', index)} className="absolute top-4 right-4 text-slate-300 hover:text-red-500 transition-colors p-2 hover:bg-red-50 rounded-xl">
-                                                            <Trash2 className="h-4 w-4" />
-                                                        </button>
-                                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-                                                            <input placeholder="Project Name" value={proj.name} onChange={(e) => handleArrayChange('projects', index, 'name', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-bold text-sm transition-all outline-none" />
-                                                            <input placeholder="Link (Optional)" value={proj.link} onChange={(e) => handleArrayChange('projects', index, 'link', e.target.value)} className="px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-bold text-sm transition-all outline-none" />
-                                                        </div>
-                                                        <textarea placeholder="Tell us about the project's impact..." rows={3} value={proj.description} onChange={(e) => handleArrayChange('projects', index, 'description', e.target.value)} className="w-full px-4 py-3 bg-slate-50 border-transparent focus:bg-white focus:border-orange-500 rounded-xl font-medium text-sm transition-all outline-none leading-relaxed" />
-                                                    </motion.div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    )}
-                                </motion.div>
-                            </AnimatePresence>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-                {/* Mobile Mini Preview - Fixed Side-by-Side Workspace */}
-                <div 
-                    className="md:hidden w-[40%] bg-slate-50 border-l border-slate-200 overflow-y-auto relative transition-all duration-300"
-                >
-                    <div className="sticky top-0 z-10 bg-slate-200/80 backdrop-blur-sm p-2 text-center border-b border-slate-300">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-600">Workspace</span>
-                    </div>
-                    <div className="p-2 flex items-start justify-center min-h-full">
-                        <div 
-                            className="resume-print-area bg-white shadow-lg origin-top-left"
-                            style={{
-                                width: '210mm',
-                                minHeight: '297mm',
-                                transform: `scale(${(window.innerWidth * 0.4 - 16) / 793})`,
-                                transformOrigin: 'top center',
-                            }}
-                            id={`resume-preview-${resume.templateId || 'modern'}`}
-                        >
-                            <ResumePreview resume={resume} />
-                        </div>
-                    </div>
-                </div>
-
-                {/* Desktop Preview Area - right side on desktop only */}
-                <div className="hidden md:flex md:w-1/2 bg-slate-50 h-full overflow-y-auto items-start justify-center p-12">
-                    <motion.div 
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        id={`resume-preview-desktop-${resume.templateId || 'modern'}`} 
-                        className="resume-print-area w-full max-w-[210mm] bg-white shadow-2xl min-h-[297mm] origin-top transform transition-transform"
-                        style={{
-                            transform: `scale(${window.innerWidth < 1024 ? 0.8 : 0.95})`,
-                            transformOrigin: 'top center'
-                        }}
+                    {/* Education with Drag & Drop */}
+                    <AccordionItem 
+                        title="Education" 
+                        icon={<GraduationCap className="h-5 w-5" />}
+                        isOpen={openSection === 'education'} 
+                        onToggle={() => setOpenSection(openSection === 'education' ? '' : 'education')}
                     >
-                        <ResumePreview resume={resume} />
-                    </motion.div>
+                        <DragDropContext onDragEnd={(result) => onDragEnd(result, 'education')}>
+                            <Droppable droppableId="education-list">
+                                {(provided) => (
+                                    <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-4">
+                                        {resume.education?.map((edu, index) => (
+                                            <Draggable key={`edu-${index}`} draggableId={`edu-${index}`} index={index}>
+                                                {(provided, snapshot) => (
+                                                    <div 
+                                                        ref={provided.innerRef} 
+                                                        {...provided.draggableProps} 
+                                                        className={`p-5 bg-slate-50 border ${snapshot.isDragging ? 'border-orange-500 shadow-xl' : 'border-slate-200'} rounded-2xl relative group`}
+                                                    >
+                                                        <div {...provided.dragHandleProps} className="absolute top-4 right-12 text-slate-400 hover:text-slate-600 cursor-grab">
+                                                            <GripVertical className="h-5 w-5" />
+                                                        </div>
+                                                        <button onClick={() => removeItem('education', index)} className="absolute top-4 right-4 text-slate-400 hover:text-red-500">
+                                                            <Trash2 className="h-5 w-5" />
+                                                        </button>
+                                                        
+                                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                                                            <div>
+                                                                <FloatingInput 
+                                                                    label="Degree / Certificate" 
+                                                                    value={edu.degree} 
+                                                                    onChange={(e) => handleArrayChange('education', index, 'degree', e.target.value)} 
+                                                                />
+                                                            </div>
+                                                            <div>
+                                                                <FloatingInput 
+                                                                    label="School / University" 
+                                                                    value={edu.school} 
+                                                                    onChange={(e) => handleArrayChange('education', index, 'school', e.target.value)} 
+                                                                />
+                                                            </div>
+                                                            <div>
+                                                                <FloatingInput 
+                                                                    label="Start Date" 
+                                                                    value={edu.startDate} 
+                                                                    onChange={(e) => handleArrayChange('education', index, 'startDate', e.target.value)} 
+                                                                    placeholder="e.g. 2018"
+                                                                />
+                                                            </div>
+                                                            <div>
+                                                                <FloatingInput 
+                                                                    label="End Date" 
+                                                                    value={edu.endDate} 
+                                                                    onChange={(e) => handleArrayChange('education', index, 'endDate', e.target.value)} 
+                                                                    placeholder="e.g. 2022"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </Draggable>
+                                        ))}
+                                        {provided.placeholder}
+                                    </div>
+                                )}
+                            </Droppable>
+                        </DragDropContext>
+                        <button onClick={() => addItem('education', { school: '', degree: '', startDate: '', endDate: '' })} className="mt-4 w-full py-3 border-2 border-dashed border-orange-200 text-orange-600 rounded-xl font-bold hover:bg-orange-50 hover:border-orange-300 transition-colors flex items-center justify-center">
+                            <Plus className="h-4 w-4 mr-2" /> Add Education
+                        </button>
+                    </AccordionItem>
+
+                    {/* Projects with Drag & Drop */}
+                    <AccordionItem 
+                        title="Projects" 
+                        icon={<Folder className="h-5 w-5" />}
+                        isOpen={openSection === 'projects'} 
+                        onToggle={() => setOpenSection(openSection === 'projects' ? '' : 'projects')}
+                    >
+                         <DragDropContext onDragEnd={(result) => onDragEnd(result, 'projects')}>
+                            <Droppable droppableId="projects-list">
+                                {(provided) => (
+                                    <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-4">
+                                        {resume.projects?.map((proj, index) => (
+                                            <Draggable key={`proj-${index}`} draggableId={`proj-${index}`} index={index}>
+                                                {(provided, snapshot) => (
+                                                    <div 
+                                                        ref={provided.innerRef} 
+                                                        {...provided.draggableProps} 
+                                                        className={`p-5 bg-slate-50 border ${snapshot.isDragging ? 'border-orange-500 shadow-xl' : 'border-slate-200'} rounded-2xl relative group`}
+                                                    >
+                                                        <div {...provided.dragHandleProps} className="absolute top-4 right-12 text-slate-400 hover:text-slate-600 cursor-grab">
+                                                            <GripVertical className="h-5 w-5" />
+                                                        </div>
+                                                        <button onClick={() => removeItem('projects', index)} className="absolute top-4 right-4 text-slate-400 hover:text-red-500">
+                                                            <Trash2 className="h-5 w-5" />
+                                                        </button>
+                                                        
+                                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                                                            <div>
+                                                                <FloatingInput 
+                                                                    label="Project Name" 
+                                                                    value={proj.name} 
+                                                                    onChange={(e) => handleArrayChange('projects', index, 'name', e.target.value)} 
+                                                                />
+                                                            </div>
+                                                            <div>
+                                                                <FloatingInput 
+                                                                    label="Project Link / URL" 
+                                                                    value={proj.link} 
+                                                                    onChange={(e) => handleArrayChange('projects', index, 'link', e.target.value)} 
+                                                                    placeholder="e.g. github.com/username/repo"
+                                                                />
+                                                            </div>
+                                                            <div className="md:col-span-2">
+                                                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1 ml-1">Project Description</label>
+                                                                <div className="quill-container-small">
+                                                                    <ReactQuill 
+                                                                        theme="snow" 
+                                                                        value={proj.description || ''} 
+                                                                        onChange={(val) => handleArrayChange('projects', index, 'description', val)}
+                                                                        modules={modules}
+                                                                        className="bg-white rounded-lg"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </Draggable>
+                                        ))}
+                                        {provided.placeholder}
+                                    </div>
+                                )}
+                            </Droppable>
+                        </DragDropContext>
+                        <button onClick={() => addItem('projects', { name: '', link: '', description: '' })} className="mt-4 w-full py-3 border-2 border-dashed border-orange-200 text-orange-600 rounded-xl font-bold hover:bg-orange-50 hover:border-orange-300 transition-colors flex items-center justify-center">
+                            <Plus className="h-4 w-4 mr-2" /> Add Project
+                        </button>
+                    </AccordionItem>
+
+                    {/* Skills */}
+                    <AccordionItem 
+                        title="Skills" 
+                        icon={<Code className="h-5 w-5" />}
+                        isOpen={openSection === 'skills'} 
+                        onToggle={() => setOpenSection(openSection === 'skills' ? '' : 'skills')}
+                    >
+                        <div className="space-y-4">
+                            <p className="text-sm text-slate-500 font-medium mb-4">Enter a skill and press comma or enter.</p>
+                            <input
+                                type="text"
+                                placeholder="React, Node.js, Python..."
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' || e.key === ',') {
+                                        e.preventDefault();
+                                        const val = e.target.value.trim();
+                                        if (val && !resume.skills?.includes(val)) {
+                                            setResume(prev => ({ ...prev, skills: [...(prev.skills || []), val] }));
+                                        }
+                                        e.target.value = '';
+                                    }
+                                }}
+                                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 focus:border-orange-500 rounded-xl outline-none font-medium mb-4"
+                            />
+                            <DragDropContext onDragEnd={(result) => onDragEnd(result, 'skills')}>
+                                <Droppable droppableId="skills-list" direction="horizontal">
+                                    {(provided) => (
+                                        <div {...provided.droppableProps} ref={provided.innerRef} className="flex flex-wrap gap-2">
+                                            {resume.skills?.map((skill, index) => (
+                                                <Draggable key={`skill-${skill}-${index}`} draggableId={`skill-${skill}-${index}`} index={index}>
+                                                    {(provided, snapshot) => (
+                                                        <div
+                                                            ref={provided.innerRef}
+                                                            {...provided.draggableProps}
+                                                            {...provided.dragHandleProps}
+                                                            className={`flex items-center px-3 py-1.5 bg-white border ${snapshot.isDragging ? 'border-orange-500 shadow-md' : 'border-slate-200'} rounded-lg group`}
+                                                        >
+                                                            <span className="text-sm font-bold text-slate-700 mr-2">{skill}</span>
+                                                            <button onClick={() => removeItem('skills', index)} className="text-slate-400 hover:text-red-500">
+                                                                <Trash2 className="h-3 w-3" />
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                </Draggable>
+                                            ))}
+                                            {provided.placeholder}
+                                        </div>
+                                    )}
+                                </Droppable>
+                            </DragDropContext>
+                        </div>
+                    </AccordionItem>
+
+                    {/* Templates */}
+                    <AccordionItem 
+                        title="Templates" 
+                        icon={<Layout className="h-5 w-5" />}
+                        isOpen={openSection === 'templates'} 
+                        onToggle={() => setOpenSection(openSection === 'templates' ? '' : 'templates')}
+                    >
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {[
+                                { id: 'executive', name: 'Executive', desc: 'Premium Corporate' },
+                                { id: 'modern', name: 'Modern', desc: 'Sleek & Clean' },
+                                { id: 'visual', name: 'High-Impact', desc: 'Creative Sidebar' },
+                                { id: 'elegant', name: 'Elegant', desc: 'Classic Serif' },
+                                { id: 'government', name: 'Formal', desc: 'Strict Standard' },
+                                { id: 'internship', name: 'Academic', desc: 'Education Focus' }
+                            ].map(tpl => (
+                                <button
+                                    key={tpl.id}
+                                    onClick={() => setResume({ ...resume, templateId: tpl.id })}
+                                    className={`group p-4 rounded-xl border-2 text-left transition-all ${resume.templateId === tpl.id
+                                        ? 'border-orange-500 bg-orange-50 shadow-md'
+                                        : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                                        }`}
+                                >
+                                    <div className="font-bold text-slate-900 text-sm mb-1">{tpl.name}</div>
+                                    <p className="text-xs text-slate-500 font-medium">{tpl.desc}</p>
+                                </button>
+                            ))}
+                        </div>
+                    </AccordionItem>
+
+                    {/* Bottom Padding */}
+                    <div className="h-24 md:h-8"></div>
                 </div>
             </div>
 
-            {/* Mobile Bottom Action Bar - Save & Download only */}
-            <div className={`md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-2xl border-t border-slate-200 p-3 flex items-center justify-center space-x-3 ${isMobilePreview ? 'hidden' : ''}`}>
-                <button 
-                    onClick={handleSave} 
-                    disabled={saving}
-                    className="flex-1 max-w-[140px] py-2.5 bg-slate-900 text-white rounded-xl shadow-lg flex items-center justify-center active:scale-95 transition-all disabled:opacity-50 text-xs font-bold"
+            {/* Right Panel: Live Scaling Preview */}
+            <div 
+                ref={previewContainerRef}
+                className={`h-full overflow-y-auto flex justify-center py-10 px-4 relative transition-all duration-500 bg-slate-200 ${isFullscreenPreview ? 'w-full' : 'w-full md:w-[55%] lg:w-[60%]'} ${!isMobilePreview ? 'hidden md:flex' : 'absolute inset-0 z-50 flex'}`}
+            >
+                {/* Floating controls for Fullscreen mode */}
+                {isFullscreenPreview && (
+                    <div className="fixed top-6 right-10 z-[60] flex items-center space-x-3">
+                         <button 
+                            onClick={() => setIsFullscreenPreview(false)} 
+                            className="flex items-center px-4 py-2.5 bg-slate-900 text-white rounded-xl font-bold shadow-2xl hover:bg-slate-800 transition-all active:scale-95"
+                        >
+                            <Layout className="h-4 w-4 mr-2" /> Show Editor
+                        </button>
+                        <button 
+                            onClick={handleDownload} 
+                            className="flex items-center px-4 py-2.5 bg-orange-500 text-white rounded-xl font-bold shadow-2xl hover:bg-orange-600 transition-all active:scale-95"
+                        >
+                            <Download className="h-4 w-4 mr-2" /> Download
+                        </button>
+                    </div>
+                )}
+                {/* Mobile Preview Header */}
+                {isMobilePreview && (
+                    <div className="fixed top-0 left-0 right-0 bg-slate-900 text-white p-4 flex justify-between items-center z-50 shadow-lg">
+                        <button onClick={() => setIsMobilePreview(false)} className="flex items-center text-sm font-bold">
+                            <ArrowLeft className="w-4 h-4 mr-2" /> Back to Editor
+                        </button>
+                        <button onClick={handleDownload} className="flex items-center text-sm font-bold bg-orange-500 px-4 py-1.5 rounded-lg">
+                            <Download className="w-4 h-4 mr-2" /> Download
+                        </button>
+                    </div>
+                )}
+
+                <div 
+                    className={`resume-print-area bg-white shadow-[0_20px_50px_rgba(0,0,0,0.1)] origin-top transition-all duration-500 ease-out ${isMobilePreview ? 'mt-12' : ''}`}
+                    style={{
+                        width: '794px',
+                        minHeight: '1123px',
+                        transform: `scale(${previewScale})`,
+                        marginBottom: `${1123 * previewScale - 1123 + 60}px` 
+                    }}
                 >
-                    <Save className="h-4 w-4 mr-1.5" />
-                    {saving ? 'Saving...' : 'Save'}
+                    <ResumePreview resume={resume} />
+                </div>
+            </div>
+
+            {/* Mobile Bottom Action Bar */}
+            <div className={`md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 p-4 flex space-x-3 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] ${isMobilePreview ? 'hidden' : ''}`}>
+                <button onClick={handleSave} disabled={saving} className="flex-1 py-3 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-sm shadow-md active:scale-95 transition-transform disabled:opacity-50">
+                    <Save className="h-4 w-4 mr-2" /> {saving ? 'Saving...' : 'Save'}
                 </button>
-                <button 
-                    onClick={handleDownload} 
-                    disabled={downloading}
-                    className="flex-1 max-w-[140px] py-2.5 bg-orange-500 text-white rounded-xl shadow-lg shadow-orange-200 flex items-center justify-center active:scale-95 transition-all disabled:opacity-50 text-xs font-bold"
-                >
-                    <Download className={`h-4 w-4 mr-1.5 ${downloading ? 'animate-bounce' : ''}`} />
-                    {downloading ? 'Processing...' : 'Download'}
+                <button onClick={handleDownload} disabled={downloading} className="flex-1 py-3 bg-orange-500 text-white rounded-xl flex items-center justify-center font-bold text-sm shadow-md shadow-orange-200 active:scale-95 transition-transform disabled:opacity-50">
+                    <Download className="h-4 w-4 mr-2" /> Download
                 </button>
             </div>
         </motion.div>
