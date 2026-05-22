@@ -396,13 +396,13 @@ const Editor = () => {
         <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className={`flex ${isSplitView ? 'flex-col' : 'flex-row'} md:flex-row h-screen overflow-hidden bg-slate-50 font-sans`}
+            className={`flex ${isSplitView ? 'flex-row' : 'flex-col'} md:flex-row h-screen overflow-hidden bg-slate-50 font-sans`}
         >
             <SEO title={resume.title ? `${resume.title} - Editor` : "Resume Editor"} />
             <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} onSuccess={handleLoginSuccess} title="🎉 Your resume is ready!" subtitle="Login or sign up to download and save your resume." />
 
             {/* Left Panel: Form & Editor */}
-            <div className={`w-full ${isSplitView ? 'h-[60%] md:h-full' : 'h-full'} md:w-[45%] lg:w-[40%] bg-slate-50 border-r border-slate-200 flex flex-col z-10 transition-all duration-500 ${isMobilePreview ? '-translate-x-full absolute md:relative md:translate-x-0' : ''} ${isFullscreenPreview ? 'md:-translate-x-full md:absolute md:opacity-0' : 'md:translate-x-0 md:relative md:opacity-100'}`}>
+            <div className={`w-full ${isSplitView ? 'w-[60%] md:w-[45%] lg:w-[40%]' : 'w-full'} bg-slate-50 border-r border-slate-200 h-full flex flex-col z-10 transition-all duration-500 ${isMobilePreview ? '-translate-x-full absolute md:relative md:translate-x-0' : ''} ${isFullscreenPreview ? 'md:-translate-x-full md:absolute md:opacity-0' : 'md:translate-x-0 md:relative md:opacity-100'}`}>
                 
                 {/* Header */}
                 <div className="bg-white border-b border-slate-200 p-4 flex items-center justify-between shrink-0 shadow-sm z-20 relative">
@@ -927,7 +927,7 @@ const Editor = () => {
             {/* Right Panel: Live Scaling Preview */}
             <div 
                 ref={previewContainerRef}
-                className={`overflow-y-auto flex justify-center py-10 px-4 relative transition-all duration-500 bg-slate-200 ${isFullscreenPreview ? 'w-full h-full' : 'w-full md:w-[55%] lg:w-[60%]'} ${isSplitView ? 'h-[40%] md:h-full flex border-t-2 border-slate-300 shadow-[0_-10px_20px_rgba(0,0,0,0.05)]' : (!isMobilePreview ? 'hidden md:flex h-full' : 'absolute inset-0 z-50 flex h-full')}`}
+                className={`overflow-y-auto flex justify-center py-10 px-4 relative transition-all duration-500 bg-slate-200 ${isFullscreenPreview ? 'w-full h-full' : 'w-full md:w-[55%] lg:w-[60%]'} ${isSplitView ? 'w-[40%] md:w-full h-full flex border-l-2 border-slate-300 shadow-[-10px_0_20px_rgba(0,0,0,0.05)]' : (!isMobilePreview ? 'hidden md:flex h-full' : 'absolute inset-0 z-50 flex h-full')}`}
             >
                 {/* Floating controls for Fullscreen mode */}
                 {isFullscreenPreview && (
@@ -964,7 +964,7 @@ const Editor = () => {
                         width: '794px',
                         minHeight: '1123px',
                         transform: `scale(${previewScale})`,
-                        marginBottom: `${1123 * previewScale - 1123 + (isSplitView ? 20 : 60)}px` 
+                        marginBottom: `${1123 * previewScale - 1123 + 60}px` 
                     }}
                 >
                     <ResumePreview resume={resume} />

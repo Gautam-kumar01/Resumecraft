@@ -446,6 +446,42 @@
   background: #cbd5e1;
 }
 
+/* Quill Styles Optimization */
+.quill-container, .quill-container-small {
+  position: relative;
+  z-index: 1;
+  min-height: 150px;
+}
+
+.quill-container-small {
+  min-height: 120px;
+}
+
+.ql-editor {
+  min-height: 120px !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 14px !important;
+}
+
+.quill-container-small .ql-editor {
+  min-height: 100px !important;
+}
+
+/* Fix for potential z-index issue on mobile */
+.ql-toolbar {
+  border-top-left-radius: 12px !important;
+  border-top-right-radius: 12px !important;
+  border-color: #e2e8f0 !important;
+  background: #f8fafc !important;
+}
+
+.ql-container {
+  border-bottom-left-radius: 12px !important;
+  border-bottom-right-radius: 12px !important;
+  border-color: #e2e8f0 !important;
+  background: white !important;
+}
+
 /* Premium Animations */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
