@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useContext, useMemo } from 'react';
+import { useState, useEffect, useRef, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
@@ -7,11 +7,11 @@ import AuthContext from '../context/AuthContext';
 import ResumePreview from '../components/ResumePreview';
 import LoginModal from '../components/LoginModal';
 import SEO from '../components/SEO';
-import { Save, Download, Eye, ArrowLeft, Plus, Trash2, User, Sparkles, FileText, Briefcase, GraduationCap, Code, Folder, Layout, ChevronDown, ChevronUp, GripVertical } from 'lucide-react';
+import { Save, Download, Eye, ArrowLeft, Plus, Trash2, User, Upload, Sparkles, FileText, Briefcase, GraduationCap, Code, Folder, Layout, ChevronDown, ChevronUp, GripVertical, Settings } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
 
 const initialResumeState = {
     title: '',
@@ -42,18 +42,18 @@ const modules = {
 };
 
 const AccordionItem = ({ title, icon, isOpen, onToggle, children }) => (
-    <div className={`border rounded-2xl bg-white mb-4 overflow-hidden transition-all duration-300 ${isOpen ? 'border-orange-200 shadow-md ring-1 ring-orange-100' : 'border-slate-200 shadow-sm hover:shadow-md'}`}>
+    <div className="border border-slate-200 rounded-2xl bg-white mb-4 overflow-hidden shadow-sm hover:shadow-md transition-all">
         <button 
             onClick={onToggle}
-            className={`w-full flex items-center justify-between p-5 transition-colors ${isOpen ? 'bg-orange-50/30' : 'bg-white hover:bg-slate-50'}`}
+            className="w-full flex items-center justify-between p-5 bg-white hover:bg-slate-50 transition-colors"
         >
             <div className="flex items-center space-x-3 text-slate-900 font-bold text-lg">
-                <div className={`p-2 rounded-xl transition-colors ${isOpen ? 'bg-orange-500 text-white' : 'bg-orange-50 text-orange-500'}`}>
+                <div className="p-2 bg-orange-50 text-orange-500 rounded-xl">
                     {icon}
                 </div>
-                <span className={isOpen ? 'text-orange-900' : 'text-slate-900'}>{title}</span>
+                <span>{title}</span>
             </div>
-            {isOpen ? <ChevronUp className="text-orange-500" /> : <ChevronDown className="text-slate-400" />}
+            {isOpen ? <ChevronUp className="text-slate-400" /> : <ChevronDown className="text-slate-400" />}
         </button>
         <AnimatePresence>
             {isOpen && (
@@ -61,7 +61,6 @@ const AccordionItem = ({ title, icon, isOpen, onToggle, children }) => (
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
                     className="border-t border-slate-100"
                 >
                     <div className="p-6">
@@ -70,21 +69,6 @@ const AccordionItem = ({ title, icon, isOpen, onToggle, children }) => (
                 </motion.div>
             )}
         </AnimatePresence>
-    </div>
-);
-
-const FloatingInput = ({ label, value, onChange, placeholder = " ", type = "text", className = "" }) => (
-    <div className={`relative ${className}`}>
-        <input
-            type={type}
-            value={value}
-            onChange={onChange}
-            placeholder={placeholder}
-            className="peer w-full px-4 pt-6 pb-2 bg-slate-50 border border-slate-200 focus:border-orange-500 rounded-xl outline-none font-medium transition-all placeholder-transparent"
-        />
-        <label className="absolute left-4 top-2 text-[10px] font-bold text-slate-400 uppercase tracking-wide transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-4 peer-placeholder-shown:font-medium peer-placeholder-shown:text-slate-500 peer-focus:top-2 peer-focus:text-[10px] peer-focus:font-bold peer-focus:text-orange-500 pointer-events-none">
-            {label}
-        </label>
     </div>
 );
 
@@ -101,7 +85,6 @@ const Editor = () => {
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [pendingAction, setPendingAction] = useState(null); 
     const [isMobilePreview, setIsMobilePreview] = useState(false);
-    const [isFullscreenPreview, setIsFullscreenPreview] = useState(false);
     
     const previewContainerRef = useRef(null);
     const [previewScale, setPreviewScale] = useState(1);
@@ -154,8 +137,8 @@ const Editor = () => {
                 const containerHeight = previewContainerRef.current.offsetHeight;
                 
                 // A4 dimensions at 96dpi are 794x1123
-                const scaleW = (containerWidth - 32) / 794; // Reduced padding for better mobile view
-                const scaleH = (containerHeight - 32) / 1123;
+                const scaleW = (containerWidth - 64) / 794; // 32px padding on each side
+                const scaleH = (containerHeight - 64) / 1123;
                 
                 // Use the smaller scale to ensure it fits completely
                 setPreviewScale(Math.min(scaleW, scaleH, 1.2)); // Cap at 1.2x scale
@@ -163,13 +146,9 @@ const Editor = () => {
         };
 
         updateScale();
-        const timer = setTimeout(updateScale, 100); // Small delay to ensure container is rendered
         window.addEventListener('resize', updateScale);
-        return () => {
-            window.removeEventListener('resize', updateScale);
-            clearTimeout(timer);
-        };
-    }, [isMobilePreview, isFullscreenPreview]);
+        return () => window.removeEventListener('resize', updateScale);
+    }, [isMobilePreview]);
 
     const handleSave = async () => {
         if (!user) {
@@ -232,7 +211,7 @@ const Editor = () => {
             await new Promise(r => setTimeout(r, 1200));
 
             const canvas = await html2canvas(offscreen, {
-                scale: 4, // High resolution for premium quality
+                scale: 4, // Higher resolution for crisp text
                 useCORS: true,
                 backgroundColor: '#ffffff',
                 logging: false,
@@ -241,14 +220,6 @@ const Editor = () => {
                 windowWidth: 1400, 
                 scrollX: 0,
                 scrollY: 0,
-                imageTimeout: 0,
-                onclone: (clonedDoc) => {
-                    // Ensure all fonts and styles are applied in the clone
-                    const fonts = clonedDoc.fonts;
-                    if (fonts) {
-                        return fonts.ready;
-                    }
-                }
             });
 
             document.body.removeChild(offscreen);
@@ -399,13 +370,13 @@ const Editor = () => {
         <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className={`flex flex-row h-screen overflow-hidden bg-slate-50 font-sans`}
+            className="flex flex-col md:flex-row h-screen overflow-hidden bg-slate-50 font-sans"
         >
             <SEO title={resume.title ? `${resume.title} - Editor` : "Resume Editor"} />
             <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} onSuccess={handleLoginSuccess} title="🎉 Your resume is ready!" subtitle="Login or sign up to download and save your resume." />
 
             {/* Left Panel: Form & Editor */}
-            <div className={`w-[60%] md:w-[45%] lg:w-[40%] bg-slate-50 border-r border-slate-200 h-full flex flex-col z-10 transition-all duration-500 ${isMobilePreview ? '-translate-x-full absolute md:relative md:translate-x-0' : ''} ${isFullscreenPreview ? 'md:-translate-x-full md:absolute md:opacity-0' : 'md:translate-x-0 md:relative md:opacity-100'}`}>
+            <div className={`w-full md:w-[45%] lg:w-[40%] bg-slate-50 border-r border-slate-200 h-full flex flex-col z-10 transition-transform ${isMobilePreview ? '-translate-x-full absolute md:relative md:translate-x-0' : ''}`}>
                 
                 {/* Header */}
                 <div className="bg-white border-b border-slate-200 p-4 flex items-center justify-between shrink-0 shadow-sm z-20 relative">
@@ -414,16 +385,7 @@ const Editor = () => {
                         {user ? 'Dashboard' : 'Home'}
                     </button>
                     <div className="flex items-center space-x-3">
-                        <button onClick={() => setIsFullscreenPreview(!isFullscreenPreview)} className="hidden md:flex items-center px-4 py-2 bg-slate-100 text-slate-700 rounded-xl font-bold text-sm hover:bg-slate-200 transition-colors">
-                            {isFullscreenPreview ? <Layout className="h-4 w-4 mr-2" /> : <Eye className="h-4 w-4 mr-2" />}
-                            {isFullscreenPreview ? 'Show Editor' : 'Full Preview'}
-                        </button>
-                        <button 
-                            onClick={() => {
-                                setIsMobilePreview(true);
-                            }} 
-                            className="md:hidden flex items-center px-4 py-2 bg-slate-100 text-slate-700 rounded-xl font-bold text-sm"
-                        >
+                        <button onClick={() => setIsMobilePreview(true)} className="md:hidden flex items-center px-4 py-2 bg-slate-100 text-slate-700 rounded-xl font-bold text-sm">
                             <Eye className="h-4 w-4 mr-2" /> Preview
                         </button>
                         <button onClick={handleSave} disabled={saving} className="hidden md:flex items-center px-4 py-2 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-colors font-bold shadow-sm disabled:opacity-70">
@@ -535,53 +497,28 @@ const Editor = () => {
                                 </div>
                             </div>
                             <div className="md:col-span-2">
-                                <FloatingInput 
-                                    label="Full Name" 
-                                    value={resume.personalInfo?.fullName || ''} 
-                                    onChange={(e) => handleChange('personalInfo', 'fullName', e.target.value)} 
-                                />
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Full Name</label>
+                                <input value={resume.personalInfo?.fullName || ''} onChange={(e) => handleChange('personalInfo', 'fullName', e.target.value)} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 focus:border-orange-500 rounded-xl outline-none font-medium" />
                             </div>
                             <div>
-                                <FloatingInput 
-                                    label="Email Address" 
-                                    value={resume.personalInfo?.email || ''} 
-                                    onChange={(e) => handleChange('personalInfo', 'email', e.target.value)} 
-                                />
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Email</label>
+                                <input value={resume.personalInfo?.email || ''} onChange={(e) => handleChange('personalInfo', 'email', e.target.value)} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 focus:border-orange-500 rounded-xl outline-none font-medium" />
                             </div>
                             <div>
-                                <FloatingInput 
-                                    label="Phone Number" 
-                                    value={resume.personalInfo?.phone || ''} 
-                                    onChange={(e) => handleChange('personalInfo', 'phone', e.target.value)} 
-                                />
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Phone</label>
+                                <input value={resume.personalInfo?.phone || ''} onChange={(e) => handleChange('personalInfo', 'phone', e.target.value)} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 focus:border-orange-500 rounded-xl outline-none font-medium" />
                             </div>
                             <div className="md:col-span-2">
-                                <FloatingInput 
-                                    label="Address / Location" 
-                                    value={resume.personalInfo?.address || ''} 
-                                    onChange={(e) => handleChange('personalInfo', 'address', e.target.value)} 
-                                />
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Address</label>
+                                <input value={resume.personalInfo?.address || ''} onChange={(e) => handleChange('personalInfo', 'address', e.target.value)} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 focus:border-orange-500 rounded-xl outline-none font-medium" />
                             </div>
                             <div>
-                                <FloatingInput 
-                                    label="LinkedIn Profile" 
-                                    value={resume.personalInfo?.linkedin || ''} 
-                                    onChange={(e) => handleChange('personalInfo', 'linkedin', e.target.value)} 
-                                />
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">LinkedIn URL</label>
+                                <input value={resume.personalInfo?.linkedin || ''} onChange={(e) => handleChange('personalInfo', 'linkedin', e.target.value)} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 focus:border-orange-500 rounded-xl outline-none font-medium" />
                             </div>
                             <div>
-                                <FloatingInput 
-                                    label="GitHub Profile" 
-                                    value={resume.personalInfo?.github || ''} 
-                                    onChange={(e) => handleChange('personalInfo', 'github', e.target.value)} 
-                                />
-                            </div>
-                            <div className="md:col-span-2">
-                                <FloatingInput 
-                                    label="Portfolio / Website" 
-                                    value={resume.personalInfo?.website || ''} 
-                                    onChange={(e) => handleChange('personalInfo', 'website', e.target.value)} 
-                                />
+                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">GitHub / Website</label>
+                                <input value={resume.personalInfo?.github || ''} onChange={(e) => handleChange('personalInfo', 'github', e.target.value)} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 focus:border-orange-500 rounded-xl outline-none font-medium" />
                             </div>
                         </div>
                     </AccordionItem>
@@ -594,15 +531,13 @@ const Editor = () => {
                         onToggle={() => setOpenSection(openSection === 'summary' ? '' : 'summary')}
                     >
                         <div className="quill-container">
-                            {openSection === 'summary' && (
-                                <ReactQuill 
-                                    theme="snow" 
-                                    value={resume.summary || ''} 
-                                    onChange={(val) => setResume({ ...resume, summary: val })}
-                                    modules={modules}
-                                    className="bg-white rounded-xl overflow-hidden"
-                                />
-                            )}
+                            <ReactQuill 
+                                theme="snow" 
+                                value={resume.summary || ''} 
+                                onChange={(val) => setResume({ ...resume, summary: val })}
+                                modules={modules}
+                                className="bg-white rounded-xl overflow-hidden"
+                            />
                         </div>
                     </AccordionItem>
 
@@ -634,47 +569,31 @@ const Editor = () => {
                                                         
                                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
                                                             <div>
-                                                                <FloatingInput 
-                                                                    label="Job Title" 
-                                                                    value={exp.position} 
-                                                                    onChange={(e) => handleArrayChange('experience', index, 'position', e.target.value)} 
-                                                                />
+                                                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Job Title</label>
+                                                                <input value={exp.position} onChange={(e) => handleArrayChange('experience', index, 'position', e.target.value)} className="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg outline-none focus:border-orange-500 font-medium" />
                                                             </div>
                                                             <div>
-                                                                <FloatingInput 
-                                                                    label="Company" 
-                                                                    value={exp.company} 
-                                                                    onChange={(e) => handleArrayChange('experience', index, 'company', e.target.value)} 
-                                                                />
+                                                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Company</label>
+                                                                <input value={exp.company} onChange={(e) => handleArrayChange('experience', index, 'company', e.target.value)} className="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg outline-none focus:border-orange-500 font-medium" />
                                                             </div>
                                                             <div>
-                                                                <FloatingInput 
-                                                                    label="Start Date" 
-                                                                    value={exp.startDate} 
-                                                                    onChange={(e) => handleArrayChange('experience', index, 'startDate', e.target.value)} 
-                                                                    placeholder="e.g. Jan 2020"
-                                                                />
+                                                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Start Date</label>
+                                                                <input value={exp.startDate} onChange={(e) => handleArrayChange('experience', index, 'startDate', e.target.value)} placeholder="e.g. Jan 2020" className="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg outline-none focus:border-orange-500 font-medium" />
                                                             </div>
                                                             <div>
-                                                                <FloatingInput 
-                                                                    label="End Date" 
-                                                                    value={exp.endDate} 
-                                                                    onChange={(e) => handleArrayChange('experience', index, 'endDate', e.target.value)} 
-                                                                    placeholder="e.g. Present"
-                                                                />
+                                                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">End Date</label>
+                                                                <input value={exp.endDate} onChange={(e) => handleArrayChange('experience', index, 'endDate', e.target.value)} placeholder="e.g. Present" className="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg outline-none focus:border-orange-500 font-medium" />
                                                             </div>
                                                             <div className="md:col-span-2">
-                                                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1 ml-1">Job Description</label>
+                                                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Description</label>
                                                                 <div className="quill-container-small">
-                                                                    {openSection === 'experience' && (
-                                                                        <ReactQuill 
-                                                                            theme="snow" 
-                                                                            value={exp.description || ''} 
-                                                                            onChange={(val) => handleArrayChange('experience', index, 'description', val)}
-                                                                            modules={modules}
-                                                                            className="bg-white rounded-lg"
-                                                                        />
-                                                                    )}
+                                                                    <ReactQuill 
+                                                                        theme="snow" 
+                                                                        value={exp.description || ''} 
+                                                                        onChange={(val) => handleArrayChange('experience', index, 'description', val)}
+                                                                        modules={modules}
+                                                                        className="bg-white rounded-lg"
+                                                                    />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -720,34 +639,20 @@ const Editor = () => {
                                                         
                                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
                                                             <div>
-                                                                <FloatingInput 
-                                                                    label="Degree / Certificate" 
-                                                                    value={edu.degree} 
-                                                                    onChange={(e) => handleArrayChange('education', index, 'degree', e.target.value)} 
-                                                                />
+                                                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Degree</label>
+                                                                <input value={edu.degree} onChange={(e) => handleArrayChange('education', index, 'degree', e.target.value)} className="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg outline-none focus:border-orange-500 font-medium" />
                                                             </div>
                                                             <div>
-                                                                <FloatingInput 
-                                                                    label="School / University" 
-                                                                    value={edu.school} 
-                                                                    onChange={(e) => handleArrayChange('education', index, 'school', e.target.value)} 
-                                                                />
+                                                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">School/University</label>
+                                                                <input value={edu.school} onChange={(e) => handleArrayChange('education', index, 'school', e.target.value)} className="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg outline-none focus:border-orange-500 font-medium" />
                                                             </div>
                                                             <div>
-                                                                <FloatingInput 
-                                                                    label="Start Date" 
-                                                                    value={edu.startDate} 
-                                                                    onChange={(e) => handleArrayChange('education', index, 'startDate', e.target.value)} 
-                                                                    placeholder="e.g. 2018"
-                                                                />
+                                                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Start Date</label>
+                                                                <input value={edu.startDate} onChange={(e) => handleArrayChange('education', index, 'startDate', e.target.value)} className="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg outline-none focus:border-orange-500 font-medium" />
                                                             </div>
                                                             <div>
-                                                                <FloatingInput 
-                                                                    label="End Date" 
-                                                                    value={edu.endDate} 
-                                                                    onChange={(e) => handleArrayChange('education', index, 'endDate', e.target.value)} 
-                                                                    placeholder="e.g. 2022"
-                                                                />
+                                                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">End Date</label>
+                                                                <input value={edu.endDate} onChange={(e) => handleArrayChange('education', index, 'endDate', e.target.value)} className="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg outline-none focus:border-orange-500 font-medium" />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -792,32 +697,23 @@ const Editor = () => {
                                                         
                                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
                                                             <div>
-                                                                <FloatingInput 
-                                                                    label="Project Name" 
-                                                                    value={proj.name} 
-                                                                    onChange={(e) => handleArrayChange('projects', index, 'name', e.target.value)} 
-                                                                />
+                                                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Project Name</label>
+                                                                <input value={proj.name} onChange={(e) => handleArrayChange('projects', index, 'name', e.target.value)} className="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg outline-none focus:border-orange-500 font-medium" />
                                                             </div>
                                                             <div>
-                                                                <FloatingInput 
-                                                                    label="Project Link / URL" 
-                                                                    value={proj.link} 
-                                                                    onChange={(e) => handleArrayChange('projects', index, 'link', e.target.value)} 
-                                                                    placeholder="e.g. github.com/username/repo"
-                                                                />
+                                                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Link / URL</label>
+                                                                <input value={proj.link} onChange={(e) => handleArrayChange('projects', index, 'link', e.target.value)} className="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg outline-none focus:border-orange-500 font-medium" />
                                                             </div>
                                                             <div className="md:col-span-2">
-                                                                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-1 ml-1">Project Description</label>
+                                                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Description</label>
                                                                 <div className="quill-container-small">
-                                                                    {openSection === 'projects' && (
-                                                                        <ReactQuill 
-                                                                            theme="snow" 
-                                                                            value={proj.description || ''} 
-                                                                            onChange={(val) => handleArrayChange('projects', index, 'description', val)}
-                                                                            modules={modules}
-                                                                            className="bg-white rounded-lg"
-                                                                        />
-                                                                    )}
+                                                                    <ReactQuill 
+                                                                        theme="snow" 
+                                                                        value={proj.description || ''} 
+                                                                        onChange={(val) => handleArrayChange('projects', index, 'description', val)}
+                                                                        modules={modules}
+                                                                        className="bg-white rounded-lg"
+                                                                    />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -927,25 +823,8 @@ const Editor = () => {
             {/* Right Panel: Live Scaling Preview */}
             <div 
                 ref={previewContainerRef}
-                className={`w-[40%] md:w-[55%] lg:w-[60%] bg-slate-200 h-full overflow-y-auto flex justify-center py-10 px-4 relative transition-all duration-500 ${!isMobilePreview ? 'flex' : 'absolute inset-0 z-50 flex'}`}
+                className={`w-full md:w-[55%] lg:w-[60%] bg-slate-400 h-full overflow-y-auto flex justify-center py-10 relative transition-transform ${!isMobilePreview ? 'hidden md:flex' : 'absolute inset-0 z-50 flex'}`}
             >
-                {/* Floating controls for Fullscreen mode */}
-                {isFullscreenPreview && (
-                    <div className="fixed top-6 right-10 z-[60] flex items-center space-x-3">
-                         <button 
-                            onClick={() => setIsFullscreenPreview(false)} 
-                            className="flex items-center px-4 py-2.5 bg-slate-900 text-white rounded-xl font-bold shadow-2xl hover:bg-slate-800 transition-all active:scale-95"
-                        >
-                            <Layout className="h-4 w-4 mr-2" /> Show Editor
-                        </button>
-                        <button 
-                            onClick={handleDownload} 
-                            className="flex items-center px-4 py-2.5 bg-orange-500 text-white rounded-xl font-bold shadow-2xl hover:bg-orange-600 transition-all active:scale-95"
-                        >
-                            <Download className="h-4 w-4 mr-2" /> Download
-                        </button>
-                    </div>
-                )}
                 {/* Mobile Preview Header */}
                 {isMobilePreview && (
                     <div className="fixed top-0 left-0 right-0 bg-slate-900 text-white p-4 flex justify-between items-center z-50 shadow-lg">
@@ -959,12 +838,12 @@ const Editor = () => {
                 )}
 
                 <div 
-                    className={`resume-print-area bg-white shadow-[0_20px_50px_rgba(0,0,0,0.1)] origin-top transition-all duration-500 ease-out ${isMobilePreview ? 'mt-12' : ''}`}
+                    className={`resume-print-area bg-white shadow-2xl origin-top transition-transform duration-300 ease-out ${isMobilePreview ? 'mt-12' : ''}`}
                     style={{
                         width: '794px',
                         minHeight: '1123px',
                         transform: `scale(${previewScale})`,
-                        marginBottom: `${1123 * previewScale - 1123 + 60}px` 
+                        marginBottom: `${1123 * previewScale - 1123 + 40}px` // Compensate for scaled height padding
                     }}
                 >
                     <ResumePreview resume={resume} />
