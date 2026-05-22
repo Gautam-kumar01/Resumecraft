@@ -1,4 +1,3 @@
-import React from 'react';
 import {
     Mail,
     Phone,
@@ -8,7 +7,6 @@ import {
     Globe, 
     Briefcase,
     GraduationCap,
-    Code2,
     Award,
     User
 } from 'lucide-react';
@@ -351,6 +349,9 @@ const ResumePreview = ({ resume }) => {
                     {personalInfo?.address && <span>{personalInfo.address}</span>}
                     {personalInfo?.email && <span>{personalInfo.email}</span>}
                     {personalInfo?.phone && <span>{personalInfo.phone}</span>}
+                    {personalInfo?.linkedin && <span>LINKEDIN: {personalInfo.linkedin.replace(/^https?:\/\/(www\.)?/, '')}</span>}
+                    {personalInfo?.github && <span>GITHUB: {personalInfo.github.replace(/^https?:\/\/(www\.)?/, '')}</span>}
+                    {personalInfo?.website && <span>WEBSITE: {personalInfo.website.replace(/^https?:\/\/(www\.)?/, '')}</span>}
                 </div>
             </div>
 
@@ -415,10 +416,12 @@ const ResumePreview = ({ resume }) => {
                     <h1 className="text-4xl font-black text-slate-900 mb-1 tracking-tight">{personalInfo?.fullName || 'Your Name'}</h1>
                     {resume.title && <p className="text-[16px] text-orange-600 font-bold uppercase">{resume.title}</p>}
                 </div>
-                <div className="text-right text-[12px] text-slate-500 space-y-1.5 font-bold uppercase tracking-wider">
-                    {personalInfo?.email && <div className="flex justify-end items-center">{personalInfo.email}</div>}
-                    {personalInfo?.phone && <div className="flex justify-end items-center">{personalInfo.phone}</div>}
-                    {personalInfo?.linkedin && <div className="flex justify-end items-center">LinkedIn</div>}
+                <div className="text-right text-[12px] text-slate-500 space-y-1 font-bold uppercase tracking-wider">
+                    {personalInfo?.email && <div>{personalInfo.email}</div>}
+                    {personalInfo?.phone && <div>{personalInfo.phone}</div>}
+                    {personalInfo?.linkedin && <div>{personalInfo.linkedin.replace(/^https?:\/\/(www\.)?/, '')}</div>}
+                    {personalInfo?.github && <div>{personalInfo.github.replace(/^https?:\/\/(www\.)?/, '')}</div>}
+                    {personalInfo?.website && <div>{personalInfo.website.replace(/^https?:\/\/(www\.)?/, '')}</div>}
                 </div>
             </header>
 

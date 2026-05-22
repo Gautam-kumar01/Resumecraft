@@ -7,7 +7,7 @@ import AuthContext from '../context/AuthContext';
 import ResumePreview from '../components/ResumePreview';
 import LoginModal from '../components/LoginModal';
 import SEO from '../components/SEO';
-import { Save, Download, Eye, ArrowLeft, Plus, Trash2, User, Upload, Sparkles, FileText, Briefcase, GraduationCap, Code, Folder, Layout, ChevronDown, ChevronUp, GripVertical, Settings } from 'lucide-react';
+import { Save, Download, Eye, ArrowLeft, Plus, Trash2, User, Sparkles, FileText, Briefcase, GraduationCap, Code, Folder, Layout, ChevronDown, ChevronUp, GripVertical } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import ReactQuill from 'react-quill';
@@ -571,9 +571,16 @@ const Editor = () => {
                             </div>
                             <div>
                                 <FloatingInput 
-                                    label="GitHub / Portfolio" 
+                                    label="GitHub Profile" 
                                     value={resume.personalInfo?.github || ''} 
                                     onChange={(e) => handleChange('personalInfo', 'github', e.target.value)} 
+                                />
+                            </div>
+                            <div className="md:col-span-2">
+                                <FloatingInput 
+                                    label="Portfolio / Website" 
+                                    value={resume.personalInfo?.website || ''} 
+                                    onChange={(e) => handleChange('personalInfo', 'website', e.target.value)} 
                                 />
                             </div>
                         </div>
