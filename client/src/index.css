@@ -383,6 +383,13 @@
   }
 }
 
+/* Optimize mobile split view */
+@media (max-width: 768px) {
+  .flex-col > .overflow-y-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
 /* Quill Content Styles for Resume Preview */
 .quill-content {
   font-family: inherit;

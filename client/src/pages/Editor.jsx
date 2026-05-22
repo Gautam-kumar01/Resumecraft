@@ -102,6 +102,7 @@ const Editor = () => {
     const [pendingAction, setPendingAction] = useState(null); 
     const [isMobilePreview, setIsMobilePreview] = useState(false);
     const [isFullscreenPreview, setIsFullscreenPreview] = useState(false);
+    const [isSplitView, setIsSplitView] = useState(true); // Default to split view on mobile
     
     const previewContainerRef = useRef(null);
     const [previewScale, setPreviewScale] = useState(1);
@@ -395,13 +396,13 @@ const Editor = () => {
         <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex flex-col md:flex-row h-screen overflow-hidden bg-slate-50 font-sans"
+            className={`flex ${isSplitView ? 'flex-col' : 'flex-row'} md:flex-row h-screen overflow-hidden bg-slate-50 font-sans`}
         >
             <SEO title={resume.title ? `${resume.title} - Editor` : "Resume Editor"} />
             <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} onSuccess={handleLoginSuccess} title="🎉 Your resume is ready!" subtitle="Login or sign up to download and save your resume." />
 
             {/* Left Panel: Form & Editor */}
-            <div className={`w-full md:w-[45%] lg:w-[40%] bg-slate-50 border-r border-slate-200 h-full flex flex-col z-10 transition-all duration-500 ${isMobilePreview ? '-translate-x-full absolute md:relative md:translate-x-0' : ''} ${isFullscreenPreview ? 'md:-translate-x-full md:absolute md:opacity-0' : 'md:translate-x-0 md:relative md:opacity-100'}`}>
+            <div className={`w-full ${isSplitView ? 'h-[60%] md:h-full' : 'h-full'} md:w-[45%] lg:w-[40%] bg-slate-50 border-r border-slate-200 flex flex-col z-10 transition-all duration-500 ${isMobilePreview ? '-translate-x-full absolute md:relative md:translate-x-0' : ''} ${isFullscreenPreview ? 'md:-translate-x-full md:absolute md:opacity-0' : 'md:translate-x-0 md:relative md:opacity-100'}`}>
                 
                 {/* Header */}
                 <div className="bg-white border-b border-slate-200 p-4 flex items-center justify-between shrink-0 shadow-sm z-20 relative">
@@ -410,15 +411,36 @@ const Editor = () => {
                         {user ? 'Dashboard' : 'Home'}
                     </button>
                     <div className="flex items-center space-x-3">
+                        <button 
+                            onClick={() => {
+                                setIsSplitView(!isSplitView);
+                                setIsMobilePreview(false);
+                            }} 
+                            className="md:hidden flex items-center px-3 py-2 bg-slate-100 text-slate-700 rounded-xl font-bold text-xs"
+                        >
+                            {isSplitView ? <Layout className="h-4 w-4 mr-1" /> : <Settings className="h-4 w-4 mr-1" />}
+                            {isSplitView ? 'Full Edit' : 'Split View'}
+                        </button>
                         <button onClick={() => setIsFullscreenPreview(!isFullscreenPreview)} className="hidden md:flex items-center px-4 py-2 bg-slate-100 text-slate-700 rounded-xl font-bold text-sm hover:bg-slate-200 transition-colors">
                             {isFullscreenPreview ? <Layout className="h-4 w-4 mr-2" /> : <Eye className="h-4 w-4 mr-2" />}
                             {isFullscreenPreview ? 'Show Editor' : 'Full Preview'}
                         </button>
-                        <button onClick={() => setIsMobilePreview(true)} className="md:hidden flex items-center px-4 py-2 bg-slate-100 text-slate-700 rounded-xl font-bold text-sm">
+                        <button 
+                            onClick={() => {
+                                setIsMobilePreview(true);
+                                setIsSplitView(false);
+                            }} 
+                            className="md:hidden flex items-center px-4 py-2 bg-slate-100 text-slate-700 rounded-xl font-bold text-sm"
+                        >
                             <Eye className="h-4 w-4 mr-2" /> Preview
                         </button>
-                        <button onClick={handleSave} disabled={saving} className="hidden md:flex items-center px-4 py-2 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-colors font-bold shadow-sm disabled:opacity-70">
-                            <Save className="h-4 w-4 mr-2" /> {saving ? 'Saving...' : 'Save'}
+                        <button 
+                            onClick={handleSave} 
+                            disabled={saving} 
+                            className={`${isSplitView ? 'flex' : 'hidden md:flex'} items-center px-3 py-2 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-colors font-bold shadow-sm disabled:opacity-70 text-xs`}
+                        >
+                            <Save className="h-4 w-4 md:mr-2" /> 
+                            <span className="hidden md:inline">{saving ? 'Saving...' : 'Save'}</span>
                         </button>
                     </div>
                 </div>
@@ -905,7 +927,7 @@ const Editor = () => {
             {/* Right Panel: Live Scaling Preview */}
             <div 
                 ref={previewContainerRef}
-                className={`h-full overflow-y-auto flex justify-center py-10 px-4 relative transition-all duration-500 bg-slate-200 ${isFullscreenPreview ? 'w-full' : 'w-full md:w-[55%] lg:w-[60%]'} ${!isMobilePreview ? 'hidden md:flex' : 'absolute inset-0 z-50 flex'}`}
+                className={`overflow-y-auto flex justify-center py-10 px-4 relative transition-all duration-500 bg-slate-200 ${isFullscreenPreview ? 'w-full h-full' : 'w-full md:w-[55%] lg:w-[60%]'} ${isSplitView ? 'h-[40%] md:h-full flex border-t-2 border-slate-300 shadow-[0_-10px_20px_rgba(0,0,0,0.05)]' : (!isMobilePreview ? 'hidden md:flex h-full' : 'absolute inset-0 z-50 flex h-full')}`}
             >
                 {/* Floating controls for Fullscreen mode */}
                 {isFullscreenPreview && (
@@ -937,12 +959,12 @@ const Editor = () => {
                 )}
 
                 <div 
-                    className={`resume-print-area bg-white shadow-[0_20px_50px_rgba(0,0,0,0.1)] origin-top transition-all duration-500 ease-out ${isMobilePreview ? 'mt-12' : ''}`}
+                    className={`resume-print-area bg-white shadow-[0_20px_50px_rgba(0,0,0,0.1)] origin-top transition-all duration-500 ease-out ${(isMobilePreview && !isSplitView) ? 'mt-12' : ''}`}
                     style={{
                         width: '794px',
                         minHeight: '1123px',
                         transform: `scale(${previewScale})`,
-                        marginBottom: `${1123 * previewScale - 1123 + 60}px` 
+                        marginBottom: `${1123 * previewScale - 1123 + (isSplitView ? 20 : 60)}px` 
                     }}
                 >
                     <ResumePreview resume={resume} />
@@ -950,7 +972,7 @@ const Editor = () => {
             </div>
 
             {/* Mobile Bottom Action Bar */}
-            <div className={`md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 p-4 flex space-x-3 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] ${isMobilePreview ? 'hidden' : ''}`}>
+            <div className={`md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 p-4 flex space-x-3 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] ${(isMobilePreview || isSplitView) ? 'hidden' : ''}`}>
                 <button onClick={handleSave} disabled={saving} className="flex-1 py-3 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-sm shadow-md active:scale-95 transition-transform disabled:opacity-50">
                     <Save className="h-4 w-4 mr-2" /> {saving ? 'Saving...' : 'Save'}
                 </button>
