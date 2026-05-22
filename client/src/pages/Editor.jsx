@@ -85,6 +85,7 @@ const Editor = () => {
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [pendingAction, setPendingAction] = useState(null); 
     const [isMobilePreview, setIsMobilePreview] = useState(false);
+    const [isFullscreenPreview, setIsFullscreenPreview] = useState(false);
     
     const previewContainerRef = useRef(null);
     const [previewScale, setPreviewScale] = useState(1);
@@ -370,26 +371,30 @@ const Editor = () => {
         <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex flex-col md:flex-row h-screen overflow-hidden bg-slate-50 font-sans"
+            className="flex flex-row h-[100dvh] overflow-hidden bg-slate-50 font-sans"
         >
             <SEO title={resume.title ? `${resume.title} - Editor` : "Resume Editor"} />
             <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} onSuccess={handleLoginSuccess} title="🎉 Your resume is ready!" subtitle="Login or sign up to download and save your resume." />
 
             {/* Left Panel: Form & Editor */}
-            <div className={`w-full md:w-[45%] lg:w-[40%] bg-slate-50 border-r border-slate-200 h-full flex flex-col z-10 transition-transform ${isMobilePreview ? '-translate-x-full absolute md:relative md:translate-x-0' : ''}`}>
+            <div className="w-[50%] md:w-[45%] lg:w-[40%] bg-slate-50 border-r border-slate-200 h-full flex flex-col z-10">
                 
                 {/* Header */}
-                <div className="bg-white border-b border-slate-200 p-4 flex items-center justify-between shrink-0 shadow-sm z-20 relative">
+                <div className="bg-white border-b border-slate-200 p-3 md:p-4 flex items-center justify-between shrink-0 shadow-sm z-20 relative">
                     <button onClick={() => navigate(user ? '/dashboard' : '/')} className="flex items-center text-slate-500 hover:text-orange-500 transition-colors font-bold text-sm">
-                        <ArrowLeft className="h-4 w-4 mr-2" /> 
-                        {user ? 'Dashboard' : 'Home'}
+                        <ArrowLeft className="h-4 w-4 mr-1 md:mr-2" /> 
+                        <span className="hidden sm:inline">{user ? 'Dashboard' : 'Home'}</span>
                     </button>
-                    <div className="flex items-center space-x-3">
-                        <button onClick={() => setIsMobilePreview(true)} className="md:hidden flex items-center px-4 py-2 bg-slate-100 text-slate-700 rounded-xl font-bold text-sm">
-                            <Eye className="h-4 w-4 mr-2" /> Preview
+                    <div className="flex items-center space-x-2 md:space-x-3">
+                        <button onClick={() => setIsFullscreenPreview(!isFullscreenPreview)} className="hidden md:flex items-center px-4 py-2 bg-slate-100 text-slate-700 rounded-xl font-bold text-sm hover:bg-slate-200 transition-colors">
+                            {isFullscreenPreview ? <Layout className="h-4 w-4 mr-2" /> : <Eye className="h-4 w-4 mr-2" />}
+                            {isFullscreenPreview ? 'Show Editor' : 'Full Preview'}
                         </button>
-                        <button onClick={handleSave} disabled={saving} className="hidden md:flex items-center px-4 py-2 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-colors font-bold shadow-sm disabled:opacity-70">
-                            <Save className="h-4 w-4 mr-2" /> {saving ? 'Saving...' : 'Save'}
+                        <button onClick={() => setIsMobilePreview(true)} className="md:hidden flex items-center px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg font-bold text-xs">
+                            <Eye className="h-3 w-3 mr-1.5" /> Fullscreen
+                        </button>
+                        <button onClick={handleSave} disabled={saving} className="flex items-center px-3 py-1.5 md:px-4 md:py-2 bg-slate-900 text-white rounded-lg md:rounded-xl hover:bg-slate-800 transition-colors font-bold shadow-sm disabled:opacity-70 text-xs md:text-sm">
+                            <Save className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" /> {saving ? 'Saving...' : 'Save'}
                         </button>
                     </div>
                 </div>
@@ -820,10 +825,10 @@ const Editor = () => {
                 </div>
             </div>
 
-            {/* Right Panel: Live Scaling Preview */}
+            {/* Right Panel: Live Scaling Workspace Preview */}
             <div 
                 ref={previewContainerRef}
-                className={`w-full md:w-[55%] lg:w-[60%] bg-slate-400 h-full overflow-y-auto flex justify-center py-10 relative transition-transform ${!isMobilePreview ? 'hidden md:flex' : 'absolute inset-0 z-50 flex'}`}
+                className={`w-[50%] md:w-[55%] lg:w-[60%] bg-slate-400 h-full overflow-y-auto flex justify-center py-4 md:py-10 relative transition-all duration-500 ${isMobilePreview ? 'absolute inset-0 z-50 !h-[100dvh]' : 'flex'}`}
             >
                 {/* Mobile Preview Header */}
                 {isMobilePreview && (
@@ -850,15 +855,6 @@ const Editor = () => {
                 </div>
             </div>
 
-            {/* Mobile Bottom Action Bar */}
-            <div className={`md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 p-4 flex space-x-3 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] ${isMobilePreview ? 'hidden' : ''}`}>
-                <button onClick={handleSave} disabled={saving} className="flex-1 py-3 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold text-sm shadow-md active:scale-95 transition-transform disabled:opacity-50">
-                    <Save className="h-4 w-4 mr-2" /> {saving ? 'Saving...' : 'Save'}
-                </button>
-                <button onClick={handleDownload} disabled={downloading} className="flex-1 py-3 bg-orange-500 text-white rounded-xl flex items-center justify-center font-bold text-sm shadow-md shadow-orange-200 active:scale-95 transition-transform disabled:opacity-50">
-                    <Download className="h-4 w-4 mr-2" /> Download
-                </button>
-            </div>
         </motion.div>
     );
 };
