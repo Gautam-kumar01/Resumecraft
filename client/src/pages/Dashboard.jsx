@@ -124,7 +124,7 @@ const Dashboard = () => {
 
     const createResume = async () => {
         try {
-            const { data } = await api.post('/resumes', { title: 'Untitled Resume' });
+            const { data } = await api.post('/resumes', { title: '' });
             navigate(`/editor/${data._id}`);
         } catch (error) {
             console.error('Failed to create resume', error);

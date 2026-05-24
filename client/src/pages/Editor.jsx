@@ -65,6 +65,8 @@ const waitForImages = async (element) => {
     }));
 };
 
+const isDefaultResumeTitle = (title) => title?.trim().toLowerCase() === 'untitled resume';
+
 const AccordionItem = ({ title, icon, isOpen, onToggle, children }) => (
     <div className="border border-slate-200 rounded-2xl bg-white mb-4 overflow-hidden shadow-sm hover:shadow-md transition-all">
         <button 
@@ -439,8 +441,8 @@ const Editor = () => {
                     <div className="mb-6">
                         <input
                             type="text"
-                            placeholder="Untitled Resume"
-                            value={resume.title}
+                            placeholder="Add headline, e.g. Software Engineer"
+                            value={isDefaultResumeTitle(resume.title) ? '' : resume.title}
                             onChange={(e) => setResume({ ...resume, title: e.target.value })}
                             className="w-full bg-transparent text-2xl md:text-3xl font-black text-slate-900 border-none outline-none placeholder:text-slate-300"
                         />

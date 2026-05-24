@@ -32,7 +32,7 @@ const Home = () => {
 
     const handleCreateNew = () => {
         const emptyData = {
-            title: 'Untitled Resume',
+            title: '',
             personalInfo: {
                 fullName: '',
                 email: '',

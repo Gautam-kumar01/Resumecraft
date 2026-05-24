@@ -15,6 +15,9 @@ const ResumePreview = ({ resume }) => {
     if (!resume) return null;
 
     const { personalInfo, summary, education, experience, skills, projects, templateId = 'modern' } = resume;
+    const displayTitle = resume.title?.trim().toLowerCase() === 'untitled resume'
+        ? ''
+        : resume.title?.trim();
 
     // Helper to render HTML from Quill Editor safely
     const renderHTML = (htmlContent, className = "text-sm") => {
@@ -51,7 +54,7 @@ const ResumePreview = ({ resume }) => {
             <header className="flex flex-row justify-between items-start gap-8 mb-10">
                 <div className="flex-1">
                     <h1 className="text-4xl font-black uppercase tracking-tight mb-2 text-slate-900 leading-none">{personalInfo?.fullName || 'Your Name'}</h1>
-                    {resume.title && <p className="text-xl text-orange-600 font-bold mb-6 tracking-wide uppercase">{resume.title}</p>}
+                    {displayTitle && <p className="text-xl text-orange-600 font-bold mb-6 tracking-wide uppercase">{displayTitle}</p>}
 
                     <div className="flex flex-wrap gap-x-6 gap-y-2 text-[13px] text-slate-500 font-semibold">
                         {personalInfo?.email && <span className="flex items-center"><Mail className="h-4 w-4 mr-2 text-orange-500" />{personalInfo.email}</span>}
@@ -172,7 +175,7 @@ const ResumePreview = ({ resume }) => {
                         )}
                         <h1 className="text-2xl font-black uppercase tracking-wide mb-2 leading-tight">{personalInfo?.fullName || 'Your Name'}</h1>
                         <div className="h-1 w-12 bg-orange-500 mx-auto rounded-full mb-4"></div>
-                        {resume.title && <p className="text-orange-400 font-extrabold text-[11px] uppercase tracking-[0.2em] leading-relaxed">{resume.title}</p>}
+                        {displayTitle && <p className="text-orange-400 font-extrabold text-[11px] uppercase tracking-[0.2em] leading-relaxed">{displayTitle}</p>}
                     </div>
 
                     <div className="space-y-6">
@@ -280,7 +283,7 @@ const ResumePreview = ({ resume }) => {
                     {personalInfo?.github && <span className="flex items-center"><Github className="h-3.5 w-3.5 mr-1.5 text-orange-500" />{personalInfo.github.replace(/^https?:\/\/(www\.)?/, '')}</span>}
                     {personalInfo?.website && <span className="flex items-center"><Globe className="h-3.5 w-3.5 mr-1.5 text-orange-500" />{personalInfo.website.replace(/^https?:\/\/(www\.)?/, '')}</span>}
                 </div>
-                {resume.title && <h3 className="text-[15px] text-orange-600 font-bold tracking-[0.3em] uppercase" style={{ fontFamily: "'Georgia', serif" }}>{resume.title}</h3>}
+                {displayTitle && <h3 className="text-[15px] text-orange-600 font-bold tracking-[0.3em] uppercase" style={{ fontFamily: "'Georgia', serif" }}>{displayTitle}</h3>}
             </div>
 
             <div className="space-y-10 px-4">
@@ -414,7 +417,7 @@ const ResumePreview = ({ resume }) => {
             <header className="flex items-start justify-between border-b-[4px] border-orange-500 pb-6 mb-8">
                 <div>
                     <h1 className="text-4xl font-black text-slate-900 mb-1 tracking-tight">{personalInfo?.fullName || 'Your Name'}</h1>
-                    {resume.title && <p className="text-[16px] text-orange-600 font-bold uppercase">{resume.title}</p>}
+                    {displayTitle && <p className="text-[16px] text-orange-600 font-bold uppercase">{displayTitle}</p>}
                 </div>
                 <div className="text-right text-[12px] text-slate-500 space-y-1 font-bold uppercase tracking-wider">
                     {personalInfo?.email && <div>{personalInfo.email}</div>}
