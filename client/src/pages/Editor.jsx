@@ -41,6 +41,8 @@ const modules = {
     ],
 };
 
+const MotionDiv = motion.div;
+
 const AccordionItem = ({ title, icon, isOpen, onToggle, children }) => (
     <div className="border border-slate-200 rounded-2xl bg-white mb-4 overflow-hidden shadow-sm hover:shadow-md transition-all">
         <button 
@@ -57,7 +59,7 @@ const AccordionItem = ({ title, icon, isOpen, onToggle, children }) => (
         </button>
         <AnimatePresence>
             {isOpen && (
-                <motion.div
+                <MotionDiv
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
@@ -66,7 +68,7 @@ const AccordionItem = ({ title, icon, isOpen, onToggle, children }) => (
                     <div className="p-6">
                         {children}
                     </div>
-                </motion.div>
+                </MotionDiv>
             )}
         </AnimatePresence>
     </div>
@@ -112,7 +114,7 @@ const Editor = () => {
                 if (savedDraft) {
                     try {
                         setResume(JSON.parse(savedDraft));
-                    } catch (e) {
+                    } catch {
                         setResume(initialResumeState);
                     }
                 } else {
@@ -176,13 +178,14 @@ const Editor = () => {
 
     const performDownload = async () => {
         setDownloading(true);
+        let offscreen = null;
         try {
             await document.fonts.ready;
             const sourceEl = document.querySelector('.resume-print-area');
             if (!sourceEl) throw new Error('Resume content not found');
 
             const A4_W = 794;
-            const offscreen = document.createElement('div');
+            offscreen = document.createElement('div');
             offscreen.style.cssText = [
                 'position:fixed', 'top:0', 'left:-9999px', `width:${A4_W}px`,
                 'background:#fff', 'z-index:-9999', 'transform:none', 'overflow:visible',
@@ -223,7 +226,8 @@ const Editor = () => {
                 scrollY: 0,
             });
 
-            document.body.removeChild(offscreen);
+            offscreen.remove();
+            offscreen = null;
 
             const imgData = canvas.toDataURL('image/jpeg', 0.98);
             const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
@@ -246,10 +250,11 @@ const Editor = () => {
             }
 
             pdf.save(`${resume.title || 'Resume'}.pdf`);
-            setDownloading(false);
         } catch (err) {
             console.error('PDF Export Error:', err);
             alert(`Download failed: ${err.message}`);
+        } finally {
+            offscreen?.remove();
             setDownloading(false);
         }
     };
@@ -368,7 +373,7 @@ const Editor = () => {
     if (!resume) return <div className="p-10 text-center">Resume not found</div>;
 
     return (
-        <motion.div 
+        <MotionDiv 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="flex flex-row h-[100dvh] overflow-hidden bg-slate-50 font-sans"
@@ -395,6 +400,9 @@ const Editor = () => {
                         </button>
                         <button onClick={handleSave} disabled={saving} className="flex items-center px-3 py-1.5 md:px-4 md:py-2 bg-slate-900 text-white rounded-lg md:rounded-xl hover:bg-slate-800 transition-colors font-bold shadow-sm disabled:opacity-70 text-xs md:text-sm">
                             <Save className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" /> {saving ? 'Saving...' : 'Save'}
+                        </button>
+                        <button onClick={handleDownload} disabled={downloading} className="flex items-center px-3 py-1.5 md:px-4 md:py-2 bg-orange-500 text-white rounded-lg md:rounded-xl hover:bg-orange-600 transition-colors font-bold shadow-sm disabled:opacity-70 text-xs md:text-sm">
+                            <Download className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" /> {downloading ? 'Downloading...' : 'Download'}
                         </button>
                     </div>
                 </div>
@@ -836,8 +844,8 @@ const Editor = () => {
                         <button onClick={() => setIsMobilePreview(false)} className="flex items-center text-sm font-bold">
                             <ArrowLeft className="w-4 h-4 mr-2" /> Back to Editor
                         </button>
-                        <button onClick={handleDownload} className="flex items-center text-sm font-bold bg-orange-500 px-4 py-1.5 rounded-lg">
-                            <Download className="w-4 h-4 mr-2" /> Download
+                        <button onClick={handleDownload} disabled={downloading} className="flex items-center text-sm font-bold bg-orange-500 px-4 py-1.5 rounded-lg disabled:opacity-70">
+                            <Download className="w-4 h-4 mr-2" /> {downloading ? 'Downloading...' : 'Download'}
                         </button>
                     </div>
                 )}
@@ -855,7 +863,7 @@ const Editor = () => {
                 </div>
             </div>
 
-        </motion.div>
+        </MotionDiv>
     );
 };
 
