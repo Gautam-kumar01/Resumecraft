@@ -43,6 +43,28 @@ const modules = {
 
 const MotionDiv = motion.div;
 
+const getPdfFileName = (title) => {
+    const safeTitle = (title || 'Resume')
+        .replace(/[\\/:*?"<>|]+/g, '-')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+    return `${safeTitle || 'Resume'}.pdf`;
+};
+
+const waitForImages = async (element) => {
+    const images = [...element.querySelectorAll('img')];
+
+    await Promise.all(images.map((img) => {
+        if (img.complete) return Promise.resolve();
+
+        return new Promise((resolve) => {
+            img.onload = resolve;
+            img.onerror = resolve;
+        });
+    }));
+};
+
 const AccordionItem = ({ title, icon, isOpen, onToggle, children }) => (
     <div className="border border-slate-200 rounded-2xl bg-white mb-4 overflow-hidden shadow-sm hover:shadow-md transition-all">
         <button 
@@ -177,10 +199,12 @@ const Editor = () => {
     };
 
     const performDownload = async () => {
+        if (downloading) return;
+
         setDownloading(true);
         let offscreen = null;
         try {
-            await document.fonts.ready;
+            await document.fonts?.ready;
             const sourceEl = document.querySelector('.resume-print-area');
             if (!sourceEl) throw new Error('Resume content not found');
 
@@ -211,8 +235,9 @@ const Editor = () => {
             clone.style.padding = '0';
             offscreen.appendChild(clone);
 
-            await document.fonts.ready;
-            await new Promise(r => setTimeout(r, 1200));
+            await document.fonts?.ready;
+            await waitForImages(clone);
+            await new Promise(r => setTimeout(r, 300));
 
             const canvas = await html2canvas(offscreen, {
                 scale: 4, // Higher resolution for crisp text
@@ -249,7 +274,7 @@ const Editor = () => {
                 }
             }
 
-            pdf.save(`${resume.title || 'Resume'}.pdf`);
+            pdf.save(getPdfFileName(resume.title));
         } catch (err) {
             console.error('PDF Export Error:', err);
             alert(`Download failed: ${err.message}`);
@@ -402,7 +427,7 @@ const Editor = () => {
                             <Save className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" /> {saving ? 'Saving...' : 'Save'}
                         </button>
                         <button onClick={handleDownload} disabled={downloading} className="flex items-center px-3 py-1.5 md:px-4 md:py-2 bg-orange-500 text-white rounded-lg md:rounded-xl hover:bg-orange-600 transition-colors font-bold shadow-sm disabled:opacity-70 text-xs md:text-sm">
-                            <Download className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" /> {downloading ? 'Downloading...' : 'Download'}
+                            <Download className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" /> {downloading ? 'Downloading...' : 'Download PDF'}
                         </button>
                     </div>
                 </div>
@@ -838,6 +863,17 @@ const Editor = () => {
                 ref={previewContainerRef}
                 className={`w-[50%] md:w-[55%] lg:w-[60%] bg-slate-400 h-full overflow-y-auto flex justify-center py-4 md:py-10 relative transition-all duration-500 ${isMobilePreview ? 'absolute inset-0 z-50 !h-[100dvh]' : 'flex'}`}
             >
+                {!isMobilePreview && (
+                    <button
+                        onClick={handleDownload}
+                        disabled={downloading}
+                        className="absolute top-4 right-4 z-20 flex items-center px-4 py-2 bg-orange-500 text-white rounded-xl font-bold text-sm shadow-lg hover:bg-orange-600 transition-colors disabled:opacity-70"
+                    >
+                        <Download className="w-4 h-4 mr-2" />
+                        {downloading ? 'Downloading...' : 'Download PDF'}
+                    </button>
+                )}
+
                 {/* Mobile Preview Header */}
                 {isMobilePreview && (
                     <div className="fixed top-0 left-0 right-0 bg-slate-900 text-white p-4 flex justify-between items-center z-50 shadow-lg">
@@ -845,7 +881,7 @@ const Editor = () => {
                             <ArrowLeft className="w-4 h-4 mr-2" /> Back to Editor
                         </button>
                         <button onClick={handleDownload} disabled={downloading} className="flex items-center text-sm font-bold bg-orange-500 px-4 py-1.5 rounded-lg disabled:opacity-70">
-                            <Download className="w-4 h-4 mr-2" /> {downloading ? 'Downloading...' : 'Download'}
+                            <Download className="w-4 h-4 mr-2" /> {downloading ? 'Downloading...' : 'Download PDF'}
                         </button>
                     </div>
                 )}
