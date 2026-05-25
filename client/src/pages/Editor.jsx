@@ -7,7 +7,7 @@ import AuthContext from '../context/AuthContext';
 import ResumePreview from '../components/ResumePreview';
 import LoginModal from '../components/LoginModal';
 import SEO from '../components/SEO';
-import { Save, Download, Eye, ArrowLeft, Plus, Trash2, User, Upload, Sparkles, FileText, Briefcase, GraduationCap, Code, Folder, Layout, ChevronDown, ChevronUp, GripVertical, Settings } from 'lucide-react';
+import { Save, Download, Eye, ArrowLeft, Plus, Trash2, User, Sparkles, FileText, Briefcase, GraduationCap, Code, Folder, Layout, ChevronDown, ChevronUp, GripVertical, Menu, Palette, PencilLine, Minus, Award, X, Maximize2, Minimize2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import ReactQuill from 'react-quill-new';
@@ -30,6 +30,7 @@ const initialResumeState = {
     education: [],
     skills: [],
     projects: [],
+    certifications: [],
     templateId: 'modern'
 };
 
@@ -42,6 +43,22 @@ const modules = {
 };
 
 const MotionDiv = motion.div;
+
+const templateOptions = [
+    { id: 'executive', name: 'Executive', desc: 'Premium Corporate' },
+    { id: 'modern', name: 'Modern', desc: 'Sleek & Clean' },
+    { id: 'visual', name: 'High-Impact', desc: 'Creative Sidebar' },
+    { id: 'elegant', name: 'Elegant', desc: 'Classic Serif' },
+    { id: 'government', name: 'Formal', desc: 'Strict Standard' },
+    { id: 'internship', name: 'Academic', desc: 'Education Focus' }
+];
+
+const mobileTabs = [
+    { id: 'edit', label: 'Edit', icon: PencilLine },
+    { id: 'templates', label: 'Templates', icon: Palette },
+    { id: 'preview', label: 'Preview', icon: Eye },
+    { id: 'download', label: 'Download', icon: Download }
+];
 
 const getPdfFileName = (title) => {
     const safeTitle = (title || 'Resume')
@@ -68,18 +85,18 @@ const waitForImages = async (element) => {
 const isDefaultResumeTitle = (title) => title?.trim().toLowerCase() === 'untitled resume';
 
 const AccordionItem = ({ title, icon, isOpen, onToggle, children }) => (
-    <div className="border border-slate-200 rounded-2xl bg-white mb-4 overflow-hidden shadow-sm hover:shadow-md transition-all">
+    <div className="border border-white/70 rounded-[18px] md:rounded-[20px] bg-white/95 mb-2.5 md:mb-4 overflow-hidden shadow-[0_10px_24px_rgba(15,23,42,0.055)] ring-1 ring-slate-900/[0.03] transition-all">
         <button 
             onClick={onToggle}
-            className="w-full flex items-center justify-between p-5 bg-white hover:bg-slate-50 transition-colors"
+            className="w-full flex items-center justify-between px-3.5 py-3 md:p-5 bg-white/90 hover:bg-slate-50 transition-colors"
         >
-            <div className="flex items-center space-x-3 text-slate-900 font-bold text-lg">
-                <div className="p-2 bg-orange-50 text-orange-500 rounded-xl">
+            <div className="flex items-center space-x-2.5 md:space-x-3 text-slate-900 font-bold text-[14px] md:text-lg">
+                <div className="p-1.5 md:p-2 bg-orange-50 text-orange-500 rounded-xl md:rounded-2xl">
                     {icon}
                 </div>
                 <span>{title}</span>
             </div>
-            {isOpen ? <ChevronUp className="text-slate-400" /> : <ChevronDown className="text-slate-400" />}
+            {isOpen ? <ChevronUp className="h-4 w-4 md:h-5 md:w-5 text-slate-400" /> : <ChevronDown className="h-4 w-4 md:h-5 md:w-5 text-slate-400" />}
         </button>
         <AnimatePresence>
             {isOpen && (
@@ -89,7 +106,7 @@ const AccordionItem = ({ title, icon, isOpen, onToggle, children }) => (
                     exit={{ height: 0, opacity: 0 }}
                     className="border-t border-slate-100"
                 >
-                    <div className="p-6">
+                    <div className="p-3.5 md:p-6">
                         {children}
                     </div>
                 </MotionDiv>
@@ -110,8 +127,11 @@ const Editor = () => {
     const [openSection, setOpenSection] = useState('personal');
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [pendingAction, setPendingAction] = useState(null); 
-    const [isMobilePreview, setIsMobilePreview] = useState(false);
+    const [activeMobileTab, setActiveMobileTab] = useState('edit');
     const [isFullscreenPreview, setIsFullscreenPreview] = useState(false);
+    const [isPreviewSheetOpen, setIsPreviewSheetOpen] = useState(false);
+    const [isPreviewExpanded, setIsPreviewExpanded] = useState(false);
+    const [mobileZoom, setMobileZoom] = useState(1);
     
     const previewContainerRef = useRef(null);
     const [previewScale, setPreviewScale] = useState(1);
@@ -126,7 +146,7 @@ const Editor = () => {
             if (id) {
                 try {
                     const { data } = await api.get(`/resumes/${id}`);
-                    setResume(data);
+                    setResume({ ...data, certifications: data.certifications || [] });
                 } catch (error) {
                     console.error("Error fetching resume:", error);
                     navigate('/dashboard');
@@ -137,7 +157,8 @@ const Editor = () => {
                 const savedDraft = localStorage.getItem('guest_resume_draft');
                 if (savedDraft) {
                     try {
-                        setResume(JSON.parse(savedDraft));
+                        const parsedDraft = JSON.parse(savedDraft);
+                        setResume({ ...parsedDraft, certifications: parsedDraft.certifications || [] });
                     } catch {
                         setResume(initialResumeState);
                     }
@@ -175,7 +196,7 @@ const Editor = () => {
         updateScale();
         window.addEventListener('resize', updateScale);
         return () => window.removeEventListener('resize', updateScale);
-    }, [isMobilePreview]);
+    }, [activeMobileTab, isPreviewSheetOpen, isPreviewExpanded]);
 
     const handleSave = async () => {
         if (!user) {
@@ -399,46 +420,69 @@ const Editor = () => {
     if (loading) return <div className="h-screen flex items-center justify-center bg-slate-50"><div className="animate-spin h-8 w-8 border-4 border-orange-500 border-t-transparent rounded-full"></div></div>;
     if (!resume) return <div className="p-10 text-center">Resume not found</div>;
 
+    const activeTemplate = templateOptions.find(tpl => tpl.id === resume.templateId) || templateOptions[1];
+    const previewTransformScale = previewScale * mobileZoom;
+    const canZoomOut = mobileZoom > 0.75;
+    const canZoomIn = mobileZoom < 1.35;
+    const previewName = resume.personalInfo?.fullName || 'Your Name';
+    const previewTitle = isDefaultResumeTitle(resume.title) || !resume.title?.trim() ? 'Resume Preview' : resume.title.trim();
+    const openPreviewSheet = () => {
+        setIsPreviewSheetOpen(true);
+        setActiveMobileTab('preview');
+    };
+    const closePreviewSheet = () => {
+        setIsPreviewSheetOpen(false);
+        setIsPreviewExpanded(false);
+        setActiveMobileTab('edit');
+    };
+
     return (
         <MotionDiv 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex flex-row h-[100dvh] overflow-hidden bg-slate-50 font-sans"
+            className="fixed inset-0 z-50 flex flex-col md:flex-row h-[100dvh] overflow-hidden bg-[linear-gradient(180deg,#f8fafc_0%,#eef2f7_100%)] font-sans text-slate-900"
         >
             <SEO title={resume.title ? `${resume.title} - Editor` : "Resume Editor"} />
-            <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} onSuccess={handleLoginSuccess} title="🎉 Your resume is ready!" subtitle="Login or sign up to download and save your resume." />
+            <div className="fixed -left-[9999px] top-0 w-[794px] bg-white pointer-events-none" aria-hidden="true">
+                <div className="resume-print-area bg-white" style={{ width: '794px', minHeight: '1123px' }}>
+                    <ResumePreview resume={resume} />
+                </div>
+            </div>
+            <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} onSuccess={handleLoginSuccess} title="Your resume is ready!" subtitle="Login or sign up to download and save your resume." />
 
             {/* Left Panel: Form & Editor */}
-            <div className="w-[50%] md:w-[45%] lg:w-[40%] bg-slate-50 border-r border-slate-200 h-full flex flex-col z-10">
+            <div className={`${activeMobileTab === 'edit' ? 'flex' : 'hidden'} md:flex ${isFullscreenPreview ? 'md:hidden' : ''} w-full md:w-[45%] lg:w-[40%] bg-transparent md:bg-slate-50/95 md:border-r md:border-slate-200 h-full flex-col z-10`}>
                 
                 {/* Header */}
-                <div className="bg-white border-b border-slate-200 p-3 md:p-4 flex items-center justify-between shrink-0 shadow-sm z-20 relative">
-                    <button onClick={() => navigate(user ? '/dashboard' : '/')} className="flex items-center text-slate-500 hover:text-orange-500 transition-colors font-bold text-sm">
-                        <ArrowLeft className="h-4 w-4 mr-1 md:mr-2" /> 
-                        <span className="hidden sm:inline">{user ? 'Dashboard' : 'Home'}</span>
+                <div className="bg-white/85 backdrop-blur-xl border-b border-white/70 px-4 py-3 md:p-4 flex items-center justify-between shrink-0 shadow-[0_8px_30px_rgba(15,23,42,0.06)] z-20 relative">
+                    <button onClick={() => navigate(user ? '/dashboard' : '/')} className="flex items-center gap-2 text-slate-600 hover:text-orange-500 transition-colors font-black text-sm">
+                        <span className="h-9 w-9 rounded-2xl bg-slate-100 flex items-center justify-center">
+                            <ArrowLeft className="h-4 w-4" />
+                        </span>
+                        <span className="tracking-tight">ResumeCraft</span>
                     </button>
                     <div className="flex items-center space-x-2 md:space-x-3">
                         <button onClick={() => setIsFullscreenPreview(!isFullscreenPreview)} className="hidden md:flex items-center px-4 py-2 bg-slate-100 text-slate-700 rounded-xl font-bold text-sm hover:bg-slate-200 transition-colors">
                             {isFullscreenPreview ? <Layout className="h-4 w-4 mr-2" /> : <Eye className="h-4 w-4 mr-2" />}
                             {isFullscreenPreview ? 'Show Editor' : 'Full Preview'}
                         </button>
-                        <button onClick={() => setIsMobilePreview(true)} className="md:hidden flex items-center px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg font-bold text-xs">
-                            <Eye className="h-3 w-3 mr-1.5" /> Fullscreen
+                        <button onClick={handleSave} disabled={saving} aria-label="Save resume" className="flex h-10 w-10 md:w-auto items-center justify-center md:px-4 md:py-2 bg-slate-900 text-white rounded-2xl md:rounded-xl hover:bg-slate-800 transition-colors font-bold shadow-sm disabled:opacity-70 text-xs md:text-sm">
+                            <Save className="h-4 w-4 md:mr-2" /> <span className="hidden md:inline">{saving ? 'Saving...' : 'Save'}</span>
                         </button>
-                        <button onClick={handleSave} disabled={saving} className="flex items-center px-3 py-1.5 md:px-4 md:py-2 bg-slate-900 text-white rounded-lg md:rounded-xl hover:bg-slate-800 transition-colors font-bold shadow-sm disabled:opacity-70 text-xs md:text-sm">
-                            <Save className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" /> {saving ? 'Saving...' : 'Save'}
+                        <button onClick={() => setActiveMobileTab('download')} className="md:hidden flex h-10 w-10 items-center justify-center bg-white text-slate-700 rounded-2xl border border-slate-200 shadow-sm" aria-label="Open actions">
+                            <Menu className="h-4 w-4" />
                         </button>
-                        <button onClick={handleDownload} disabled={downloading} className="flex items-center px-3 py-1.5 md:px-4 md:py-2 bg-orange-500 text-white rounded-lg md:rounded-xl hover:bg-orange-600 transition-colors font-bold shadow-sm disabled:opacity-70 text-xs md:text-sm">
+                        <button onClick={handleDownload} disabled={downloading} className="hidden md:flex items-center px-3 py-1.5 md:px-4 md:py-2 bg-orange-500 text-white rounded-lg md:rounded-xl hover:bg-orange-600 transition-colors font-bold shadow-sm disabled:opacity-70 text-xs md:text-sm">
                             <Download className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" /> {downloading ? 'Downloading...' : 'Download PDF'}
                         </button>
                     </div>
                 </div>
 
                 {/* Main Scrollable Form Area */}
-                <div className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 space-y-6 scroll-smooth bg-[#f8fafc]">
+                <div className="flex-1 overflow-y-auto px-4 pt-4 pb-[calc(8.75rem+env(safe-area-inset-bottom))] md:p-6 lg:p-8 space-y-4 md:space-y-6 scroll-smooth bg-transparent md:bg-[#f8fafc]">
                     
                     {/* Document Title */}
-                    <div className="mb-6">
+                    <div className="mb-4 md:mb-6">
                         <input
                             type="text"
                             placeholder="Add headline, e.g. Software Engineer"
@@ -824,7 +868,66 @@ const Editor = () => {
                         </div>
                     </AccordionItem>
 
+                    {/* Certifications with Drag & Drop */}
+                    <AccordionItem 
+                        title="Certifications" 
+                        icon={<Award className="h-5 w-5" />}
+                        isOpen={openSection === 'certifications'} 
+                        onToggle={() => setOpenSection(openSection === 'certifications' ? '' : 'certifications')}
+                    >
+                        <DragDropContext onDragEnd={(result) => onDragEnd(result, 'certifications')}>
+                            <Droppable droppableId="certifications-list">
+                                {(provided) => (
+                                    <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-4">
+                                        {(resume.certifications || []).map((cert, index) => (
+                                            <Draggable key={`cert-${index}`} draggableId={`cert-${index}`} index={index}>
+                                                {(provided, snapshot) => (
+                                                    <div
+                                                        ref={provided.innerRef}
+                                                        {...provided.draggableProps}
+                                                        className={`p-4 md:p-5 bg-slate-50 border ${snapshot.isDragging ? 'border-orange-500 shadow-xl' : 'border-slate-200'} rounded-2xl relative group`}
+                                                    >
+                                                        <div {...provided.dragHandleProps} className="absolute top-4 right-12 text-slate-400 hover:text-slate-600 cursor-grab">
+                                                            <GripVertical className="h-5 w-5" />
+                                                        </div>
+                                                        <button onClick={() => removeItem('certifications', index)} className="absolute top-4 right-4 text-slate-400 hover:text-red-500">
+                                                            <Trash2 className="h-5 w-5" />
+                                                        </button>
+
+                                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                                                            <div>
+                                                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Certification</label>
+                                                                <input value={cert.name || ''} onChange={(e) => handleArrayChange('certifications', index, 'name', e.target.value)} className="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg outline-none focus:border-orange-500 font-medium" />
+                                                            </div>
+                                                            <div>
+                                                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Issuer</label>
+                                                                <input value={cert.issuer || ''} onChange={(e) => handleArrayChange('certifications', index, 'issuer', e.target.value)} className="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg outline-none focus:border-orange-500 font-medium" />
+                                                            </div>
+                                                            <div>
+                                                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Date</label>
+                                                                <input value={cert.date || ''} onChange={(e) => handleArrayChange('certifications', index, 'date', e.target.value)} placeholder="e.g. Mar 2026" className="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg outline-none focus:border-orange-500 font-medium" />
+                                                            </div>
+                                                            <div>
+                                                                <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Credential Link</label>
+                                                                <input value={cert.link || ''} onChange={(e) => handleArrayChange('certifications', index, 'link', e.target.value)} className="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg outline-none focus:border-orange-500 font-medium" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </Draggable>
+                                        ))}
+                                        {provided.placeholder}
+                                    </div>
+                                )}
+                            </Droppable>
+                        </DragDropContext>
+                        <button onClick={() => addItem('certifications', { name: '', issuer: '', date: '', link: '' })} className="mt-4 w-full py-3 border-2 border-dashed border-orange-200 text-orange-600 rounded-xl font-bold hover:bg-orange-50 hover:border-orange-300 transition-colors flex items-center justify-center">
+                            <Plus className="h-4 w-4 mr-2" /> Add Certification
+                        </button>
+                    </AccordionItem>
+
                     {/* Templates */}
+                    <div className="hidden md:block">
                     <AccordionItem 
                         title="Templates" 
                         icon={<Layout className="h-5 w-5" />}
@@ -832,14 +935,7 @@ const Editor = () => {
                         onToggle={() => setOpenSection(openSection === 'templates' ? '' : 'templates')}
                     >
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            {[
-                                { id: 'executive', name: 'Executive', desc: 'Premium Corporate' },
-                                { id: 'modern', name: 'Modern', desc: 'Sleek & Clean' },
-                                { id: 'visual', name: 'High-Impact', desc: 'Creative Sidebar' },
-                                { id: 'elegant', name: 'Elegant', desc: 'Classic Serif' },
-                                { id: 'government', name: 'Formal', desc: 'Strict Standard' },
-                                { id: 'internship', name: 'Academic', desc: 'Education Focus' }
-                            ].map(tpl => (
+                            {templateOptions.map(tpl => (
                                 <button
                                     key={tpl.id}
                                     onClick={() => setResume({ ...resume, templateId: tpl.id })}
@@ -854,52 +950,224 @@ const Editor = () => {
                             ))}
                         </div>
                     </AccordionItem>
+                    </div>
 
                     {/* Bottom Padding */}
                     <div className="h-24 md:h-8"></div>
                 </div>
             </div>
 
-            {/* Right Panel: Live Scaling Workspace Preview */}
-            <div 
+            {/* Desktop / Tablet Preview */}
+            <div
                 ref={previewContainerRef}
-                className={`w-[50%] md:w-[55%] lg:w-[60%] bg-slate-400 h-full overflow-y-auto flex justify-center py-4 md:py-10 relative transition-all duration-500 ${isMobilePreview ? 'absolute inset-0 z-50 !h-[100dvh]' : 'flex'}`}
+                className={`hidden md:flex ${isFullscreenPreview ? 'md:w-full' : 'md:w-[55%] lg:w-[60%]'} bg-slate-300 h-full overflow-y-auto justify-center px-4 py-6 md:py-10 relative transition-all duration-500`}
             >
-                {!isMobilePreview && (
-                    <button
-                        onClick={handleDownload}
-                        disabled={downloading}
-                        className="absolute top-4 right-4 z-20 flex items-center px-4 py-2 bg-orange-500 text-white rounded-xl font-bold text-sm shadow-lg hover:bg-orange-600 transition-colors disabled:opacity-70"
-                    >
-                        <Download className="w-4 h-4 mr-2" />
-                        {downloading ? 'Downloading...' : 'Download PDF'}
-                    </button>
-                )}
-
-                {/* Mobile Preview Header */}
-                {isMobilePreview && (
-                    <div className="fixed top-0 left-0 right-0 bg-slate-900 text-white p-4 flex justify-between items-center z-50 shadow-lg">
-                        <button onClick={() => setIsMobilePreview(false)} className="flex items-center text-sm font-bold">
-                            <ArrowLeft className="w-4 h-4 mr-2" /> Back to Editor
-                        </button>
-                        <button onClick={handleDownload} disabled={downloading} className="flex items-center text-sm font-bold bg-orange-500 px-4 py-1.5 rounded-lg disabled:opacity-70">
-                            <Download className="w-4 h-4 mr-2" /> {downloading ? 'Downloading...' : 'Download PDF'}
-                        </button>
-                    </div>
-                )}
-
-                <div 
-                    className={`resume-print-area bg-white shadow-2xl origin-top transition-transform duration-300 ease-out ${isMobilePreview ? 'mt-12' : ''}`}
+                <button
+                    onClick={handleDownload}
+                    disabled={downloading}
+                    className="hidden md:flex absolute top-4 right-4 z-20 items-center px-4 py-2 bg-orange-500 text-white rounded-xl font-bold text-sm shadow-lg hover:bg-orange-600 transition-colors disabled:opacity-70"
+                >
+                    <Download className="w-4 h-4 mr-2" />
+                    {downloading ? 'Downloading...' : 'Download PDF'}
+                </button>
+                <div
+                    className="bg-white shadow-2xl origin-top transition-transform duration-300 ease-out"
                     style={{
                         width: '794px',
                         minHeight: '1123px',
-                        transform: `scale(${previewScale})`,
-                        marginBottom: `${1123 * previewScale - 1123 + 40}px` // Compensate for scaled height padding
+                        transform: `scale(${previewTransformScale})`,
+                        marginBottom: `${1123 * previewTransformScale - 1123 + 120}px`
                     }}
                 >
                     <ResumePreview resume={resume} />
                 </div>
             </div>
+
+            {/* Mobile Templates */}
+            <div className={`${activeMobileTab === 'templates' ? 'flex' : 'hidden'} md:hidden h-full w-full flex-col overflow-y-auto px-4 pt-5 pb-[calc(7rem+env(safe-area-inset-bottom))]`}>
+                <div className="flex items-center justify-between mb-5">
+                    <div>
+                        <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-500 mb-1">Templates</p>
+                        <h1 className="text-2xl font-black text-slate-950 tracking-tight">Pick a style</h1>
+                    </div>
+                    <button onClick={handleSave} className="h-10 w-10 rounded-2xl bg-white border border-slate-200 flex items-center justify-center shadow-sm" aria-label="Save resume">
+                        <Save className="h-4 w-4 text-slate-700" />
+                    </button>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                    {templateOptions.map(tpl => (
+                        <button
+                            key={tpl.id}
+                            onClick={() => setResume({ ...resume, templateId: tpl.id })}
+                            className={`min-h-36 rounded-[20px] border p-4 text-left shadow-[0_12px_30px_rgba(15,23,42,0.06)] transition-all ${resume.templateId === tpl.id ? 'border-orange-500 bg-orange-50 ring-4 ring-orange-100' : 'border-white bg-white'}`}
+                        >
+                            <div className="h-16 rounded-xl bg-slate-100 mb-4 overflow-hidden p-2">
+                                <div className="h-2 w-2/3 rounded-full bg-slate-300 mb-2"></div>
+                                <div className="space-y-1.5">
+                                    <div className="h-1.5 rounded-full bg-slate-200"></div>
+                                    <div className="h-1.5 w-4/5 rounded-full bg-slate-200"></div>
+                                    <div className="h-1.5 w-3/5 rounded-full bg-slate-200"></div>
+                                </div>
+                            </div>
+                            <div className="font-black text-slate-900 text-sm">{tpl.name}</div>
+                            <p className="text-xs text-slate-500 font-bold mt-1">{tpl.desc}</p>
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            {/* Mobile Download */}
+            <div className={`${activeMobileTab === 'download' ? 'flex' : 'hidden'} md:hidden h-full w-full flex-col justify-between px-4 pt-6 pb-[calc(7rem+env(safe-area-inset-bottom))]`}>
+                <div>
+                    <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-500 mb-2">Export</p>
+                    <h1 className="text-3xl font-black text-slate-950 tracking-tight mb-3">Ready when you are.</h1>
+                    <p className="text-sm font-medium text-slate-500 leading-relaxed">Save your latest edits, preview the final page, or download a polished PDF.</p>
+                </div>
+                <div className="rounded-[24px] bg-white/95 border border-white p-5 shadow-[0_24px_60px_rgba(15,23,42,0.12)]">
+                    <div className="flex items-center gap-4 mb-5">
+                        <div className="h-16 w-12 rounded-lg bg-slate-100 border border-slate-200 shadow-inner"></div>
+                        <div className="min-w-0">
+                            <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-400">PDF File</p>
+                            <p className="font-black text-slate-900 truncate">{getPdfFileName(resume.title)}</p>
+                            <p className="text-xs font-bold text-slate-500 mt-1">Template: {activeTemplate.name}</p>
+                        </div>
+                    </div>
+                    <button onClick={handleDownload} disabled={downloading} className="w-full h-14 rounded-2xl bg-orange-500 text-white font-black shadow-lg shadow-orange-500/20 hover:bg-orange-600 disabled:opacity-70 flex items-center justify-center">
+                        <Download className="h-5 w-5 mr-2" /> {downloading ? 'Downloading...' : 'Download PDF'}
+                    </button>
+                    <div className="grid grid-cols-2 gap-3 mt-3">
+                        <button onClick={openPreviewSheet} className="h-12 rounded-2xl bg-slate-100 text-slate-800 font-black">Preview</button>
+                        <button onClick={handleSave} disabled={saving} className="h-12 rounded-2xl bg-slate-900 text-white font-black disabled:opacity-70">{saving ? 'Saving...' : 'Save'}</button>
+                    </div>
+                </div>
+            </div>
+
+            <AnimatePresence>
+                {activeMobileTab === 'edit' && !isPreviewSheetOpen && (
+                    <MotionDiv
+                        initial={{ opacity: 0, y: 14 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 14 }}
+                        transition={{ type: 'spring', stiffness: 340, damping: 30 }}
+                        className="md:hidden fixed left-4 right-4 bottom-[calc(4.85rem+env(safe-area-inset-bottom))] z-30"
+                    >
+                        <button
+                            onClick={openPreviewSheet}
+                            className="w-full rounded-[20px] bg-white/92 backdrop-blur-xl border border-white shadow-[0_18px_45px_rgba(15,23,42,0.14)] px-3 py-2.5 flex items-center gap-3 text-left"
+                        >
+                            <div className="h-12 w-9 rounded-lg bg-slate-100 border border-slate-200 p-1 shadow-inner shrink-0">
+                                <div className="h-1.5 w-5 rounded-full bg-slate-300 mb-1.5"></div>
+                                <div className="space-y-1">
+                                    <div className="h-1 rounded-full bg-slate-200"></div>
+                                    <div className="h-1 w-4/5 rounded-full bg-slate-200"></div>
+                                    <div className="h-1 w-3/5 rounded-full bg-slate-200"></div>
+                                </div>
+                            </div>
+                            <div className="min-w-0 flex-1">
+                                <div className="text-sm font-black text-slate-900 truncate">{previewName}</div>
+                                <div className="text-xs font-bold text-slate-500 truncate">{previewTitle}</div>
+                            </div>
+                            <div className="h-9 px-3 rounded-2xl bg-orange-50 text-orange-600 font-black text-xs flex items-center shrink-0">
+                                <Eye className="h-3.5 w-3.5 mr-1.5" /> Preview
+                            </div>
+                        </button>
+                    </MotionDiv>
+                )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+                {isPreviewSheetOpen && (
+                    <MotionDiv
+                        className="md:hidden fixed inset-0 z-50 bg-slate-950/35 backdrop-blur-sm"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={closePreviewSheet}
+                    >
+                        <MotionDiv
+                            drag="y"
+                            dragConstraints={{ top: 0, bottom: 0 }}
+                            dragElastic={{ top: 0.04, bottom: 0.18 }}
+                            onDragEnd={(_, info) => {
+                                if (info.offset.y > 110 || info.velocity.y > 700) closePreviewSheet();
+                            }}
+                            initial={{ y: '100%' }}
+                            animate={{ y: 0 }}
+                            exit={{ y: '100%' }}
+                            transition={{ type: 'spring', stiffness: 320, damping: 34 }}
+                            onClick={(event) => event.stopPropagation()}
+                            className={`${isPreviewExpanded ? 'inset-0 rounded-none' : 'left-0 right-0 bottom-0 h-[82dvh] rounded-t-[30px]'} fixed bg-slate-200 shadow-[0_-24px_80px_rgba(15,23,42,0.28)] overflow-hidden`}
+                        >
+                            <div className="h-full flex flex-col">
+                                <div className="bg-white/90 backdrop-blur-xl border-b border-white px-4 pt-2.5 pb-3 shrink-0">
+                                    <div className="mx-auto mb-2 h-1.5 w-12 rounded-full bg-slate-300"></div>
+                                    <div className="flex items-center justify-between gap-2">
+                                        <button onClick={closePreviewSheet} className="h-10 w-10 rounded-2xl bg-slate-100 text-slate-700 flex items-center justify-center" aria-label="Close preview">
+                                            <X className="h-4 w-4" />
+                                        </button>
+                                        <div className="min-w-0 text-center">
+                                            <div className="text-sm font-black text-slate-950 truncate">Live Preview</div>
+                                            <div className="text-[11px] font-bold text-slate-500 truncate">{activeTemplate.name} template</div>
+                                        </div>
+                                        <button onClick={() => setIsPreviewExpanded(prev => !prev)} className="h-10 w-10 rounded-2xl bg-slate-100 text-slate-700 flex items-center justify-center" aria-label={isPreviewExpanded ? 'Collapse preview' : 'Expand preview'}>
+                                            {isPreviewExpanded ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+                                        </button>
+                                    </div>
+                                    <div className="mt-3 flex items-center justify-center gap-2">
+                                        <button onClick={() => canZoomOut && setMobileZoom(v => Math.max(0.75, +(v - 0.1).toFixed(2)))} disabled={!canZoomOut} className="h-9 w-9 rounded-2xl bg-white border border-slate-200 text-slate-700 disabled:opacity-40 flex items-center justify-center shadow-sm">
+                                            <Minus className="h-4 w-4" />
+                                        </button>
+                                        <span className="h-9 min-w-14 px-3 rounded-2xl bg-white border border-slate-200 text-xs font-black text-slate-600 flex items-center justify-center shadow-sm">{Math.round(mobileZoom * 100)}%</span>
+                                        <button onClick={() => canZoomIn && setMobileZoom(v => Math.min(1.35, +(v + 0.1).toFixed(2)))} disabled={!canZoomIn} className="h-9 w-9 rounded-2xl bg-white border border-slate-200 text-slate-700 disabled:opacity-40 flex items-center justify-center shadow-sm">
+                                            <Plus className="h-4 w-4" />
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div ref={previewContainerRef} className="flex-1 overflow-y-auto flex justify-center px-4 py-5 bg-slate-300">
+                                    <div
+                                        className="bg-white shadow-2xl origin-top transition-transform duration-300 ease-out"
+                                        style={{
+                                            width: '794px',
+                                            minHeight: '1123px',
+                                            transform: `scale(${previewTransformScale})`,
+                                            marginBottom: `${1123 * previewTransformScale - 1123 + 110}px`
+                                        }}
+                                    >
+                                        <ResumePreview resume={resume} />
+                                    </div>
+                                </div>
+
+                                <div className="bg-white/92 backdrop-blur-xl border-t border-white px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] grid grid-cols-2 gap-3 shrink-0">
+                                    <button onClick={closePreviewSheet} className="h-12 rounded-2xl bg-slate-100 text-slate-800 font-black">Edit</button>
+                                    <button onClick={handleDownload} disabled={downloading} className="h-12 rounded-2xl bg-orange-500 text-white font-black shadow-lg shadow-orange-500/20 disabled:opacity-70 flex items-center justify-center">
+                                        <Download className="h-4 w-4 mr-2" /> {downloading ? 'Downloading...' : 'Download PDF'}
+                                    </button>
+                                </div>
+                            </div>
+                        </MotionDiv>
+                    </MotionDiv>
+                )}
+            </AnimatePresence>
+
+            <nav className="md:hidden fixed left-3 right-3 bottom-2 z-40 rounded-[20px] bg-white/90 backdrop-blur-xl border border-white shadow-[0_18px_50px_rgba(15,23,42,0.16)] px-1.5 py-1.5 pb-[calc(0.35rem+env(safe-area-inset-bottom))]">
+                <div className="grid grid-cols-4 gap-1">
+                    {mobileTabs.map(tab => {
+                        const Icon = tab.icon;
+                        const isActive = activeMobileTab === tab.id;
+                        return (
+                            <button
+                                key={tab.id}
+                                onClick={() => tab.id === 'preview' ? openPreviewSheet() : setActiveMobileTab(tab.id)}
+                                className={`h-11 rounded-2xl flex flex-col items-center justify-center gap-0.5 text-[10px] font-black transition-all ${isActive ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/20' : 'text-slate-500 hover:bg-slate-100'}`}
+                            >
+                                <Icon className="h-3.5 w-3.5" />
+                                {tab.label}
+                            </button>
+                        );
+                    })}
+                </div>
+            </nav>
 
         </MotionDiv>
     );

@@ -14,7 +14,7 @@ import {
 const ResumePreview = ({ resume }) => {
     if (!resume) return null;
 
-    const { personalInfo, summary, education, experience, skills, projects, templateId = 'modern' } = resume;
+    const { personalInfo, summary, education, experience, skills, projects, certifications = [], templateId = 'modern' } = resume;
     const displayTitle = resume.title?.trim().toLowerCase() === 'untitled resume'
         ? ''
         : resume.title?.trim();
@@ -123,6 +123,22 @@ const ResumePreview = ({ resume }) => {
                                         <div className="font-bold text-slate-900 text-[15px] mb-1">{edu.school}</div>
                                         <div className="text-orange-600 text-[13px] font-bold mb-1 italic">{edu.degree}</div>
                                         <div className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{edu.startDate} — {edu.endDate}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {certifications?.length > 0 && (
+                        <section>
+                            <h2 className="text-[13px] font-black uppercase tracking-[0.15em] mb-4 text-slate-900">Certifications</h2>
+                            <div className="space-y-5">
+                                {certifications.map((cert, i) => (
+                                    <div key={i}>
+                                        <div className="font-bold text-slate-900 text-[14px] mb-1">{cert.name}</div>
+                                        <div className="text-orange-600 text-[12px] font-bold mb-1">{cert.issuer}</div>
+                                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{cert.date}</div>
+                                        {cert.link && <div className="text-[10px] font-bold text-slate-400 mt-1 truncate underline">{cert.link}</div>}
                                     </div>
                                 ))}
                             </div>
@@ -264,6 +280,24 @@ const ResumePreview = ({ resume }) => {
                                 </div>
                             </section>
                         )}
+
+                        {certifications?.length > 0 && (
+                            <section>
+                                <div className="flex items-center space-x-3 mb-5">
+                                    <div className="p-2 bg-orange-50 rounded-xl text-orange-600"><Award className="h-5 w-5" /></div>
+                                    <h2 className="text-xl font-black uppercase tracking-wide text-slate-900">Certifications</h2>
+                                </div>
+                                <div className="grid grid-cols-2 gap-4">
+                                    {certifications.map((cert, i) => (
+                                        <div key={i} className="p-5 rounded-2xl bg-slate-50 border-2 border-transparent hover:border-orange-100 hover:bg-orange-50/30 transition-all">
+                                            <h4 className="font-black text-[14px] text-slate-900 mb-1">{cert.name}</h4>
+                                            <p className="text-slate-500 font-bold text-[13px] mb-2">{cert.issuer}</p>
+                                            {cert.date && <div className="text-[10px] font-black text-orange-500 uppercase tracking-[0.1em] bg-white inline-block px-2 py-0.5 rounded-sm shadow-sm">{cert.date}</div>}
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+                        )}
                     </div>
                 </div>
             </div>
@@ -323,6 +357,21 @@ const ResumePreview = ({ resume }) => {
                                     <div className="text-[10px] text-slate-400 font-black mb-2 uppercase tracking-widest">{edu.startDate} — {edu.endDate}</div>
                                     <h3 className="text-[18px] font-bold text-slate-900 mb-1" style={{ fontFamily: "'Georgia', serif" }}>{edu.school}</h3>
                                     <div className="text-orange-600 font-bold italic text-[14px]">{edu.degree}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {certifications?.length > 0 && (
+                    <section>
+                        <h2 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.4em] text-center mb-8 italic">Certifications</h2>
+                        <div className="space-y-5">
+                            {certifications.map((cert, i) => (
+                                <div key={i} className="text-center">
+                                    {cert.date && <div className="text-[10px] text-slate-400 font-black mb-2 uppercase tracking-widest">{cert.date}</div>}
+                                    <h3 className="text-[17px] font-bold text-slate-900 mb-1" style={{ fontFamily: "'Georgia', serif" }}>{cert.name}</h3>
+                                    <div className="text-orange-600 font-bold italic text-[13px]">{cert.issuer}</div>
                                 </div>
                             ))}
                         </div>
@@ -395,6 +444,23 @@ const ResumePreview = ({ resume }) => {
                                         <span className="font-medium text-[13px]">{edu.startDate} - {edu.endDate}</span>
                                     </div>
                                     <div className="text-[13px] italic text-gray-800 mt-0.5">{edu.degree}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {certifications?.length > 0 && (
+                    <section>
+                        <h2 className="text-[14px] font-black uppercase border-b-2 border-black mb-3 pb-0.5 tracking-wider">Certifications</h2>
+                        <div className="space-y-3">
+                            {certifications.map((cert, i) => (
+                                <div key={i}>
+                                    <div className="flex justify-between font-bold text-[14px]">
+                                        <span>{cert.name}</span>
+                                        <span className="font-medium text-[13px]">{cert.date}</span>
+                                    </div>
+                                    <div className="text-[13px] italic text-gray-800 mt-0.5">{cert.issuer}</div>
                                 </div>
                             ))}
                         </div>
@@ -491,6 +557,23 @@ const ResumePreview = ({ resume }) => {
                             </div>
                         </section>
                     )}
+
+                    {certifications?.length > 0 && (
+                        <section>
+                            <h2 className="text-[13px] font-black text-slate-900 uppercase mb-4 flex items-center tracking-wider">
+                                <span className="w-2 h-5 bg-orange-500 mr-3 rounded-full"></span> Certifications
+                            </h2>
+                            <div className="space-y-4">
+                                {certifications.map((cert, i) => (
+                                    <div key={i} className="bg-white p-4 rounded-xl border-2 border-slate-50">
+                                        <h3 className="font-black text-[13px] text-slate-900 mb-1">{cert.name}</h3>
+                                        <div className="text-[12px] text-slate-500 font-bold">{cert.issuer}</div>
+                                        {cert.date && <div className="text-[10px] text-orange-500 font-black uppercase tracking-wider mt-1">{cert.date}</div>}
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
                     
                     {projects?.length > 0 && (
                         <section>
@@ -581,6 +664,23 @@ const ResumePreview = ({ resume }) => {
                                         <div className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">
                                             {edu.startDate} — {edu.endDate}
                                         </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {certifications?.length > 0 && (
+                        <section>
+                            <h2 className="text-[12px] font-black uppercase tracking-[0.2em] text-orange-600 mb-4 border-b border-slate-100 pb-2">
+                                Certifications
+                            </h2>
+                            <div className="space-y-5 pl-4">
+                                {certifications.map((cert, i) => (
+                                    <div key={i}>
+                                        <h3 className="text-[14px] font-bold text-slate-900 mb-1">{cert.name}</h3>
+                                        <div className="text-slate-500 text-[12px] font-bold mb-1 italic">{cert.issuer}</div>
+                                        <div className="text-[11px] font-bold text-slate-400 uppercase tracking-widest">{cert.date}</div>
                                     </div>
                                 ))}
                             </div>
