@@ -391,9 +391,42 @@
 }
 
 /* Quill Content Styles for Resume Preview */
+[id^="resume-preview-"] {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+[id^="resume-preview-"],
+[id^="resume-preview-"] section,
+[id^="resume-preview-"] div {
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+[id^="resume-preview-"] p,
+[id^="resume-preview-"] span,
+[id^="resume-preview-"] li {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
+}
+
 .quill-content {
   font-family: inherit;
   color: inherit;
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.quill-content * {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
 }
 
 .quill-content ul {
@@ -413,10 +446,15 @@
 .quill-content li {
   margin-bottom: 0.25rem;
   line-height: 1.5;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .quill-content p {
   margin-bottom: 0.5rem;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
 }
 
 .quill-content p:last-child {

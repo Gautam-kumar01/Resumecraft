@@ -30,7 +30,7 @@ const ResumePreview = ({ resume }) => {
                  points = htmlContent.split('.').filter(p => p.trim().length > 10).map(p => p.trim() + '.');
              }
              return (
-                 <ul className="space-y-1 text-left list-disc pl-5">
+                 <ul className="space-y-1 text-left list-disc pl-5 max-w-full min-w-0 break-words">
                      {points.map((point, i) => (
                          <li key={i} className={className}>
                              <span>{point.trim().replace(/^[•\-\*]\s*/, '')}</span>
@@ -42,7 +42,7 @@ const ResumePreview = ({ resume }) => {
 
         return (
             <div 
-                className={`quill-content ${className}`} 
+                className={`quill-content max-w-full min-w-0 break-words [overflow-wrap:anywhere] ${className}`} 
                 dangerouslySetInnerHTML={{ __html: htmlContent }} 
             />
         );
@@ -75,15 +75,15 @@ const ResumePreview = ({ resume }) => {
                 )}
             </header>
 
-            <div className="grid grid-cols-3 gap-12">
-                <div className="col-span-2 space-y-8">
+            <div className="grid grid-cols-3 gap-12 min-w-0">
+                <div className="col-span-2 space-y-8 min-w-0">
                     {summary && (
                         <section>
                             <h2 className="text-[13px] font-black uppercase tracking-[0.15em] mb-4 text-slate-900 flex items-center">
                                 <span className="w-8 h-[2px] bg-orange-500 mr-3"></span>
                                 Profile
                             </h2>
-                            <div className="pl-11">
+                            <div className="pl-11 min-w-0 max-w-full">
                                 {renderHTML(summary, "text-slate-600 text-[14px] leading-relaxed")}
                             </div>
                         </section>

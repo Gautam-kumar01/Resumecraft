@@ -440,7 +440,7 @@ const Editor = () => {
         <MotionDiv 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="fixed inset-0 z-50 flex flex-col md:flex-row h-[100dvh] overflow-hidden bg-[linear-gradient(180deg,#f8fafc_0%,#eef2f7_100%)] font-sans text-slate-900"
+            className="fixed inset-0 z-[80] flex flex-col md:flex-row h-[100dvh] overflow-hidden bg-[linear-gradient(180deg,#f8fafc_0%,#eef2f7_100%)] font-sans text-slate-900"
         >
             <SEO title={resume.title ? `${resume.title} - Editor` : "Resume Editor"} />
             <div className="fixed -left-[9999px] top-0 w-[794px] bg-white pointer-events-none" aria-hidden="true">
@@ -982,6 +982,15 @@ const Editor = () => {
                     <ResumePreview resume={resume} />
                 </div>
             </div>
+
+            <button
+                onClick={handleDownload}
+                disabled={downloading}
+                className="hidden md:flex fixed right-6 bottom-6 z-[90] items-center px-5 py-3 bg-orange-500 text-white rounded-2xl font-black text-sm shadow-[0_18px_45px_rgba(249,115,22,0.35)] hover:bg-orange-600 hover:-translate-y-0.5 transition-all disabled:opacity-70 disabled:hover:translate-y-0"
+            >
+                <Download className="w-4 h-4 mr-2" />
+                {downloading ? 'Downloading...' : 'Download PDF'}
+            </button>
 
             {/* Mobile Templates */}
             <div className={`${activeMobileTab === 'templates' ? 'flex' : 'hidden'} md:hidden h-full w-full flex-col overflow-y-auto px-4 pt-5 pb-[calc(7rem+env(safe-area-inset-bottom))]`}>
