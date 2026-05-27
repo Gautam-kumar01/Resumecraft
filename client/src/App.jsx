@@ -15,11 +15,13 @@ import CoverLetterEditor from './pages/CoverLetterEditor';
 import Contact from './pages/Contact';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
+import CookiePolicy from './pages/CookiePolicy';
 import { AuthProvider } from './context/AuthContext';
 import Resource from './pages/Resource';
 import About from './pages/About';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
+import CookieConsent from './components/CookieConsent';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 function App() {
@@ -46,6 +48,7 @@ function App() {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/privacy" element={<Privacy />} />
+                <Route path="/cookies" element={<CookiePolicy />} />
 
                 <Route path="/dashboard" element={
                   <ProtectedRoute>
@@ -73,6 +76,7 @@ function App() {
               </Routes>
             </main>
             <Footer />
+            <CookieConsent />
           </div>
         </AuthProvider>
       </GoogleOAuthProvider>
