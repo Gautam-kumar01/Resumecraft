@@ -215,7 +215,7 @@ const Home = () => {
                             >
                                 <div className="h-40 bg-slate-900 relative overflow-hidden">
                                     <OptimizedImage
-                                        src="/images/ats-friendly-resume-template.webp"
+                                        src={card.image}
                                         alt={`${card.company} Professional Resume Template for ${card.role}`}
                                         className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity"
                                     />
@@ -242,7 +242,7 @@ const Home = () => {
                                     </div>
                                     <div className="mt-6">
                                         <div className="relative h-24 rounded-xl border border-slate-200 overflow-hidden bg-white">
-                                            <OptimizedImage src="/images/ats-friendly-resume-template.webp" alt="Resume" className="w-full h-full object-cover resume-scroll" />
+                                            <OptimizedImage src={card.image} alt="Resume" className="w-full h-full object-cover resume-scroll" />
                                         </div>
                                     </div>
                                 </div>
@@ -268,7 +268,7 @@ const Home = () => {
                             >
                                 <div className="h-40 bg-slate-900 relative overflow-hidden">
                                     <OptimizedImage
-                                        src="/images/ats-friendly-resume-template.webp"
+                                        src={card.image}
                                         alt={card.company}
                                         className="w-full h-full object-cover opacity-80"
                                     />
@@ -276,7 +276,7 @@ const Home = () => {
                                 </div>
                                 <div className="p-4">
                                     <div className="h-24 rounded-xl border border-slate-200 overflow-hidden bg-white">
-                                        <OptimizedImage src="/images/ats-friendly-resume-template.webp" alt="Resume" className="w-full h-full object-cover resume-scroll" />
+                                        <OptimizedImage src={card.image} alt="Resume" className="w-full h-full object-cover resume-scroll" />
                                     </div>
                                     <div className="mt-3 text-sm font-bold text-slate-900">{card.company} • {card.role} (Accepted)</div>
                                 </div>
