@@ -30,7 +30,11 @@ const SEO = ({
             <title>{metaTitle}</title>
             <meta name="description" content={metaDescription} />
             <meta name="keywords" content={metaKeywords} />
-            {noindex && <meta name="robots" content="noindex, nofollow" />}
+            {noindex ? (
+                <meta name="robots" content="noindex, nofollow" />
+            ) : (
+                <meta name="robots" content="index, follow, imageindex" />
+            )}
             <link rel="canonical" href={metaUrl} />
 
             {/* Open Graph / Facebook */}
@@ -39,6 +43,8 @@ const SEO = ({
             <meta property="og:description" content={metaDescription} />
             <meta property="og:url" content={metaUrl} />
             <meta property="og:image" content={metaImage} />
+            <meta property="og:image:width" content="1200" />
+            <meta property="og:image:height" content="630" />
             <meta property="og:site_name" content="ResumeCraft" />
 
             {/* Twitter */}
@@ -100,6 +106,17 @@ const SEO = ({
                             "item": metaUrl
                         }
                     ]
+                })}
+            </script>
+
+            {/* ImageObject Schema */}
+            <script type="application/ld+json">
+                {JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "ImageObject",
+                    "contentUrl": metaImage,
+                    "description": metaDescription,
+                    "name": metaTitle
                 })}
             </script>
         </Helmet>

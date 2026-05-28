@@ -1,10 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://resumecraft.co.in/</loc>
-    <lastmod>2026-05-06</lastmod>
+    <lastmod>2026-05-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://resumecraft.co.in/resume-builder-dashboard</loc>
+    <lastmod>2026-05-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://resumecraft.co.in/images/ai-resume-builder-dashboard.webp</image:loc>
+      <image:title>Free AI Resume Builder Dashboard</image:title>
+      <image:caption>ResumeCraft AI resume builder dashboard with ATS-friendly resume editor</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://resumecraft.co.in/ats-resume-checker-preview</loc>
+    <lastmod>2026-05-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://resumecraft.co.in/images/free-online-resume-maker.webp</image:loc>
+      <image:title>ATS Resume Checker Preview</image:title>
+      <image:caption>ATS Resume Checker UI preview showing mobile and desktop devices with resume score</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://resumecraft.co.in/free-resume-templates</loc>
+    <lastmod>2026-05-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://resumecraft.co.in/images/ats-friendly-resume-template.webp</image:loc>
+      <image:title>Free ATS-Friendly Resume Templates</image:title>
+      <image:caption>Gallery of professional free ATS-friendly resume templates inside ResumeCraft</image:caption>
+    </image:image>
   </url>
   <url> 
     <loc>https://resumecraft.co.in/templates</loc>

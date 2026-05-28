@@ -24,6 +24,10 @@ import ProtectedRoute from './components/ProtectedRoute';
 import CookieConsent from './components/CookieConsent';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
+import ResumeBuilderDashboard from './pages/ResumeBuilderDashboard';
+import AtsResumeCheckerPreview from './pages/AtsResumeCheckerPreview';
+import FreeResumeTemplates from './pages/FreeResumeTemplates';
+
 function App() {
   return (
     <Router>
@@ -49,6 +53,10 @@ function App() {
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/cookies" element={<CookiePolicy />} />
+                
+                <Route path="/resume-builder-dashboard" element={<ResumeBuilderDashboard />} />
+                <Route path="/ats-resume-checker-preview" element={<AtsResumeCheckerPreview />} />
+                <Route path="/free-resume-templates" element={<FreeResumeTemplates />} />
 
                 <Route path="/dashboard" element={
                   <ProtectedRoute>
