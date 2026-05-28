@@ -58,22 +58,30 @@ const CookieConsent = () => {
                         </div>
                     </div>
 
-                    <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-                        <button
-                            type="button"
-                            onClick={dismissNotice}
-                            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition-colors hover:border-slate-300 hover:text-slate-700 dark:border-slate-700 dark:text-slate-300 dark:hover:text-white"
-                            aria-label="Dismiss cookie notice"
-                        >
-                            <X className="h-4 w-4" aria-hidden="true" />
-                        </button>
-                        <button
-                            type="button"
-                            onClick={acceptCookies}
-                            className="inline-flex h-10 items-center justify-center rounded-xl bg-orange-500 px-5 text-sm font-bold text-white shadow-lg shadow-orange-500/25 transition-all hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
-                        >
-                            Accept Cookies
-                        </button>
+                    <div className="flex flex-col shrink-0 items-end gap-3 sm:gap-4">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                            <button
+                                type="button"
+                                onClick={dismissNotice}
+                                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition-colors hover:border-slate-300 hover:text-slate-700 dark:border-slate-700 dark:text-slate-300 dark:hover:text-white"
+                                aria-label="Dismiss cookie notice"
+                            >
+                                <X className="h-4 w-4" aria-hidden="true" />
+                            </button>
+                            <button
+                                type="button"
+                                onClick={acceptCookies}
+                                className="inline-flex h-10 items-center justify-center rounded-xl bg-orange-500 px-5 text-sm font-bold text-white shadow-lg shadow-orange-500/25 transition-all hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                            >
+                                Accept Cookies
+                            </button>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <input type="checkbox" id="country-access" className="h-4 w-4 rounded border-slate-300 text-orange-500 focus:ring-orange-500" />
+                            <label htmlFor="country-access" className="text-sm font-medium text-slate-600 dark:text-slate-300">
+                                I accept it and my resumecraft will access in all country
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
