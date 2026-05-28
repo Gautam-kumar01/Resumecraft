@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Cookie, ShieldCheck, X } from 'lucide-react';
+import { Cookie, X } from 'lucide-react';
 
 const CONSENT_KEY = 'resumecraft_cookie_consent';
 
@@ -8,7 +8,6 @@ const hasAcceptedCookies = () => {
     if (typeof window === 'undefined') {
         return false;
     }
-
     try {
         return window.localStorage.getItem(CONSENT_KEY) === 'accepted';
     } catch {
@@ -17,7 +16,16 @@ const hasAcceptedCookies = () => {
 };
 
 const CookieConsent = () => {
-    const [isVisible, setIsVisible] = useState(() => !hasAcceptedCookies());
+    const [isVisible, setIsVisible] = useState(false);
+    const [isAnimatingOut, setIsAnimatingOut] = useState(false);
+
+    useEffect(() => {
+        if (!hasAcceptedCookies()) {
+            // Delay to allow smooth entry animation
+            const timer = setTimeout(() => setIsVisible(true), 100);
+            return () => clearTimeout(timer);
+        }
+    }, []);
 
     const acceptCookies = () => {
         try {
@@ -25,63 +33,79 @@ const CookieConsent = () => {
         } catch {
             // Consent still closes for the current session if storage is blocked.
         }
-        setIsVisible(false);
+        closePopup();
     };
 
-    const dismissNotice = () => {
-        setIsVisible(false);
+    const closePopup = () => {
+        setIsAnimatingOut(true);
+        setTimeout(() => {
+            setIsVisible(false);
+            setIsAnimatingOut(false);
+        }, 300); // Matches the exit animation duration
     };
 
-    if (!isVisible) {
+    if (!isVisible && !isAnimatingOut) {
         return null;
     }
 
     return (
-        <div className="fixed inset-x-0 bottom-0 z-50 px-4 pb-4 sm:px-6 sm:pb-6">
-            <div className="mx-auto max-w-5xl rounded-2xl border border-slate-200 bg-white/95 p-4 shadow-2xl shadow-slate-900/15 backdrop-blur-xl dark:border-slate-700 dark:bg-slate-900/95 sm:p-5">
-                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                    <div className="flex gap-3 text-left">
-                        <div className="hidden h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-orange-100 text-orange-600 sm:flex">
+        <div className="fixed inset-x-0 bottom-0 z-50 md:bottom-6 md:left-6 md:right-auto md:w-full md:max-w-[380px]">
+            <div 
+                className={`
+                    relative mx-auto w-full overflow-hidden 
+                    rounded-t-2xl border border-slate-700/50 
+                    bg-slate-900/80 p-5 backdrop-blur-xl 
+                    shadow-[0_8px_30px_rgb(0,0,0,0.5)] 
+                    transition-all duration-300 ease-in-out md:rounded-2xl
+                    ${isVisible && !isAnimatingOut ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0 md:translate-y-8'}
+                `}
+            >
+                {/* Close Button */}
+                <button
+                    type="button"
+                    onClick={closePopup}
+                    className="absolute right-4 top-4 rounded-full p-1 text-slate-400 transition-colors hover:bg-slate-800 hover:text-white"
+                    aria-label="Close"
+                >
+                    <X className="h-4 w-4" />
+                </button>
+
+                <div className="flex flex-col gap-4">
+                    {/* Header */}
+                    <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500/20 to-orange-600/10 text-orange-500 ring-1 ring-orange-500/20">
                             <Cookie className="h-5 w-5" aria-hidden="true" />
                         </div>
-                        <div>
-                            <div className="flex items-center gap-2">
-                                <ShieldCheck className="h-4 w-4 text-orange-500 sm:hidden" aria-hidden="true" />
-                                <h2 className="text-base font-bold text-slate-900 dark:text-white">Cookies Policy</h2>
-                            </div>
-                            <p className="mt-1 max-w-3xl text-sm leading-6 text-slate-600 dark:text-slate-300">
-                                ResumeCraft uses essential cookies and local storage to keep you signed in, remember your consent, and improve the resume builder experience. We do not sell your personal data.
-                            </p>
-                            <Link to="/cookies" className="mt-2 inline-flex text-sm font-semibold text-orange-600 hover:text-orange-700">
-                                Read Cookie Policy
-                            </Link>
-                        </div>
+                        <h2 className="text-base font-semibold text-white">Cookies & Privacy</h2>
                     </div>
 
-                    <div className="flex flex-col shrink-0 items-end gap-3 sm:gap-4">
-                        <div className="flex items-center gap-2 sm:gap-3">
-                            <button
-                                type="button"
-                                onClick={dismissNotice}
-                                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 text-slate-500 transition-colors hover:border-slate-300 hover:text-slate-700 dark:border-slate-700 dark:text-slate-300 dark:hover:text-white"
-                                aria-label="Dismiss cookie notice"
-                            >
-                                <X className="h-4 w-4" aria-hidden="true" />
-                            </button>
-                            <button
-                                type="button"
-                                onClick={acceptCookies}
-                                className="inline-flex h-10 items-center justify-center rounded-xl bg-orange-500 px-5 text-sm font-bold text-white shadow-lg shadow-orange-500/25 transition-all hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
-                            >
-                                Accept Cookies
-                            </button>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <input type="checkbox" id="country-access" className="h-4 w-4 rounded border-slate-300 text-orange-500 focus:ring-orange-500" />
-                            <label htmlFor="country-access" className="text-sm font-medium text-slate-600 dark:text-slate-300">
-                                I accept it and my resumecraft will access in all country
-                            </label>
-                        </div>
+                    {/* Content */}
+                    <p className="text-sm leading-relaxed text-slate-300">
+                        ResumeCraft uses cookies to improve your experience and keep you signed in securely.
+                    </p>
+
+                    {/* Actions */}
+                    <div className="mt-1 flex flex-col gap-3 sm:flex-row">
+                        <button
+                            type="button"
+                            onClick={acceptCookies}
+                            className="order-1 inline-flex flex-1 items-center justify-center rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-4 py-2.5 text-sm font-semibold text-white shadow-lg transition-all hover:scale-[1.02] hover:shadow-[0_0_15px_rgba(249,115,22,0.5)] active:scale-[0.98] sm:order-2"
+                        >
+                            Accept All
+                        </button>
+                        <Link
+                            to="/cookies"
+                            className="order-2 inline-flex flex-1 items-center justify-center rounded-xl border border-slate-600 bg-slate-800/50 px-4 py-2.5 text-sm font-medium text-slate-200 transition-colors hover:bg-slate-700 hover:text-white sm:order-1"
+                        >
+                            Manage Settings
+                        </Link>
+                    </div>
+
+                    {/* Footer Link */}
+                    <div className="mt-1 text-center sm:text-left">
+                        <Link to="/privacy" className="text-xs text-slate-400 transition-colors hover:text-orange-400 hover:underline">
+                            Privacy Policy
+                        </Link>
                     </div>
                 </div>
             </div>
