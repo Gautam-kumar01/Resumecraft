@@ -56,6 +56,11 @@ const CoverLetterTemplates = () => {
             navigate(`/cover-letter-editor/${data._id}`);
         } catch (error) {
             console.error('Failed to create cover letter from template', error);
+            if (error.response && error.response.status === 401) {
+                navigate('/login');
+            } else {
+                alert('Something went wrong. Please try again later.');
+            }
         } finally {
             setCreating(null);
         }
@@ -68,6 +73,11 @@ const CoverLetterTemplates = () => {
             navigate(`/cover-letter-editor/${data._id}`);
         } catch (error) {
             console.error('Failed to create blank cover letter', error);
+            if (error.response && error.response.status === 401) {
+                navigate('/login');
+            } else {
+                alert('Something went wrong. Please try again later.');
+            }
         } finally {
             setCreating(null);
         }
@@ -86,6 +96,11 @@ const CoverLetterTemplates = () => {
             navigate(`/cover-letter-editor/${data._id}`);
         } catch (error) {
             console.error('Failed to generate AI cover letter', error);
+            if (error.response && error.response.status === 401) {
+                navigate('/login');
+            } else {
+                alert('Something went wrong. Please try again later.');
+            }
         } finally {
             setGeneratingAi(false);
             setShowAiModal(false);

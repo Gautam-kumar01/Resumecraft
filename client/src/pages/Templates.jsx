@@ -34,6 +34,11 @@ const Templates = () => {
             navigate(`/editor/${data._id}`);
         } catch (error) {
             console.error('Failed to create resume from template', error);
+            if (error.response && error.response.status === 401) {
+                navigate('/login');
+            } else {
+                alert('Something went wrong. Please try again later.');
+            }
         } finally {
             setCreating(null);
         }
