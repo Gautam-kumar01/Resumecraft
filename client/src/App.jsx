@@ -22,6 +22,7 @@ import About from './pages/About';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 import CookieConsent from './components/CookieConsent';
+import ScrollToTop from './components/ScrollToTop';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 import ResumeBuilderDashboard from './pages/ResumeBuilderDashboard';
@@ -31,6 +32,7 @@ import FreeResumeTemplates from './pages/FreeResumeTemplates';
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || 'your-google-client-id'}>
         <AuthProvider>
           <div className="min-h-screen font-sans text-slate-900 relative">
