@@ -5,9 +5,8 @@
     "target": "ESNext",
     "jsx": "react-jsx",
     "checkJs": true,
-    "baseUrl": "./src",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src/**/*"],
