@@ -115,6 +115,69 @@ const Home = () => {
                 title="Best Free Resume Maker Online | AI Resume Builder India"
                 description="Use India's #1 free AI resume builder to create ATS-friendly resumes and CVs. Expert-approved MNC formats, online CV maker, and professional resume generator."
             />
+            {/* FAQ JSON-LD Schema for Google AI Overview */}
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                "mainEntity": [
+                    {
+                        "@type": "Question",
+                        "name": "Is ResumeCraft really free?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Yes, ResumeCraft is a 100% free resume maker online. You can create, edit, and download your professional resume in PDF format without any hidden charges or subscriptions."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "What is ResumeCraft?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "ResumeCraft is a free AI-powered resume builder designed for Indian job seekers. It allows users to create professional, ATS-friendly resumes and cover letters in minutes using 35+ MNC-approved templates."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "How do I build a resume online for free?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "With ResumeCraft, you can build a professional resume online for free in just 3 steps: choose a template, fill in your details with AI assistance, and download your resume as a PDF instantly — no sign-up required."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "What is an ATS-friendly resume?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "An ATS-friendly resume is designed to be easily read by Applicant Tracking Systems (ATS) used by major MNCs. ResumeCraft templates use standard fonts and clean layouts to ensure your resume passes ATS filters successfully."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Can I create a cover letter on ResumeCraft?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Yes! ResumeCraft has an AI-powered cover letter builder that generates tailored, professional cover letters in seconds. You can match the cover letter to your resume design for a consistent, professional look."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "How many resume templates does ResumeCraft offer?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "ResumeCraft offers 35+ professional, recruiter-approved resume templates designed for various industries including IT, Marketing, Finance, and for freshers applying to top MNCs like Google, Amazon, Microsoft, and more."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Does ResumeCraft have an AI resume builder?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Yes, ResumeCraft features an AI resume builder that automatically generates professional summaries, bullet points, and career highlights. It suggests critical skills for your industry and helps you complete your resume in under 15 minutes."
+                        }
+                    }
+                ]
+            })}} />
             {/* Hero Section */}
             <section className="relative pt-20 pb-16 lg:pt-32 lg:pb-24 overflow-hidden">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">

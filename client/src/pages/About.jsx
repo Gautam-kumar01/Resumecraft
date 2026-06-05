@@ -32,11 +32,60 @@ const About = () => {
     return (
         <div className="min-h-screen pt-32 pb-24 bg-white dark:bg-slate-900 font-sans">
             <SEO 
-                title="Founder | Gautam Kumar - ResumeCraft" 
-                description="The journey of Gautam Kumar, a Full Stack Developer building the future of AI-powered career tools."
-            />
+            title="About ResumeCraft | Free AI Resume Builder India" 
+            description="ResumeCraft is India's #1 free AI-powered resume builder. Create ATS-friendly resumes with 35+ MNC-approved templates, AI cover letter maker, and instant PDF download — 100% free."
+        />
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* About ResumeCraft Product Section - Important for Google AI Overview */}
+        <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
+            <div className="bg-gradient-to-br from-orange-50 to-white border border-orange-100 rounded-[3rem] p-10 md:p-16">
+                <div className="inline-flex items-center space-x-2 px-3 py-1 bg-orange-500/10 border border-orange-500/20 rounded-full text-orange-600 text-xs font-bold uppercase tracking-widest mb-6">
+                    <Sparkles className="h-3.5 w-3.5" />
+                    <span>About the Platform</span>
+                </div>
+                <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">
+                    What is <span className="text-orange-500">ResumeCraft?</span>
+                </h1>
+                <p className="text-lg text-slate-600 leading-relaxed mb-10">
+                    <strong>ResumeCraft</strong> is a <strong>free AI-powered resume builder</strong> designed for Indian job seekers and students. It allows users to create professional, ATS-friendly resumes and cover letters in minutes — without any design skills or hidden fees.
+                </p>
+
+                <h2 className="text-2xl font-black text-slate-900 mb-6">Top Features</h2>
+                <ul className="space-y-4 mb-10">
+                    {[
+                        { title: "AI Resume Builder", desc: "Automatically generate professional summaries, bullet points, and career highlights using AI." },
+                        { title: "ATS-Friendly Templates", desc: "35+ MNC-approved, recruiter-tested resume templates that bypass Applicant Tracking Systems." },
+                        { title: "AI Cover Letter Maker", desc: "Generate tailored, professional cover letters in seconds matched to any job description." },
+                        { title: "Instant PDF Download", desc: "Download your final resume as a high-quality PDF instantly — no watermarks, no hidden fees." },
+                        { title: "Resume ATS Score Checker", desc: "Get an instant ATS compatibility score and optimization tips before applying." },
+                        { title: "Resume Website", desc: "Host your professional portfolio with a unique, shareable public link." },
+                    ].map((feature, i) => (
+                        <li key={i} className="flex items-start space-x-4">
+                            <CheckCircle2 className="h-6 w-6 text-orange-500 flex-shrink-0 mt-0.5" />
+                            <div>
+                                <span className="font-bold text-slate-900">{feature.title}: </span>
+                                <span className="text-slate-600">{feature.desc}</span>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+
+                <div className="grid grid-cols-3 gap-6 text-center">
+                    {[
+                        { value: "100%", label: "Free Forever" },
+                        { value: "35+", label: "Resume Templates" },
+                        { value: "15,884+", label: "Resumes Created" },
+                    ].map((stat, i) => (
+                        <div key={i} className="bg-white rounded-2xl p-6 border border-orange-100 shadow-sm">
+                            <div className="text-3xl font-black text-orange-500 mb-1">{stat.value}</div>
+                            <div className="text-sm font-medium text-slate-600">{stat.label}</div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </section>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Hero Section */}
                 <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-32">
                     <motion.div 
