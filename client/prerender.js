@@ -38,10 +38,32 @@ async function prerender() {
     await new Promise(resolve => server.listen(PORT, resolve));
     console.log(`Server listening on http://localhost:${PORT}`);
 
-    console.log('Launching puppeteer...');
-    const browser = await puppeteer.launch({ headless: true });
-    const page = await browser.newPage();
+    let browser;
+    try {
+        console.log('Launching puppeteer...');
+        if (process.env.VERCEL) {
+            const chromium = (await import('@sparticuz/chromium')).default;
+            const puppeteerCore = (await import('puppeteer-core')).default;
+            browser = await puppeteerCore.launch({
+                args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+                defaultViewport: chromium.defaultViewport,
+                executablePath: await chromium.executablePath(),
+                headless: chromium.headless,
+                ignoreHTTPSErrors: true,
+            });
+        } else {
+            browser = await puppeteer.launch({ 
+                headless: true,
+                args: ['--no-sandbox', '--disable-setuid-sandbox']
+            });
+        }
+    } catch (e) {
+        console.error('Failed to launch Puppeteer. Skipping prerender:', e);
+        server.close();
+        return;
+    }
 
+    const page = await browser.newPage();
     for (const route of routes) {
         console.log(`Prerendering ${route}...`);
         
