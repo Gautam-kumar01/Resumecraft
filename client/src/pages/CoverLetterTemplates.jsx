@@ -23,7 +23,20 @@ const CoverLetterTemplates = () => {
         const fetchStarters = async () => {
             try {
                 const { data } = await api.get('/cover-letters/starters');
-                setStarters(data);
+                if (Array.isArray(data)) {
+                    setStarters(data);
+                } else {
+                    setStarters([
+                        {
+                            id: 'software-engineer-cl',
+                            role: 'Software Engineer',
+                            industry: 'Technology',
+                            description: 'A clean, impact-oriented cover letter template for software engineers.',
+                            imageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=800&auto=format&fit=crop',
+                            content: { title: 'Software Engineer Blueprint' }
+                        }
+                    ]);
+                }
             } catch (error) {
                 console.error('Failed to fetch starters', error);
                 // Fallback starters if API fails
@@ -109,9 +122,15 @@ const CoverLetterTemplates = () => {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-[calc(100vh-64px)]">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
-            </div>
+            <>
+                <SEO
+                    title="Free Cover Letter Maker Online | Professional Templates & AI Builder"
+                    description="Create a job-winning cover letter in minutes with our free online cover letter maker. Use professional templates or generate a custom letter with AI."
+                />
+                <div className="flex items-center justify-center min-h-[calc(100vh-64px)]">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
+                </div>
+            </>
         );
     }
 

@@ -15,9 +15,14 @@ const Templates = () => {
         const fetchStarters = async () => {
             try {
                 const { data } = await api.get('/resumes/starters');
-                setStarters(data);
+                if (Array.isArray(data)) {
+                    setStarters(data);
+                } else {
+                    setStarters([]);
+                }
             } catch (error) {
                 console.error('Failed to fetch starters', error);
+                setStarters([]);
             } finally {
                 setLoading(false);
             }
@@ -46,9 +51,15 @@ const Templates = () => {
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center min-h-[calc(100vh-64px)]">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
-            </div>
+            <>
+                <SEO
+                    title="Free Resume Templates & Formats | Online CV Maker & AI Builder"
+                    description="Browse India's best free resume templates and formats. ATS-friendly, MNC-ready layouts for freshers and experienced professionals. Build your CV online for free."
+                />
+                <div className="flex items-center justify-center min-h-[calc(100vh-64px)]">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
+                </div>
+            </>
         );
     }
 
