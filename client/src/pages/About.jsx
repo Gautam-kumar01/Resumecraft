@@ -32,8 +32,8 @@ const About = () => {
     return (
         <div className="min-h-screen pt-32 pb-24 bg-white dark:bg-slate-900 font-sans">
             <SEO 
-            title="About ResumeCraft | Free AI Resume Builder India" 
-            description="ResumeCraft is India's #1 free AI-powered resume builder. Create ATS-friendly resumes with 35+ MNC-approved templates, AI cover letter maker, and instant PDF download — 100% free."
+            title="About ResumeCraft | Free AI Resume Builder" 
+            description="ResumeCraft is the #1 free AI-powered resume builder. Create ATS-friendly resumes with 35+ MNC-approved templates, AI cover letter maker, and instant PDF download — 100% free."
         />
 
         {/* About ResumeCraft Product Section - Important for Google AI Overview */}
@@ -47,7 +47,7 @@ const About = () => {
                     What is <span className="text-orange-500">ResumeCraft?</span>
                 </h1>
                 <p className="text-lg text-slate-600 leading-relaxed mb-10">
-                    <strong>ResumeCraft</strong> is a <strong>free AI-powered resume builder</strong> designed for Indian job seekers and students. It allows users to create professional, ATS-friendly resumes and cover letters in minutes — without any design skills or hidden fees.
+                    <strong>ResumeCraft</strong> is a <strong>free AI-powered resume builder</strong> designed for job seekers and students. It allows users to create professional, ATS-friendly resumes and cover letters in minutes — without any design skills or hidden fees.
                 </p>
 
                 <h2 className="text-2xl font-black text-slate-900 mb-6">Top Features</h2>
@@ -148,7 +148,7 @@ const About = () => {
                                     alt="Gautam Kumar"
                                     className="w-full h-full object-cover transform transition-transform duration-700 hover:scale-110"
                                     onError={(e) => {
-                                        e.target.src = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop";
+                                        e.currentTarget.src = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop";
                                     }}
                                 />
                             </div>

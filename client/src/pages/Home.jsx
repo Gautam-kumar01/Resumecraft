@@ -112,8 +112,8 @@ const Home = () => {
             className="bg-white"
         >
             <SEO
-                title="Best Free Resume Maker Online | AI Resume Builder India"
-                description="Use India's #1 free AI resume builder to create ATS-friendly resumes and CVs. Expert-approved MNC formats, online CV maker, and professional resume generator."
+                title="Best Free Resume Maker Online | AI Resume Builder"
+                description="Use the #1 free AI resume builder to create ATS-friendly resumes and CVs. Expert-approved MNC formats, online CV maker, and professional resume generator."
             />
             {/* FAQ JSON-LD Schema for Google AI Overview */}
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
@@ -133,7 +133,7 @@ const Home = () => {
                         "name": "What is ResumeCraft?",
                         "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": "ResumeCraft is a free AI-powered resume builder designed for Indian job seekers. It allows users to create professional, ATS-friendly resumes and cover letters in minutes using 35+ MNC-approved templates."
+                            "text": "ResumeCraft is a free AI-powered resume builder designed for job seekers. It allows users to create professional, ATS-friendly resumes and cover letters in minutes using 35+ MNC-approved templates."
                         }
                     },
                     {
@@ -504,7 +504,6 @@ const Home = () => {
             <AnimatePresence>
                 {showcaseOpen && (
                     <FeatureShowcase
-                        isOpen={showcaseOpen}
                         onClose={() => setShowcaseOpen(false)}
                         initialFeature={activeFeature}
                     />

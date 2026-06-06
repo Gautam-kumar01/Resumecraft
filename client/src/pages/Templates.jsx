@@ -54,7 +54,7 @@ const Templates = () => {
             <>
                 <SEO
                     title="Free Resume Templates & Formats | Online CV Maker & AI Builder"
-                    description="Browse India's best free resume templates and formats. ATS-friendly, MNC-ready layouts for freshers and experienced professionals. Build your CV online for free."
+                    description="Browse the best free resume templates and formats. ATS-friendly, MNC-ready layouts for freshers and experienced professionals. Build your CV online for free."
                 />
                 <div className="flex items-center justify-center min-h-[calc(100vh-64px)]">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
@@ -67,7 +67,7 @@ const Templates = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
             <SEO
                 title="Free Resume Templates & Formats | Online CV Maker & AI Builder"
-                description="Browse India's best free resume templates and formats. ATS-friendly, MNC-ready layouts for freshers and experienced professionals. Build your CV online for free."
+                description="Browse the best free resume templates and formats. ATS-friendly, MNC-ready layouts for freshers and experienced professionals. Build your CV online for free."
             />
             <div className="text-center mb-20">
                 <div className="inline-flex items-center space-x-2 px-3 py-1 bg-orange-500/10 border border-orange-500/20 rounded-full text-orange-600 text-xs font-bold uppercase tracking-widest mb-6">
@@ -93,8 +93,8 @@ const Templates = () => {
                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-90 group-hover:opacity-100"
                                 alt={template.role}
                                 onError={(e) => {
-                                    e.target.src = 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop';
-                                    e.target.className = "w-full h-full object-cover opacity-50";
+                                    e.currentTarget.src = 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop';
+                                    e.currentTarget.className = "w-full h-full object-cover opacity-50";
                                 }}
                             />
                             {/* Animated light effect */}

@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 const OptimizedImage = ({
     src,
     alt,
-    caption,
-    linkTo,
-    width,
-    height,
+    caption = '',
+    linkTo = '',
+    width = undefined,
+    height = undefined,
     className = '',
     figureClassName = '',
     priority = false

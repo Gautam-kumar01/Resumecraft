@@ -1,17 +1,17 @@
 import { Helmet } from 'react-helmet-async';
 
 const SEO = ({
-    title,
-    description,
-    keywords,
-    image,
-    url,
+    title = '',
+    description = '',
+    keywords = '',
+    image = '',
+    url = '',
     type = 'website',
     noindex = false
 }) => {
     const siteTitle = "ResumeCraft – #1 Best Free Resume Maker Online 2026 | AI Resume Builder";
-    const defaultDescription = "Create professional, ATS-friendly resumes and cover letters in minutes with ResumeCraft. India's top-rated free AI resume builder with MNC-ready templates and instant PDF download.";
-    const defaultKeywords = "resume build, resume making, resume maker, cv maker, resume, free resume builder, AI resume builder, CV maker online, ATS friendly resume, professional resume, Indian resume builder, job resume maker, online resume generator, free CV templates, MNC resume formats, fresher resume builder, experience resume maker, resume builder india, best resume builder 2026, free cv maker india";
+    const defaultDescription = "Create professional, ATS-friendly resumes and cover letters in minutes with ResumeCraft. The top-rated free AI resume builder with MNC-ready templates and instant PDF download.";
+    const defaultKeywords = "resume build, resume making, resume maker, cv maker, resume, free resume builder, AI resume builder, CV maker online, ATS friendly resume, professional resume, job resume maker, online resume generator, free CV templates, MNC resume formats, fresher resume builder, experience resume maker, best resume builder 2026";
     const siteUrl = "https://resumecraft.co.in/"; // Updating to a more likely current URL
     const defaultImage = "https://resumecraft.co.in/og-image.png";
 
@@ -59,7 +59,7 @@ const SEO = ({
                     "@context": "https://schema.org",
                     "@type": "WebSite",
                     "name": "ResumeCraft",
-                    "alternateName": ["Resume Craft", "ResumeCraft India"],
+                    "alternateName": ["Resume Craft"],
                     "url": siteUrl
                 })}
             </script>
@@ -76,7 +76,7 @@ const SEO = ({
                     "offers": {
                         "@type": "Offer",
                         "price": "0",
-                        "priceCurrency": "INR"
+                        "priceCurrency": "USD"
                     },
                     "description": defaultDescription,
                     "aggregateRating": {
