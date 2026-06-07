@@ -18,7 +18,12 @@ const routes = [
     '/about',
     '/contact',
     '/terms',
-    '/privacy'
+    '/privacy',
+    '/resource/resume-formats',
+    '/resource/resume-examples',
+    '/resource/how-to-write-a-resume',
+    '/resource/career-advice',
+    '/resource/interview-tips'
 ];
 
 const PORT = 3000;

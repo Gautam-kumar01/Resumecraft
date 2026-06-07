@@ -138,7 +138,7 @@ const ResumePreview = ({ resume }) => {
                                         <div className="font-bold text-slate-900 text-[14px] mb-1">{cert.name}</div>
                                         <div className="text-orange-600 text-[12px] font-bold mb-1">{cert.issuer}</div>
                                         <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{cert.date}</div>
-                                        {cert.link && <div className="text-[10px] font-bold text-slate-400 mt-1 truncate underline">{cert.link}</div>}
+                                        {cert.link && <div className="text-[10px] font-bold text-slate-400 mt-1 break-all underline">{cert.link}</div>}
                                     </div>
                                 ))}
                             </div>
@@ -152,7 +152,7 @@ const ResumePreview = ({ resume }) => {
                                 {projects.map((proj, i) => (
                                     <div key={i} className="group">
                                         <div className="font-bold text-slate-900 text-[14px] mb-1 group-hover:text-orange-600 transition-colors">{proj.name}</div>
-                                        {proj.link && <div className="text-[10px] font-bold text-slate-400 mb-2 truncate underline">{proj.link}</div>}
+                                        {proj.link && <div className="text-[10px] font-bold text-slate-400 mb-2 break-all underline">{proj.link}</div>}
                                         {renderHTML(proj.description, "text-[12px] text-slate-600 leading-relaxed")}
                                     </div>
                                 ))}
@@ -200,9 +200,9 @@ const ResumePreview = ({ resume }) => {
                             {personalInfo?.email && <div className="flex items-center group break-all"><div className="p-1.5 bg-slate-800 rounded-md mr-2.5 group-hover:bg-orange-500 transition-colors"><Mail className="h-3 w-3 text-white shrink-0" /></div><span>{personalInfo.email}</span></div>}
                             {personalInfo?.phone && <div className="flex items-center group"><div className="p-1.5 bg-slate-800 rounded-md mr-2.5 group-hover:bg-orange-500 transition-colors"><Phone className="h-3 w-3 text-white shrink-0" /></div>{personalInfo.phone}</div>}
                             {personalInfo?.address && <div className="flex items-center group"><div className="p-1.5 bg-slate-800 rounded-md mr-2.5 group-hover:bg-orange-500 transition-colors"><MapPin className="h-3 w-3 text-white shrink-0" /></div>{personalInfo.address}</div>}
-                            {personalInfo?.linkedin && <div className="flex items-center group"><div className="p-1.5 bg-slate-800 rounded-md mr-2.5 group-hover:bg-orange-500 transition-colors"><Linkedin className="h-3 w-3 text-white shrink-0" /></div><span className="truncate">{personalInfo.linkedin.replace(/^https?:\/\/(www\.)?/, '')}</span></div>}
-                            {personalInfo?.github && <div className="flex items-center group"><div className="p-1.5 bg-slate-800 rounded-md mr-2.5 group-hover:bg-orange-500 transition-colors"><Github className="h-3 w-3 text-white shrink-0" /></div><span className="truncate">{personalInfo.github.replace(/^https?:\/\/(www\.)?/, '')}</span></div>}
-                            {personalInfo?.website && <div className="flex items-center group"><div className="p-1.5 bg-slate-800 rounded-md mr-2.5 group-hover:bg-orange-500 transition-colors"><Globe className="h-3 w-3 text-white shrink-0" /></div><span className="truncate">{personalInfo.website.replace(/^https?:\/\/(www\.)?/, '')}</span></div>}
+                            {personalInfo?.linkedin && <div className="flex items-center group"><div className="p-1.5 bg-slate-800 rounded-md mr-2.5 group-hover:bg-orange-500 transition-colors"><Linkedin className="h-3 w-3 text-white shrink-0" /></div><span className="break-all">{personalInfo.linkedin.replace(/^https?:\/\/(www\.)?/, '')}</span></div>}
+                            {personalInfo?.github && <div className="flex items-center group"><div className="p-1.5 bg-slate-800 rounded-md mr-2.5 group-hover:bg-orange-500 transition-colors"><Github className="h-3 w-3 text-white shrink-0" /></div><span className="break-all">{personalInfo.github.replace(/^https?:\/\/(www\.)?/, '')}</span></div>}
+                            {personalInfo?.website && <div className="flex items-center group"><div className="p-1.5 bg-slate-800 rounded-md mr-2.5 group-hover:bg-orange-500 transition-colors"><Globe className="h-3 w-3 text-white shrink-0" /></div><span className="break-all">{personalInfo.website.replace(/^https?:\/\/(www\.)?/, '')}</span></div>}
                         </div>
                     </div>
 
