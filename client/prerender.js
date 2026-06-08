@@ -8,6 +8,8 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+import { blogPosts } from './src/data/blogPosts.js';
+
 const routes = [
     '/',
     '/templates',
@@ -23,7 +25,9 @@ const routes = [
     '/resource/resume-examples',
     '/resource/how-to-write-a-resume',
     '/resource/career-advice',
-    '/resource/interview-tips'
+    '/resource/interview-tips',
+    '/blog',
+    ...blogPosts.map(post => `/blog/${post.slug}`)
 ];
 
 const PORT = 3000;
@@ -94,6 +98,19 @@ async function prerender() {
         fs.writeFileSync(path.join(dirPath, 'index.html'), html);
         console.log(`Saved ${route}`);
     }
+
+    // Generate Sitemap
+    console.log('Generating sitemap.xml...');
+    const sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${routes.map(route => `    <url>
+        <loc>https://resumecraft.co.in${route}</loc>
+        <changefreq>${route === '/' || route.startsWith('/blog') ? 'daily' : 'weekly'}</changefreq>
+        <priority>${route === '/' ? '1.0' : route === '/blog' ? '0.9' : '0.8'}</priority>
+    </url>`).join('\n')}
+</urlset>`;
+    fs.writeFileSync(path.join(DIST_DIR, 'sitemap.xml'), sitemapContent);
+    console.log('Saved sitemap.xml');
 
     await browser.close();
     server.close();

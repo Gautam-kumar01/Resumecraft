@@ -18,6 +18,8 @@ import Privacy from './pages/Privacy';
 import CookiePolicy from './pages/CookiePolicy';
 import { AuthProvider } from './context/AuthContext';
 import Resource from './pages/Resource';
+import BlogList from './pages/BlogList';
+import BlogPost from './pages/BlogPost';
 import About from './pages/About';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -82,6 +84,8 @@ function App() {
 
                 <Route path="/p/:id" element={<PublicResume />} />
                 <Route path="/resource/:slug" element={<Resource />} />
+                <Route path="/blog" element={<BlogList />} />
+                <Route path="/blog/:slug" element={<BlogPost />} />
                 <Route path="/about" element={<About />} />
               </Routes>
             </main>

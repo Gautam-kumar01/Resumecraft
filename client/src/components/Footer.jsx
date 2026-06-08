@@ -88,6 +88,7 @@ const Footer = () => {
                     <div>
                         <h4 className="font-bold text-slate-900 dark:text-white mb-6 uppercase tracking-wider text-xs">Resources</h4>
                         <ul className="space-y-4 text-sm">
+                            <li><Link to="/blog" className="hover:text-orange-500 font-bold transition-colors">Resume & Career Blog</Link></li>
                             <li><Link to="/resource/resume-formats" className="hover:text-orange-500 transition-colors">Resume Formats</Link></li>
                             <li><Link to="/resource/resume-examples" className="hover:text-orange-500 transition-colors">Resume Examples</Link></li>
                             <li><Link to="/resource/how-to-write-a-resume" className="hover:text-orange-500 transition-colors">How to Write a Resume</Link></li>

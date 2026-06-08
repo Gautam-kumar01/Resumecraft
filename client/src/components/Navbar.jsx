@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useContext, useState, useEffect } from 'react';
 import AuthContext from '../context/AuthContext';
-import { LogOut, User, Menu, X, Sun, Moon, Star, FileText, Mail, ChevronDown } from 'lucide-react';
+import { LogOut, User, Menu, X, Sun, Moon, Star, FileText, Mail, ChevronDown, BookOpen } from 'lucide-react';
 import Logo from './Logo';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -177,6 +177,10 @@ const Navbar = () => {
                             </div>
                         </div>
 
+                        <Link to="/blog" className="text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors font-medium px-4">
+                            Blog
+                        </Link>
+
                         <Link to="/about" className="text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors font-medium px-4">
                             About Us
                         </Link>
@@ -313,6 +317,10 @@ const Navbar = () => {
                                         <Link to="/cover-letter-templates" onClick={() => setIsMenuOpen(false)} className="flex items-center space-x-3 p-3 hover:bg-orange-50 dark:hover:bg-orange-900/10 rounded-xl text-slate-700 dark:text-slate-300 font-bold">
                                             <Star className="h-5 w-5 text-orange-500" />
                                             <span>Cover Letters</span>
+                                        </Link>
+                                        <Link to="/blog" onClick={() => setIsMenuOpen(false)} className="flex items-center space-x-3 p-3 hover:bg-orange-50 dark:hover:bg-orange-900/10 rounded-xl text-slate-700 dark:text-slate-300 font-bold">
+                                            <BookOpen className="h-5 w-5 text-orange-500" />
+                                            <span>Blog</span>
                                         </Link>
                                         <Link to="/about" onClick={() => setIsMenuOpen(false)} className="flex items-center space-x-3 p-3 hover:bg-orange-50 dark:hover:bg-orange-900/10 rounded-xl text-slate-700 dark:text-slate-300 font-bold">
                                             <User className="h-5 w-5 text-orange-500" />

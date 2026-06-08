@@ -5,6 +5,7 @@
     "target": "ESNext",
     "jsx": "react-jsx",
     "checkJs": true,
+    "types": ["vite/client"],
     "paths": {
       "@/*": ["./src/*"]
     }
