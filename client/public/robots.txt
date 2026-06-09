@@ -1,12 +1,23 @@
 User-agent: *
 Allow: /
 Allow: /images/
+Allow: /blog/
+Allow: /resource/
+Allow: /templates
+Allow: /cover-letter-templates
+Allow: /free-resume-templates
+Allow: /resume-builder-dashboard
+Allow: /ats-resume-checker-preview
+Allow: /about
+Allow: /contact
+Allow: /terms
+Allow: /privacy
 Disallow: /login
 Disallow: /register
 Disallow: /dashboard
 Disallow: /editor
 Disallow: /forgot-password
 Disallow: /reset-password
+Disallow: /cover-letter-editor
 
-Sitemap: https://resumecraft.co.in/sitemap.xml 
-Host: https://resumecraft.co.in
+Sitemap: https://resumecraft.co.in/sitemap.xml
