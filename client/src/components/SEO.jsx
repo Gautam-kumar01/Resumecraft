@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async';
+import { useLocation } from 'react-router-dom';
 
 const SEO = ({
     title = '',
@@ -9,6 +10,7 @@ const SEO = ({
     type = 'website',
     noindex = false
 }) => {
+    const location = useLocation();
     const siteTitle = "ResumeCraft – #1 Best Free Resume Maker Online 2026 | AI Resume Builder";
     const defaultDescription = "Create professional, ATS-friendly resumes and cover letters in minutes with ResumeCraft. The top-rated free AI resume builder with MNC-ready templates and instant PDF download.";
     const defaultKeywords = "resume build, resume making, resume maker, cv maker, resume, free resume builder, AI resume builder, CV maker online, ATS friendly resume, professional resume, job resume maker, online resume generator, free CV templates, MNC resume formats, fresher resume builder, experience resume maker, best resume builder 2026";
@@ -20,8 +22,9 @@ const SEO = ({
     const metaKeywords = keywords || defaultKeywords;
     const metaImage = image || defaultImage;
 
-    // Ensure URL doesn't start with a slash if siteUrl has a trailing slash
-    const cleanUrl = url ? (url.startsWith('/') ? url.substring(1) : url) : '';
+    // Dynamically get the current path if url is not explicitly provided
+    const activeUrl = url || (location && location.pathname !== '/' ? location.pathname : '');
+    const cleanUrl = activeUrl ? (activeUrl.startsWith('/') ? activeUrl.substring(1) : activeUrl) : '';
     const metaUrl = `${siteUrl}${cleanUrl}`;
 
     return (
