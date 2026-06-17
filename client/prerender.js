@@ -168,7 +168,7 @@ ${routes.map(route => {
     const priority = route === '/' ? '1.0' : (route === '/blog' || route.startsWith('/resume-template')) ? '0.9' : '0.8';
     const img = routeImages[route];
     const imageTag = img ? `    <image:image>
-        <image:loc>${img.loc}</image:loc>
+        <image:loc>${img.loc.replace(/&/g, '&amp;')}</image:loc>
         <image:title>${img.title}</image:title>
         <image:caption>${img.caption}</image:caption>
     </image:image>` : '';
