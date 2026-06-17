@@ -21,6 +21,12 @@ const routes = [
     '/contact',
     '/terms',
     '/privacy',
+    '/cookies',
+    '/resume-template/software-engineer',
+    '/resume-template/data-analyst',
+    '/resume-template/marketing-manager',
+    '/resume-template/fresher',
+    '/resume-template/teacher',
     '/resource/resume-formats',
     '/resource/resume-examples',
     '/resource/how-to-write-a-resume',
@@ -89,25 +95,90 @@ async function prerender() {
         page.removeAllListeners('console');
         page.removeAllListeners('pageerror');
         
-        // Save to dist/route/index.html or dist/index.html
-        const dirPath = path.join(DIST_DIR, route);
-        if (!fs.existsSync(dirPath)) {
-            fs.mkdirSync(dirPath, { recursive: true });
+        // Save to dist/route.html (or dist/index.html if route is '/')
+        if (route === '/') {
+            fs.writeFileSync(path.join(DIST_DIR, 'index.html'), html);
+        } else {
+            const filePath = path.join(DIST_DIR, `${route}.html`);
+            const dirPath = path.dirname(filePath);
+            if (!fs.existsSync(dirPath)) {
+                fs.mkdirSync(dirPath, { recursive: true });
+            }
+            fs.writeFileSync(filePath, html);
         }
-        
-        fs.writeFileSync(path.join(dirPath, 'index.html'), html);
         console.log(`Saved ${route}`);
     }
+
+    // Route to images mapping for Sitemap
+    const routeImages = {
+        '/': {
+            loc: 'https://resumecraft.co.in/og-image.png',
+            title: 'Free AI Resume Builder - ResumeCraft',
+            caption: 'ResumeCraft free online resume maker and AI resume builder homepage'
+        },
+        '/resume-builder-dashboard': {
+            loc: 'https://resumecraft.co.in/images/ai-resume-builder-dashboard.webp',
+            title: 'Free AI Resume Builder Dashboard',
+            caption: 'ResumeCraft AI resume builder dashboard with ATS-friendly resume editor'
+        },
+        '/ats-resume-checker-preview': {
+            loc: 'https://resumecraft.co.in/images/free-online-resume-maker.webp',
+            title: 'ATS Resume Checker Preview',
+            caption: 'ATS Resume Checker UI preview showing mobile and desktop devices with resume score'
+        },
+        '/free-resume-templates': {
+            loc: 'https://resumecraft.co.in/images/ats-friendly-resume-template.webp',
+            title: 'Free ATS-Friendly Resume Templates',
+            caption: 'Gallery of professional free ATS-friendly resume templates inside ResumeCraft'
+        },
+        '/resume-template/software-engineer': {
+            loc: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=800&auto=format&fit=crop',
+            title: 'Software Engineer Resume Template',
+            caption: 'Professional Software Engineer resume template with pre-filled skills and summaries'
+        },
+        '/resume-template/data-analyst': {
+            loc: 'https://images.unsplash.com/photo-1551288560-66936b61ee2b?q=80&w=800&auto=format&fit=crop',
+            title: 'Data Analyst Resume Template',
+            caption: 'ATS-optimized Data Analyst resume template with pre-filled skills and SQL highlights'
+        },
+        '/resume-template/marketing-manager': {
+            loc: 'https://images.unsplash.com/photo-1557838923-2985c318be48?q=80&w=800&auto=format&fit=crop',
+            title: 'Marketing Manager Resume Template',
+            caption: 'High-impact campaign-focused Marketing Manager resume blueprint'
+        },
+        '/resume-template/fresher': {
+            loc: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800&auto=format&fit=crop',
+            title: 'Fresher / Entry-Level Resume Template',
+            caption: 'Entry-level graduate resume blueprint emphasizing academic projects and skills'
+        },
+        '/resume-template/teacher': {
+            loc: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?q=80&w=800&auto=format&fit=crop',
+            title: 'Teacher / Educator Resume Template',
+            caption: 'Academic teacher resume blueprint highlighting curriculum development and student growth'
+        }
+    };
 
     // Generate Sitemap
     console.log('Generating sitemap.xml...');
     const sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${routes.map(route => `    <url>
-        <loc>https://resumecraft.co.in${route}</loc>
-        <changefreq>${route === '/' || route.startsWith('/blog') ? 'daily' : 'weekly'}</changefreq>
-        <priority>${route === '/' ? '1.0' : route === '/blog' ? '0.9' : '0.8'}</priority>
-    </url>`).join('\n')}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+${routes.map(route => {
+    const changefreq = route === '/' || route.startsWith('/blog') ? 'daily' : 'weekly';
+    const priority = route === '/' ? '1.0' : (route === '/blog' || route.startsWith('/resume-template')) ? '0.9' : '0.8';
+    const img = routeImages[route];
+    const imageTag = img ? `    <image:image>
+        <image:loc>${img.loc}</image:loc>
+        <image:title>${img.title}</image:title>
+        <image:caption>${img.caption}</image:caption>
+    </image:image>` : '';
+    return `  <url>
+    <loc>https://resumecraft.co.in${route === '/' ? '/' : route}</loc>
+    <changefreq>${changefreq}</changefreq>
+    <priority>${priority}</priority>
+${imageTag ? '\n' + imageTag : ''}
+  </url>`;
+}).join('\n')}
 </urlset>`;
     fs.writeFileSync(path.join(DIST_DIR, 'sitemap.xml'), sitemapContent);
     console.log('Saved sitemap.xml');

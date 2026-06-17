@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/axios';
 import SEO from '../components/SEO';
 import { Sparkles, ArrowRight, Brain, Zap, Briefcase, Globe, Target, ShieldCheck } from 'lucide-react';
@@ -80,6 +80,36 @@ const Templates = () => {
                 <p className="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
                     Industry-ready templates designed for <strong>online resume making</strong>. Bypass ATS systems and impress recruiters at world-leading corporations.
                 </p>
+            </div>
+
+            {/* Popular Role-Specific Templates Banner/List */}
+            <div className="mb-16 bg-gradient-to-br from-orange-50 to-white dark:from-slate-800/40 dark:to-slate-900 border border-orange-100 dark:border-slate-800 rounded-[2.5rem] p-8 md:p-12 text-center relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/5 blur-[80px] rounded-full"></div>
+                <div className="relative z-10 max-w-3xl mx-auto">
+                    <h2 className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">
+                        Looking for a Role-Specific Blueprint?
+                    </h2>
+                    <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base mb-8">
+                        Explore our customized, ATS-vetted resume templates pre-filled with industry-specific skills and achievements.
+                    </p>
+                    <div className="flex flex-wrap justify-center gap-3">
+                        {[
+                            { name: 'Software Engineer', slug: 'software-engineer' },
+                            { name: 'Data Analyst', slug: 'data-analyst' },
+                            { name: 'Marketing Manager', slug: 'marketing-manager' },
+                            { name: 'Fresher / Graduate', slug: 'fresher' },
+                            { name: 'Teacher / Educator', slug: 'teacher' }
+                        ].map((role) => (
+                            <Link 
+                                key={role.slug}
+                                to={`/resume-template/${role.slug}`}
+                                className="px-5 py-3 bg-white dark:bg-slate-800 hover:bg-orange-500 hover:text-white text-slate-700 dark:text-slate-300 rounded-2xl font-bold text-xs border border-slate-200/50 dark:border-slate-700 hover:border-orange-500 transition-all shadow-sm"
+                            >
+                                {role.name} Template →
+                            </Link>
+                        ))}
+                    </div>
+                </div>
             </div>
 
             <div className="grid md:grid-cols-2 gap-12">

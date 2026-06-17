@@ -97,9 +97,9 @@ const About = () => {
                             <Sparkles className="h-3.5 w-3.5" />
                             <span>Innovator & Architect</span>
                         </div>
-                        <h1 className="text-5xl md:text-7xl font-black text-slate-900 dark:text-white mb-8 tracking-tight">
+                        <h2 className="text-5xl md:text-7xl font-black text-slate-900 dark:text-white mb-8 tracking-tight">
                             Gautam <span className="text-orange-500">Kumar</span>
-                        </h1>
+                        </h2>
                         <div className="space-y-6 text-lg md:text-xl text-slate-600 dark:text-slate-400 leading-relaxed font-normal md:font-light">
                             <p>
                                 I am a <span className="font-bold text-slate-900 dark:text-white border-b-2 border-orange-500/30">Full Stack Developer</span> and software architect with a deep-rooted passion for algorithmic efficiency and clean code. My coding journey is driven by the thrill of turning complex logic into seamless, user-centric experiences.

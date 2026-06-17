@@ -1,4 +1,5 @@
 {
+    "cleanUrls": true,
     "buildCommand": "cd client && npm install --legacy-peer-deps && npm run build",
     "outputDirectory": "client/dist",
     "framework": "vite",
@@ -86,7 +87,7 @@
             "destination": "/sitemap.xml"
         },
         {
-            "source": "/((?!api/|.*\\..*).*)",
+            "source": "/((?!api/|templates|cover-letter-templates|resume-builder-dashboard|ats-resume-checker-preview|free-resume-templates|resume-template|about|contact|terms|privacy|cookies|blog|resource|.*\\..*).*)",
             "destination": "/index.html"
         }
     ]

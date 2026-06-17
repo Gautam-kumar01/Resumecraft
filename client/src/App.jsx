@@ -30,6 +30,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import ResumeBuilderDashboard from './pages/ResumeBuilderDashboard';
 import AtsResumeCheckerPreview from './pages/AtsResumeCheckerPreview';
 import FreeResumeTemplates from './pages/FreeResumeTemplates';
+import RoleTemplate from './pages/RoleTemplate';
 
 function App() {
   return (
@@ -61,6 +62,7 @@ function App() {
                 <Route path="/resume-builder-dashboard" element={<ResumeBuilderDashboard />} />
                 <Route path="/ats-resume-checker-preview" element={<AtsResumeCheckerPreview />} />
                 <Route path="/free-resume-templates" element={<FreeResumeTemplates />} />
+                <Route path="/resume-template/:slug" element={<RoleTemplate />} />
 
                 <Route path="/dashboard" element={
                   <ProtectedRoute>
