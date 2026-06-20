@@ -77,6 +77,9 @@ const Dashboard = () => {
             navigate(`/editor/${data._id}`);
         } catch (error) {
             console.error('Failed to create resume from template', error);
+            const { id: templateId, targetCompanies: tc, imageUrl: imgUrl, ...resumeData } = template;
+            localStorage.setItem('guest_resume_draft', JSON.stringify(resumeData));
+            navigate('/editor');
         } finally {
             setCreating(null);
         }
@@ -236,8 +239,8 @@ const Dashboard = () => {
                                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 opacity-80 group-hover:opacity-100"
                                     alt={template.title}
                                     onError={(e) => {
-                                        e.target.src = 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop';
-                                        e.target.className = "w-full h-full object-cover opacity-40";
+                                        e.currentTarget.src = 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop';
+                                        e.currentTarget.className = "w-full h-full object-cover opacity-40";
                                     }}
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/40 to-transparent"></div>

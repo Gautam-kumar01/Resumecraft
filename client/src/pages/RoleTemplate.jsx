@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { roleTemplates } from '../data/roleTemplates';
 import SEO from '../components/SEO';
 import api from '../api/axios';
+import AuthContext from '../context/AuthContext';
 import { 
     Sparkles, 
     ArrowRight, 
@@ -22,6 +23,7 @@ const RoleTemplate = () => {
     const { slug } = useParams();
     const navigate = useNavigate();
     const [creating, setCreating] = useState(false);
+    const { user } = useContext(AuthContext);
 
     // Find the matching template data
     const template = roleTemplates.find(t => t.slug === slug);
@@ -39,37 +41,44 @@ const RoleTemplate = () => {
     }
 
     const handleUseTemplate = async () => {
+        // Build the pre-filled resume structure dynamically based on the template
+        const resumeData = {
+            title: `${template.roleName} - ResumeCraft Blueprint`,
+            templateId: 'modern',
+            summary: template.sampleSummary,
+            skills: template.sampleSkills,
+            experience: template.sampleExperience.map(exp => ({
+                company: exp.company,
+                position: exp.position,
+                startDate: exp.duration.split(' - ')[0],
+                endDate: exp.duration.split(' - ')[1] || 'Present',
+                description: exp.bullets.join('\n')
+            })),
+            education: [
+                {
+                    institution: 'University / College Name',
+                    degree: template.slug === 'fresher' ? 'B.S. in Computer Science / Relevant Field' : 'Bachelor / Master Degree',
+                    startDate: '2018',
+                    endDate: '2022'
+                }
+            ],
+            projects: template.slug === 'fresher' ? [
+                {
+                    title: 'Academic Capstone Project: E-Commerce Storefront',
+                    description: 'Developed a full-stack e-commerce web application using React, Node.js, and MongoDB, enabling user authentication and product cart features. Simulated payment gateways.'
+                }
+            ] : []
+        };
+
+        if (!user) {
+            // Save to local storage for guests
+            localStorage.setItem('guest_resume_draft', JSON.stringify(resumeData));
+            navigate('/editor');
+            return;
+        }
+
         setCreating(true);
         try {
-            // Build the pre-filled resume structure dynamically based on the template
-            const resumeData = {
-                title: `${template.roleName} - ResumeCraft Blueprint`,
-                templateId: 'modern',
-                summary: template.sampleSummary,
-                skills: template.sampleSkills,
-                experience: template.sampleExperience.map(exp => ({
-                    company: exp.company,
-                    position: exp.position,
-                    startDate: exp.duration.split(' - ')[0],
-                    endDate: exp.duration.split(' - ')[1] || 'Present',
-                    description: exp.bullets.join('\n')
-                })),
-                education: [
-                    {
-                        institution: 'University / College Name',
-                        degree: template.slug === 'fresher' ? 'B.S. in Computer Science / Relevant Field' : 'Bachelor / Master Degree',
-                        startDate: '2018',
-                        endDate: '2022'
-                    }
-                ],
-                projects: template.slug === 'fresher' ? [
-                    {
-                        title: 'Academic Capstone Project: E-Commerce Storefront',
-                        description: 'Developed a full-stack e-commerce web application using React, Node.js, and MongoDB, enabling user authentication and product cart features. Simulated payment gateways.'
-                    }
-                ] : []
-            };
-
             const { data } = await api.post('/resumes', resumeData);
             navigate(`/editor/${data._id}`);
         } catch (error) {
@@ -79,7 +88,9 @@ const RoleTemplate = () => {
                 sessionStorage.setItem('redirectAfterLogin', `/resume-template/${slug}`);
                 navigate('/login');
             } else {
-                alert('Something went wrong. Please try again later.');
+                // Fallback to local storage draft if backend fails
+                localStorage.setItem('guest_resume_draft', JSON.stringify(resumeData));
+                navigate('/editor');
             }
         } finally {
             setCreating(false);

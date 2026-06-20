@@ -1,15 +1,17 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/axios';
 import SEO from '../components/SEO';
 import { Sparkles, ArrowRight, Brain, Zap, Briefcase, Globe, Target, ShieldCheck } from 'lucide-react';
+import AuthContext from '../context/AuthContext';
 
 const Templates = () => {
     const [starters, setStarters] = useState([]);
     const [loading, setLoading] = useState(true);
     const [creating, setCreating] = useState(null);
     const navigate = useNavigate();
+    const { user } = useContext(AuthContext);
 
     useEffect(() => {
         const fetchStarters = async () => {
@@ -32,9 +34,17 @@ const Templates = () => {
     }, []);
 
     const useTemplate = async (template) => {
+        const { id, targetCompanies, ...resumeData } = template;
+
+        if (!user) {
+            // Save to local storage for guests
+            localStorage.setItem('guest_resume_draft', JSON.stringify(resumeData));
+            navigate('/editor');
+            return;
+        }
+
         setCreating(template.id);
         try {
-            const { id, targetCompanies, ...resumeData } = template;
             const { data } = await api.post('/resumes', resumeData);
             navigate(`/editor/${data._id}`);
         } catch (error) {
@@ -42,7 +52,9 @@ const Templates = () => {
             if (error.response && error.response.status === 401) {
                 navigate('/login');
             } else {
-                alert('Something went wrong. Please try again later.');
+                // Fallback to local storage draft if backend fails
+                localStorage.setItem('guest_resume_draft', JSON.stringify(resumeData));
+                navigate('/editor');
             }
         } finally {
             setCreating(null);
