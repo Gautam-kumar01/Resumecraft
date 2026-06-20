@@ -28,16 +28,16 @@ const Footer = () => {
                             The world's most intuitive resume builder designed to help you land your dream job at record speed.
                         </p>
                         <div className="flex space-x-4">
-                            <a href="#" className="h-10 w-10 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-slate-400 hover:text-orange-500 hover:border-orange-500/30 transition-all">
+                            <a href="https://twitter.com/Imgautam_001" target="_blank" rel="noopener noreferrer" className="h-10 w-10 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-slate-400 hover:text-orange-500 hover:border-orange-500/30 transition-all">
                                 <Twitter className="h-5 w-5" />
                             </a>
-                            <a href="#" className="h-10 w-10 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-slate-400 hover:text-orange-500 hover:border-orange-500/30 transition-all">
+                            <a href="https://www.linkedin.com/in/imgautam01" target="_blank" rel="noopener noreferrer" className="h-10 w-10 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-slate-400 hover:text-orange-500 hover:border-orange-500/30 transition-all">
                                 <Linkedin className="h-5 w-5" />
                             </a>
-                            <a href="#" className="h-10 w-10 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-slate-400 hover:text-orange-500 hover:border-orange-500/30 transition-all">
+                            <a href="https://www.youtube.com/@UNFILTERED_GOJO" target="_blank" rel="noopener noreferrer" className="h-10 w-10 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-slate-400 hover:text-orange-500 hover:border-orange-500/30 transition-all">
                                 <Youtube className="h-5 w-5" />
                             </a>
-                            <a href="#" className="h-10 w-10 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-slate-400 hover:text-orange-500 hover:border-orange-500/30 transition-all">
+                            <a href="https://github.com/Gautam-kumar01/" target="_blank" rel="noopener noreferrer" className="h-10 w-10 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-slate-400 hover:text-orange-500 hover:border-orange-500/30 transition-all">
                                 <Github className="h-5 w-5" />
                             </a>
                         </div>
