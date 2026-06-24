@@ -239,16 +239,19 @@ const Editor = () => {
             ].join(';');
             document.body.appendChild(offscreen);
 
-            const clone = sourceEl.cloneNode(true);
-            [clone, ...clone.querySelectorAll('*')].forEach(el => {
-                el.style.transform = 'none';
-                el.style.transition = 'none';
-                el.style.animation = 'none';
-                if (window.getComputedStyle(el).letterSpacing !== 'normal') {
-                    el.style.letterSpacing = 'normal';
-                }
-                if (window.getComputedStyle(el).textAlign === 'justify') {
-                    el.style.textAlign = 'left';
+            /** @type {HTMLElement} */
+            const clone = (sourceEl.cloneNode(true));
+            [clone, ...clone.querySelectorAll('*')].forEach(/** @type {any} */ (el) => {
+                if (el.style) {
+                    el.style.transform = 'none';
+                    el.style.transition = 'none';
+                    el.style.animation = 'none';
+                    if (window.getComputedStyle(el).letterSpacing !== 'normal') {
+                        el.style.letterSpacing = 'normal';
+                    }
+                    if (window.getComputedStyle(el).textAlign === 'justify') {
+                        el.style.textAlign = 'left';
+                    }
                 }
             });
             clone.style.width = `${A4_W}px`;
@@ -392,7 +395,8 @@ const Editor = () => {
         } catch (error) {
             console.error("AI Error Full Object:", error);
             const message = error.response?.data?.message || error.message || "Failed to generate suggestions";
-            const details = error.response?.data?.error || "";
+            let details = error.response?.data?.error || "";
+            if (typeof details === 'object') details = JSON.stringify(details);
             alert(`${message}${details ? `: ${details}` : ""}. Please check if your server is running and your API key is valid.`);
         } finally {
             setAiLoading(false);
@@ -830,11 +834,12 @@ const Editor = () => {
                                 onKeyDown={(e) => {
                                     if (e.key === 'Enter' || e.key === ',') {
                                         e.preventDefault();
-                                        const val = e.target.value.trim();
+                                        const target = /** @type {HTMLInputElement} */ (e.target);
+                                        const val = target.value.trim();
                                         if (val && !resume.skills?.includes(val)) {
                                             setResume(prev => ({ ...prev, skills: [...(prev.skills || []), val] }));
                                         }
-                                        e.target.value = '';
+                                        target.value = '';
                                     }
                                 }}
                                 className="w-full px-4 py-3 bg-slate-50 border border-slate-200 focus:border-orange-500 rounded-xl outline-none font-medium mb-4"
