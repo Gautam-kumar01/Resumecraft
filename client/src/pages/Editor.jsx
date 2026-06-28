@@ -133,7 +133,8 @@ const Editor = () => {
     const [isPreviewExpanded, setIsPreviewExpanded] = useState(false);
     const [mobileZoom, setMobileZoom] = useState(1);
     
-    const previewContainerRef = useRef(null);
+    const desktopPreviewRef = useRef(null);
+    const mobilePreviewRef = useRef(null);
     const [previewScale, setPreviewScale] = useState(1);
 
     // AI State
@@ -180,9 +181,15 @@ const Editor = () => {
     // Update preview scale based on container width
     useEffect(() => {
         const updateScale = () => {
-            if (previewContainerRef.current) {
-                const containerWidth = previewContainerRef.current.offsetWidth;
-                const containerHeight = previewContainerRef.current.offsetHeight;
+            const isMobile = window.innerWidth < 768;
+            
+            if (isMobile) {
+                // On mobile, use full width and allow vertical scrolling
+                const scaleW = (window.innerWidth - 32) / 794;
+                setPreviewScale(Math.min(scaleW, 1));
+            } else if (desktopPreviewRef.current) {
+                const containerWidth = desktopPreviewRef.current.offsetWidth;
+                const containerHeight = desktopPreviewRef.current.offsetHeight;
                 
                 // A4 dimensions at 96dpi are 794x1123
                 const scaleW = (containerWidth - 64) / 794; // 32px padding on each side
@@ -193,9 +200,15 @@ const Editor = () => {
             }
         };
 
+        // Run immediately and after a short delay to account for sheet animations
         updateScale();
+        const timeoutId = setTimeout(updateScale, 100);
+        
         window.addEventListener('resize', updateScale);
-        return () => window.removeEventListener('resize', updateScale);
+        return () => {
+            clearTimeout(timeoutId);
+            window.removeEventListener('resize', updateScale);
+        };
     }, [activeMobileTab, isPreviewSheetOpen, isPreviewExpanded]);
 
     const handleSave = async () => {
@@ -964,7 +977,7 @@ const Editor = () => {
 
             {/* Desktop / Tablet Preview */}
             <div
-                ref={previewContainerRef}
+                ref={desktopPreviewRef}
                 className={`hidden md:flex ${isFullscreenPreview ? 'md:w-full' : 'md:w-[55%] lg:w-[60%]'} bg-slate-300 h-full overflow-y-auto justify-center px-4 py-6 md:py-10 relative transition-all duration-500`}
             >
                 <button
@@ -1138,7 +1151,7 @@ const Editor = () => {
                                     </div>
                                 </div>
 
-                                <div ref={previewContainerRef} className="flex-1 overflow-y-auto flex justify-center px-4 py-5 bg-slate-300">
+                                <div ref={mobilePreviewRef} className="flex-1 overflow-y-auto flex justify-center px-4 py-5 bg-slate-300">
                                     <div
                                         className="bg-white shadow-2xl origin-top transition-transform duration-300 ease-out"
                                         style={{
