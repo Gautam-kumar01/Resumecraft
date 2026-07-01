@@ -73,9 +73,9 @@ async function prerender() {
             });
         }
     } catch (e) {
-        console.error('Failed to launch Puppeteer. Skipping prerender:', e);
+        console.error('Failed to launch Puppeteer. Failing the build:', e);
         server.close();
-        return;
+        process.exit(1);
     }
 
     const page = await browser.newPage();
