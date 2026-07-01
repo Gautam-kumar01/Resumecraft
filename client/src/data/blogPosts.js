@@ -1,5 +1,217 @@
 export const blogPosts = [
   {
+    slug: 'bca-ke-baad-resume-kaise-banaye-2026',
+    title: 'BCA Ke Baad Resume Kaise Banaye 2026 - Free Template',
+    description: '90% BCA freshers yahi mistake karte hain. Is guide mein main tujhe bataunga exactly kya likhna hai BCA fresher resume mein.',
+    category: 'Resume Writing',
+    publishDate: 'July 1, 2026',
+    updatedDate: 'July 1, 2026',
+    readTime: '6 min read',
+    featured: true,
+    coverImage: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=1200&q=80',
+    tags: ['BCA Resume', 'Fresher Resume', 'IT Jobs'],
+    author: {
+      name: 'ResumeCraft Team',
+      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=100&q=80',
+      role: 'Career Expert'
+    },
+    content: [
+      {
+        type: 'paragraph',
+        text: 'BCA complete ho gaya but resume dekh ke HR bhi confuse ho jaaye? Tension mat lo bhai. 90% BCA freshers yahi mistake karte hain - ya to 3 page ka novel bana dete hain, ya to "MS Word" ko skill mein likh dete hain. Is guide mein main tujhe bataunga exactly kya likhna hai BCA fresher resume mein. Plus free template bhi milega resumecraft.co.in pe. Chalo shuru karte hain - Step by step, bina bakwaas ke.'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '1. Introduction - BCA Fresher Ka Dard'
+      },
+      {
+        type: 'paragraph',
+        text: 'Sabse pehli baat, BCA (Bachelor of Computer Applications) ek bahut hi solid degree hai. Lekin problem yeh hai ki market mein competition itna hai ki agar tumhara resume stand out nahi karega, toh interview ki call aana bahut mushkil hai. IT companies (jaise TCS, Infosys, Wipro) roz hazaron resume dekhti hain. Unke paas ek resume par spend karne ke liye sirf 6-7 seconds hote hain.'
+      },
+      {
+        type: 'paragraph',
+        text: 'Aaj hum baat karenge un sabhi important sections ki jo ek BCA fresher ke resume mein hone hi chahiye. Aur haan, format ke baare mein tension mat lo, ResumeCraft.co.in par tumhe best templates free mein mil jayenge.'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '2. Header aur Contact Information - Simple Rakho'
+      },
+      {
+        type: 'paragraph',
+        text: 'Yahan par log ajeeb-ajeeb email IDs use karte hain jaise "coolboyrahul@gmail.com". Yeh sab chhod do.'
+      },
+      {
+        type: 'list',
+        items: [
+          'Full Name: Bada aur bold.',
+          'Phone Number: Chalu number dena, jo hamesha on rahe.',
+          'Email ID: Professional (e.g., rahul.sharma@gmail.com).',
+          'LinkedIn Profile URL: Agar abhi tak LinkedIn nahi banaya hai, toh bhai kya kar rahe ho? Aaj hi banao.',
+          'GitHub Link: BCA walon ke liye yeh sabse important hai. Tumhara code tumhari pehchan hai.'
+        ]
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '3. Resume Summary - Objective Nahi, Summary Likho'
+      },
+      {
+        type: 'paragraph',
+        text: 'Puraane zamane mein log "Career Objective" likhte the ("To work in a reputed company..."). Ab yeh sab outdated ho gaya hai. Ab likho Professional Summary.'
+      },
+      {
+        type: 'quote',
+        text: 'Recent BCA graduate with a strong foundation in Java, MySQL, and web development. Passionate about problem-solving and looking for an entry-level Software Developer role to apply technical skills in building real-world applications. Ranked top 10 in college hackathon.',
+        author: 'Example Summary'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '4. Technical Skills - Pura Syllabus Mat Chaap Dena'
+      },
+      {
+        type: 'paragraph',
+        text: 'Skills section tumhara sabse strong point hona chahiye. Lekin "MS Excel" ya "Internet surfing" mat likhna.'
+      },
+      {
+        type: 'list',
+        items: [
+          'Programming Languages: Java, Python, C++ (Jo sach mein aati ho, wahi likhna).',
+          'Web Technologies: HTML, CSS, JavaScript, React.js.',
+          'Databases: MySQL, MongoDB.',
+          'Tools: Git, VS Code, Postman.'
+        ]
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '5. Projects - Tumhara Asli Hathiyar'
+      },
+      {
+        type: 'paragraph',
+        text: 'BCA freshers ke paas experience nahi hota, isliye tumhare Projects hi tumhara experience hain. College ka final year project toh likhna hi hai, uske alawa bhi 1-2 personal projects hone chahiye.'
+      },
+      {
+        type: 'list',
+        items: [
+          'Project Name & Role: (e.g., E-Commerce Website - Frontend Developer)',
+          'Tech Stack Used: React, Node.js, MongoDB',
+          'Description: 2-3 bullet points. Kya banaya? Kaunsi problem solve ki?',
+          'Live Link / GitHub Link: HR tumhara code zaroor dekhna chahega.'
+        ]
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '6. Education - Ulta Shuru Karo'
+      },
+      {
+        type: 'paragraph',
+        text: 'Education mein sabse pehle apni latest degree (BCA) likho. Degree, College Name, Year of Passing (2026), aur CGPA (agar 7.0 se upar hai).'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '7. Conclusion'
+      },
+      {
+        type: 'paragraph',
+        text: 'Bhai, resume tumhari marketing document hai. Ise clean, professional aur to-the-point rakho. 1 page se zyada lamba mat karna kyunki fresher ke paas 2 page ka content hota hi nahi hai. Apne projects par focus karo, skills highlight karo, aur confidence ke saath apply karo.'
+      }
+    ]
+  },
+  {
+    slug: 'sarkari-naukri-resume-format-bihar-police-ssc',
+    title: 'Sarkari Naukri Resume Format - Bihar Police/SSC Ke Liye',
+    description: 'Sarkari Naukri ke liye resume kaise banate hain, usme kya-kya likhna zaroori hai, aur kaunsi galtiyan bilkul nahi karni hain.',
+    category: 'Govt Jobs',
+    publishDate: 'July 1, 2026',
+    updatedDate: 'July 1, 2026',
+    readTime: '5 min read',
+    featured: false,
+    coverImage: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=1200&q=80',
+    tags: ['Sarkari Naukri', 'SSC', 'Bihar Police', 'Resume Format'],
+    author: {
+      name: 'ResumeCraft Team',
+      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=100&q=80',
+      role: 'Career Expert'
+    },
+    content: [
+      {
+        type: 'paragraph',
+        text: 'Govt job ki taiyari kar rahe ho? SSC, Bihar Police, ya Railway ka form bharte time ya interview ke time samajh nahi aata ki resume kaisa hona chahiye? Maximum students yahi galti karte hain ki private job wala fancy resume utha ke sarkari naukri ke interview mein le jaate hain.'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '1. Private vs Sarkari Resume: Fark Kya Hai?'
+      },
+      {
+        type: 'list',
+        items: [
+          'Photo: Sarkari resume mein passport size photo hona almost compulsory hai.',
+          'Personal Details: Father\'s Name, Date of Birth, Category (Gen/OBC/SC/ST) clear honi chahiye.',
+          'Format: Ekdum simple aur formal. Koi funky font ya color nahi.'
+        ]
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '2. Header and Objective - Sidhi Baat'
+      },
+      {
+        type: 'paragraph',
+        text: 'Top par tumhara naam bada hona chahiye. Uske neeche tumhari contact details. Objective simple rakho jaise: "To serve the nation and contribute to the public sector with utmost dedication, discipline, and hard work."'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '3. Personal Information - Sabse Zaroori Section'
+      },
+      {
+        type: 'paragraph',
+        text: 'SSC ya Police ke interview panel ko tumhari personal background mein zyada interest hota hai. Father\'s Name, Date of Birth, Category, aur Local Languages zaroor likhein.'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '4. Educational Qualification - Table Format Is Best'
+      },
+      {
+        type: 'paragraph',
+        text: 'Sarkari jobs mein eligibility criteria bahut strict hota hai. Isliye panel ko tumhari education turant dikhni chahiye. Iske liye ek Table banao jisme Degree, Board/University, Year of Passing aur Percentage ho.'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '5. Extra Qualifications and Certifications'
+      },
+      {
+        type: 'list',
+        items: [
+          'Computer Course: CCC, PGDCA, ya basic computer knowledge.',
+          'Typing: Hindi/English typing speed (e.g., 35 WPM in English).',
+          'NCC / NSS: Bihar Police ya kisi bhi defense job mein NCC B ya C certificate ka alag se weightage milta hai.'
+        ]
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '6. Kya Galtiyan NAHI Karni Hain?'
+      },
+      {
+        type: 'list',
+        items: [
+          'Jhoot bolna: Document verification mein ek-ek certificate check hota hai.',
+          'Fancy Fonts & Colors: Professional raho.',
+          'Spelling Mistakes: Typing mistake bilkul mat karna, DV mein problem ho sakti hai.'
+        ]
+      }
+    ]
+  },
+  {
     slug: 'how-to-create-ats-friendly-resume-2026',
     title: 'How to Create an ATS-Friendly Resume in 2026',
     description: 'Learn the exact rules to format and optimize your resume to pass Applicant Tracking Systems (ATS) used by top MNCs, complete with keywords and layout advice.',
