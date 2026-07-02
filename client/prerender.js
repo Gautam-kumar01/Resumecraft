@@ -67,7 +67,7 @@ async function prerender() {
                 ignoreHTTPSErrors: true,
             });
         } else {
-            browser = await puppeteer.launch({ 
+            browser = await puppeteer.launch({
                 headless: true,
                 args: ['--no-sandbox', '--disable-setuid-sandbox']
             });
@@ -81,20 +81,20 @@ async function prerender() {
     const page = await browser.newPage();
     for (const route of routes) {
         console.log(`Prerendering ${route}...`);
-        
+
         page.on('console', msg => console.log('BROWSER LOG:', msg.text()));
         page.on('pageerror', error => console.log('BROWSER ERROR:', error.message));
-        
+
         await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: 'networkidle0' });
-        
+
         // Wait an extra second for Helmet to inject tags
         await new Promise(resolve => setTimeout(resolve, 2000));
 
         const html = await page.content();
-        
+
         page.removeAllListeners('console');
         page.removeAllListeners('pageerror');
-        
+
         // Save to dist/route.html (or dist/index.html if route is '/')
         if (route === '/') {
             fs.writeFileSync(path.join(DIST_DIR, 'index.html'), html);
@@ -173,21 +173,21 @@ async function prerender() {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 ${routes.map(route => {
-    const changefreq = route === '/' || route.startsWith('/blog') ? 'daily' : 'weekly';
-    const priority = route === '/' ? '1.0' : (route === '/blog' || route.startsWith('/resume-template')) ? '0.9' : '0.8';
-    const img = routeImages[route];
-    const imageTag = img ? `    <image:image>
+        const changefreq = route === '/' || route.startsWith('/blog') ? 'daily' : 'weekly';
+        const priority = route === '/' ? '1.0' : (route === '/blog' || route.startsWith('/resume-template')) ? '0.9' : '0.8';
+        const img = routeImages[route];
+        const imageTag = img ? `    <image:image>
         <image:loc>${img.loc.replace(/&/g, '&amp;')}</image:loc>
         <image:title>${img.title}</image:title>
         <image:caption>${img.caption}</image:caption>
     </image:image>` : '';
-    return `  <url>
+        return `  <url>
     <loc>https://resumecraft.co.in${route === '/' ? '/' : route}</loc>
     <changefreq>${changefreq}</changefreq>
     <priority>${priority}</priority>
 ${imageTag ? '\n' + imageTag : ''}
   </url>`;
-}).join('\n')}
+    }).join('\n')}
 </urlset>`;
     fs.writeFileSync(path.join(DIST_DIR, 'sitemap.xml'), sitemapContent);
     console.log('Saved sitemap.xml');
