@@ -158,6 +158,15 @@ async function prerender() {
         }
     };
 
+    // Dynamically add blog post images to the sitemap
+    blogPosts.forEach(post => {
+        routeImages[`/blog/${post.slug}`] = {
+            loc: post.coverImage,
+            title: post.title,
+            caption: post.description
+        };
+    });
+
     // Generate Sitemap
     console.log('Generating sitemap.xml...');
     const sitemapContent = `<?xml version="1.0" encoding="UTF-8"?>
