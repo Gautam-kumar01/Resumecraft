@@ -212,6 +212,84 @@ export const blogPosts = [
     ]
   },
   {
+    slug: 'ats-resume-kya-hai-tcs-mein-resume-reject-kyu-hota-hai',
+    title: 'ATS Resume Kya Hai? TCS Mein Resume Reject Kyu Hota Hai',
+    description: 'ATS kya bala hai aur TCS jaisi badi companies tumhara resume reject kyu kar deti hain. Janiye ATS-friendly resume banane ka tarika.',
+    category: 'Resume Tips',
+    publishDate: 'July 1, 2026',
+    updatedDate: 'July 1, 2026',
+    readTime: '7 min read',
+    featured: true,
+    coverImage: 'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=1200&q=80',
+    tags: ['ATS Resume', 'TCS', 'Resume Formatting'],
+    author: {
+      name: 'ResumeCraft Team',
+      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=100&q=80',
+      role: 'Career Expert'
+    },
+    content: [
+      {
+        type: 'paragraph',
+        text: 'Kya tumne kabhi socha hai ki tum TCS, Infosys, ya Wipro mein apply karte ho, aur bina kisi interview ke sidha "Rejection Email" kyu aa jata hai? Problem tumhare skills mein nahi, tumhare Resume Format mein hai.'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '1. ATS (Applicant Tracking System) Kya Hai?'
+      },
+      {
+        type: 'paragraph',
+        text: 'Socho ek company jaise TCS ke paas ek job posting ke liye 50,000 resumes aate hain. Wahan 100 HR baithe nahi hain. Wo use karte hain ek software jisko kehte hain ATS. ATS tumhare resume ko scan karta hai, aur check karta hai ki profile match karti hai ya nahi.'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '2. TCS/Infosys Mein Resume Reject Hone Ke Top Reasons'
+      },
+      {
+        type: 'list',
+        items: [
+          'Fancy Design aur Graphics Ka Use: ATS robot ko images aur columns padhne nahi aate! Usko sirf plain text samajh aata hai.',
+          'Keywords Missing Hona: Job description ke keywords agar resume mein nahi hain, toh score low aayega.',
+          'Ajeeb Fonts: Standard fonts jaise Arial, Calibri ki jagah stylish fonts use karna.',
+          'Objective ki jagah bakwas: "Seeking a challenging role..." Company ko yeh jaanna hai ki tum unke liye kya kar sakte ho. Professional Summary likho.'
+        ]
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '3. ATS-Friendly Resume Kaise Banaye?'
+      },
+      {
+        type: 'list',
+        items: [
+          'Single Column Format Use Karo: Left to right padhne mein aasan hota hai.',
+          'Standard Headings: "My Coding Journey" mat likho, simply "Experience" ya "Projects" likho.',
+          'Action Verbs Ka Use: "I made a project" mat likho. Likho: "Developed a web application...".',
+          'No Graphics: Photo lagana, ya logo lagana band karo.'
+        ]
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '4. Kya Fresher Ka Resume ATS Pass Kar Sakta Hai?'
+      },
+      {
+        type: 'paragraph',
+        text: 'Bilkul! Experience nahi hai toh kya hua, tumhare Projects, Internships, aur Certifications tumhara strong point hain. Project description mein tech stack ke keywords use karo. Jaise: "Built an Inventory Management System using Java, MySQL, and HTML/CSS."'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '5. Conclusion'
+      },
+      {
+        type: 'paragraph',
+        text: 'TCS ya kisi bhi MNC mein selection hona sirf tumhari coding skills par depend nahi karta. ATS ek barrier hai, jisko cross karna aasan hai agar tum rules follow karo. Fancy design chhod do, content aur keywords par focus karo.'
+      }
+    ]
+  },
+  {
     slug: 'how-to-create-ats-friendly-resume-2026',
     title: 'How to Create an ATS-Friendly Resume in 2026',
     description: 'Learn the exact rules to format and optimize your resume to pass Applicant Tracking Systems (ATS) used by top MNCs, complete with keywords and layout advice.',
