@@ -18,7 +18,11 @@ export const blogPosts = [
     content: [
       {
         type: 'paragraph',
-        text: 'BCA complete ho gaya but resume dekh ke HR bhi confuse ho jaaye? Tension mat lo bhai. 90% BCA freshers yahi mistake karte hain - ya to 3 page ka novel bana dete hain, ya to "MS Word" ko skill mein likh dete hain. Is guide mein main tujhe bataunga exactly kya likhna hai BCA fresher resume mein. Plus free template bhi milega resumecraft.co.in pe. Chalo shuru karte hain - Step by step, bina bakwaas ke.'
+        text: 'BCA complete ho gaya but resume dekh ke HR bhi confuse ho jaaye? Tension mat lo bhai. 90% BCA freshers yahi mistake karte hain - ya to 3 page ka novel bana dete hain, ya to "MS Word" ko skill mein likh dete hain. Is guide mein main tujhe bataunga exactly kya likhna hai BCA fresher resume mein. Chalo shuru karte hain - Step by step, bina bakwaas ke.'
+      },
+      {
+        type: 'highlight',
+        text: '🎁 Bonus: Is blog ko padhne walo ke liye free template: http://resumecraft.co.in pe jaake \'BCA Fresher\' select karo aur 5 minute mein apna resume ready karo!'
       },
       {
         type: 'heading',
@@ -114,11 +118,58 @@ export const blogPosts = [
       {
         type: 'heading',
         level: 2,
+        text: 'Step 1: Photo Lagaye Ya Nahi?'
+      },
+      {
+        type: 'paragraph',
+        text: 'India mein IT jobs ke liye photo lagana zaroori nahi hai unless specified. Agar lagana chahte ho toh ekdum professional passport size photo use karo, Instagram wali selfie bilkul nahi!'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: 'Step 2: Skills Kaunsi Dale'
+      },
+      {
+        type: 'paragraph',
+        text: 'Sirf wahi skills dalo jispar tum confidence se answer de sako. Agar HTML, CSS, JavaScript aati hai toh wo dalo. C++ padhi thi 1st year mein par ab yaad nahi, toh use skip karna behtar hai.'
+      },
+      {
+        type: 'heading',
+        level: 2,
         text: '7. Conclusion'
       },
       {
         type: 'paragraph',
         text: 'Bhai, resume tumhari marketing document hai. Ise clean, professional aur to-the-point rakho. 1 page se zyada lamba mat karna kyunki fresher ke paas 2 page ka content hota hi nahi hai. Apne projects par focus karo, skills highlight karo, aur confidence ke saath apply karo.'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: 'Frequently Asked Questions (FAQs)'
+      },
+      {
+        type: 'highlight',
+        text: '💡 Q1. Kya 1 page ka resume chalega?'
+      },
+      {
+        type: 'paragraph',
+        text: 'Haan bhai, 100% chalega. As a fresher, 1 page ka resume sabse best aur professional mana jata hai. HR ke paas itna time nahi hota ki wo 3 page ka essay padhe.'
+      },
+      {
+        type: 'highlight',
+        text: '💡 Q2. PDF ya Word bheje?'
+      },
+      {
+        type: 'paragraph',
+        text: 'Hamesha PDF format mein bhejo. Word document ka formatting alag computers mein kharab ho sakta hai, par PDF hamesha same rehti hai.'
+      },
+      {
+        type: 'highlight',
+        text: '💡 Q3. College marks kam hain, resume mein dalu ya skip karu?'
+      },
+      {
+        type: 'paragraph',
+        text: 'Agar percentage 60% ya 6.0 CGPA se kam hai toh sirf pass year aur college ka naam likh do. Apne projects aur coding skills ko highlight karo, marks utna matter nahi karenge agar tumhara code accha hai.'
       }
     ]
   },
@@ -658,6 +709,106 @@ export const blogPosts = [
       {
         type: 'paragraph',
         text: 'MNCs utilize structured interviews where all candidates are asked standardized questions. Be prepared for behavioral interviews using the STAR method, and complete case studies or coding rounds for technical roles.'
+      }
+    ]
+  },
+  {
+    slug: '12th-pass-resume-kaise-banaye',
+    title: '12th Pass Ke Liye Resume Kaise Banaye - Patna/Bihar /all over india .Jobs Ke Liye',
+    description: '12th pass resume kaise banaye - Bihar mein toot ke search hota hai. Ek perfect guide 12th pass students ke liye jobs paane ke liye.',
+    category: 'Resume Writing',
+    publishDate: 'July 6, 2026',
+    updatedDate: 'July 6, 2026',
+    readTime: '4 min read',
+    featured: false,
+    coverImage: 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1200&q=80',
+    tags: ['12th Pass Resume', 'Bihar Jobs', 'Fresher Resume'],
+    author: {
+      name: 'ResumeCraft Team',
+      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=100&q=80',
+      role: 'Career Expert'
+    },
+    content: [
+      {
+        type: 'paragraph',
+        text: '12th pass resume kaise banaye - Bihar mein toot ke search hota hai. Aaj hum aapko batayenge ki 12th pass students ke liye Patna, Bihar ya all over India jobs ke liye ek attractive resume kaise banaye.'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '1. Basic Contact Info'
+      },
+      {
+        type: 'paragraph',
+        text: 'Sabse pehle apna naam, mobile number, aur ek professional email ID likhein.'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '2. Education Details'
+      },
+      {
+        type: 'paragraph',
+        text: 'Apni 10th aur 12th ki details clear format me likhein. Jaise Board name, Passing year aur percentage.'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '3. Skills'
+      },
+      {
+        type: 'paragraph',
+        text: 'Basic computer skills, communication, ya koi certificate course kiya hai to usko mention zarur karein.'
+      }
+    ]
+  },
+  {
+    slug: 'college-student-resume-format-india',
+    title: 'College Student Ke Liye Resume - Internship Ke Liye 5 Minute Mein',
+    description: 'college student resume format india . Ek 5 minute guide internship ke liye resume banane ke liye.',
+    category: 'Internship',
+    publishDate: 'July 6, 2026',
+    updatedDate: 'July 6, 2026',
+    readTime: '5 min read',
+    featured: false,
+    coverImage: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80',
+    tags: ['College Student', 'Internship', 'Resume Format'],
+    author: {
+      name: 'ResumeCraft Team',
+      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=100&q=80',
+      role: 'Career Expert'
+    },
+    content: [
+      {
+        type: 'paragraph',
+        text: 'college student resume format india . Agar aap college student hain aur internship dhoondh rahe hain, to ye 5 minute ki guide aapke bahut kaam aayegi.'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '1. Professional Summary'
+      },
+      {
+        type: 'paragraph',
+        text: 'Ek choti aur crisp summary likhein jisme aapke core interest aur goals clear ho.'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '2. Academic Projects'
+      },
+      {
+        type: 'paragraph',
+        text: 'College me kiye gaye projects ka zikra karein. Ye aapka real-world experience dikhata hai.'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '3. Extracurricular Activities'
+      },
+      {
+        type: 'paragraph',
+        text: 'Agar aap kisi college club ya society me hain to use apne resume me zarur include karein. Ye leadership aur teamwork skills ko highlight karta hai.'
       }
     ]
   }
