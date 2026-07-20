@@ -811,5 +811,81 @@ export const blogPosts = [
         text: 'Agar aap kisi college club ya society me hain to use apne resume me zarur include karein. Ye leadership aur teamwork skills ko highlight karta hai.'
       }
     ]
+  },
+  {
+    slug: 'top-5-skills-for-freshers-in-2026',
+    title: 'Top 5 Skills Every Fresher Needs in 2026 to Get Hired',
+    description: '2026 mein IT aur non-IT jobs ke liye kaunsi skills sabse zaroori hain? Janiye is detail guide mein.',
+    category: 'Career Advice',
+    publishDate: 'July 20, 2026',
+    updatedDate: 'July 20, 2026',
+    readTime: '6 min read',
+    featured: true,
+    coverImage: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80',
+    tags: ['Freshers', 'Skills 2026', 'Career Growth', 'Jobs'],
+    author: {
+      name: 'ResumeCraft Team',
+      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=100&q=80',
+      role: 'Career Expert'
+    },
+    content: [
+      {
+        type: 'paragraph',
+        text: 'Doston, 2026 aa chuka hai aur job market bilkul badal gaya hai. Agar aap ek fresher hain aur college pass out hone wale hain, to sirf degree se kaam nahi chalega. AI aur automation ke is zamane mein, employers aisi skills dhundh rahe hain jo aapko ek "plug-and-play" employee banaye. Aaiye dekhte hain wo top 5 skills jo aapke resume me 2026 me zaroor honi chahiye.'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '1. Artificial Intelligence & Prompt Engineering (AI Tools)'
+      },
+      {
+        type: 'paragraph',
+        text: 'Aaj kal har company apne kaam me AI tools jaise ChatGPT, Gemini, aur Claude ka use kar rahi hai. Agar aapko in tools se sahi output nikalna aata hai (Prompt Engineering), to ye aapki productivity 10x badha sakta hai. Ise apne resume me "AI & Prompt Engineering" ke naam se zaroor add karein.'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '2. Cloud Computing Basics'
+      },
+      {
+        type: 'paragraph',
+        text: 'Ab koi bhi company local servers nahi use karti. Sab kuch cloud par hai (AWS, Google Cloud, ya Azure). Agar aap IT background se hain, to Cloud ka basic idea (jaise AWS S3, EC2, ya Firebase) aapko baaki freshers se bahut aage khada kar dega.'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '3. Data Literacy & Basic Analytics'
+      },
+      {
+        type: 'paragraph',
+        text: 'Har decision ab data-driven hota hai. Aap chahe marketing me ho, HR me ho ya phir development me, aapko basic data samajhna aana chahiye. Excel, Google Analytics ya thodi bohot SQL aana 2026 me ek bohot badi advantage hai.'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '4. Adaptability aur Continuous Learning'
+      },
+      {
+        type: 'paragraph',
+        text: 'Market itni tezi se badal raha hai ki aaj seekhi hui cheez kal purani ho sakti hai. Isliye HR interview me aapki "Adaptability" check karte hain. Resume me likhne ke saath-saath interview me batao ki aapne naye tools kitni jaldi seekhe hain.'
+      },
+      {
+        type: 'heading',
+        level: 2,
+        text: '5. Advanced Communication Skills'
+      },
+      {
+        type: 'paragraph',
+        text: 'Sirf English bolna communication nahi hai. Remote work aur hybrid models me email likhna, slack/teams par update dena, aur virtual meetings me point explain karna sabse zaroori skill ban chuka hai. Clear aur concise communication 2026 ka sabse bada game-changer hai.'
+      },
+      {
+        type: 'highlight',
+        text: '💡 Pro Tip: In skills ko apne resume me bas "list" mat karein, balki projects ya internship ke "Experience" section me dikhaye ki aapne inhe use kaise kiya hai. Isse ATS score bhi badhega aur recruiter pe impression bhi!'
+      },
+      {
+        type: 'paragraph',
+        text: 'Agar aap apne resume me in skills ko sahi se place karna chahte hain, to ResumeCraft.co.in ke free AI resume builder ka use karein!'
+      }
+    ]
   }
 ];
