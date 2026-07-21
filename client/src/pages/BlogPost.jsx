@@ -152,7 +152,7 @@ const BlogPost = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#d2b48c]/30 backdrop-blur-xl border border-white/20 dark:bg-[#d2b48c]/10 pt-16 pb-24 transition-colors duration-300">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 pt-16 pb-24 transition-colors duration-300">
             {/* SEO Tag Integrator */}
             <SEO 
                 title={post.title}
@@ -321,7 +321,7 @@ const BlogPost = () => {
 
                     {/* Middle: Content Blocks Rendering */}
                     <div className="lg:col-span-9 order-1 lg:order-2">
-                        <div className="prose prose-slate dark:prose-invert max-w-none prose-headings:tracking-tight prose-a:text-orange-500 prose-blockquote:border-orange-500 text-slate-700 dark:text-slate-350">
+                        <div className="prose prose-slate dark:prose-invert max-w-none prose-headings:tracking-tight prose-a:text-orange-500 prose-blockquote:border-orange-500 text-slate-800 dark:text-slate-200">
                             {post.content.map((block, idx) => {
                                 if (block.type === 'paragraph') {
                                     return (

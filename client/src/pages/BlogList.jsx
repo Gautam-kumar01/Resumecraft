@@ -45,7 +45,7 @@ const BlogList = () => {
     }, []);
 
     return (
-        <div className="min-h-screen bg-[#d2b48c]/30 backdrop-blur-xl border border-white/20 dark:bg-[#d2b48c]/10 pt-16 pb-24 transition-colors duration-300">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 pt-16 pb-24 transition-colors duration-300">
             <SEO 
                 title="Resume & Career Blog"
                 description="Expert tips, ATS optimization templates, LinkedIn branding strategies, and career guides to help you land your dream job."
