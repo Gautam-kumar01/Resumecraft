@@ -152,7 +152,7 @@ const BlogPost = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 pt-16 pb-24 transition-colors duration-300">
+        <div className="min-h-screen bg-stone-50 dark:bg-stone-900 pt-16 pb-24 transition-colors duration-300">
             {/* SEO Tag Integrator */}
             <SEO 
                 title={post.title}
@@ -185,9 +185,9 @@ const BlogPost = () => {
                 <div className="mb-10 pt-8">
                     <Link 
                         to="/blog"
-                        className="inline-flex items-center space-x-2 text-sm font-bold text-slate-500 hover:text-orange-500 transition-colors group"
+                        className="inline-flex items-center space-x-2 text-sm font-bold text-stone-500 hover:text-orange-500 transition-colors group"
                     >
-                        <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+                        <ArrowLeft className="h-4 w-4 group-hover:-transtone-x-1 transition-transform" />
                         <span>Back to Blog</span>
                     </Link>
                 </div>
@@ -198,29 +198,29 @@ const BlogPost = () => {
                         {post.category}
                     </span>
                     
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-6 leading-tight tracking-tight max-w-3xl mx-auto">
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-stone-900 dark:text-white mb-6 leading-tight tracking-tight max-w-3xl mx-auto">
                         {post.title}
                     </h1>
 
-                    <p className="text-base sm:text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto mb-8 leading-relaxed">
+                    <p className="text-base sm:text-lg text-stone-500 dark:text-stone-400 max-w-2xl mx-auto mb-8 leading-relaxed">
                         {post.description}
                     </p>
 
                     {/* Author & Meta details */}
-                    <div className="flex flex-wrap items-center justify-center gap-6 pb-8 border-b border-slate-100 dark:border-slate-800">
+                    <div className="flex flex-wrap items-center justify-center gap-6 pb-8 border-b border-stone-100 dark:border-stone-800">
                         <div className="flex items-center space-x-3 text-left">
                             <img 
                                 src={post.author.avatar} 
                                 alt={post.author.name}
-                                className="h-11 w-11 rounded-full object-cover ring-2 ring-slate-100 dark:ring-slate-700" 
+                                className="h-11 w-11 rounded-full object-cover ring-2 ring-stone-100 dark:ring-stone-700" 
                             />
                             <div>
-                                <p className="text-sm font-bold text-slate-900 dark:text-white">{post.author.name}</p>
-                                <p className="text-xs text-slate-400">{post.author.role}</p>
+                                <p className="text-sm font-bold text-stone-900 dark:text-white">{post.author.name}</p>
+                                <p className="text-xs text-stone-400">{post.author.role}</p>
                             </div>
                         </div>
 
-                        <div className="flex items-center space-x-4 text-xs font-bold text-slate-400">
+                        <div className="flex items-center space-x-4 text-xs font-bold text-stone-400">
                             <span className="flex items-center space-x-1">
                                 <Calendar className="h-3.5 w-3.5" />
                                 <span>Published: {post.publishDate}</span>
@@ -253,8 +253,8 @@ const BlogPost = () => {
                         
                         {/* Table of Contents */}
                         {headings.length > 0 && (
-                            <div className="bg-white dark:bg-slate-800/50 rounded-2xl p-6 border border-slate-100 dark:border-slate-800/80">
-                                <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4 flex items-center gap-1.5">
+                            <div className="bg-white dark:bg-stone-800/50 rounded-2xl p-6 border border-stone-100 dark:border-stone-800/80">
+                                <h3 className="text-xs font-black uppercase tracking-widest text-stone-400 mb-4 flex items-center gap-1.5">
                                     <BookOpen className="h-3.5 w-3.5 text-orange-500" />
                                     On This Page
                                 </h3>
@@ -264,7 +264,7 @@ const BlogPost = () => {
                                         <a 
                                             key={heading.id} 
                                             href={`#${heading.id}`}
-                                            className="block text-xs font-bold text-slate-500 hover:text-orange-500 dark:text-slate-400 dark:hover:text-orange-400 transition-colors leading-relaxed"
+                                            className="block text-xs font-bold text-stone-500 hover:text-orange-500 dark:text-stone-400 dark:hover:text-orange-400 transition-colors leading-relaxed"
                                             onClick={(e) => {
                                                 e.preventDefault();
                                                 document.getElementById(heading.id)?.scrollIntoView({ behavior: 'smooth' });
@@ -278,8 +278,8 @@ const BlogPost = () => {
                         )}
 
                         {/* Social Shares */}
-                        <div className="bg-white dark:bg-slate-800/50 rounded-2xl p-6 border border-slate-100 dark:border-slate-800/80">
-                            <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 mb-4 flex items-center gap-1.5">
+                        <div className="bg-white dark:bg-stone-800/50 rounded-2xl p-6 border border-stone-100 dark:border-stone-800/80">
+                            <h3 className="text-xs font-black uppercase tracking-widest text-stone-400 mb-4 flex items-center gap-1.5">
                                 <Share2 className="h-3.5 w-3.5 text-orange-500" />
                                 Share Article
                             </h3>
@@ -289,7 +289,7 @@ const BlogPost = () => {
                                     href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(currentUrl)}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="p-3 bg-slate-50 hover:bg-orange-50 hover:text-orange-500 dark:bg-slate-800 dark:hover:bg-orange-950/20 dark:hover:text-orange-400 border border-slate-100 dark:border-slate-700 rounded-xl text-slate-400 transition-colors flex-grow flex justify-center"
+                                    className="p-3 bg-stone-50 hover:bg-orange-50 hover:text-orange-500 dark:bg-stone-800 dark:hover:bg-orange-950/20 dark:hover:text-orange-400 border border-stone-100 dark:border-stone-700 rounded-xl text-stone-400 transition-colors flex-grow flex justify-center"
                                     aria-label="Share on LinkedIn"
                                 >
                                     <Linkedin className="h-4 w-4" />
@@ -298,19 +298,19 @@ const BlogPost = () => {
                                     href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(currentUrl)}&text=${encodeURIComponent(post.title)}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="p-3 bg-slate-50 hover:bg-orange-50 hover:text-orange-500 dark:bg-slate-800 dark:hover:bg-orange-950/20 dark:hover:text-orange-400 border border-slate-100 dark:border-slate-700 rounded-xl text-slate-400 transition-colors flex-grow flex justify-center"
+                                    className="p-3 bg-stone-50 hover:bg-orange-50 hover:text-orange-500 dark:bg-stone-800 dark:hover:bg-orange-950/20 dark:hover:text-orange-400 border border-stone-100 dark:border-stone-700 rounded-xl text-stone-400 transition-colors flex-grow flex justify-center"
                                     aria-label="Share on Twitter"
                                 >
                                     <Twitter className="h-4 w-4" />
                                 </a>
                                 <button 
                                     onClick={handleCopyLink}
-                                    className="p-3 bg-slate-50 hover:bg-orange-50 hover:text-orange-500 dark:bg-slate-800 dark:hover:bg-orange-950/20 dark:hover:text-orange-400 border border-slate-100 dark:border-slate-700 rounded-xl text-slate-400 transition-colors flex-grow flex justify-center relative"
+                                    className="p-3 bg-stone-50 hover:bg-orange-50 hover:text-orange-500 dark:bg-stone-800 dark:hover:bg-orange-950/20 dark:hover:text-orange-400 border border-stone-100 dark:border-stone-700 rounded-xl text-stone-400 transition-colors flex-grow flex justify-center relative"
                                     aria-label="Copy Link"
                                 >
                                     {copied ? <Check className="h-4 w-4 text-green-500" /> : <Link2 className="h-4 w-4" />}
                                     {copied && (
-                                        <span className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-green-500 text-white text-[9px] font-black rounded shadow-md">
+                                        <span className="absolute -top-8 left-1/2 -transtone-x-1/2 px-2 py-1 bg-green-500 text-white text-[9px] font-black rounded shadow-md">
                                             Copied
                                         </span>
                                     )}
@@ -321,7 +321,7 @@ const BlogPost = () => {
 
                     {/* Middle: Content Blocks Rendering */}
                     <div className="lg:col-span-9 order-1 lg:order-2">
-                        <div className="prose prose-slate dark:prose-invert max-w-none prose-headings:tracking-tight prose-a:text-orange-500 prose-blockquote:border-orange-500 text-slate-800 dark:text-slate-200">
+                        <div className="prose prose-stone dark:prose-invert max-w-none prose-headings:tracking-tight prose-a:text-orange-500 prose-blockquote:border-orange-500 text-stone-800 dark:text-stone-200">
                             {post.content.map((block, idx) => {
                                 if (block.type === 'paragraph') {
                                     return (
@@ -336,7 +336,7 @@ const BlogPost = () => {
                                         <h2 
                                             key={idx} 
                                             id={id}
-                                            className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mt-12 mb-6 scroll-mt-24 tracking-tight leading-snug"
+                                            className="text-2xl sm:text-3xl font-black text-stone-900 dark:text-white mt-12 mb-6 scroll-mt-24 tracking-tight leading-snug"
                                         >
                                             {block.text}
                                         </h2>
@@ -351,7 +351,7 @@ const BlogPost = () => {
                                                 return (
                                                     <li key={itemIdx} className="text-base sm:text-lg leading-relaxed">
                                                         {parts.map((part, partIdx) => 
-                                                            partIdx % 2 === 1 ? <strong key={partIdx} className="font-bold text-slate-900 dark:text-white">{part}</strong> : part
+                                                            partIdx % 2 === 1 ? <strong key={partIdx} className="font-bold text-stone-900 dark:text-white">{part}</strong> : part
                                                         )}
                                                     </li>
                                                 );
@@ -361,10 +361,10 @@ const BlogPost = () => {
                                 }
                                 if (block.type === 'quote') {
                                     return (
-                                        <blockquote key={idx} className="border-l-4 border-orange-500 pl-6 italic my-8 text-slate-600 dark:text-slate-400">
+                                        <blockquote key={idx} className="border-l-4 border-orange-500 pl-6 italic my-8 text-stone-600 dark:text-stone-400">
                                             <p className="text-lg leading-relaxed mb-2">"{block.text}"</p>
                                             {block.author && (
-                                                <cite className="text-xs font-bold not-italic text-slate-400 dark:text-slate-500">— {block.author}</cite>
+                                                <cite className="text-xs font-bold not-italic text-stone-400 dark:text-stone-500">— {block.author}</cite>
                                             )}
                                         </blockquote>
                                     );
@@ -383,16 +383,16 @@ const BlogPost = () => {
                         </div>
 
                         {/* Prev / Next Article Navigation */}
-                        <div className="flex flex-col sm:flex-row items-stretch gap-4 mt-16 pt-8 border-t border-slate-100 dark:border-slate-800">
+                        <div className="flex flex-col sm:flex-row items-stretch gap-4 mt-16 pt-8 border-t border-stone-100 dark:border-stone-800">
                             {prevPost ? (
                                 <Link 
                                     to={`/blog/${prevPost.slug}`}
-                                    className="flex-1 flex gap-4 p-5 bg-white dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 text-left hover:border-orange-500 transition-colors group"
+                                    className="flex-1 flex gap-4 p-5 bg-white dark:bg-stone-800/50 rounded-2xl border border-stone-100 dark:border-stone-800 text-left hover:border-orange-500 transition-colors group"
                                 >
-                                    <ChevronLeft className="h-5 w-5 text-slate-400 group-hover:text-orange-500 shrink-0 mt-0.5" />
+                                    <ChevronLeft className="h-5 w-5 text-stone-400 group-hover:text-orange-500 shrink-0 mt-0.5" />
                                     <div>
-                                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-1">Previous Article</span>
-                                        <span className="text-sm font-bold text-slate-900 dark:text-white line-clamp-2 leading-snug group-hover:text-orange-500 transition-colors">
+                                        <span className="text-[10px] font-black text-stone-400 uppercase tracking-wider block mb-1">Previous Article</span>
+                                        <span className="text-sm font-bold text-stone-900 dark:text-white line-clamp-2 leading-snug group-hover:text-orange-500 transition-colors">
                                             {prevPost.title}
                                         </span>
                                     </div>
@@ -402,15 +402,15 @@ const BlogPost = () => {
                             {nextPost ? (
                                 <Link 
                                     to={`/blog/${nextPost.slug}`}
-                                    className="flex-1 flex gap-4 p-5 bg-white dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 text-right justify-end hover:border-orange-500 transition-colors group"
+                                    className="flex-1 flex gap-4 p-5 bg-white dark:bg-stone-800/50 rounded-2xl border border-stone-100 dark:border-stone-800 text-right justify-end hover:border-orange-500 transition-colors group"
                                 >
                                     <div>
-                                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider block mb-1">Next Article</span>
-                                        <span className="text-sm font-bold text-slate-900 dark:text-white line-clamp-2 leading-snug group-hover:text-orange-500 transition-colors">
+                                        <span className="text-[10px] font-black text-stone-400 uppercase tracking-wider block mb-1">Next Article</span>
+                                        <span className="text-sm font-bold text-stone-900 dark:text-white line-clamp-2 leading-snug group-hover:text-orange-500 transition-colors">
                                             {nextPost.title}
                                         </span>
                                     </div>
-                                    <ChevronRight className="h-5 w-5 text-slate-400 group-hover:text-orange-500 shrink-0 mt-0.5" />
+                                    <ChevronRight className="h-5 w-5 text-stone-400 group-hover:text-orange-500 shrink-0 mt-0.5" />
                                 </Link>
                             ) : <div className="flex-1 hidden sm:block"></div>}
                         </div>
