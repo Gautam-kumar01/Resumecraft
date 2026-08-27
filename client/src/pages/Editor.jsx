@@ -50,7 +50,8 @@ const templateOptions = [
     { id: 'visual', name: 'High-Impact', desc: 'Creative Sidebar' },
     { id: 'elegant', name: 'Elegant', desc: 'Classic Serif' },
     { id: 'government', name: 'Formal', desc: 'Strict Standard' },
-    { id: 'internship', name: 'Academic', desc: 'Education Focus' }
+    { id: 'internship', name: 'Academic', desc: 'Education Focus' },
+    { id: 'aurora', name: 'Aurora', desc: 'Editorial Modern' }
 ];
 
 const mobileTabs = [
@@ -76,10 +77,79 @@ const waitForImages = async (element) => {
         if (img.complete) return Promise.resolve();
 
         return new Promise((resolve) => {
-            img.onload = resolve;
-            img.onerror = resolve;
+            const finish = () => {
+                img.removeEventListener('load', finish);
+                img.removeEventListener('error', finish);
+                resolve();
+            };
+            img.addEventListener('load', finish, { once: true });
+            img.addEventListener('error', finish, { once: true });
         });
     }));
+};
+
+const downloadPdfBlob = (pdf, filename) => {
+    const blob = pdf.output('blob');
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = filename;
+    anchor.rel = 'noopener';
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+};
+
+const legacyColorContext = typeof document !== 'undefined'
+    ? document.createElement('canvas').getContext('2d')
+    : null;
+
+const normalizeLegacyCssColors = (value) => {
+    if (!value || !/(oklab|oklch)/i.test(value) || !legacyColorContext) return value;
+
+    const withoutModernInterpolation = value.replace(/\bin\s+(?:oklab|oklch)\b/gi, '');
+
+    return withoutModernInterpolation.replace(/(?:oklab|oklch)\([^)]*\)/gi, (modernColor) => {
+        legacyColorContext.fillStyle = '#000000';
+        legacyColorContext.fillStyle = modernColor;
+        const normalized = legacyColorContext.fillStyle;
+        return /oklab|oklch/i.test(normalized) ? 'transparent' : normalized;
+    });
+};
+
+const sanitizeCloneColors = (element) => {
+    const colorProperties = [
+        'color',
+        'backgroundColor',
+        'backgroundImage',
+        'borderTopColor',
+        'borderRightColor',
+        'borderBottomColor',
+        'borderLeftColor',
+        'outlineColor',
+        'textDecorationColor',
+        'columnRuleColor'
+    ];
+
+    const computedStyle = window.getComputedStyle(element);
+    colorProperties.forEach((property) => {
+        const currentValue = computedStyle[property];
+        const normalizedValue = normalizeLegacyCssColors(currentValue);
+        if (normalizedValue && normalizedValue !== currentValue) {
+            element.style[property] = normalizedValue;
+        }
+    });
+
+    for (let index = 0; index < computedStyle.length; index += 1) {
+        const property = computedStyle[index];
+        if (!property.startsWith('--')) continue;
+        const currentValue = computedStyle.getPropertyValue(property);
+        const normalizedValue = normalizeLegacyCssColors(currentValue);
+        if (normalizedValue && normalizedValue !== currentValue) {
+            element.style.setProperty(property, normalizedValue);
+        }
+    }
 };
 
 const isDefaultResumeTitle = (title) => title?.trim().toLowerCase() === 'untitled resume';
@@ -247,76 +317,80 @@ const Editor = () => {
             const A4_W = 794;
             offscreen = document.createElement('div');
             offscreen.style.cssText = [
-                'position:fixed', 'top:0', 'left:-9999px', `width:${A4_W}px`,
-                'background:#fff', 'z-index:-9999', 'transform:none', 'overflow:visible',
+                'position:absolute',
+                'top:0',
+                'left:-10000px',
+                `width:${A4_W}px`,
+                'min-height:1px',
+                'background:#fff',
+                'opacity:1',
+                'pointer-events:none',
+                'z-index:2147483647',
+                'transform:none',
+                'overflow:visible',
             ].join(';');
             document.body.appendChild(offscreen);
 
             /** @type {HTMLElement} */
-            const clone = (sourceEl.cloneNode(true));
+            const clone = sourceEl.cloneNode(true);
+            offscreen.appendChild(clone);
             [clone, ...clone.querySelectorAll('*')].forEach(/** @type {any} */ (el) => {
-                if (el.style) {
-                    el.style.transform = 'none';
-                    el.style.transition = 'none';
-                    el.style.animation = 'none';
-                    if (window.getComputedStyle(el).letterSpacing !== 'normal') {
-                        el.style.letterSpacing = 'normal';
-                    }
-                    if (window.getComputedStyle(el).textAlign === 'justify') {
-                        el.style.textAlign = 'left';
-                    }
+                if (!el.style) return;
+                el.style.transform = 'none';
+                el.style.transition = 'none';
+                el.style.animation = 'none';
+                el.style.boxShadow = 'none';
+                if (window.getComputedStyle(el).letterSpacing !== 'normal') {
+                    el.style.letterSpacing = 'normal';
                 }
+                if (window.getComputedStyle(el).textAlign === 'justify') {
+                    el.style.textAlign = 'left';
+                }
+                sanitizeCloneColors(el);
             });
             clone.style.width = `${A4_W}px`;
-            clone.style.minHeight = 'auto';
-            clone.style.boxShadow = 'none';
+            clone.style.height = 'auto';
+            clone.style.minHeight = '1123px';
             clone.style.margin = '0';
             clone.style.padding = '0';
-            offscreen.appendChild(clone);
+            clone.style.overflow = 'visible';
+            clone.style.visibility = 'visible';
 
             await document.fonts?.ready;
             await waitForImages(clone);
-            await new Promise(r => setTimeout(r, 300));
+            await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
 
-            const canvas = await html2canvas(offscreen, {
-                scale: 4, // Higher resolution for crisp text
+            const contentHeight = Math.max(clone.scrollHeight, clone.offsetHeight, 1123);
+            const canvas = await html2canvas(clone, {
+                scale: Math.min(3, Math.max(2, window.devicePixelRatio || 2)),
                 useCORS: true,
+                allowTaint: false,
                 backgroundColor: '#ffffff',
                 logging: false,
                 width: A4_W,
-                height: offscreen.scrollHeight,
-                windowWidth: 1400, 
+                height: contentHeight,
+                windowWidth: A4_W,
+                windowHeight: contentHeight,
                 scrollX: 0,
                 scrollY: 0,
             });
 
-            offscreen.remove();
-            offscreen = null;
-
-            const imgData = canvas.toDataURL('image/jpeg', 0.98);
-            const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-
+            const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true });
             const pageW = pdf.internal.pageSize.getWidth();
             const pageH = pdf.internal.pageSize.getHeight();
-            let imgH  = (canvas.height / canvas.width) * pageW;
+            const imageHeight = (canvas.height / canvas.width) * pageW;
+            const imageData = canvas.toDataURL('image/jpeg', 0.96);
+            const pageCount = Math.max(1, Math.ceil(imageHeight / pageH));
 
-            if (imgH > pageH && imgH < pageH * 1.3) {
-                pdf.addImage(imgData, 'JPEG', 0, 0, pageW, pageH, '', 'FAST');
-            } else {
-                let remaining = imgH;
-                let yOffset = 0;
-                while (remaining > 0) {
-                    if (yOffset > 0) pdf.addPage();
-                    pdf.addImage(imgData, 'JPEG', 0, -yOffset, pageW, imgH, '', 'FAST');
-                    yOffset += pageH;
-                    remaining -= pageH;
-                }
+            for (let page = 0; page < pageCount; page += 1) {
+                if (page > 0) pdf.addPage();
+                pdf.addImage(imageData, 'JPEG', 0, -(page * pageH), pageW, imageHeight, undefined, 'FAST');
             }
 
-            pdf.save(getPdfFileName(resume.title));
+            downloadPdfBlob(pdf, getPdfFileName(resume.title));
         } catch (err) {
             console.error('PDF Export Error:', err);
-            alert(`Download failed: ${err.message}`);
+            alert(`Download failed: ${err.message || 'Unable to generate the PDF.'}`);
         } finally {
             offscreen?.remove();
             setDownloading(false);

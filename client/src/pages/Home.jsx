@@ -22,6 +22,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import FeatureShowcase from '../components/FeatureShowcase';
 import OptimizedImage from '../components/OptimizedImage';
 
+const MotionDiv = motion.div;
+
 const Home = () => {
     const navigate = useNavigate();
     const [showcaseOpen, setShowcaseOpen] = useState(false);
@@ -106,7 +108,7 @@ const Home = () => {
     ];
 
     return (
-        <motion.div 
+        <MotionDiv
             initial={{ opacity: 0, rotateY: 10, perspective: 1000 }}
             animate={{ opacity: 1, rotateY: 0 }}
             transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
@@ -180,90 +182,72 @@ const Home = () => {
                 ]
             })}} />
             {/* Hero Section */}
-            <section className="relative pt-20 pb-16 lg:pt-32 lg:pb-24 overflow-hidden">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                    <div className="grid lg:grid-cols-2 gap-12 items-center">
-                        <div>
-                            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-orange-50 border border-orange-100 text-orange-600 font-medium text-sm mb-6">
-                                <Award className="h-4 w-4" />
-                                <span>#1 Resume Making Online Tool</span>
-                            </div>
-                            <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-slate-900 leading-[1.1] mb-6 tracking-tight">
-                                Free Online <br />
-                                <span className="bg-gradient-to-r from-orange-500 via-orange-400 to-orange-600 bg-clip-text text-transparent">
-                                    Resume Builder.
-                                </span>
-                            </h1>
-                            <p className="text-lg md:text-xl text-slate-600 mb-10 max-w-lg leading-relaxed font-medium">
-                                Experience the easiest <strong>resume making online</strong>. Use our <strong>AI resume builder</strong> with recruiter-approved templates to create your professional CV in minutes.
-                            </p>
-                            <div className="flex flex-col sm:flex-row flex-wrap gap-4 relative z-30">
-                                <button
-                                    onClick={handleCreateNew}
-                                    className="px-8 py-4 bg-slate-900 text-white rounded-xl font-bold text-lg hover:bg-slate-800 active:scale-[0.98] transition-all shadow-xl shadow-slate-900/20 flex items-center justify-center group touch-manipulation"
-                                >
-                                    Create new resume
-                                    <ChevronRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                                </button>
-                                <button
-                                    onClick={handleCreateNew}
-                                    className="px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-bold text-lg hover:from-orange-600 hover:to-orange-700 active:scale-[0.98] transition-all shadow-xl shadow-orange-500/20 flex items-center justify-center group touch-manipulation"
-                                >
-                                    <Sparkles className="mr-2 h-5 w-5" />
-                                    Build with AI
-                                </button>
-                                <Link
-                                    to="/templates"
-                                    className="px-8 py-4 bg-white text-slate-900 border-2 border-slate-200 rounded-xl font-bold text-lg hover:bg-slate-50 active:scale-[0.98] transition-all flex items-center justify-center touch-manipulation"
-                                >
-                                    Choose a template
-                                </Link>
-                            </div>
+            <section className="relative isolate overflow-hidden bg-slate-950 py-16 text-white sm:py-20 lg:py-28">
+                <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_82%_18%,rgba(249,115,22,0.2),transparent_32%),radial-gradient(circle_at_15%_85%,rgba(59,130,246,0.16),transparent_28%)]" />
+                <div className="absolute -right-28 top-10 -z-10 h-80 w-80 rounded-full bg-orange-500/10 blur-3xl" />
+                <div className="absolute -bottom-32 left-1/3 -z-10 h-80 w-80 rounded-full bg-blue-500/10 blur-3xl" />
 
-                            {/* Trustpilot-style Rating */}
-                            <div className="mt-12 flex items-center space-x-4">
-                                <div className="flex items-center space-x-1">
-                                    {[1, 2, 3, 4, 5].map((s) => (
-                                        <div key={s} className="bg-emerald-500 p-1 rounded-sm">
-                                            <Star className="h-4 w-4 text-white fill-white" />
-                                        </div>
-                                    ))}
-                                </div>
-                                <div className="text-slate-900 font-bold">Excellent</div>
-                                <div className="text-slate-500 text-sm">
-                                    <span className="font-bold text-slate-700">4.5</span> out of 5 based on 15,884 reviews
-                                </div>
-                            </div>
+                <div className="mx-auto grid max-w-7xl items-center gap-14 px-4 sm:px-6 lg:grid-cols-[0.95fr_1.05fr] lg:px-8">
+                    <div className="relative z-10">
+                        <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-orange-300/20 bg-orange-400/10 px-3.5 py-2 text-xs font-bold uppercase tracking-[0.18em] text-orange-200">
+                            <Sparkles className="h-4 w-4" />
+                            <span>Build with confidence</span>
                         </div>
-
-                        <div className="relative">
-                            <div className="absolute -top-20 -right-20 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl animate-blob"></div>
-                            <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-orange-400/10 rounded-full blur-3xl animate-blob [animation-delay:2s]"></div>
-
-                            <motion.div
-                                whileHover={{ scale: 1.02, rotate: 0 }}
+                        <h1 className="max-w-3xl text-5xl font-black leading-[0.98] tracking-[-0.045em] text-white sm:text-6xl lg:text-[5.4rem]">
+                            Your next role starts with a better
+                            <span className="mt-2 block bg-gradient-to-r from-orange-300 via-orange-400 to-amber-200 bg-clip-text text-transparent">resume.</span>
+                        </h1>
+                        <p className="mt-7 max-w-xl text-base leading-8 text-slate-300 sm:text-lg">
+                            Create a polished, ATS-friendly resume in minutes with smart guidance, modern templates, and a live preview that keeps every detail recruiter-ready.
+                        </p>
+                        <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+                            <button
                                 onClick={handleCreateNew}
-                                className="relative glass-effect p-4 rounded-3xl border border-white shadow-2xl rotate-2 cursor-pointer transition-all duration-500 hidden sm:block"
+                                className="group inline-flex items-center justify-center rounded-2xl bg-orange-500 px-6 py-4 text-base font-black text-white shadow-[0_16px_40px_rgba(249,115,22,0.3)] transition-all hover:-translate-y-0.5 hover:bg-orange-400 active:translate-y-0"
                             >
-                                <OptimizedImage
-                                    src="/images/free-online-resume-maker.webp"
-                                    alt="Free AI Resume Builder Dashboard interface showing ATS-friendly resume templates"
-                                    className="rounded-2xl shadow-lg border border-slate-100"
-                                    priority={true}
-                                />
-                                <div className="absolute -left-10 bottom-20 bg-white p-4 rounded-2xl shadow-xl border border-slate-100 animate-bounce [animation-duration:3s] hidden lg:block">
-                                    <div className="flex items-center space-x-3">
-                                        <div className="bg-green-100 p-2 rounded-full">
-                                            <CheckCircle2 className="h-5 w-5 text-green-600" />
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-bold text-slate-900">ATS Friendly Score</p>
-                                            <p className="text-xs text-slate-500">98% Optimization Complete</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </motion.div>
+                                Create my resume
+                                <ChevronRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                            </button>
+                            <Link
+                                to="/templates"
+                                className="inline-flex items-center justify-center rounded-2xl border border-white/15 bg-white/10 px-6 py-4 text-base font-black text-white backdrop-blur transition-all hover:bg-white/15"
+                            >
+                                Explore templates
+                            </Link>
                         </div>
+                        <div className="mt-10 grid max-w-md grid-cols-3 gap-4 border-t border-white/10 pt-6">
+                            <div><p className="text-2xl font-black text-white">35+</p><p className="mt-1 text-xs font-semibold text-slate-400">Templates</p></div>
+                            <div><p className="text-2xl font-black text-white">15 min</p><p className="mt-1 text-xs font-semibold text-slate-400">To get started</p></div>
+                            <div><p className="text-2xl font-black text-white">100%</p><p className="mt-1 text-xs font-semibold text-slate-400">Free to build</p></div>
+                        </div>
+                    </div>
+
+                    <div className="relative mx-auto w-full max-w-2xl lg:ml-auto">
+                        <div className="absolute -inset-5 rounded-[2.5rem] bg-gradient-to-br from-orange-500/20 via-transparent to-blue-500/10 blur-2xl" />
+                        <MotionDiv
+                            whileHover={{ y: -6, rotate: 0 }}
+                            onClick={handleCreateNew}
+                            className="relative cursor-pointer rounded-[2rem] border border-white/15 bg-white/10 p-3 shadow-[0_30px_90px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-transform duration-500 sm:rotate-2 sm:p-4"
+                        >
+                            <div className="flex items-center gap-2 border-b border-white/10 px-2 pb-3">
+                                <span className="h-2.5 w-2.5 rounded-full bg-red-400" /><span className="h-2.5 w-2.5 rounded-full bg-amber-400" /><span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+                                <span className="ml-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">ResumeCraft workspace</span>
+                            </div>
+                            <OptimizedImage
+                                src="/images/free-online-resume-maker.webp"
+                                alt="ResumeCraft AI resume builder workspace with ATS-friendly templates"
+                                className="mt-3 rounded-2xl border border-slate-200/20 shadow-2xl"
+                                priority={true}
+                            />
+                            <div className="absolute -bottom-5 -left-5 hidden items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3 text-slate-900 shadow-2xl sm:flex lg:-left-12">
+                                <div className="rounded-xl bg-emerald-100 p-2"><CheckCircle2 className="h-5 w-5 text-emerald-600" /></div>
+                                <div><p className="text-xs font-black">ATS-ready structure</p><p className="mt-0.5 text-[11px] font-semibold text-slate-500">Built to be noticed</p></div>
+                            </div>
+                            <div className="absolute -right-4 top-16 hidden rounded-2xl border border-orange-100 bg-white px-4 py-3 text-slate-900 shadow-2xl sm:block lg:-right-8">
+                                <p className="text-[10px] font-black uppercase tracking-widest text-orange-500">Live preview</p>
+                                <p className="mt-1 text-xs font-bold">Every edit, instantly</p>
+                            </div>
+                        </MotionDiv>
                     </div>
                 </div>
             </section>
@@ -277,7 +261,7 @@ const Home = () => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
                         {mncCards.map((card, idx) => (
-                            <motion.div
+                            <MotionDiv
                                 key={idx}
                                 whileHover={{ y: -6, scale: 1.01 }}
                                 transition={{ type: 'spring', stiffness: 300, damping: 20 }}
@@ -317,7 +301,7 @@ const Home = () => {
                                         </div>
                                     </div>
                                 </div>
-                            </motion.div>
+                            </MotionDiv>
                         ))}
                     </div>
                 </div>
@@ -468,7 +452,7 @@ const Home = () => {
                                 textColor: "text-orange-600"
                             }
                         ].map((item, i) => (
-                            <motion.div
+                            <MotionDiv
                                 key={i}
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
@@ -503,7 +487,7 @@ const Home = () => {
 
                                 {/* Premium Ripple/Glow Border Effect */}
                                 <div className={`absolute inset-0 border-2 border-transparent group-hover:border-slate-100/50 rounded-[32px] transition-all duration-500`}></div>
-                            </motion.div>
+                            </MotionDiv>
                         ))}
                     </div>
                 </div>
@@ -581,7 +565,7 @@ const Home = () => {
                     </div>
                 </div>
             </section>
-        </motion.div>
+        </MotionDiv>
     );
 };
 

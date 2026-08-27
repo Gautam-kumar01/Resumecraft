@@ -10,6 +10,7 @@ import {
     Award,
     User
 } from 'lucide-react';
+import AuroraTemplate from './templates/AuroraTemplate';
 
 const ResumePreview = ({ resume }) => {
     if (!resume) return null;
@@ -33,7 +34,7 @@ const ResumePreview = ({ resume }) => {
                  <ul className="space-y-1 text-left list-disc pl-5 max-w-full min-w-0 break-words">
                      {points.map((point, i) => (
                          <li key={i} className={className}>
-                             <span>{point.trim().replace(/^[•\-\*]\s*/, '')}</span>
+                             <span>{point.trim().replace(/^[•*-]\s*/, '')}</span>
                          </li>
                      ))}
                  </ul>
@@ -716,8 +717,13 @@ const ResumePreview = ({ resume }) => {
         executive: ExecutiveTemplate
     };
 
-    const SelectedTemplate = templates[templateId] || ModernTemplate;
+    if (templateId === 'aurora') {
+        return <AuroraTemplate resume={resume} renderHTML={renderHTML} />;
+    }
 
+        const SelectedTemplate = templates[templateId] || ModernTemplate;
+    // The existing templates are render-only functions defined in this component.
+    // eslint-disable-next-line react-hooks/static-components
     return <SelectedTemplate />;
 };
 

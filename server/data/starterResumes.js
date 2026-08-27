@@ -455,6 +455,69 @@ const starterResumes = [
                 description: 'Supported senior bankers on 3 closed M&A transactions totaling $1.2B in value. Built comprehensive LBO models for prospective buy-side clients.'
             }
         ]
+    },
+    {
+        id: 'aurora-product-lead',
+        role: 'Product & Growth Lead',
+        title: 'Aurora Editorial Resume',
+        industry: 'Product & Strategy',
+        experienceLevel: 'Mid-Senior',
+        atsScore: 97,
+        targetCompanies: ['Stripe', 'Notion', 'Airbnb'],
+        description: 'A modern editorial layout that pairs a high-contrast header with a clean, ATS-friendly content structure.',
+        templateId: 'aurora',
+        imageUrl: 'https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=800&auto=format&fit=crop',
+        personalInfo: {
+            fullName: 'Maya Thompson',
+            email: 'maya.thompson@example.com',
+            phone: '+1 (415) 555-0148',
+            address: 'Austin, TX',
+            linkedin: 'linkedin.com/in/mayathompson',
+            website: 'mayathompson.co'
+        },
+        skills: [
+            'Product Strategy', 'Growth Experiments', 'User Research', 'SQL',
+            'Roadmapping', 'Stakeholder Leadership', 'Analytics', 'Go-to-Market'
+        ],
+        summary: 'Product and growth leader who turns customer insight into focused product strategy, measurable experiments, and durable business outcomes. Experienced in guiding cross-functional teams from discovery through launch.',
+        experience: [
+            {
+                company: 'Northstar Labs',
+                position: 'Senior Product Manager',
+                startDate: '2021-04',
+                endDate: 'Present',
+                description: 'Led a 12-person product and design pod to launch a self-serve onboarding experience that increased activation by 28%. Built an experimentation roadmap that connected customer insights to quarterly revenue goals.'
+            },
+            {
+                company: 'Bright Commerce',
+                position: 'Product Manager',
+                startDate: '2018-07',
+                endDate: '2021-03',
+                description: 'Delivered marketplace features across web and mobile, partnering with engineering, design, and marketing to improve repeat purchase rate by 19%.'
+            }
+        ],
+        education: [
+            {
+                school: 'University of Texas at Austin',
+                degree: 'B.B.A. in Marketing and Analytics',
+                startDate: '2014',
+                endDate: '2018'
+            }
+        ],
+        projects: [
+            {
+                name: 'Activation Playbook',
+                link: 'mayathompson.co/activation',
+                description: 'Created a reusable research and experiment framework for improving first-week product engagement.'
+            }
+        ],
+        certifications: [
+            {
+                name: 'Product Analytics Micro-Certification',
+                issuer: 'Product School',
+                date: '2023'
+            }
+        ]
     }
 ];
 
