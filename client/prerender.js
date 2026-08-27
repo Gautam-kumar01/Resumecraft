@@ -87,8 +87,9 @@ async function prerender() {
 
         await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: 'networkidle0' });
 
-        // Wait an extra second for Helmet to inject tags
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        // Helmet updates the head during the settled render; a short pause allows the
+        // final title/meta tags to commit without adding seconds per route.
+        await new Promise(resolve => setTimeout(resolve, 400));
 
         const html = await page.content();
 

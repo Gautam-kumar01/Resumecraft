@@ -377,6 +377,26 @@ const Home = () => {
                         ))}
                     </div>
                 </div>
+                <div className="mx-auto mt-14 max-w-5xl px-4 sm:px-6 lg:px-8">
+                    <div className="relative overflow-hidden rounded-[2rem] bg-slate-950 px-6 py-8 text-left shadow-[0_24px_60px_rgba(15,23,42,0.2)] sm:px-10 sm:py-9">
+                        <div className="absolute -right-16 -top-24 h-56 w-56 rounded-full bg-orange-500/20 blur-3xl" />
+                        <div className="relative flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+                            <div>
+                                <p className="mb-2 text-xs font-black uppercase tracking-[0.2em] text-orange-300">Your next step</p>
+                                <h3 className="text-2xl font-extrabold tracking-tight text-white sm:text-3xl">Turn your experience into your next opportunity.</h3>
+                                <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">Let AI shape your story, then refine every detail in a polished live editor.</p>
+                            </div>
+                            <button
+                                onClick={handleCreateNew}
+                                className="group inline-flex shrink-0 items-center justify-center rounded-2xl bg-orange-500 px-5 py-3.5 text-sm font-black text-white shadow-lg shadow-orange-500/20 transition-all hover:-translate-y-0.5 hover:bg-orange-400"
+                            >
+                                <Sparkles className="mr-2 h-4 w-4" />
+                                Create with AI
+                                <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             {/* 6 Features to boost your job search */}

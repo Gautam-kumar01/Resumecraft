@@ -88,6 +88,8 @@ const ensureDb = async (req, res, next) => {
   next();
 };
 
+// Presence tracking is anonymous and uses a short-lived MongoDB record per browser.
+app.use('/api/presence', ensureDb, require('./routes/presence'));
 app.use('/api/auth', ensureDb, require('./routes/auth'));
 app.use('/api/resumes', ensureDb, require('./routes/resume'));
 app.use('/api/cover-letters', ensureDb, require('./routes/coverLetter'));

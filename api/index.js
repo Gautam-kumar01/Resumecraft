@@ -56,6 +56,7 @@ const withDB = async (req, res, next) => {
     }
 };
 
+app.use('/api/presence', withDB, require('../server/routes/presence'));
 app.use('/api/auth', withDB, require('../server/routes/auth'));
 app.use('/api/resumes', withDB, require('../server/routes/resume'));
 app.use('/api/cover-letters', withDB, require('../server/routes/coverLetter'));
