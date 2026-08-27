@@ -225,6 +225,10 @@ const Editor = () => {
                     setLoading(false);
                 }
             } else {
+                const shouldOpenAiCoach = localStorage.getItem('resumecraft_open_ai_coach') === 'true'
+                    || new URLSearchParams(window.location.search).get('focus') === 'ai';
+                localStorage.removeItem('resumecraft_open_ai_coach');
+                setOpenSection(shouldOpenAiCoach ? 'ai' : 'personal');
                 const savedDraft = localStorage.getItem('guest_resume_draft');
                 if (savedDraft) {
                     try {
@@ -579,7 +583,7 @@ const Editor = () => {
                             placeholder="Add headline, e.g. Software Engineer"
                             value={isDefaultResumeTitle(resume.title) ? '' : resume.title}
                             onChange={(e) => setResume({ ...resume, title: e.target.value })}
-                            className="w-full bg-transparent text-2xl md:text-3xl font-black text-slate-900 border-none outline-none placeholder:text-slate-300"
+                            className="w-full bg-transparent text-xl md:text-2xl font-bold text-slate-900 border-none outline-none placeholder:text-slate-300"
                         />
                     </div>
 

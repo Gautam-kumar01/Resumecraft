@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Users } from 'lucide-react';
 import api from '../api/axios';
 
@@ -27,7 +28,10 @@ const getVisitorId = () => {
 };
 
 const ActiveUsersBadge = () => {
+    const location = useLocation();
     const [online, setOnline] = useState(null);
+    const isEditor = location.pathname.startsWith('/editor');
+    const positionClass = isEditor ? 'bottom-24 sm:bottom-24' : 'bottom-5';
 
     useEffect(() => {
         let active = true;
@@ -60,7 +64,7 @@ const ActiveUsersBadge = () => {
     if (online === null) return null;
 
     return (
-        <div className="fixed bottom-5 right-5 z-[70] hidden items-center gap-2 rounded-full border border-emerald-200/80 bg-white/95 px-3.5 py-2 text-xs font-bold text-slate-700 shadow-[0_12px_36px_rgba(15,23,42,0.14)] backdrop-blur sm:flex" aria-live="polite">
+        <div className={`fixed ${positionClass} right-5 z-[70] hidden items-center gap-2 rounded-full border border-emerald-200/80 bg-white/95 px-3.5 py-2 text-xs font-bold text-slate-700 shadow-[0_12px_36px_rgba(15,23,42,0.14)] backdrop-blur sm:flex`} aria-live="polite">
             <span className="relative flex h-2.5 w-2.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
                 <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />

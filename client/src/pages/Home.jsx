@@ -34,7 +34,12 @@ const Home = () => {
         setShowcaseOpen(true);
     };
 
-    const handleCreateNew = () => {
+    const handleCreateNew = ({ openAi = false } = {}) => {
+        if (openAi) {
+            localStorage.setItem('resumecraft_open_ai_coach', 'true');
+        } else {
+            localStorage.removeItem('resumecraft_open_ai_coach');
+        }
         const emptyData = {
             title: '',
             personalInfo: {
@@ -54,7 +59,11 @@ const Home = () => {
             templateId: 'modern'
         };
         localStorage.setItem('guest_resume_draft', JSON.stringify(emptyData));
-        navigate('/editor');
+        navigate(openAi ? '/editor?focus=ai' : '/editor');
+    };
+
+    const handleCreateWithAI = () => {
+        handleCreateNew({ openAi: true });
     };
 
     const handleBlueprintClick = (card) => {
@@ -115,8 +124,8 @@ const Home = () => {
             className="bg-white"
         >
             <SEO
-                title="Best Free Resume Maker Online | AI Resume Builder"
-                description="Use the #1 free AI resume builder to create ATS-friendly resumes and CVs. Expert-approved MNC formats, online CV maker, and professional resume generator."
+                title="Free AI Resume Builder | ATS-Friendly Resume Maker"
+                description="Create a professional, ATS-friendly resume online with ResumeCraft. Use AI guidance, modern templates, live editing, and reliable PDF download to prepare for your next job."
             />
             {/* FAQ JSON-LD Schema for Google AI Overview */}
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
@@ -193,24 +202,32 @@ const Home = () => {
                             <Sparkles className="h-4 w-4" />
                             <span>Build with confidence</span>
                         </div>
-                        <h1 className="max-w-3xl text-5xl font-black leading-[0.98] tracking-[-0.045em] text-white sm:text-6xl lg:text-[5.4rem]">
+                        <h1 className="max-w-3xl text-[2.65rem] font-extrabold leading-[1.02] tracking-[-0.035em] text-white sm:text-5xl lg:text-[4.25rem]">
                             Your next role starts with a better
                             <span className="mt-2 block bg-gradient-to-r from-orange-300 via-orange-400 to-amber-200 bg-clip-text text-transparent">resume.</span>
                         </h1>
-                        <p className="mt-7 max-w-xl text-base leading-8 text-slate-300 sm:text-lg">
+                        <p className="mt-7 max-w-xl text-[0.98rem] leading-7 text-slate-300 sm:text-base">
                             Create a polished, ATS-friendly resume in minutes with smart guidance, modern templates, and a live preview that keeps every detail recruiter-ready.
                         </p>
                         <div className="mt-9 flex flex-col gap-3 sm:flex-row">
                             <button
                                 onClick={handleCreateNew}
-                                className="group inline-flex items-center justify-center rounded-2xl bg-orange-500 px-6 py-4 text-base font-black text-white shadow-[0_16px_40px_rgba(249,115,22,0.3)] transition-all hover:-translate-y-0.5 hover:bg-orange-400 active:translate-y-0"
+                                className="group inline-flex items-center justify-center rounded-2xl bg-orange-500 px-5 py-3.5 text-sm font-extrabold text-white shadow-[0_16px_40px_rgba(249,115,22,0.3)] transition-all hover:-translate-y-0.5 hover:bg-orange-400 active:translate-y-0"
                             >
                                 Create my resume
                                 <ChevronRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                             </button>
+                            <button
+                                onClick={handleCreateWithAI}
+                                className="group inline-flex items-center justify-center rounded-2xl border border-orange-300/30 bg-orange-400/10 px-5 py-3.5 text-sm font-extrabold text-orange-100 backdrop-blur transition-all hover:-translate-y-0.5 hover:bg-orange-400/20"
+                            >
+                                <Sparkles className="mr-2 h-5 w-5 text-orange-300" />
+                                Create with AI
+                                <ChevronRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                            </button>
                             <Link
                                 to="/templates"
-                                className="inline-flex items-center justify-center rounded-2xl border border-white/15 bg-white/10 px-6 py-4 text-base font-black text-white backdrop-blur transition-all hover:bg-white/15"
+                                className="inline-flex items-center justify-center rounded-2xl border border-white/15 bg-white/10 px-5 py-3.5 text-sm font-extrabold text-white backdrop-blur transition-all hover:bg-white/15"
                             >
                                 Explore templates
                             </Link>
@@ -387,7 +404,7 @@ const Home = () => {
                                 <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">Let AI shape your story, then refine every detail in a polished live editor.</p>
                             </div>
                             <button
-                                onClick={handleCreateNew}
+                                onClick={handleCreateWithAI}
                                 className="group inline-flex shrink-0 items-center justify-center rounded-2xl bg-orange-500 px-5 py-3.5 text-sm font-black text-white shadow-lg shadow-orange-500/20 transition-all hover:-translate-y-0.5 hover:bg-orange-400"
                             >
                                 <Sparkles className="mr-2 h-4 w-4" />

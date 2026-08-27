@@ -11,21 +11,23 @@ const SEO = ({
     noindex = false
 }) => {
     const location = useLocation();
-    const siteTitle = "ResumeCraft – #1 Best Free Resume Maker Online 2026 | AI Resume Builder";
-    const defaultDescription = "Create professional, ATS-friendly resumes and cover letters in minutes with ResumeCraft. The top-rated free AI resume builder with MNC-ready templates and instant PDF download.";
-    const defaultKeywords = "resume build, resume making, resume maker, cv maker, resume, free resume builder, AI resume builder, CV maker online, ATS friendly resume, professional resume, job resume maker, online resume generator, free CV templates, MNC resume formats, fresher resume builder, experience resume maker, best resume builder 2026";
-    const siteUrl = "https://resumecraft.co.in/"; // Updating to a more likely current URL
+    const siteTitle = "Free AI Resume Builder | ATS-Friendly Resume Maker | ResumeCraft";
+    const defaultDescription = "Create a professional, ATS-friendly resume online with ResumeCraft. Use AI guidance, modern templates, live editing, and reliable PDF download to prepare for your next job.";
+    const defaultKeywords = "free AI resume builder, ATS-friendly resume maker, online CV maker, professional resume templates, resume PDF download, fresher resume builder, resume builder India";
+    const siteUrl = "https://resumecraft.co.in/";
     const defaultImage = "https://resumecraft.co.in/og-image.png";
 
     const metaTitle = title ? `${title} | ResumeCraft` : siteTitle;
     const metaDescription = description || defaultDescription;
     const metaKeywords = keywords || defaultKeywords;
     const metaImage = image || defaultImage;
-
-    // Dynamically get the current path if url is not explicitly provided
-    const activeUrl = url || (location && location.pathname !== '/' ? location.pathname : '');
-    const cleanUrl = activeUrl ? (activeUrl.startsWith('/') ? activeUrl.substring(1) : activeUrl) : '';
-    const metaUrl = `${siteUrl}${cleanUrl}`;
+    const pathname = location?.pathname || '/';
+    const isHomepage = pathname === '/';
+    const privateRoute = /^\/(login|register|dashboard|editor|forgot-password|reset-password|cover-letter-editor)(\/|$)/.test(pathname);
+    const shouldNoindex = noindex || privateRoute;
+    const metaUrl = url
+        ? (url.startsWith('http') ? url : new URL(url, siteUrl).toString())
+        : new URL(pathname, siteUrl).toString();
 
     return (
         <Helmet>
@@ -33,10 +35,10 @@ const SEO = ({
             <title>{metaTitle}</title>
             <meta name="description" content={metaDescription} />
             <meta name="keywords" content={metaKeywords} />
-            {noindex ? (
+            {shouldNoindex ? (
                 <meta name="robots" content="noindex, nofollow" />
             ) : (
-                <meta name="robots" content="index, follow, imageindex" />
+                <meta name="robots" content="index, follow, max-image-preview:large" />
             )}
             <link rel="canonical" href={metaUrl} />
 
@@ -49,6 +51,7 @@ const SEO = ({
             <meta property="og:image:width" content="1200" />
             <meta property="og:image:height" content="630" />
             <meta property="og:site_name" content="ResumeCraft" />
+            <meta property="og:locale" content="en_IN" />
 
             {/* Twitter */}
             <meta name="twitter:card" content="summary_large_image" />
@@ -56,42 +59,42 @@ const SEO = ({
             <meta name="twitter:description" content={metaDescription} />
             <meta name="twitter:image" content={metaImage} />
 
-            {/* Google Site Name Schema */}
-            <script type="application/ld+json">
+            {/* Site identity and application schema */}
+            {isHomepage && <script type="application/ld+json">
                 {JSON.stringify({
                     "@context": "https://schema.org",
-                    "@type": "WebSite",
-                    "name": "ResumeCraft",
-                    "alternateName": ["Resume Craft"],
-                    "url": siteUrl
+                    "@graph": [
+                        {
+                            "@type": "WebSite",
+                            "name": "ResumeCraft",
+                            "alternateName": ["Resume Craft"],
+                            "url": siteUrl
+                        },
+                        {
+                            "@type": "Organization",
+                            "name": "ResumeCraft",
+                            "url": siteUrl,
+                            "logo": `${siteUrl}logo.svg`
+                        },
+                        {
+                            "@type": "SoftwareApplication",
+                            "name": "ResumeCraft AI Resume Builder",
+                            "applicationCategory": "BusinessApplication",
+                            "operatingSystem": "Web",
+                            "url": siteUrl,
+                            "offers": {
+                                "@type": "Offer",
+                                "price": "0",
+                                "priceCurrency": "USD"
+                            },
+                            "description": defaultDescription
+                        }
+                    ]
                 })}
-            </script>
+            </script>}
 
-            {/* Schema.org JSON-LD for Software Application */}
-            <script type="application/ld+json">
-                {JSON.stringify({
-                    "@context": "https://schema.org",
-                    "@type": "SoftwareApplication",
-                    "name": "ResumeCraft",
-                    "applicationCategory": "BusinessApplication",
-                    "operatingSystem": "Web",
-                    "url": siteUrl,
-                    "offers": {
-                        "@type": "Offer",
-                        "price": "0",
-                        "priceCurrency": "USD"
-                    },
-                    "description": defaultDescription,
-                    "aggregateRating": {
-                        "@type": "AggregateRating",
-                        "ratingValue": "4.8",
-                        "ratingCount": "15884"
-                    }
-                })}
-            </script>
-
-            {/* Breadcrumb Schema */}
-            <script type="application/ld+json">
+            {/* Breadcrumb schema belongs on internal public pages, not the homepage or private screens. */}
+            {!isHomepage && !shouldNoindex && <script type="application/ld+json">
                 {JSON.stringify({
                     "@context": "https://schema.org",
                     "@type": "BreadcrumbList",
@@ -110,10 +113,10 @@ const SEO = ({
                         }
                     ]
                 })}
-            </script>
+            </script>}
 
             {/* ImageObject Schema */}
-            <script type="application/ld+json">
+            {!shouldNoindex && <script type="application/ld+json">
                 {JSON.stringify({
                     "@context": "https://schema.org",
                     "@type": "ImageObject",
@@ -121,7 +124,7 @@ const SEO = ({
                     "description": metaDescription,
                     "name": metaTitle
                 })}
-            </script>
+            </script>}
         </Helmet>
     );
 };
