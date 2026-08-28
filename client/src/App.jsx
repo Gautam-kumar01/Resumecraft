@@ -25,7 +25,6 @@ import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 import CookieConsent from './components/CookieConsent';
 import ScrollToTop from './components/ScrollToTop';
-import ActiveUsersBadge from './components/ActiveUsersBadge';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 import ResumeBuilderDashboard from './pages/ResumeBuilderDashboard';
@@ -95,7 +94,6 @@ function App() {
               </Routes>
             </main>
             <Footer />
-            <ActiveUsersBadge />
             <CookieConsent />
           </div>
         </AuthProvider>
