@@ -32,10 +32,12 @@ import ResumeBuilderDashboard from './pages/ResumeBuilderDashboard';
 import AtsResumeCheckerPreview from './pages/AtsResumeCheckerPreview';
 import FreeResumeTemplates from './pages/FreeResumeTemplates';
 import RoleTemplate from './pages/RoleTemplate';
+import GoogleAnalytics from './components/GoogleAnalytics';
 
 function App() {
   return (
     <Router>
+      <GoogleAnalytics />
       <ScrollToTop />
       <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || 'your-google-client-id'}>
         <AuthProvider>
