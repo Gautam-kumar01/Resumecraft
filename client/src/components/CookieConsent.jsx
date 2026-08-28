@@ -30,6 +30,7 @@ const CookieConsent = () => {
     const acceptCookies = () => {
         try {
             window.localStorage.setItem(CONSENT_KEY, 'accepted');
+            window.dispatchEvent(new Event('resumecraft:cookie-consent'));
         } catch {
             // Consent still closes for the current session if storage is blocked.
         }

@@ -18,7 +18,7 @@ const OptimizedImage = ({
         <div className={`relative overflow-hidden rounded-xl bg-slate-200 dark:bg-slate-800 ${className}`}>
             {/* Blur placeholder */}
             <div 
-                className={`absolute inset-0 bg-slate-200 dark:bg-slate-800 transition-opacity duration-700 ease-in-out ${isLoaded ? 'opacity-0' : 'opacity-100 animate-pulse'}`}
+                className={`absolute inset-0 bg-slate-200 dark:bg-slate-800 transition-opacity duration-700 ease-in-out ${priority || isLoaded ? 'opacity-0' : 'opacity-100 animate-pulse'}`}
             ></div>
             
             <img
@@ -27,9 +27,10 @@ const OptimizedImage = ({
                 width={width}
                 height={height}
                 loading={priority ? 'eager' : 'lazy'}
-                decoding={priority ? 'sync' : 'async'}
+                decoding="async"
+                fetchPriority={priority ? 'high' : 'low'}
                 onLoad={() => setIsLoaded(true)}
-                className={`w-full h-auto transition-opacity duration-700 ease-in-out ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+                className={`w-full h-auto transition-opacity duration-700 ease-in-out ${priority || isLoaded ? 'opacity-100' : 'opacity-0'}`}
             />
         </div>
     );

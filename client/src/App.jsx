@@ -1,36 +1,59 @@
 
+import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import ForgotPassword from './pages/ForgotPassword';
-import ResetPassword from './pages/ResetPassword';
-import Dashboard from './pages/Dashboard';
-import Editor from './pages/Editor';
-import PublicResume from './pages/PublicResume';
-import Templates from './pages/Templates';
-import CoverLetterTemplates from './pages/CoverLetterTemplates';
-import CoverLetterEditor from './pages/CoverLetterEditor';
-import Contact from './pages/Contact';
-import Terms from './pages/Terms';
-import Privacy from './pages/Privacy';
-import CookiePolicy from './pages/CookiePolicy';
+const Login = lazy(() => import('./pages/Login'));
+
+const Register = lazy(() => import('./pages/Register'));
+
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
+
+const ResetPassword = lazy(() => import('./pages/ResetPassword'));
+
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+
+const Editor = lazy(() => import('./pages/Editor'));
+
+const PublicResume = lazy(() => import('./pages/PublicResume'));
+
+const Templates = lazy(() => import('./pages/Templates'));
+
+const CoverLetterTemplates = lazy(() => import('./pages/CoverLetterTemplates'));
+
+const CoverLetterEditor = lazy(() => import('./pages/CoverLetterEditor'));
+
+const Contact = lazy(() => import('./pages/Contact'));
+
+const Terms = lazy(() => import('./pages/Terms'));
+
+const Privacy = lazy(() => import('./pages/Privacy'));
+
+const CookiePolicy = lazy(() => import('./pages/CookiePolicy'));
+
 import { AuthProvider } from './context/AuthContext';
-import Resource from './pages/Resource';
-import BlogList from './pages/BlogList';
-import BlogPost from './pages/BlogPost';
-import About from './pages/About';
+const Resource = lazy(() => import('./pages/Resource'));
+
+const BlogList = lazy(() => import('./pages/BlogList'));
+
+const BlogPost = lazy(() => import('./pages/BlogPost'));
+
+const About = lazy(() => import('./pages/About'));
+
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 import CookieConsent from './components/CookieConsent';
 import ScrollToTop from './components/ScrollToTop';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
-import ResumeBuilderDashboard from './pages/ResumeBuilderDashboard';
-import AtsResumeCheckerPreview from './pages/AtsResumeCheckerPreview';
-import FreeResumeTemplates from './pages/FreeResumeTemplates';
-import RoleTemplate from './pages/RoleTemplate';
+const ResumeBuilderDashboard = lazy(() => import('./pages/ResumeBuilderDashboard'));
+
+const AtsResumeCheckerPreview = lazy(() => import('./pages/AtsResumeCheckerPreview'));
+
+const FreeResumeTemplates = lazy(() => import('./pages/FreeResumeTemplates'));
+
+const RoleTemplate = lazy(() => import('./pages/RoleTemplate'));
+
 import GoogleAnalytics from './components/GoogleAnalytics';
 
 function App() {
@@ -50,7 +73,8 @@ function App() {
 
             <Navbar />
             <main className="relative z-10">
-              <Routes>
+              <Suspense fallback={null}>
+                <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
@@ -91,7 +115,8 @@ function App() {
                 <Route path="/blog" element={<BlogList />} />
                 <Route path="/blog/:slug" element={<BlogPost />} />
                 <Route path="/about" element={<About />} />
-              </Routes>
+                </Routes>
+              </Suspense>
             </main>
             <Footer />
             <CookieConsent />

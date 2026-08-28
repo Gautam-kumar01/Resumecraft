@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO';
 import {
@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import Logo from '../components/Logo';
 import { motion, AnimatePresence } from 'framer-motion';
-import FeatureShowcase from '../components/FeatureShowcase';
+const FeatureShowcase = lazy(() => import('../components/FeatureShowcase'));
 import OptimizedImage from '../components/OptimizedImage';
 
 const MotionDiv = motion.div;
@@ -253,6 +253,8 @@ const Home = () => {
                             <OptimizedImage
                                 src="/images/free-online-resume-maker.webp"
                                 alt="ResumeCraft AI resume builder workspace with ATS-friendly templates"
+                                width={1200}
+                                height={630}
                                 className="mt-3 rounded-2xl border border-slate-200/20 shadow-2xl"
                                 priority={true}
                             />
@@ -532,10 +534,12 @@ const Home = () => {
 
             <AnimatePresence>
                 {showcaseOpen && (
-                    <FeatureShowcase
+                    <Suspense fallback={null}>
+                        <FeatureShowcase
                         onClose={() => setShowcaseOpen(false)}
-                        initialFeature={activeFeature}
-                    />
+                            initialFeature={activeFeature}
+                        />
+                    </Suspense>
                 )}
             </AnimatePresence>
 
