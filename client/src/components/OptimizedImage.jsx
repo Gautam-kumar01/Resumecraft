@@ -30,6 +30,13 @@ const OptimizedImage = ({
                 decoding="async"
                 fetchPriority={priority ? 'high' : 'low'}
                 onLoad={() => setIsLoaded(true)}
+                onError={(event) => {
+                    const image = event.currentTarget;
+                    if (image.dataset.fallback === 'true') return;
+                    image.dataset.fallback = 'true';
+                    image.src = '/images/ai-resume-builder-dashboard.webp';
+                    setIsLoaded(true);
+                }}
                 className={`w-full h-auto transition-opacity duration-700 ease-in-out ${priority || isLoaded ? 'opacity-100' : 'opacity-0'}`}
             />
         </div>

@@ -32,7 +32,7 @@ const CoverLetterTemplates = () => {
                             role: 'Software Engineer',
                             industry: 'Technology',
                             description: 'A clean, impact-oriented cover letter template for software engineers.',
-                            imageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=800&auto=format&fit=crop',
+                            imageUrl: '/images/ai-resume-builder-dashboard.webp',
                             content: { title: 'Software Engineer Blueprint' }
                         }
                     ]);
@@ -46,7 +46,7 @@ const CoverLetterTemplates = () => {
                         role: 'Software Engineer',
                         industry: 'Technology',
                         description: 'A clean, impact-oriented cover letter template for software engineers.',
-                        imageUrl: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=800&auto=format&fit=crop',
+                        imageUrl: '/images/ai-resume-builder-dashboard.webp',
                         content: { title: 'Software Engineer Blueprint' }
                     }
                 ]);
@@ -58,10 +58,10 @@ const CoverLetterTemplates = () => {
         fetchStarters();
     }, []);
 
-    const useTemplate = async (template) => {
+    const handleUseTemplate = async (template) => {
         setCreating(template.id);
         try {
-            const { id, ...coverLetterData } = template;
+            const { ...coverLetterData } = template;
             const { data } = await api.post('/cover-letters', {
                 ...coverLetterData.content,
                 title: template.title || `${template.role} Cover Letter`
@@ -180,9 +180,15 @@ const CoverLetterTemplates = () => {
                     <div key={template.id} className="group glass-effect rounded-[2.5rem] border border-white/80 hover:border-orange-500/40 transition-all duration-500 hover:shadow-2xl overflow-hidden flex flex-col h-full">
                         <div className="h-48 relative overflow-hidden shrink-0">
                             <img
-                                src={template.imageUrl}
+                                src={template.imageUrl || '/images/ai-resume-builder-dashboard.webp'}
                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                                 alt={template.role}
+                                onError={(e) => {
+                                    if (e.currentTarget.dataset.fallback === 'true') return;
+                                    e.currentTarget.dataset.fallback = 'true';
+                                    e.currentTarget.src = '/images/ai-resume-builder-dashboard.webp';
+                                    e.currentTarget.className = 'w-full h-full object-cover opacity-50';
+                                }}
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent" />
                             <div className="absolute bottom-4 left-6">
@@ -199,7 +205,7 @@ const CoverLetterTemplates = () => {
                             </p>
 
                             <button
-                                onClick={() => useTemplate(template)}
+                                onClick={() => handleUseTemplate(template)}
                                 disabled={creating === template.id}
                                 className="mt-auto w-full flex items-center justify-center space-x-3 bg-slate-900 hover:bg-orange-500 text-white py-4 rounded-xl font-bold transition-all disabled:opacity-50"
                             >

@@ -33,8 +33,8 @@ const Templates = () => {
         fetchStarters();
     }, []);
 
-    const useTemplate = async (template) => {
-        const { id, targetCompanies, ...resumeData } = template;
+    const handleUseTemplate = async (template) => {
+        const { id: _templateId, ...resumeData } = template;
 
         if (!user) {
             // Save to local storage for guests
@@ -131,11 +131,13 @@ const Templates = () => {
                         {/* Visual Preview Side */}
                         <div className="md:w-[45%] h-64 md:h-auto p-0 relative overflow-hidden shrink-0">
                             <img
-                                src={template.imageUrl || 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop'}
+                                src={template.imageUrl || '/images/ai-resume-builder-dashboard.webp'}
                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-90 group-hover:opacity-100"
                                 alt={template.role}
                                 onError={(e) => {
-                                    e.currentTarget.src = 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop';
+                                    if (e.currentTarget.dataset.fallback === 'true') return;
+                                    e.currentTarget.dataset.fallback = 'true';
+                                    e.currentTarget.src = '/images/ai-resume-builder-dashboard.webp';
                                     e.currentTarget.className = "w-full h-full object-cover opacity-50";
                                 }}
                             />
@@ -187,7 +189,7 @@ const Templates = () => {
                             </div>
 
                             <button
-                                onClick={() => useTemplate(template)}
+                                onClick={() => handleUseTemplate(template)}
                                 disabled={creating === template.id}
                                 className="w-full flex items-center justify-center space-x-3 bg-slate-950 hover:bg-orange-500 text-white py-5 rounded-[1.25rem] font-black transition-all transform active:scale-[0.97] disabled:opacity-50 shadow-2xl shadow-slate-950/20 hover:shadow-orange-500/30 text-xs uppercase tracking-widest"
                             >
