@@ -3,7 +3,7 @@ import { useContext, useState, useEffect } from 'react';
 import AuthContext from '../context/AuthContext';
 import { LogOut, User, Menu, X, Sun, Moon, Star, FileText, Mail, ChevronDown, BookOpen } from 'lucide-react';
 import Logo from './Logo';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion as Motion, AnimatePresence } from 'framer-motion';
 
 const Navbar = () => {
     const { user, logout } = useContext(AuthContext);
@@ -42,7 +42,7 @@ const Navbar = () => {
                     </Link>
 
                     {/* Desktop Menu */}
-                    <div className="hidden md:flex items-center space-x-2">
+                    <div className="hidden lg:flex items-center space-x-2">
                         {/* Resume Dropdown */}
                         <div 
                             className="relative group"
@@ -233,7 +233,7 @@ const Navbar = () => {
                     </div>
 
                     {/* Mobile Menu Button */}
-                    <div className="flex items-center space-x-2 md:hidden">
+                    <div className="flex items-center space-x-2 lg:hidden">
                         <button
                             onClick={() => setIsDark(!isDark)}
                             className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400"
@@ -257,19 +257,19 @@ const Navbar = () => {
             <AnimatePresence>
                 {isMenuOpen && (
                     <>
-                        <motion.div 
+                        <Motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setIsMenuOpen(false)}
-                            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] md:hidden"
+                            className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] lg:hidden"
                         />
-                        <motion.div 
+                        <Motion.div
                             initial={{ x: '100%' }}
                             animate={{ x: 0 }}
                             exit={{ x: '100%' }}
                             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                            className="fixed right-0 top-0 bottom-0 w-[80%] max-w-sm bg-white dark:bg-slate-900 z-[70] md:hidden shadow-2xl overflow-y-auto"
+                            className="fixed right-0 top-0 bottom-0 w-[80%] max-w-sm bg-white dark:bg-slate-900 z-[70] lg:hidden shadow-2xl overflow-y-auto"
                         >
                             <div className="p-6">
                                 <div className="flex items-center justify-between mb-8">
@@ -350,7 +350,7 @@ const Navbar = () => {
                                     )}
                                 </div>
                             </div>
-                        </motion.div>
+                        </Motion.div>
                     </>
                 )}
             </AnimatePresence>
