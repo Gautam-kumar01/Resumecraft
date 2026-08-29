@@ -120,12 +120,17 @@ const callGroq = async (prompt, isJson = true) => {
     });
 };
 
-// Helper to call Gemini API
-const callGemini = async (prompt) => {
+// Helper to call Gemini API. The key stays server-side and is never sent to the browser.
+const callGemini = async (prompt, isJson = true) => {
     if (!process.env.GEMINI_API_KEY) throw new Error("Gemini API Key is missing");
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const modelsToTry = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"];
+    const configuredModel = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+    const modelsToTry = [...new Set([
+        configuredModel,
+        "gemini-2.0-flash",
+        "gemini-flash-latest"
+    ])];
     let lastError = null;
 
     const safetySettings = [
@@ -138,7 +143,14 @@ const callGemini = async (prompt) => {
     for (const modelName of modelsToTry) {
         try {
             console.log(`AI: Attempting generation with Gemini model: ${modelName}...`);
-            const model = genAI.getGenerativeModel({ model: modelName, safetySettings });
+            const model = genAI.getGenerativeModel({
+                model: modelName,
+                safetySettings,
+                generationConfig: {
+                    temperature: 0.7,
+                    ...(isJson ? { responseMimeType: "application/json" } : {})
+                }
+            });
             const result = await model.generateContent(prompt);
             
             if (result && result.response) {
@@ -209,9 +221,9 @@ exports.getSuggestions = async (req, res) => {
         }
     } catch (error) {
         console.error("AI Generation Error:", error.message);
-        res.status(500).json({ 
-            message: "Failed to generate suggestions", 
-            error: error.message 
+        res.status(503).json({
+            message: "AI generation is temporarily unavailable. Please try again shortly.",
+            code: "AI_PROVIDER_UNAVAILABLE"
         });
     }
 };
@@ -286,9 +298,9 @@ exports.generateCoverLetter = async (req, res) => {
         }
     } catch (error) {
         console.error("Cover Letter Generation Error:", error.message);
-        res.status(500).json({ 
-            message: "Failed to generate cover letter", 
-            error: error.message 
+        res.status(503).json({
+            message: "AI cover-letter generation is temporarily unavailable. Please try again shortly.",
+            code: "AI_PROVIDER_UNAVAILABLE"
         });
     }
 };
