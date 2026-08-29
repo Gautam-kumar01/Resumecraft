@@ -75,6 +75,14 @@
             "destination": "/api"
         },
         {
+            "source": "/editor",
+            "destination": "/index.html"
+        },
+        {
+            "source": "/editor/:id*",
+            "destination": "/index.html"
+        },
+        {
             "source": "/google4d740df52294f260.html",
             "destination": "/google4d740df52294f260.html"
         },
