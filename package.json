@@ -7,7 +7,7 @@
         "server": "cd server && npm start",
         "client": "cd client && npm run dev",
         "build": "cd client && npm run build",
-        "install-all": "npm install && cd server && npm install && cd client && npm install"
+        "install-all": "npm install && (cd server && npm install) && (cd client && npm install --legacy-peer-deps)"
     },
     "keywords": [],
     "author": "",
@@ -23,6 +23,10 @@
         "google-auth-library": "^10.5.0",
         "jsonwebtoken": "^9.0.3",
         "mongoose": "^9.1.6",
-        "nodemailer": "^8.0.1"
+        "nodemailer": "^8.0.1",
+        "multer": "^2.0.2",
+        "pdf-parse": "^1.1.1",
+        "mammoth": "^1.10.0",
+        "docx": "^9.5.1"
     }
 }

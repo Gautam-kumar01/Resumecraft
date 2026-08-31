@@ -15,7 +15,30 @@ import AuroraTemplate from './templates/AuroraTemplate';
 const ResumePreview = ({ resume }) => {
     if (!resume) return null;
 
-    const { personalInfo, summary, education, experience, skills, projects, certifications = [], templateId = 'modern' } = resume;
+    const { templateId = 'modern' } = resume;
+    const hiddenSections = new Set(resume.hiddenSections || []);
+    const personalInfo = hiddenSections.has('personal') ? {} : (resume.personalInfo || {});
+    const summary = hiddenSections.has('summary') ? '' : (resume.summary || '');
+    const education = hiddenSections.has('education') ? [] : (resume.education || []);
+    const experience = hiddenSections.has('experience') ? [] : (resume.experience || []);
+    const skills = hiddenSections.has('skills') ? [] : (resume.skills || []);
+    const projects = hiddenSections.has('projects') ? [] : (resume.projects || []);
+    const certifications = hiddenSections.has('certifications') ? [] : (resume.certifications || []);
+    const previewResume = {
+        ...resume,
+        personalInfo: hiddenSections.has('personal') ? {} : personalInfo,
+        summary,
+        education,
+        experience,
+        skills,
+        projects,
+        certifications,
+        achievements: hiddenSections.has('achievements') ? [] : (resume.achievements || []),
+        languages: hiddenSections.has('languages') ? [] : (resume.languages || []),
+        volunteer: hiddenSections.has('volunteer') ? [] : (resume.volunteer || []),
+        interests: hiddenSections.has('interests') ? [] : (resume.interests || []),
+        customSections: hiddenSections.has('custom') ? [] : (resume.customSections || []),
+    };
     const displayTitle = resume.title?.trim().toLowerCase() === 'untitled resume'
         ? ''
         : resume.title?.trim();
@@ -707,6 +730,19 @@ const ResumePreview = ({ resume }) => {
         </div>
     );
 
+    const renderAdditionalSections = () => {
+        const hasAdditional = previewResume.achievements?.length || previewResume.languages?.length || previewResume.volunteer?.length || previewResume.interests?.length || previewResume.customSections?.length;
+        if (!hasAdditional) return null;
+        const sectionHeading = (title) => <h2 className="mb-2 mt-5 border-b-2 border-[var(--resume-accent)] pb-1 text-sm font-black uppercase tracking-wider text-slate-800">{title}</h2>;
+        return <div className="bg-white px-12 pb-12 pt-2 text-sm text-slate-700">
+            {previewResume.achievements?.length > 0 && <section>{sectionHeading('Achievements')}{previewResume.achievements.map((item, index) => <div key={`achievement-preview-${index}`} className="mb-2"><strong>{item.name}</strong>{item.date ? ` — ${item.date}` : ''}{item.description ? <div>{item.description}</div> : null}</div>)}</section>}
+            {previewResume.languages?.length > 0 && <section>{sectionHeading('Languages')}<p>{previewResume.languages.map((item) => `${item.name}${item.proficiency ? ` (${item.proficiency})` : ''}`).join(' • ')}</p></section>}
+            {previewResume.volunteer?.length > 0 && <section>{sectionHeading('Volunteer Experience')}{previewResume.volunteer.map((item, index) => <div key={`volunteer-preview-${index}`} className="mb-2"><strong>{item.role}</strong>{item.organization ? ` — ${item.organization}` : ''}{item.description ? <div>{item.description}</div> : null}</div>)}</section>}
+            {previewResume.interests?.length > 0 && <section>{sectionHeading('Interests')}<p>{previewResume.interests.join(' • ')}</p></section>}
+            {previewResume.customSections?.map((item, index) => <section key={`custom-preview-${index}`}>{sectionHeading(item.title || 'Additional Information')}{renderHTML(item.content, 'text-sm')}</section>)}
+        </div>;
+    };
+
     // Map template IDs to components
     const templates = {
         modern: ModernTemplate,
@@ -718,13 +754,13 @@ const ResumePreview = ({ resume }) => {
     };
 
     if (templateId === 'aurora') {
-        return <AuroraTemplate resume={resume} renderHTML={renderHTML} />;
+        return <div className="min-h-full bg-white" style={{ fontFamily: resume.customization?.fontFamily || undefined, '--resume-accent': resume.customization?.accentColor || '#f97316' }}><AuroraTemplate resume={previewResume} renderHTML={renderHTML} />{renderAdditionalSections()}</div>;
     }
 
         const SelectedTemplate = templates[templateId] || ModernTemplate;
     // The existing templates are render-only functions defined in this component.
     // eslint-disable-next-line react-hooks/static-components
-    return <SelectedTemplate />;
+    return <div className="min-h-full bg-white" style={{ fontFamily: resume.customization?.fontFamily || undefined, '--resume-accent': resume.customization?.accentColor || '#f97316', lineHeight: resume.customization?.lineSpacing || undefined }}><SelectedTemplate />{renderAdditionalSections()}</div>;
 };
 
 export default ResumePreview;

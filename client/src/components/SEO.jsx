@@ -23,7 +23,7 @@ const SEO = ({
     const metaImage = image || defaultImage;
     const pathname = location?.pathname || '/';
     const isHomepage = pathname === '/';
-    const privateRoute = /^\/(login|register|dashboard|editor|forgot-password|reset-password|cover-letter-editor)(\/|$)/.test(pathname);
+    const privateRoute = /^\/(login|register|dashboard|editor|forgot-password|reset-password|cover-letter-editor|cover-letter-builder|applications)(\/|$)/.test(pathname);
     const shouldNoindex = noindex || privateRoute;
     const metaUrl = url
         ? (url.startsWith('http') ? url : new URL(url, siteUrl).toString())

@@ -8,6 +8,8 @@ Allow: /cover-letter-templates
 Allow: /free-resume-templates
 Allow: /resume-builder-dashboard
 Allow: /ats-resume-checker-preview
+Allow: /resume-examples
+Allow: /resume-templates
 Allow: /about
 Allow: /contact
 Allow: /terms

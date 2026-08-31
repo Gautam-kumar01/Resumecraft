@@ -25,7 +25,7 @@ const Footer = () => {
                     <div className="col-span-2">
                         <Logo size="md" className="mb-6" />
                         <p className="max-w-xs mb-8 text-slate-500 dark:text-slate-400 leading-relaxed">
-                            The world's most intuitive resume builder designed to help you land your dream job at record speed.
+                            An AI-assisted resume builder with professional templates, live editing, and practical career tools for students and job seekers.
                         </p>
                         <div className="flex space-x-4">
                             <a href="https://twitter.com/Imgautam_001" target="_blank" rel="noopener noreferrer" className="h-10 w-10 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-slate-400 hover:text-orange-500 hover:border-orange-500/30 transition-all">
@@ -49,7 +49,7 @@ const Footer = () => {
                             <li>
                                 <Link to="/templates" className="flex items-center space-x-2 hover:text-orange-500 transition-colors">
                                     <FileText className="h-4 w-4" />
-                                    <span>35+ Templates</span>
+                                    <span>Resume Templates</span>
                                 </Link>
                             </li>
                             <li>
@@ -59,9 +59,9 @@ const Footer = () => {
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/templates" className="flex items-center space-x-2 hover:text-orange-500 transition-colors">
+                                <Link to="/ats-resume-checker-preview" className="flex items-center space-x-2 hover:text-orange-500 transition-colors">
                                     <Eye className="h-4 w-4" />
-                                    <span>Resume Review</span>
+                                    <span>ATS Resume Review</span>
                                 </Link>
                             </li>
                             <li>
@@ -77,9 +77,9 @@ const Footer = () => {
                                 </Link>
                             </li>
                             <li>
-                                <Link to="/dashboard" className="flex items-center space-x-2 hover:text-orange-500 transition-colors">
+                                <Link to="/applications" className="flex items-center space-x-2 hover:text-orange-500 transition-colors">
                                     <BarChart3 className="h-4 w-4" />
-                                    <span>Resume Tracking</span>
+                                    <span>Application Tracker</span>
                                 </Link>
                             </li>
                         </ul>
@@ -105,7 +105,7 @@ const Footer = () => {
                                 <a href="mailto:support.resumecraft@gmail.com" className="hover:text-orange-500 transition-colors">support.resumecraft@gmail.com</a>
                             </li>
                             <li className="flex items-start space-x-3 text-slate-500 dark:text-slate-400 text-xs">
-                                <span>Get 24/7 assistance with your resume and career questions.</span>
+                                <span>Find practical guidance for your resume and career questions.</span>
                             </li>
                         </ul>
                     </div>

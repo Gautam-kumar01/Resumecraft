@@ -21,6 +21,8 @@ import Logo from '../components/Logo';
 import { motion, AnimatePresence } from 'framer-motion';
 const FeatureShowcase = lazy(() => import('../components/FeatureShowcase'));
 import OptimizedImage from '../components/OptimizedImage';
+import ResumeOnboarding from '../components/ResumeOnboarding';
+import { trackEvent } from '../utils/analytics';
 
 const MotionDiv = motion.div;
 
@@ -28,42 +30,21 @@ const Home = () => {
     const navigate = useNavigate();
     const [showcaseOpen, setShowcaseOpen] = useState(false);
     const [activeFeature, setActiveFeature] = useState(0);
+    const [showOnboarding, setShowOnboarding] = useState(false);
 
     const openFeature = (index) => {
         setActiveFeature(index);
         setShowcaseOpen(true);
     };
 
-    const handleCreateNew = ({ openAi = false } = {}) => {
-        if (openAi) {
-            localStorage.setItem('resumecraft_open_ai_coach', 'true');
-        } else {
-            localStorage.removeItem('resumecraft_open_ai_coach');
-        }
-        const emptyData = {
-            title: '',
-            personalInfo: {
-                fullName: '',
-                email: '',
-                phone: '',
-                address: '',
-                linkedin: '',
-                website: '',
-                profilePicture: ''
-            },
-            summary: '',
-            experience: [],
-            education: [],
-            skills: [],
-            projects: [],
-            templateId: 'modern'
-        };
-        localStorage.setItem('guest_resume_draft', JSON.stringify(emptyData));
-        navigate(openAi ? '/editor?focus=ai' : '/editor');
+    const handleCreateNew = () => {
+        setShowOnboarding(true);
+        trackEvent('resume_builder_started', { source: 'homepage' });
     };
 
     const handleCreateWithAI = () => {
-        handleCreateNew({ openAi: true });
+        setShowOnboarding(true);
+        trackEvent('ai_builder_started', { source: 'homepage' });
     };
 
     const handleBlueprintClick = (card) => {
@@ -106,14 +87,14 @@ const Home = () => {
     };
 
     const mncCards = [
-        { company: 'Google', role: 'Software Engineer', skills: ['Go', 'Distributed Systems', 'Cloud'], image: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&q=80&w=800' },
-        { company: 'Amazon', role: 'AI Engineer', skills: ['Python', 'LLMs', 'SageMaker'], image: 'https://images.unsplash.com/photo-1551288560-66936b61ee2b?auto=format&fit=crop&q=80&w=800' },
-        { company: 'Microsoft', role: 'Product Manager', skills: ['Roadmaps', 'Analytics', 'Stakeholders'], image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800' },
-        { company: 'Apple', role: 'Designer', skills: ['Figma', 'HIG', 'Prototyping'], image: 'https://images.unsplash.com/photo-1512484776495-a09d92e8a9ec?auto=format&fit=crop&q=80&w=800' },
-        { company: 'Netflix', role: 'Data Scientist', skills: ['PySpark', 'AB Testing', 'ML'], image: 'https://images.unsplash.com/photo-1557838923-2985c318be48?auto=format&fit=crop&q=80&w=800' },
-        { company: 'Meta', role: 'Software Engineer', skills: ['React', 'GraphQL', 'Hack'], image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=800' },
-        { company: 'Tesla', role: 'AI Engineer', skills: ['C++', 'Vision', 'Robotics'], image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=800' },
-        { company: 'Adobe', role: 'Designer', skills: ['Illustrator', 'After Effects', 'Brand'], image: 'https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&q=80&w=800' }
+        { company: 'Product teams', role: 'Software Engineer', skills: ['Go', 'Distributed Systems', 'Cloud'], image: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&q=80&w=800' },
+        { company: 'Cloud teams', role: 'AI Engineer', skills: ['Python', 'LLMs', 'SageMaker'], image: 'https://images.unsplash.com/photo-1551288560-66936b61ee2b?auto=format&fit=crop&q=80&w=800' },
+        { company: 'Research teams', role: 'Product Manager', skills: ['Roadmaps', 'Analytics', 'Stakeholders'], image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800' },
+        { company: 'Design teams', role: 'Designer', skills: ['Figma', 'HIG', 'Prototyping'], image: 'https://images.unsplash.com/photo-1512484776495-a09d92e8a9ec?auto=format&fit=crop&q=80&w=800' },
+        { company: 'Analytics teams', role: 'Data Scientist', skills: ['PySpark', 'AB Testing', 'ML'], image: 'https://images.unsplash.com/photo-1557838923-2985c318be48?auto=format&fit=crop&q=80&w=800' },
+        { company: 'Platform teams', role: 'Software Engineer', skills: ['React', 'GraphQL', 'Hack'], image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=800' },
+        { company: 'Applied AI teams', role: 'AI Engineer', skills: ['C++', 'Vision', 'Robotics'], image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=800' },
+        { company: 'Creative teams', role: 'Designer', skills: ['Illustrator', 'After Effects', 'Brand'], image: 'https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&q=80&w=800' }
     ];
 
     return (
@@ -137,7 +118,7 @@ const Home = () => {
                         "name": "Is ResumeCraft really free?",
                         "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": "Yes, ResumeCraft is a 100% free resume maker online. You can create, edit, and download your professional resume in PDF format without any hidden charges or subscriptions."
+                            "text": "ResumeCraft lets you start a resume online, edit it with live guidance, and download your work when it is ready. Check the current product terms for plan details."
                         }
                     },
                     {
@@ -145,7 +126,7 @@ const Home = () => {
                         "name": "What is ResumeCraft?",
                         "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": "ResumeCraft is a free AI-powered resume builder designed for job seekers. It allows users to create professional, ATS-friendly resumes and cover letters in minutes using 35+ MNC-approved templates."
+                            "text": "ResumeCraft is an AI-assisted resume builder designed for job seekers. It helps users create professional, ATS-readable resumes and cover letters with structured templates and an editor."
                         }
                     },
                     {
@@ -161,7 +142,7 @@ const Home = () => {
                         "name": "What is an ATS-friendly resume?",
                         "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": "An ATS-friendly resume is designed to be easily read by Applicant Tracking Systems (ATS) used by major MNCs. ResumeCraft templates use standard fonts and clean layouts to ensure your resume passes ATS filters successfully."
+                            "text": "An ATS-friendly resume uses clear headings, ordinary text, and readable formatting so Applicant Tracking Systems can parse it more reliably. No template can guarantee a hiring or ATS outcome."
                         }
                     },
                     {
@@ -177,7 +158,7 @@ const Home = () => {
                         "name": "How many resume templates does ResumeCraft offer?",
                         "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": "ResumeCraft offers 35+ professional, recruiter-approved resume templates designed for various industries including IT, Marketing, Finance, and for freshers applying to top MNCs like Google, Amazon, Microsoft, and more."
+                            "text": "ResumeCraft offers professional resume templates for different roles, industries, students, and freshers. Choose a layout that keeps your information clear and reviewable."
                         }
                     },
                     {
@@ -185,7 +166,7 @@ const Home = () => {
                         "name": "Does ResumeCraft have an AI resume builder?",
                         "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": "Yes, ResumeCraft features an AI resume builder that automatically generates professional summaries, bullet points, and career highlights. It suggests critical skills for your industry and helps you complete your resume in under 15 minutes."
+                            "text": "Yes, ResumeCraft features an AI resume builder that can suggest summaries, bullet points, and skills based on the facts you provide. Review every suggestion before using it in an application."
                         }
                     }
                 ]
@@ -222,7 +203,7 @@ const Home = () => {
                                 className="group inline-flex items-center justify-center rounded-2xl border border-orange-300/30 bg-orange-400/10 px-5 py-3.5 text-sm font-extrabold text-orange-100 backdrop-blur transition-all hover:-translate-y-0.5 hover:bg-orange-400/20"
                             >
                                 <Sparkles className="mr-2 h-5 w-5 text-orange-300" />
-                                Create with AI
+                                Build with AI Resume
                                 <ChevronRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                             </button>
                             <Link
@@ -233,9 +214,9 @@ const Home = () => {
                             </Link>
                         </div>
                         <div className="mt-10 grid max-w-md grid-cols-3 gap-4 border-t border-white/10 pt-6">
-                            <div><p className="text-2xl font-black text-white">35+</p><p className="mt-1 text-xs font-semibold text-slate-400">Templates</p></div>
-                            <div><p className="text-2xl font-black text-white">15 min</p><p className="mt-1 text-xs font-semibold text-slate-400">To get started</p></div>
-                            <div><p className="text-2xl font-black text-white">100%</p><p className="mt-1 text-xs font-semibold text-slate-400">Free to build</p></div>
+                            <div><p className="text-2xl font-black text-white">7+</p><p className="mt-1 text-xs font-semibold text-slate-400">Starter layouts</p></div>
+                            <div><p className="text-2xl font-black text-white">Live</p><p className="mt-1 text-xs font-semibold text-slate-400">Preview updates</p></div>
+                            <div><p className="text-2xl font-black text-white">Guest</p><p className="mt-1 text-xs font-semibold text-slate-400">Drafts supported</p></div>
                         </div>
                     </div>
 
@@ -275,7 +256,7 @@ const Home = () => {
             <section className="py-24 bg-gradient-to-b from-slate-50 via-white to-slate-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 text-center">
                     <h2 className="text-3xl lg:text-5xl font-black text-slate-900 tracking-tight">ATS-Friendly Resume Templates</h2>
-                    <p className="text-slate-600 mt-4 text-lg max-w-2xl mx-auto font-medium">Premium, recruiter-tested layouts inspired by Google, Amazon, Microsoft, Netflix, Apple, Meta, Tesla, Adobe.</p>
+                    <p className="text-slate-600 mt-4 text-lg max-w-2xl mx-auto font-medium">Professional layouts designed for clear reading across roles and industries.</p>
                 </div>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -352,7 +333,7 @@ const Home = () => {
                                     <div className="h-24 rounded-xl border border-slate-200 overflow-hidden bg-white">
                                         <OptimizedImage src={card.image} alt="Resume" className="w-full h-full object-cover resume-scroll" />
                                     </div>
-                                    <div className="mt-3 text-sm font-bold text-slate-900">{card.company} • {card.role} (Accepted)</div>
+                                    <div className="mt-3 text-sm font-bold text-slate-900">{card.company} • {card.role}</div>
                                 </div>
                             </div>
                         ))}
@@ -364,9 +345,9 @@ const Home = () => {
             <section className="py-24 bg-slate-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-16">
                     <h2 className="text-3xl lg:text-5xl font-black text-slate-900 mb-4 tracking-tight">
-                        Create a resume that gets results
+                        Create a resume that communicates your strengths
                     </h2>
-                    <p className="text-lg text-slate-600 font-medium">Choose a template and get hired by top companies.</p>
+                    <p className="text-lg text-slate-600 font-medium">Choose a template and present your experience clearly.</p>
                 </div>
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -374,18 +355,18 @@ const Home = () => {
                         {[
                             {
                                 icon: <Award className="h-8 w-8 text-orange-500" />,
-                                title: "Recruiter-Approved Resume",
-                                description: "We work with recruiters to design resume templates that format automatically and bypass ATS filters."
+                                title: "ATS-Friendly Structure",
+                                description: "Use readable headings, consistent spacing, and reviewable text that can be checked before you apply."
                             },
                             {
                                 icon: <Clock className="h-8 w-8 text-orange-600" />,
-                                title: "Finish Your Resume in 15 Minutes",
-                                description: "ResumeCraft helps you tackle your work experience by suggesting what you did at your previous jobs."
+                                title: "Turn notes into clear sections",
+                                description: "ResumeCraft helps you shape work experience and projects into concise, reviewable resume content."
                             },
                             {
                                 icon: <Target className="h-8 w-8 text-orange-500" />,
-                                title: "Land an Interview",
-                                description: "We suggest critical skills for your industry. We've helped over a million people land high-paying interviews."
+                                title: "Prepare to apply",
+                                description: "Review role-specific skills and use your resume as a truthful starting point for each application."
                             }
                         ].map((item, i) => (
                             <div key={i} className="bg-white p-10 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all">
@@ -406,11 +387,11 @@ const Home = () => {
                                 <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">Let AI shape your story, then refine every detail in a polished live editor.</p>
                             </div>
                             <button
-                                onClick={handleCreateWithAI}
+                                onClick={() => openFeature(1)}
                                 className="group inline-flex shrink-0 items-center justify-center rounded-2xl bg-orange-500 px-5 py-3.5 text-sm font-black text-white shadow-lg shadow-orange-500/20 transition-all hover:-translate-y-0.5 hover:bg-orange-400"
                             >
                                 <Sparkles className="mr-2 h-4 w-4" />
-                                Create with AI
+                                Explore AI tools
                                 <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                             </button>
                         </div>
@@ -444,8 +425,8 @@ const Home = () => {
                         {[
                             {
                                 icon: <FileText className="w-8 h-8" />,
-                                title: "35+ Template Designs",
-                                text: "Extensive library of high-fidelity, MNC-focused resume layouts.",
+                                title: "Role-ready templates",
+                                text: "A growing set of layouts for students, freshers, developers, analysts, and professionals.",
                                 color: "from-orange-500 to-orange-600",
                                 lightColor: "bg-orange-50",
                                 textColor: "text-orange-600"
@@ -553,11 +534,11 @@ const Home = () => {
                         {[
                             {
                                 q: "Is this resume builder really free?",
-                                a: "Yes, ResumeCraft is a 100% free resume maker online. You can create, edit, and download your professional resume in PDF format without any hidden charges or subscriptions."
+                                 a: "You can start building a resume online, edit it with live guidance, and review the current product terms for plan details before downloading."
                             },
                             {
                                 q: "What is an ATS-friendly resume?",
-                                a: "An ATS-friendly resume is designed to be easily read by Applicant Tracking Systems (ATS) used by major MNCs. Our templates use standard fonts and layouts to ensure your resume passes these filters successfully."
+                                 a: "An ATS-friendly resume uses clear headings, ordinary text, and consistent layouts so Applicant Tracking Systems can parse it more reliably. No resume can guarantee a hiring or ATS result."
                             },
                             {
                                 q: "Can I create a cover letter here?",
@@ -569,7 +550,7 @@ const Home = () => {
                             },
                             {
                                 q: "How many resume templates do you offer?",
-                                a: "We offer over 35+ professional, recruiter-approved resume templates designed for various industries including IT, Marketing, Finance, and for freshers."
+                                 a: "We offer role-ready resume layouts for different industries, students, freshers, and professionals. Choose the format that keeps your evidence clear and easy to review."
                             }
                         ].map((faq, i) => (
                             <div key={i} className="p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:border-orange-200 transition-all">
@@ -595,17 +576,22 @@ const Home = () => {
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
                     <p className="text-center text-slate-400 font-medium mb-12 uppercase tracking-widest text-sm">
-                        Our customers have been hired by
+                        Explore role blueprints for
                     </p>
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-8 items-center text-center">
-                        <div className="text-white text-2xl font-bold opacity-60 hover:opacity-100 transition-opacity">HDFC Bank</div>
-                        <div className="text-white text-2xl font-bold opacity-60 hover:opacity-100 transition-opacity">Tech Mahindra</div>
-                        <div className="text-white text-2xl font-bold opacity-60 hover:opacity-100 transition-opacity">Genpact</div>
-                        <div className="text-white text-2xl font-bold opacity-60 hover:opacity-100 transition-opacity">Accenture</div>
-                        <div className="text-white text-2xl font-bold opacity-60 hover:opacity-100 transition-opacity">Deloitte</div>
+                        <div className="text-white text-xl font-bold opacity-60 hover:opacity-100 transition-opacity">Software teams</div>
+                        <div className="text-white text-xl font-bold opacity-60 hover:opacity-100 transition-opacity">Analytics teams</div>
+                        <div className="text-white text-xl font-bold opacity-60 hover:opacity-100 transition-opacity">Product teams</div>
+                        <div className="text-white text-xl font-bold opacity-60 hover:opacity-100 transition-opacity">Design teams</div>
+                        <div className="text-white text-xl font-bold opacity-60 hover:opacity-100 transition-opacity">Business teams</div>
                     </div>
                 </div>
             </section>
+            <ResumeOnboarding
+                isOpen={showOnboarding}
+                onClose={() => setShowOnboarding(false)}
+                onOpenEditor={() => navigate('/editor')}
+            />
         </MotionDiv>
     );
 };

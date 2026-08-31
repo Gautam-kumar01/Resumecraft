@@ -1,11 +1,18 @@
 
-import { useState, useEffect, useContext, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
-import AuthContext from '../context/AuthContext';
 import SEO from '../components/SEO';
 import { Plus, FileText, Trash2, Edit, ExternalLink, Download, Sparkles, ArrowRight, Copy, Search, Filter, BarChart, Briefcase, Brain, Mail } from 'lucide-react';
+import { trackEvent } from '../utils/analytics';
 import { motion } from 'framer-motion';
+
+const MotionDiv = motion.div;
+const stripTemplateMetadata = (template) => {
+    const resumeData = { ...template };
+    ['id', 'targetCompanies', 'imageUrl'].forEach((key) => delete resumeData[key]);
+    return resumeData;
+};
 
 const Dashboard = () => {
     const [resumes, setResumes] = useState([]);
@@ -20,7 +27,6 @@ const Dashboard = () => {
     const [selectedExperience, setSelectedExperience] = useState('All');
     const [minAtsScore, setMinAtsScore] = useState(0);
 
-    const { user } = useContext(AuthContext);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -55,6 +61,21 @@ const Dashboard = () => {
         return ['All', ...Array.from(unique)];
     }, [starters]);
 
+    const profileCompletion = useMemo(() => {
+        const latest = resumes[0];
+        if (!latest) return 0;
+        const checks = [
+            latest.personalInfo?.fullName,
+            latest.personalInfo?.email,
+            latest.summary,
+            latest.experience?.length || latest.projects?.length,
+            latest.education?.length,
+            latest.skills?.length,
+        ];
+        return Math.round((checks.filter(Boolean).length / checks.length) * 100);
+    }, [resumes]);
+    const toolResumePath = resumes[0]?._id ? `/editor/${resumes[0]._id}` : '/editor';
+
     const filteredStarters = useMemo(() => {
         return starters.filter(template => {
             const matchesSearch = template.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -69,15 +90,15 @@ const Dashboard = () => {
         });
     }, [starters, searchQuery, selectedIndustry, selectedExperience, minAtsScore]);
 
-    const useTemplate = async (template) => {
+    const createFromTemplate = async (template) => {
         setCreating(template.id);
         try {
-            const { id, targetCompanies, imageUrl, ...resumeData } = template;
+            const resumeData = stripTemplateMetadata(template);
             const { data } = await api.post('/resumes', resumeData);
             navigate(`/editor/${data._id}`);
         } catch (error) {
             console.error('Failed to create resume from template', error);
-            const { id: templateId, targetCompanies: tc, imageUrl: imgUrl, ...resumeData } = template;
+            const resumeData = stripTemplateMetadata(template);
             localStorage.setItem('guest_resume_draft', JSON.stringify(resumeData));
             navigate('/editor');
         } finally {
@@ -143,15 +164,15 @@ const Dashboard = () => {
     }
 
     return (
-        <motion.div 
+        <MotionDiv
             initial={{ opacity: 0, rotateY: 15, perspective: 1000 }}
             animate={{ opacity: 1, rotateY: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="min-h-screen bg-gray-50 pt-20 pb-10 px-4 sm:px-6 lg:px-8"
         >
             <SEO
-                title="Dashboard | ResumeCraft - MNC Resume Templates"
-                description="Access professional MNC-approved resume templates. Filter by industry, experience level, and ATS score to create your perfect resume."
+                title="Dashboard | ResumeCraft"
+                description="Manage your resumes, review resume health, and choose a starting layout for your next application."
             />
 
             <div className="max-w-7xl mx-auto">
@@ -159,10 +180,17 @@ const Dashboard = () => {
                     <div>
                         <h2 className="text-xl font-black text-slate-900 flex items-center">
                             <Sparkles className="h-5 w-5 mr-2 text-orange-500" />
-                            MNC Resume Blueprints
+                            Resume blueprints
                         </h2>
-                        <p className="text-sm text-slate-500">Pick a high-performance blueprint to get hired at top MNCs.</p>
+                        <p className="text-sm text-slate-500">Choose a structured starting point and tailor it to your own experience.</p>
                     </div>
+                </div>
+
+                <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    <div className="rounded-3xl border border-orange-100 bg-orange-50 p-5"><p className="text-xs font-black uppercase tracking-wider text-orange-600">Resume health</p><p className="mt-2 text-3xl font-black text-orange-950">{profileCompletion}%</p><p className="mt-1 text-xs font-semibold text-orange-800">Profile completeness based on your saved resume.</p></div>
+                    <Link to={toolResumePath} onClick={() => trackEvent('ats_check_started', { source: 'dashboard' })} className="rounded-3xl border border-slate-200 bg-white p-5 transition hover:-translate-y-0.5 hover:border-orange-300 hover:shadow-lg"><p className="text-xs font-black uppercase tracking-wider text-slate-400">Career tool</p><p className="mt-2 font-black text-slate-950">ATS score</p><p className="mt-1 text-xs font-semibold leading-5 text-slate-500">Open the editor’s explainable resume checklist.</p></Link>
+                    <Link to={toolResumePath} onClick={() => trackEvent('job_match_started', { source: 'dashboard' })} className="rounded-3xl border border-slate-200 bg-white p-5 transition hover:-translate-y-0.5 hover:border-orange-300 hover:shadow-lg"><p className="text-xs font-black uppercase tracking-wider text-slate-400">Career tool</p><p className="mt-2 font-black text-slate-950">Match a job</p><p className="mt-1 text-xs font-semibold leading-5 text-slate-500">Paste a job description and review keyword gaps.</p></Link>
+                    <Link to="/cover-letter-templates" className="rounded-3xl border border-slate-200 bg-white p-5 transition hover:-translate-y-0.5 hover:border-orange-300 hover:shadow-lg"><p className="text-xs font-black uppercase tracking-wider text-slate-400">Career tool</p><p className="mt-2 font-black text-slate-950">Cover letter</p><p className="mt-1 text-xs font-semibold leading-5 text-slate-500">Turn a selected resume into a consistent application package.</p></Link>
                 </div>
 
                 {/* Filters Section */}
@@ -229,7 +257,7 @@ const Dashboard = () => {
                     {filteredStarters.map((template) => (
                         <button
                             key={template.id}
-                            onClick={() => useTemplate(template)}
+                            onClick={() => createFromTemplate(template)}
                             className="group relative flex flex-col bg-white rounded-3xl border border-slate-200 hover:border-orange-500/40 transition-all text-left overflow-hidden hover:shadow-2xl hover:-translate-y-2 h-[480px]"
                         >
                             {/* Visual Resume Mockup Header */}
@@ -540,7 +568,7 @@ const Dashboard = () => {
                     ))}
                 </div>
             )}
-        </motion.div>
+        </MotionDiv>
     );
 };
 

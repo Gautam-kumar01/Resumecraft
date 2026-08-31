@@ -53,6 +53,12 @@ const AtsResumeCheckerPreview = lazy(() => import('./pages/AtsResumeCheckerPrevi
 const FreeResumeTemplates = lazy(() => import('./pages/FreeResumeTemplates'));
 
 const RoleTemplate = lazy(() => import('./pages/RoleTemplate'));
+const ResumeExamples = lazy(() => import('./pages/ResumeExamples'));
+const TemplateLanding = lazy(() => import('./pages/TemplateLanding'));
+const AudienceLanding = lazy(() => import('./pages/AudienceLanding'));
+const CoverLetterExamples = lazy(() => import('./pages/CoverLetterExamples'));
+const InterviewPrep = lazy(() => import('./pages/InterviewPrep'));
+const Applications = lazy(() => import('./pages/Applications'));
 
 import GoogleAnalytics from './components/GoogleAnalytics';
 
@@ -89,6 +95,18 @@ function App() {
                 <Route path="/ats-resume-checker-preview" element={<AtsResumeCheckerPreview />} />
                 <Route path="/free-resume-templates" element={<FreeResumeTemplates />} />
                 <Route path="/resume-template/:slug" element={<RoleTemplate />} />
+                <Route path="/resume-examples" element={<ResumeExamples />} />
+                <Route path="/resume-examples/:slug" element={<ResumeExamples />} />
+                <Route path="/resume-templates" element={<TemplateLanding />} />
+                <Route path="/resume-templates/:slug" element={<TemplateLanding />} />
+                <Route path="/resume-builder-for-freshers" element={<AudienceLanding />} />
+                <Route path="/resume-builder-for-students" element={<AudienceLanding />} />
+                <Route path="/resume-builder-india" element={<AudienceLanding />} />
+                <Route path="/resume-format-for-freshers" element={<AudienceLanding />} />
+                <Route path="/resume-format-for-bca-students" element={<AudienceLanding />} />
+                <Route path="/resume-format-for-mba-students" element={<AudienceLanding />} />
+                <Route path="/resume-format-for-engineering-students" element={<AudienceLanding />} />
+                <Route path="/ats-resume-for-freshers" element={<AudienceLanding />} />
 
                 <Route path="/dashboard" element={
                   <ProtectedRoute>
@@ -99,6 +117,10 @@ function App() {
                 <Route path="/templates" element={<Templates />} />
 
                 <Route path="/cover-letter-templates" element={<CoverLetterTemplates />} />
+                <Route path="/cover-letter-examples" element={<CoverLetterExamples />} />
+                <Route path="/cover-letter-builder/:id?" element={<ProtectedRoute><CoverLetterEditor /></ProtectedRoute>} />
+                <Route path="/interview-prep" element={<InterviewPrep />} />
+                <Route path="/applications" element={<Applications />} />
 
                 <Route path="/cover-letter-editor/:id?" element={
                   <ProtectedRoute>

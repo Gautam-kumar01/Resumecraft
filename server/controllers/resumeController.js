@@ -47,7 +47,18 @@ const createResume = async (req, res) => {
         education,
         experience,
         skills,
-        projects
+        projects,
+        targetRole,
+        experienceLevel,
+        certifications,
+        achievements,
+        languages,
+        volunteer,
+        interests,
+        customSections,
+        sectionOrder,
+        hiddenSections,
+        customization
     } = req.body;
 
     console.log('Create Resume Request:', { title, user: req.user?._id });
@@ -66,11 +77,22 @@ const createResume = async (req, res) => {
                 fullName: req.user.name || '',
                 email: req.user.email || '',
             },
+            targetRole: targetRole || '',
+            experienceLevel: experienceLevel || '',
             summary: summary || '',
             education: education || [],
             experience: experience || [],
             skills: skills || [],
-            projects: projects || []
+            projects: projects || [],
+            certifications: certifications || [],
+            achievements: achievements || [],
+            languages: languages || [],
+            volunteer: volunteer || [],
+            interests: interests || [],
+            customSections: customSections || [],
+            sectionOrder: sectionOrder || [],
+            hiddenSections: hiddenSections || [],
+            customization: customization || undefined
         });
 
         console.log('Attempting to save resume...');
@@ -97,6 +119,17 @@ const updateResume = async (req, res) => {
         projects,
         templateId,
         isPublic,
+        targetRole,
+        experienceLevel,
+        certifications,
+        achievements,
+        languages,
+        volunteer,
+        interests,
+        customSections,
+        sectionOrder,
+        hiddenSections,
+        customization,
     } = req.body;
 
     try {
@@ -107,14 +140,25 @@ const updateResume = async (req, res) => {
                 return res.status(401).json({ message: 'Not authorized' });
             }
 
-            resume.title = title || resume.title;
-            resume.personalInfo = personalInfo || resume.personalInfo;
-            resume.summary = summary || resume.summary;
-            resume.education = education || resume.education;
-            resume.experience = experience || resume.experience;
-            resume.skills = skills || resume.skills;
-            resume.projects = projects || resume.projects;
-            resume.templateId = templateId || resume.templateId;
+            if (Object.prototype.hasOwnProperty.call(req.body, 'title')) resume.title = title;
+            if (Object.prototype.hasOwnProperty.call(req.body, 'personalInfo')) resume.personalInfo = personalInfo;
+            if (Object.prototype.hasOwnProperty.call(req.body, 'summary')) resume.summary = summary;
+            if (Object.prototype.hasOwnProperty.call(req.body, 'education')) resume.education = education;
+            if (Object.prototype.hasOwnProperty.call(req.body, 'experience')) resume.experience = experience;
+            if (Object.prototype.hasOwnProperty.call(req.body, 'skills')) resume.skills = skills;
+            if (Object.prototype.hasOwnProperty.call(req.body, 'projects')) resume.projects = projects;
+            if (Object.prototype.hasOwnProperty.call(req.body, 'templateId')) resume.templateId = templateId;
+            if (Object.prototype.hasOwnProperty.call(req.body, 'targetRole')) resume.targetRole = targetRole;
+            if (Object.prototype.hasOwnProperty.call(req.body, 'experienceLevel')) resume.experienceLevel = experienceLevel;
+            if (Object.prototype.hasOwnProperty.call(req.body, 'certifications')) resume.certifications = certifications;
+            if (Object.prototype.hasOwnProperty.call(req.body, 'achievements')) resume.achievements = achievements;
+            if (Object.prototype.hasOwnProperty.call(req.body, 'languages')) resume.languages = languages;
+            if (Object.prototype.hasOwnProperty.call(req.body, 'volunteer')) resume.volunteer = volunteer;
+            if (Object.prototype.hasOwnProperty.call(req.body, 'interests')) resume.interests = interests;
+            if (Object.prototype.hasOwnProperty.call(req.body, 'customSections')) resume.customSections = customSections;
+            if (Object.prototype.hasOwnProperty.call(req.body, 'sectionOrder')) resume.sectionOrder = sectionOrder;
+            if (Object.prototype.hasOwnProperty.call(req.body, 'hiddenSections')) resume.hiddenSections = hiddenSections;
+            if (Object.prototype.hasOwnProperty.call(req.body, 'customization')) resume.customization = customization;
             resume.isPublic = isPublic !== undefined ? isPublic : resume.isPublic;
 
             const updatedResume = await resume.save();

@@ -7,33 +7,17 @@ import AuthContext from '../context/AuthContext';
 import ResumePreview from '../components/ResumePreview';
 import LoginModal from '../components/LoginModal';
 import SEO from '../components/SEO';
-import { Save, Download, Eye, ArrowLeft, Plus, Trash2, User, Sparkles, FileText, Briefcase, GraduationCap, Code, Folder, Layout, ChevronDown, ChevronUp, GripVertical, Menu, Palette, PencilLine, Minus, Award, X, Maximize2, Minimize2 } from 'lucide-react';
+import { Save, Download, Eye, ArrowLeft, Plus, Trash2, User, Sparkles, FileText, Briefcase, GraduationCap, Code, Folder, Layout, ChevronDown, ChevronUp, GripVertical, Menu, Palette, PencilLine, Minus, Award, X, Maximize2, Minimize2, Undo2, Redo2, FileDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
-
-const initialResumeState = {
-    title: '',
-    personalInfo: {
-        fullName: '',
-        email: '',
-        phone: '',
-        address: '',
-        linkedin: '',
-        github: '',
-        website: '',
-        profilePicture: ''
-    },
-    summary: '',
-    experience: [],
-    education: [],
-    skills: [],
-    projects: [],
-    certifications: [],
-    templateId: 'modern'
-};
-
+import EditorSidebar from '../components/EditorSidebar';
+import EditorToolsPanel from '../components/EditorToolsPanel';
+import AdditionalResumeSections from '../components/AdditionalResumeSections';
+import { createEmptyResume, normalizeResume } from '../data/resumeBuilder';
+import { trackEvent } from '../utils/analytics';
+const initialResumeState = createEmptyResume();
 const modules = {
     toolbar: [
         ['bold', 'italic', 'underline'],
@@ -211,13 +195,20 @@ const Editor = () => {
     const [aiJobRole, setAiJobRole] = useState('');
     const [aiLoading, setAiLoading] = useState(false);
     const [aiSuggestions, setAiSuggestions] = useState(null);
+    const [activeTool, setActiveTool] = useState('');
+    const [saveStatus, setSaveStatus] = useState('Saved locally');
+    const [history, setHistory] = useState([]);
+    const [future, setFuture] = useState([]);
+    const lastSnapshotRef = useRef(null);
+    const isRestoringHistoryRef = useRef(false);
+    const autosaveTimerRef = useRef(null);
 
     useEffect(() => {
         const fetchResume = async () => {
             if (id) {
                 try {
                     const { data } = await api.get(`/resumes/${id}`);
-                    setResume({ ...data, certifications: data.certifications || [] });
+                        setResume(normalizeResume(data));
                 } catch (error) {
                     console.error("Error fetching resume:", error);
                     navigate('/dashboard');
@@ -233,7 +224,7 @@ const Editor = () => {
                 if (savedDraft) {
                     try {
                         const parsedDraft = JSON.parse(savedDraft);
-                        setResume({ ...parsedDraft, certifications: parsedDraft.certifications || [] });
+                        setResume(normalizeResume(parsedDraft));
                     } catch {
                         setResume(initialResumeState);
                     }
@@ -247,10 +238,36 @@ const Editor = () => {
     }, [id, navigate]);
 
     useEffect(() => {
-        if (!id && resume) {
-            localStorage.setItem('guest_resume_draft', JSON.stringify(resume));
+        if (!resume) return undefined;
+        const snapshot = JSON.stringify(resume);
+        if (lastSnapshotRef.current && lastSnapshotRef.current !== snapshot && !isRestoringHistoryRef.current) {
+            setHistory((previous) => [...previous.slice(-19), lastSnapshotRef.current]);
+            setFuture([]);
         }
-    }, [resume, id]);
+        lastSnapshotRef.current = snapshot;
+        isRestoringHistoryRef.current = false;
+        if (!id) {
+            localStorage.setItem('guest_resume_draft', snapshot);
+            setSaveStatus('Saved locally');
+            return undefined;
+        }
+        if (!user) return undefined;
+        setSaveStatus('Saving…');
+        window.clearTimeout(autosaveTimerRef.current);
+        autosaveTimerRef.current = window.setTimeout(async () => {
+            try {
+                await api.put(`/resumes/${id}`, resume);
+                setSaveStatus('Saved ✓');
+                trackEvent('resume_saved', { source: 'autosave' });
+            } catch (error) {
+                console.error('Autosave error:', error);
+                setSaveStatus('Save failed');
+            }
+        }, 1200);
+        return () => window.clearTimeout(autosaveTimerRef.current);
+    }, [resume, id, user]);
+
+    useEffect(() => () => window.clearTimeout(autosaveTimerRef.current), []);
 
     // Update preview scale based on container width
     useEffect(() => {
@@ -285,6 +302,24 @@ const Editor = () => {
         };
     }, [activeMobileTab, isPreviewSheetOpen, isPreviewExpanded]);
 
+    const handleUndo = () => {
+        if (!history.length) return;
+        const previous = history[history.length - 1];
+        isRestoringHistoryRef.current = true;
+        setFuture((items) => [JSON.stringify(resume), ...items].slice(0, 20));
+        setHistory((items) => items.slice(0, -1));
+        setResume(JSON.parse(previous));
+    };
+
+    const handleRedo = () => {
+        if (!future.length) return;
+        const next = future[0];
+        isRestoringHistoryRef.current = true;
+        setHistory((items) => [...items, JSON.stringify(resume)].slice(-20));
+        setFuture((items) => items.slice(1));
+        setResume(JSON.parse(next));
+    };
+
     const handleSave = async () => {
         if (!user) {
             setPendingAction('save');
@@ -296,13 +331,17 @@ const Editor = () => {
         try {
             if (id) {
                 await api.put(`/resumes/${id}`, resume);
+                setSaveStatus('Saved ✓');
+                trackEvent('resume_saved', { source: 'manual' });
             } else {
                 const { data } = await api.post('/resumes', resume);
                 localStorage.removeItem('guest_resume_draft');
+                trackEvent('resume_created', { source: 'manual' });
                 navigate(`/editor/${data._id}`, { replace: true });
             }
         } catch (error) {
             console.error("Error saving resume:", error);
+            setSaveStatus('Save failed');
         } finally {
             setSaving(false);
         }
@@ -392,6 +431,7 @@ const Editor = () => {
             }
 
             downloadPdfBlob(pdf, getPdfFileName(resume.title));
+            trackEvent('resume_downloaded', { format: 'pdf' });
         } catch (err) {
             console.error('PDF Export Error:', err);
             alert(`Download failed: ${err.message || 'Unable to generate the PDF.'}`);
@@ -403,6 +443,39 @@ const Editor = () => {
 
     const handleDownload = async () => {
         await performDownload();
+    };
+
+    const handleDocxDownload = async () => {
+        if (downloading) return;
+        setDownloading(true);
+        try {
+            const response = await api.post('/ai/export-docx', { resume }, { responseType: 'blob' });
+            const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+            const url = URL.createObjectURL(blob);
+            const anchor = document.createElement('a');
+            anchor.href = url;
+            anchor.download = getPdfFileName(resume.title).replace(/\.pdf$/i, '.docx');
+            document.body.appendChild(anchor);
+            anchor.click();
+            anchor.remove();
+            URL.revokeObjectURL(url);
+            trackEvent('resume_downloaded', { format: 'docx' });
+        } catch (error) {
+            console.error('DOCX export error:', error);
+            alert(error.response?.data?.message || 'Unable to generate your DOCX. Please try again.');
+        } finally {
+            setDownloading(false);
+        }
+    };
+
+    const resetCustomization = () => setResume((previous) => ({
+        ...previous,
+        customization: createEmptyResume().customization,
+    }));
+
+    const addCustomSection = () => {
+        addItem('customSections', { title: 'Additional Information', content: '' });
+        setOpenSection('extras');
     };
 
     const handleLoginSuccess = async () => {
@@ -420,6 +493,7 @@ const Editor = () => {
             alert("Resume saved locally but failed to sync. Please try saving again.");
         } finally {
             setSaving(false);
+            setSaveStatus('Saved ✓');
             setPendingAction(null);
         }
     };
@@ -481,7 +555,7 @@ const Editor = () => {
 
         setAiLoading(true);
         try {
-            const { data } = await api.post('/ai/suggest', { jobRole: aiJobRole });
+            const { data } = await api.post('/ai/suggest', { jobRole: aiJobRole, resumeContext: resume });
             setAiSuggestions(data);
         } catch (error) {
             console.error("AI Error Full Object:", error);
@@ -500,16 +574,13 @@ const Editor = () => {
         } else if (type === 'skills') {
             setResume(prev => ({ ...prev, skills: [...(prev.skills || []), ...data] }));
         } else if (type === 'experience') {
-            const bulletsHtml = `<ul>${data.map(b => `<li>${b}</li>`).join('')}</ul>`;
-            addItem('experience', {
-                company: 'Sample Company',
-                position: aiJobRole,
-                startDate: '202X',
-                endDate: 'Present',
-                description: bulletsHtml
+            const bulletsHtml = `<ul>${data.map(b => `<li>${String(b).replace(/</g, '&lt;').replace(/>/g, '&gt;')}</li>`).join('')}</ul>`;
+            addItem('customSections', {
+                title: 'AI bullet suggestions — review before using',
+                content: bulletsHtml
             });
         }
-        alert("Applied to resume!");
+        alert("Applied as a reviewable suggestion. Please verify every fact before using it.");
     };
 
     if (loading) return <div className="h-screen flex items-center justify-center bg-slate-50"><div className="animate-spin h-8 w-8 border-4 border-orange-500 border-t-transparent rounded-full"></div></div>;
@@ -546,7 +617,7 @@ const Editor = () => {
             <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} onSuccess={handleLoginSuccess} title="Your resume is ready!" subtitle="Login or sign up to download and save your resume." />
 
             {/* Left Panel: Form & Editor */}
-            <div className={`${activeMobileTab === 'edit' ? 'flex' : 'hidden'} md:flex ${isFullscreenPreview ? 'md:hidden' : ''} w-full md:w-[45%] lg:w-[40%] bg-transparent md:bg-slate-50/95 md:border-r md:border-slate-200 h-full flex-col z-10`}>
+            <div className={`${activeMobileTab === 'edit' ? 'flex' : 'hidden'} md:flex ${isFullscreenPreview ? 'md:hidden' : ''} w-full md:w-[61%] lg:w-[58%] bg-transparent md:bg-slate-50/95 md:border-r md:border-slate-200 h-full flex-col z-10`}>
                 
                 {/* Header */}
                 <div className="bg-white/85 backdrop-blur-xl border-b border-white/70 px-4 py-3 md:p-4 flex items-center justify-between shrink-0 shadow-[0_8px_30px_rgba(15,23,42,0.06)] z-20 relative">
@@ -570,12 +641,26 @@ const Editor = () => {
                         <button onClick={handleDownload} disabled={downloading} className="hidden md:flex items-center px-3 py-1.5 md:px-4 md:py-2 bg-orange-500 text-white rounded-lg md:rounded-xl hover:bg-orange-600 transition-colors font-bold shadow-sm disabled:opacity-70 text-xs md:text-sm">
                             <Download className="h-3 w-3 md:h-4 md:w-4 mr-1 md:mr-2" /> {downloading ? 'Downloading...' : 'Download PDF'}
                         </button>
+                        <button onClick={handleDocxDownload} disabled={downloading} className="hidden lg:flex items-center px-3 py-2 bg-white text-slate-700 border border-slate-200 rounded-xl hover:border-orange-300 hover:text-orange-600 transition-colors font-bold text-xs disabled:opacity-70"><FileDown className="mr-2 h-4 w-4" /> DOCX</button>
                     </div>
                 </div>
 
                 {/* Main Scrollable Form Area */}
-                <div className="flex-1 overflow-y-auto px-4 pt-4 pb-[calc(8.75rem+env(safe-area-inset-bottom))] md:p-6 lg:p-8 space-y-4 md:space-y-6 scroll-smooth bg-transparent md:bg-[#f8fafc]">
+                    <div className="flex-1 min-h-0 flex">
+                        <EditorSidebar
+                            resume={resume}
+                            openSection={openSection}
+                            setOpenSection={setOpenSection}
+                            setResume={setResume}
+                            activeTool={activeTool}
+                            setActiveTool={setActiveTool}
+                            saveStatus={saveStatus}
+                            onAddSection={addCustomSection}
+                        />
+                        <div className="flex-1 min-w-0 overflow-y-auto px-4 pt-4 pb-[calc(8.75rem+env(safe-area-inset-bottom))] md:p-6 lg:p-8 space-y-4 md:space-y-6 scroll-smooth bg-transparent md:bg-[#f8fafc]">
                     
+                    {activeTool && <div className="rounded-[20px] border border-white/70 bg-white/95 p-4 shadow-[0_10px_24px_rgba(15,23,42,0.055)] md:p-6"><EditorToolsPanel activeTool={activeTool} resume={resume} setResume={setResume} onResetCustomization={resetCustomization} onOpenSection={setOpenSection} /></div>}
+
                     {/* Document Title */}
                     <div className="mb-4 md:mb-6">
                         <input
@@ -1022,6 +1107,22 @@ const Editor = () => {
                         </button>
                     </AccordionItem>
 
+                    {/* Achievements and additional sections */}
+                    <AccordionItem
+                        title="Achievements & More"
+                        icon={<Award className="h-5 w-5" />}
+                        isOpen={openSection === 'extras'}
+                        onToggle={() => { setActiveTool(''); setOpenSection(openSection === 'extras' ? '' : 'extras'); }}
+                    >
+                        <AdditionalResumeSections
+                            resume={resume}
+                            handleArrayChange={handleArrayChange}
+                            addItem={addItem}
+                            removeItem={removeItem}
+                            setResume={setResume}
+                        />
+                    </AccordionItem>
+
                     {/* Templates */}
                     <div className="hidden md:block">
                     <AccordionItem 
@@ -1050,13 +1151,14 @@ const Editor = () => {
 
                     {/* Bottom Padding */}
                     <div className="h-24 md:h-8"></div>
-                </div>
+                        </div>
+                    </div>
             </div>
 
             {/* Desktop / Tablet Preview */}
             <div
                 ref={desktopPreviewRef}
-                className={`hidden md:flex ${isFullscreenPreview ? 'md:w-full' : 'md:w-[55%] lg:w-[60%]'} bg-slate-300 h-full overflow-y-auto justify-center px-4 py-6 md:py-10 relative transition-all duration-500`}
+                className={`hidden md:flex ${isFullscreenPreview ? 'md:w-full' : 'md:w-[39%] lg:w-[42%]'} bg-slate-300 h-full overflow-y-auto justify-center px-4 py-6 md:py-10 relative transition-all duration-500`}
             >
                 <button
                     onClick={handleDownload}
@@ -1072,7 +1174,11 @@ const Editor = () => {
                         width: '794px',
                         minHeight: '1123px',
                         transform: `scale(${previewTransformScale})`,
-                        marginBottom: `${1123 * previewTransformScale - 1123 + 120}px`
+                        marginBottom: `${1123 * previewTransformScale - 1123 + 120}px`,
+                        fontFamily: resume.customization?.fontFamily || 'Inter',
+                        fontSize: `${resume.customization?.fontSize || 14}px`,
+                        lineHeight: resume.customization?.lineSpacing || 1.45,
+                        '--resume-accent': resume.customization?.accentColor || '#f97316'
                     }}
                 >
                     <ResumePreview resume={resume} />
@@ -1144,6 +1250,7 @@ const Editor = () => {
                         <button onClick={openPreviewSheet} className="h-12 rounded-2xl bg-slate-100 text-slate-800 font-black">Preview</button>
                         <button onClick={handleSave} disabled={saving} className="h-12 rounded-2xl bg-slate-900 text-white font-black disabled:opacity-70">{saving ? 'Saving...' : 'Save'}</button>
                     </div>
+                    <button onClick={handleDocxDownload} disabled={downloading} className="mt-3 h-12 w-full rounded-2xl border border-slate-200 bg-white text-slate-800 font-black disabled:opacity-60"><FileDown className="mr-2 inline h-4 w-4" /> Download DOCX</button>
                 </div>
             </div>
 
@@ -1179,6 +1286,16 @@ const Editor = () => {
                     </MotionDiv>
                 )}
             </AnimatePresence>
+
+            <div className="hidden md:flex fixed bottom-5 left-1/2 z-30 -translate-x-1/2 items-center gap-1 rounded-2xl border border-white/80 bg-white/95 p-1.5 shadow-[0_18px_50px_rgba(15,23,42,0.18)] backdrop-blur-xl">
+                <button type="button" onClick={handleUndo} disabled={!history.length} className="flex items-center gap-1 rounded-xl px-3 py-2 text-xs font-black text-slate-600 hover:bg-slate-100 disabled:opacity-30" title="Undo"><Undo2 className="h-4 w-4" /> Undo</button>
+                <button type="button" onClick={handleRedo} disabled={!future.length} className="flex items-center gap-1 rounded-xl px-3 py-2 text-xs font-black text-slate-600 hover:bg-slate-100 disabled:opacity-30" title="Redo"><Redo2 className="h-4 w-4" /> Redo</button>
+                <span className="mx-1 h-5 w-px bg-slate-200" />
+                <button type="button" onClick={() => { setActiveTool(''); setOpenSection('templates'); }} className="rounded-xl px-3 py-2 text-xs font-black text-slate-600 hover:bg-slate-100">Template</button>
+                <button type="button" onClick={() => { setOpenSection(''); setActiveTool('customize'); }} className="rounded-xl px-3 py-2 text-xs font-black text-slate-600 hover:bg-slate-100">Font & spacing</button>
+                <button type="button" onClick={() => { setOpenSection(''); setActiveTool('copilot'); }} className="rounded-xl bg-slate-900 px-3 py-2 text-xs font-black text-white hover:bg-orange-500">AI Assistant</button>
+                <button type="button" onClick={() => { setOpenSection(''); setActiveTool('ats'); }} className="rounded-xl bg-orange-50 px-3 py-2 text-xs font-black text-orange-700 hover:bg-orange-100">ATS score</button>
+            </div>
 
             <AnimatePresence>
                 {isPreviewSheetOpen && (
@@ -1236,7 +1353,11 @@ const Editor = () => {
                                             width: '794px',
                                             minHeight: '1123px',
                                             transform: `scale(${previewTransformScale})`,
-                                            marginBottom: `${1123 * previewTransformScale - 1123 + 110}px`
+                                            marginBottom: `${1123 * previewTransformScale - 1123 + 110}px`,
+                                            fontFamily: resume.customization?.fontFamily || 'Inter',
+                                            fontSize: `${resume.customization?.fontSize || 14}px`,
+                                            lineHeight: resume.customization?.lineSpacing || 1.45,
+                                            '--resume-accent': resume.customization?.accentColor || '#f97316'
                                         }}
                                     >
                                         <ResumePreview resume={resume} />

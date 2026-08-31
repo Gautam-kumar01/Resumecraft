@@ -9,7 +9,7 @@ const Contact = () => {
         <div className="min-h-screen pt-32 pb-24 bg-slate-50 dark:bg-slate-900">
             <SEO 
                 title="Support & Contact | ResumeCraft" 
-                description="Get in touch with the ResumeCraft support team. We're here to help you build the perfect resume and land your dream job."
+                description="Get in touch with the ResumeCraft support team for questions about the builder, exports, or account experience."
             />
             
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -19,7 +19,7 @@ const Contact = () => {
                         We're here to <span className="text-orange-500">help you win.</span>
                     </h1>
                     <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
-                        Have questions about our AI builder or need career advice? Our support team is ready to assist you 24/7.
+                        Have questions about our AI builder or need career guidance? Send us a message and we will point you to the right help.
                     </p>
                 </div>
 
