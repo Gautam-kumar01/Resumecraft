@@ -34,8 +34,8 @@ const toHtmlList = (value) => {
   return items.length ? `<ul>${items.map((item) => `<li>${item.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</li>`).join('')}</ul>` : '';
 };
 
-const ResumeOnboarding = ({ isOpen, onClose, onOpenEditor }) => {
-  const [mode, setMode] = useState('choose');
+const ResumeOnboarding = ({ isOpen, onClose, onOpenEditor, isPage = false, initialMode = 'choose' }) => {
+  const [mode, setMode] = useState(initialMode);
   const [step, setStep] = useState(1);
   const [targetRole, setTargetRole] = useState('');
   const [personalInfo, setPersonalInfo] = useState({ fullName: '', email: '', phone: '', address: '', linkedin: '', github: '', website: '' });
@@ -49,7 +49,7 @@ const ResumeOnboarding = ({ isOpen, onClose, onOpenEditor }) => {
   const fileInputRef = useRef(null);
 
   const reset = () => {
-    setMode('choose');
+    setMode(initialMode);
     setStep(1);
     setTargetRole('');
     setPersonalInfo({ fullName: '', email: '', phone: '', address: '', linkedin: '', github: '', website: '' });
@@ -77,7 +77,9 @@ const ResumeOnboarding = ({ isOpen, onClose, onOpenEditor }) => {
     localStorage.setItem('guest_resume_draft', JSON.stringify(draft));
     trackEvent(eventName, { source: 'onboarding', template_id: draft.templateId || 'modern' });
     onOpenEditor(draft);
-    close();
+    if (!isPage) {
+      close();
+    }
   };
 
   const handleAiFinish = async () => {

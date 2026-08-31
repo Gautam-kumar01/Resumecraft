@@ -123,6 +123,70 @@ const callGroq = async (prompt, isJson = true) => {
     });
 };
 
+// Helper to call Manus AI API
+const callManus = async (prompt, isJson = true) => {
+    const apiKey = process.env.MANUS_API_KEY;
+    if (!apiKey) throw new Error("Manus API Key is missing");
+
+    return new Promise((resolve, reject) => {
+        console.log("AI: Attempting generation with Manus AI (manus-1.6-adaptive)...");
+        
+        const data = JSON.stringify({
+            model: process.env.MANUS_MODEL || "manus-1.6-adaptive",
+            messages: [
+                { role: "system", content: "You are a professional resume writer and career coach." },
+                { role: "user", content: prompt }
+            ],
+            ...(isJson ? { response_format: { type: "json_object" } } : {}),
+            temperature: 0.7
+        });
+
+        const options = {
+            hostname: 'api.manus.ai',
+            path: '/v1/chat/completions',
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'x-manus-api-key': apiKey,
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(data)
+            },
+            timeout: 60000
+        };
+
+        const req = https.request(options, (res) => {
+            let body = '';
+            res.on('data', (chunk) => body += chunk);
+            res.on('end', () => {
+                try {
+                    const response = JSON.parse(body);
+                    if (res.statusCode >= 200 && res.statusCode < 300) {
+                        if (response.choices && response.choices[0] && response.choices[0].message) {
+                            resolve(response.choices[0].message.content);
+                        } else {
+                            reject(new Error(`Manus API response format invalid: ${body}`));
+                        }
+                    } else {
+                        reject(new Error(`Manus API failed (${res.statusCode}): ${response.error?.message || body}`));
+                    }
+                } catch (e) {
+                    reject(new Error(`Failed to parse Manus response: ${e.message}`));
+                }
+            });
+        });
+
+        req.on('error', (e) => reject(new Error(`Manus Request Error: ${e.message}`)));
+        req.on('timeout', () => {
+            req.destroy();
+            reject(new Error('Manus Request Timeout'));
+        });
+        
+        req.write(data);
+        req.end();
+    });
+};
+
+
 // Helper to call Gemini API. The key stays server-side and is never sent to the browser.
 const callGemini = async (prompt, isJson = true) => {
     if (!process.env.GEMINI_API_KEY) throw new Error("Gemini API Key is missing");
@@ -196,14 +260,20 @@ exports.getSuggestions = async (req, res) => {
             // Try Gemini first
             text = await callGemini(prompt);
         } catch (geminiError) {
-            console.log("AI: Gemini failed, falling back to DeepSeek...");
+            console.log("AI: Gemini failed, falling back to Manus AI...");
             try {
-                // Fallback to DeepSeek
-                text = await callDeepSeek(prompt, true);
-            } catch (deepSeekError) {
-                console.log("AI: DeepSeek failed, falling back to Groq...");
-                // Fallback to Groq
-                text = await callGroq(prompt, true);
+                // Fallback to Manus AI
+                text = await callManus(prompt, true);
+            } catch (manusError) {
+                console.log("AI: Manus AI failed, falling back to DeepSeek...");
+                try {
+                    // Fallback to DeepSeek
+                    text = await callDeepSeek(prompt, true);
+                } catch (deepSeekError) {
+                    console.log("AI: DeepSeek failed, falling back to Groq...");
+                    // Fallback to Groq
+                    text = await callGroq(prompt, true);
+                }
             }
         }
 
@@ -246,9 +316,13 @@ const generateWithFallback = async (prompt) => {
         return await callGemini(prompt);
     } catch (geminiError) {
         try {
-            return await callDeepSeek(prompt, true);
-        } catch (deepSeekError) {
-            return callGroq(prompt, true);
+            return await callManus(prompt, true);
+        } catch (manusError) {
+            try {
+                return await callDeepSeek(prompt, true);
+            } catch (deepSeekError) {
+                return callGroq(prompt, true);
+            }
         }
     }
 };
@@ -432,14 +506,20 @@ exports.generateCoverLetter = async (req, res) => {
             // Try Gemini first
             text = await callGemini(prompt);
         } catch (geminiError) {
-            console.log("AI: Gemini failed, falling back to DeepSeek...");
+            console.log("AI: Gemini failed, falling back to Manus AI...");
             try {
-                // Fallback to DeepSeek
-                text = await callDeepSeek(prompt, true);
-            } catch (deepSeekError) {
-                console.log("AI: DeepSeek failed, falling back to Groq...");
-                // Fallback to Groq
-                text = await callGroq(prompt, true);
+                // Fallback to Manus AI
+                text = await callManus(prompt, true);
+            } catch (manusError) {
+                console.log("AI: Manus AI failed, falling back to DeepSeek...");
+                try {
+                    // Fallback to DeepSeek
+                    text = await callDeepSeek(prompt, true);
+                } catch (deepSeekError) {
+                    console.log("AI: DeepSeek failed, falling back to Groq...");
+                    // Fallback to Groq
+                    text = await callGroq(prompt, true);
+                }
             }
         }
 

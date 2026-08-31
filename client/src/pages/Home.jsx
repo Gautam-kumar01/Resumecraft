@@ -21,7 +21,6 @@ import Logo from '../components/Logo';
 import { motion, AnimatePresence } from 'framer-motion';
 const FeatureShowcase = lazy(() => import('../components/FeatureShowcase'));
 import OptimizedImage from '../components/OptimizedImage';
-import ResumeOnboarding from '../components/ResumeOnboarding';
 import { trackEvent } from '../utils/analytics';
 
 const MotionDiv = motion.div;
@@ -30,7 +29,6 @@ const Home = () => {
     const navigate = useNavigate();
     const [showcaseOpen, setShowcaseOpen] = useState(false);
     const [activeFeature, setActiveFeature] = useState(0);
-    const [showOnboarding, setShowOnboarding] = useState(false);
 
     const openFeature = (index) => {
         setActiveFeature(index);
@@ -38,12 +36,12 @@ const Home = () => {
     };
 
     const handleCreateNew = () => {
-        setShowOnboarding(true);
+        navigate('/create-resume?mode=choose');
         trackEvent('resume_builder_started', { source: 'homepage' });
     };
 
     const handleCreateWithAI = () => {
-        setShowOnboarding(true);
+        navigate('/create-resume?mode=ai');
         trackEvent('ai_builder_started', { source: 'homepage' });
     };
 
@@ -587,11 +585,6 @@ const Home = () => {
                     </div>
                 </div>
             </section>
-            <ResumeOnboarding
-                isOpen={showOnboarding}
-                onClose={() => setShowOnboarding(false)}
-                onOpenEditor={() => navigate('/editor')}
-            />
         </MotionDiv>
     );
 };
