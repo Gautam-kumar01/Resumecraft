@@ -35,6 +35,7 @@ const SEO = ({
             <title>{metaTitle}</title>
             <meta name="description" content={metaDescription} />
             <meta name="keywords" content={metaKeywords} />
+            <meta name="author" content="ResumeCraft" />
             {shouldNoindex ? (
                 <meta name="robots" content="noindex, nofollow" />
             ) : (
@@ -48,6 +49,7 @@ const SEO = ({
             <meta property="og:description" content={metaDescription} />
             <meta property="og:url" content={metaUrl} />
             <meta property="og:image" content={metaImage} />
+            <meta property="og:image:alt" content={metaTitle} />
             <meta property="og:image:width" content="1200" />
             <meta property="og:image:height" content="630" />
             <meta property="og:site_name" content="ResumeCraft" />
@@ -58,6 +60,7 @@ const SEO = ({
             <meta name="twitter:title" content={metaTitle} />
             <meta name="twitter:description" content={metaDescription} />
             <meta name="twitter:image" content={metaImage} />
+            <meta name="twitter:image:alt" content={metaTitle} />
 
             {/* Site identity and application schema */}
             {isHomepage && <script type="application/ld+json">

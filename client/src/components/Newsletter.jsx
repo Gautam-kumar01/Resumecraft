@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Mail, CheckCircle2, Loader2 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion as Motion, AnimatePresence } from 'framer-motion';
 
 const Newsletter = () => {
     const [email, setEmail] = useState('');
@@ -26,18 +26,18 @@ const Newsletter = () => {
                 <div className="inline-flex p-3 bg-orange-500/10 text-orange-400 rounded-2xl mb-6 border border-orange-500/20">
                     <Mail className="h-6 w-6" />
                 </div>
-                
+
                 <h3 className="text-2xl md:text-3xl font-black mb-3 tracking-tight">
                     Get Weekly Resume & Career Tips
                 </h3>
-                
+
                 <p className="text-slate-400 dark:text-slate-300 text-sm md:text-base max-w-xl mx-auto mb-8 leading-relaxed">
                     Receive ATS optimization tips, resume strategies, interview advice, and career growth insights.
                 </p>
 
                 <AnimatePresence mode="wait">
                     {status === 'success' ? (
-                        <motion.div 
+                        <Motion.div
                             initial={{ opacity: 0, scale: 0.95 }}
                             animate={{ opacity: 1, scale: 1 }}
                             exit={{ opacity: 0 }}
@@ -45,9 +45,9 @@ const Newsletter = () => {
                         >
                             <CheckCircle2 className="h-5 w-5 shrink-0" />
                             <span className="font-bold text-sm">Successfully subscribed! Welcome aboard.</span>
-                        </motion.div>
+                        </Motion.div>
                     ) : (
-                        <motion.form 
+                        <Motion.form
                             onSubmit={handleSubmit}
                             initial={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
@@ -76,7 +76,7 @@ const Newsletter = () => {
                                     <span>Subscribe</span>
                                 )}
                             </button>
-                        </motion.form>
+                        </Motion.form>
                     )}
                 </AnimatePresence>
             </div>

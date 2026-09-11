@@ -64,6 +64,15 @@ const Applications = lazy(() => import('./pages/Applications'));
 import GoogleAnalytics from './components/GoogleAnalytics';
 
 function App() {
+  const pageLoader = (
+    <div className="flex min-h-[50vh] items-center justify-center bg-white px-6 py-16" role="status" aria-live="polite">
+      <div className="flex flex-col items-center gap-4 text-center">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-orange-100 border-t-orange-500" aria-hidden="true" />
+        <p className="text-sm font-bold text-slate-600">Loading your ResumeCraft workspace…</p>
+      </div>
+    </div>
+  );
+
   return (
     <Router>
       <GoogleAnalytics />
@@ -71,6 +80,7 @@ function App() {
       <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || 'your-google-client-id'}>
         <AuthProvider>
           <div className="min-h-screen font-sans text-slate-900 relative">
+            <a href="#main-content" className="sr-only-focusable fixed left-4 top-4 z-[100] rounded-xl bg-slate-950 text-sm font-bold text-white shadow-xl">Skip to main content</a>
             {/* Premium Background Elements */}
             <div className="premium-bg">
               <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-orange-400/10 blur-[120px] rounded-full animate-blob"></div>
@@ -79,8 +89,8 @@ function App() {
             </div>
 
             <Navbar />
-            <main className="relative z-10">
-              <Suspense fallback={null}>
+            <main id="main-content" className="relative z-10">
+              <Suspense fallback={pageLoader}>
                 <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/create-resume" element={<Onboarding />} />

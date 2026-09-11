@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
 import Logo from '../components/Logo';
 import SEO from '../components/SEO';
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 import { Mail, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 
 const ForgotPassword = () => {
@@ -52,7 +52,7 @@ const ForgotPassword = () => {
         </div>
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-          <motion.div
+          <Motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10"
@@ -132,7 +132,7 @@ const ForgotPassword = () => {
                 </Link>
               </div>
             </div>
-          </motion.div>
+          </Motion.div>
         </div>
       </div>
     </>

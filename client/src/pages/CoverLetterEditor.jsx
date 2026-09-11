@@ -155,12 +155,6 @@ const CoverLetterEditor = () => {
     };
 
     const handleAiRewrite = async (section) => {
-        const sectionLabels = {
-            introduction: 'Introduction',
-            bodyParagraph1: 'Experience Paragraph',
-            bodyParagraph2: 'Company Fit Paragraph',
-            conclusion: 'Conclusion'
-        };
 
         try {
             const { data } = await api.post('/ai/generate-cover-letter', {

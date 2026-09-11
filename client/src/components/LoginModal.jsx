@@ -2,7 +2,7 @@ import { useState, useContext } from 'react';
 import AuthContext from '../context/AuthContext';
 import { GoogleLogin } from '@react-oauth/google';
 import Logo from './Logo';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion as Motion, AnimatePresence } from 'framer-motion';
 import { Mail, Lock, Loader2, ArrowRight, UserPlus, X, User } from 'lucide-react';
 
 const LoginModal = ({ isOpen, onClose, onSuccess, initialMode = 'login', title, subtitle }) => {
@@ -70,15 +70,15 @@ const LoginModal = ({ isOpen, onClose, onSuccess, initialMode = 'login', title, 
     return (
         <AnimatePresence>
             <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
-                <motion.div
+                <Motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
                     onClick={onClose}
-                ></motion.div>
+                ></Motion.div>
 
-                <motion.div
+                <Motion.div
                     initial={{ opacity: 0, scale: 0.95, y: 20 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -201,7 +201,7 @@ const LoginModal = ({ isOpen, onClose, onSuccess, initialMode = 'login', title, 
                             </button>
                         </p>
                     </div>
-                </motion.div>
+                </Motion.div>
             </div>
         </AnimatePresence>
     );

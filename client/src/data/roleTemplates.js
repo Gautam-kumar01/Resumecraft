@@ -273,5 +273,70 @@ export const roleTemplates = [
                 }
             ]
         }
+    },
+    {
+        slug: 'frontend-developer',
+        roleName: 'Frontend Developer',
+        title: 'Free Frontend Developer Resume Template & AI Builder',
+        description: 'Create a focused frontend developer resume with projects, UI performance wins, JavaScript skills, and an ATS-readable format.',
+        keywords: 'frontend developer resume template, frontend engineer CV, React developer resume, web developer resume format',
+        heading: 'Frontend Developer Resume Blueprint',
+        subheading: 'A project-first resume structure for frontend developers who want to show interface quality, performance improvements, and practical JavaScript experience.',
+        imageUrl: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=800&auto=format&fit=crop',
+        industry: 'Web & Product Engineering',
+        targetCompanies: ['Product teams', 'SaaS teams', 'Agencies', 'Startups'],
+        sampleSummary: 'Frontend Developer who builds accessible, responsive interfaces with React, TypeScript, and modern CSS. Strong at translating product requirements into maintainable components, improving Core Web Vitals, and collaborating with design and backend teams.',
+        sampleSkills: ['React', 'TypeScript', 'JavaScript', 'CSS / Tailwind', 'Accessibility', 'Testing', 'Performance', 'Git'],
+        sampleExperience: [{ position: 'Frontend Developer', company: 'Product Studio', duration: '2023 - Present', bullets: ['Built reusable React components for customer-facing workflows, reducing duplicate UI code across product surfaces.', 'Improved page performance by auditing bundle size, image loading, and rendering bottlenecks.', 'Partnered with designers and API developers to deliver responsive features with accessible keyboard interactions.'] }],
+        guide: { title: 'How to Write a Frontend Developer Resume', sections: [{ title: '1. Show interfaces you built', content: 'Use projects and experience bullets to explain the product surface, your contribution, and the technologies you used.' }, { title: '2. Include accessibility and performance', content: 'Mention measurable improvements such as faster page loads, better Core Web Vitals, accessibility fixes, or reduced bundle size when you have evidence.' }, { title: '3. Link to proof', content: 'Add a working portfolio or GitHub link and make sure the projects are easy to review.' }] }
+    },
+    {
+        slug: 'backend-developer',
+        roleName: 'Backend Developer',
+        title: 'Free Backend Developer Resume Template & AI Builder',
+        description: 'Build a backend developer resume focused on APIs, databases, reliability, cloud systems, and measurable engineering outcomes.',
+        keywords: 'backend developer resume template, API developer CV, Node.js developer resume, backend engineer resume format',
+        heading: 'Backend Developer Resume Blueprint',
+        subheading: 'A clear technical layout for backend engineers who want to communicate architecture decisions, reliability work, data systems, and delivery impact.',
+        imageUrl: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=800&auto=format&fit=crop',
+        industry: 'Backend & Platform Engineering',
+        targetCompanies: ['Platform teams', 'Fintech teams', 'SaaS teams', 'Infrastructure teams'],
+        sampleSummary: 'Backend Developer experienced in designing APIs, data models, and background workflows with Node.js, Python, and SQL. Focused on dependable services, clear observability, and pragmatic system design that supports product growth.',
+        sampleSkills: ['Node.js', 'Python', 'REST APIs', 'PostgreSQL', 'Redis', 'Docker', 'Cloud Services', 'Observability'],
+        sampleExperience: [{ position: 'Backend Developer', company: 'Cloud Products Team', duration: '2022 - Present', bullets: ['Designed REST endpoints and validation rules for a multi-tenant product workflow.', 'Optimized database queries and indexes after profiling slow requests in production.', 'Added structured logs and health checks that shortened incident investigation time.'] }],
+        guide: { title: 'How to Write a Backend Developer Resume', sections: [{ title: '1. Explain system responsibility', content: 'Name the service, workflow, or data problem you owned instead of listing technologies without context.' }, { title: '2. Show reliability work', content: 'Mention testing, monitoring, error handling, performance, migrations, and security practices that you actually implemented.' }, { title: '3. Use concrete scale carefully', content: 'Include request volume, latency, data size, or uptime only when you can support the number.' }] }
+    },
+    {
+        slug: 'product-manager',
+        roleName: 'Product Manager',
+        title: 'Free Product Manager Resume Template & AI Builder',
+        description: 'Create a product manager resume that connects customer problems, product decisions, launches, experiments, and business outcomes.',
+        keywords: 'product manager resume template, PM resume format, product management CV, associate product manager resume',
+        heading: 'Product Manager Resume Blueprint',
+        subheading: 'A concise product-management format for showing discovery, prioritization, cross-functional leadership, launches, and measurable outcomes.',
+        imageUrl: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=800&auto=format&fit=crop',
+        industry: 'Product Management',
+        targetCompanies: ['B2B SaaS', 'Consumer apps', 'Fintech', 'Digital services'],
+        sampleSummary: 'Product Manager who turns customer research and business goals into focused roadmaps, testable experiments, and shipped improvements. Comfortable working across engineering, design, sales, and operations to move products forward.',
+        sampleSkills: ['Product Discovery', 'Roadmapping', 'User Research', 'Prioritization', 'Analytics', 'Experimentation', 'Stakeholder Management', 'Agile Delivery'],
+        sampleExperience: [{ position: 'Product Manager', company: 'Digital Product Team', duration: '2023 - Present', bullets: ['Synthesized customer interviews and product analytics into a prioritized quarterly roadmap.', 'Worked with design and engineering to launch an onboarding improvement and monitor adoption.', 'Defined success metrics for experiments and shared concise decision notes with stakeholders.'] }],
+        guide: { title: 'How to Write a Product Manager Resume', sections: [{ title: '1. Lead with product outcomes', content: 'Describe the customer problem, the decision you made, and what changed after the launch or experiment.' }, { title: '2. Show cross-functional leadership', content: 'Make your collaboration with engineering, design, sales, and operations visible through specific examples.' }, { title: '3. Keep strategy concrete', content: 'Replace broad phrases such as strategic thinker with the product decisions and trade-offs you handled.' }] }
+    },
+    {
+        slug: 'hr-manager',
+        roleName: 'HR Manager',
+        title: 'Free HR Manager Resume Template & AI Builder',
+        description: 'Build an HR manager resume around hiring operations, employee experience, policies, learning, and measurable people outcomes.',
+        keywords: 'HR manager resume template, human resources CV format, HR generalist resume, people operations resume',
+        heading: 'HR Manager Resume Blueprint',
+        subheading: 'A people-focused resume structure for HR professionals who want to show hiring, policy, employee experience, compliance, and stakeholder impact.',
+        imageUrl: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=800&auto=format&fit=crop',
+        industry: 'Human Resources',
+        targetCompanies: ['People teams', 'Growing businesses', 'Operations teams', 'Nonprofits'],
+        sampleSummary: 'HR Manager with experience supporting hiring, onboarding, employee relations, and people programs across growing teams. Builds clear processes, partners with managers, and uses practical reporting to improve employee experience and operational consistency.',
+        sampleSkills: ['Recruitment', 'Onboarding', 'Employee Relations', 'HR Operations', 'Policy Writing', 'People Analytics', 'Learning Programs', 'HRIS'],
+        sampleExperience: [{ position: 'HR Manager', company: 'Growing Services Company', duration: '2022 - Present', bullets: ['Standardized onboarding checklists and manager resources for new hires across multiple teams.', 'Partnered with department leads on hiring plans, interview structure, and candidate communication.', 'Maintained people operations documentation and recurring reports for leadership review.'] }],
+        guide: { title: 'How to Write an HR Manager Resume', sections: [{ title: '1. Show the people process', content: 'Explain the hiring, onboarding, employee-support, or learning process you improved and who it served.' }, { title: '2. Balance empathy and operations', content: 'Strong HR resumes show both relationship skills and dependable systems, documentation, and follow-through.' }, { title: '3. Protect confidential information', content: 'Use aggregated or anonymized outcomes and never include private employee details in your resume.' }] }
     }
+
 ];

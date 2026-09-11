@@ -17,7 +17,6 @@ import {
     ChevronRight, 
     Building2 
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 const RoleTemplate = () => {
     const { slug } = useParams();

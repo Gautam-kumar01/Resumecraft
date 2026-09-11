@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion as Motion, AnimatePresence } from 'framer-motion';
 import api from '../api/axios';
 import {
   X, FileText, Cpu, Eye, MessageSquare, Globe, BarChart3,
@@ -37,7 +37,7 @@ function TemplateWorkspace() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {templates.map((t, i) => (
-          <motion.div
+          <Motion.div
             key={t.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -65,7 +65,7 @@ function TemplateWorkspace() {
                 <CheckCircle2 className="w-4 h-4" />
               </div>
             )}
-          </motion.div>
+          </Motion.div>
         ))}
       </div>
     </div>
@@ -105,7 +105,7 @@ function AIWorkspace() {
         setMessages(prev => [...prev, { role: 'ai', content: aiResponse }]);
         setTyping(false);
       }, 1000);
-    } catch (error) {
+    } catch {
       setMessages(prev => [...prev, { role: 'ai', content: "I'm having trouble connecting right now, but I can still give you general advice: Always quantify your achievements!" }]);
       setTyping(false);
     }
@@ -135,7 +135,7 @@ function AIWorkspace() {
 
         <div className="flex-1 overflow-y-auto p-8 space-y-8 scroll-smooth">
           {messages.map((m, i) => (
-            <motion.div
+            <Motion.div
               key={i}
               initial={{ opacity: 0, y: 20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -148,14 +148,14 @@ function AIWorkspace() {
                 }`}>
                 <p className="text-sm leading-relaxed">{m.content}</p>
               </div>
-            </motion.div>
+            </Motion.div>
           ))}
           {typing && (
             <div className="flex justify-start">
               <div className="bg-slate-50 p-6 rounded-[24px] rounded-tl-none border border-slate-100 flex space-x-2">
-                <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 1 }} className="w-2 h-2 bg-orange-400 rounded-full"></motion.div>
-                <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 1, delay: 0.2 }} className="w-2 h-2 bg-orange-400 rounded-full"></motion.div>
-                <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 1, delay: 0.4 }} className="w-2 h-2 bg-orange-400 rounded-full"></motion.div>
+                <Motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 1 }} className="w-2 h-2 bg-orange-400 rounded-full"></Motion.div>
+                <Motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 1, delay: 0.2 }} className="w-2 h-2 bg-orange-400 rounded-full"></Motion.div>
+                <Motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 1, delay: 0.4 }} className="w-2 h-2 bg-orange-400 rounded-full"></Motion.div>
               </div>
             </div>
           )}
@@ -208,7 +208,7 @@ function ReviewWorkspace() {
           <div className="relative w-40 h-40">
             <svg className="w-full h-full rotate-[-90deg]">
               <circle cx="80" cy="80" r="70" fill="none" stroke="#f1f5f9" strokeWidth="12" />
-              <motion.circle
+              <Motion.circle
                 cx="80" cy="80" r="70" fill="none" stroke="url(#scoreGradient)" strokeWidth="12" strokeLinecap="round"
                 initial={{ strokeDasharray: "0 440" }}
                 animate={{ strokeDasharray: `${(score / 100) * 440} 440` }}
@@ -251,7 +251,7 @@ function ReviewWorkspace() {
           { title: "Section Order", desc: "Your skills section should be more prominent for technical roles.", status: "Suggestion", color: "orange" },
           { title: "Formatting Consistency", desc: "Date formats are consistent throughout the document.", status: "Perfect", color: "emerald" },
         ].map((tip, i) => (
-          <motion.div
+          <Motion.div
             key={i}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -268,7 +268,7 @@ function ReviewWorkspace() {
               </div>
               <p className="text-sm text-slate-500">{tip.desc}</p>
             </div>
-          </motion.div>
+          </Motion.div>
         ))}
       </div>
     </div>
@@ -323,7 +323,7 @@ function CoverLetterWorkspace() {
             </div>
             {s < 3 && (
               <div className="flex-1 mx-4 h-1 bg-slate-100 rounded-full overflow-hidden">
-                <motion.div
+                <Motion.div
                   initial={{ width: "0%" }}
                   animate={{ width: step > s ? "100%" : "0%" }}
                   className="h-full bg-orange-500"
@@ -337,7 +337,7 @@ function CoverLetterWorkspace() {
       <div className="flex-1 min-h-0">
         <AnimatePresence mode="wait">
           {step === 1 && (
-            <motion.div
+            <Motion.div
               key="step1"
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -378,11 +378,11 @@ function CoverLetterWorkspace() {
                 Continue to Personality
                 <ArrowRight className="ml-2 w-6 h-6 group-hover:translate-x-1 transition-transform" />
               </button>
-            </motion.div>
+            </Motion.div>
           )}
 
           {step === 2 && (
-            <motion.div
+            <Motion.div
               key="step2"
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -427,11 +427,11 @@ function CoverLetterWorkspace() {
               >
                 ← Back to Job Details
               </button>
-            </motion.div>
+            </Motion.div>
           )}
 
           {step === 3 && (
-            <motion.div
+            <Motion.div
               key="step3"
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -477,7 +477,7 @@ function CoverLetterWorkspace() {
                   </button>
                 </div>
               </div>
-            </motion.div>
+            </Motion.div>
           )}
         </AnimatePresence>
       </div>
@@ -539,7 +539,7 @@ function WebsiteWorkspace() {
             <div className="w-10"></div>
           </div>
           <div className="flex-1 overflow-y-auto p-12 text-center">
-            <motion.div
+            <Motion.div
               key={activeSection}
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -570,7 +570,7 @@ function WebsiteWorkspace() {
                   <p className="text-sm text-slate-500 mt-2">Delivered solutions used by 5M+ users across 40 countries.</p>
                 </div>
               </div>
-            </motion.div>
+            </Motion.div>
           </div>
         </div>
       </div>
@@ -588,7 +588,7 @@ function TrackingWorkspace() {
           { label: 'Resume Downloads', value: '42', change: '+24%', icon: <Download className="w-5 h-5" />, color: 'emerald' },
           { label: 'Avg. Time Spent', value: '2m 45s', change: '-5%', icon: <TrendingUp className="w-5 h-5" />, color: 'orange' },
         ].map((stat, i) => (
-          <motion.div
+          <Motion.div
             key={i}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -605,7 +605,7 @@ function TrackingWorkspace() {
                 {stat.change}
               </div>
             </div>
-          </motion.div>
+          </Motion.div>
         ))}
       </div>
 
@@ -620,7 +620,7 @@ function TrackingWorkspace() {
           </div>
           <div className="h-64 flex items-end justify-between gap-2 px-2">
             {[40, 65, 35, 90, 55, 75, 45, 85, 30, 60, 95, 40].map((h, i) => (
-              <motion.div
+              <Motion.div
                 key={i}
                 initial={{ height: 0 }}
                 animate={{ height: `${h}%` }}
@@ -630,7 +630,7 @@ function TrackingWorkspace() {
                 <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-2 py-1 rounded text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity">
                   {Math.floor(h * 1.5)}
                 </div>
-              </motion.div>
+              </Motion.div>
             ))}
           </div>
           <div className="flex justify-between mt-6 text-[10px] font-bold text-slate-400 uppercase tracking-widest px-2">
@@ -658,7 +658,7 @@ function TrackingWorkspace() {
                   <span className="font-black text-slate-900">{source.value}%</span>
                 </div>
                 <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                  <motion.div
+                  <Motion.div
                     initial={{ width: 0 }}
                     animate={{ width: `${source.value}%` }}
                     transition={{ duration: 1, delay: 0.5 + i * 0.1 }}
@@ -712,15 +712,8 @@ const modalVariants = {
 };
 
 const FeatureShowcase = ({ onClose, initialFeature = 0 }) => {
-  const [activeFeature, setActiveFeature] = useState(initialFeature);
-  const [mobileView, setMobileView] = useState(initialFeature !== undefined ? 'workspace' : 'list');
-
-  useEffect(() => {
-    if (initialFeature !== undefined) {
-      setActiveFeature(initialFeature);
-      setMobileView('workspace');
-    }
-  }, [initialFeature]);
+  const [activeFeature, setActiveFeature] = useState(initialFeature ?? 0);
+  const [mobileView, setMobileView] = useState('workspace');
 
   const features = [
     {
@@ -775,7 +768,7 @@ const FeatureShowcase = ({ onClose, initialFeature = 0 }) => {
   return createPortal(
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8 overflow-hidden">
       {/* Overlay */}
-      <motion.div
+      <Motion.div
         variants={overlayVariants}
         initial="hidden"
         animate="visible"
@@ -785,7 +778,7 @@ const FeatureShowcase = ({ onClose, initialFeature = 0 }) => {
       />
 
       {/* Modal Container */}
-      <motion.div
+      <Motion.div
         variants={modalVariants}
         initial="hidden"
         animate="visible"
@@ -795,7 +788,7 @@ const FeatureShowcase = ({ onClose, initialFeature = 0 }) => {
         <AnimatePresence mode="popLayout" initial={false}>
           {/* Sidebar / Feature List */}
           {(window.innerWidth >= 768 || mobileView === 'list') && (
-            <motion.div
+            <Motion.div
               key="sidebar"
               initial={{ x: -320, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
@@ -836,12 +829,12 @@ const FeatureShowcase = ({ onClose, initialFeature = 0 }) => {
                         {feature.title}
                       </div>
                       {activeFeature === feature.id && (
-                        <motion.div
+                        <Motion.div
                           layoutId="activeIndicator"
                           className="text-[10px] text-slate-400 font-medium mt-0.5"
                         >
                           ACTIVE WORKSPACE
-                        </motion.div>
+                        </Motion.div>
                       )}
                     </div>
                     <ChevronRight className={`w-4 h-4 transition-transform duration-300 ${activeFeature === feature.id ? 'translate-x-0 opacity-100' : '-translate-x-2 opacity-0'}`} />
@@ -857,12 +850,12 @@ const FeatureShowcase = ({ onClose, initialFeature = 0 }) => {
                   <span>Close Workspace</span>
                 </button>
               </div>
-            </motion.div>
+            </Motion.div>
           )}
 
           {/* Main Content Area / Workspace */}
           {(window.innerWidth >= 768 || mobileView === 'workspace') && (
-            <motion.div
+            <Motion.div
               key="content"
               initial={{ x: 500, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
@@ -902,7 +895,7 @@ const FeatureShowcase = ({ onClose, initialFeature = 0 }) => {
               {/* Workspace Render */}
               <div className="flex-1 overflow-y-auto bg-slate-50/30 p-4 md:p-8 no-scrollbar">
                 <AnimatePresence mode="wait">
-                  <motion.div
+                  <Motion.div
                     key={activeFeature}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -911,13 +904,13 @@ const FeatureShowcase = ({ onClose, initialFeature = 0 }) => {
                     className="h-full"
                   >
                     <Workspace id={activeFeature} />
-                  </motion.div>
+                  </Motion.div>
                 </AnimatePresence>
               </div>
-            </motion.div>
+            </Motion.div>
           )}
         </AnimatePresence>
-      </motion.div>
+      </Motion.div>
     </div>,
     document.body
   );

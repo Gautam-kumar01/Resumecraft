@@ -14,7 +14,6 @@ import {
     ChevronRight,
     BookOpen
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import SEO from '../components/SEO';
 import { blogPosts } from '../data/blogPosts';
 import InternalLink from '../components/InternalLink';

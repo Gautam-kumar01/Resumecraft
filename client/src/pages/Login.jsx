@@ -2,9 +2,9 @@ import { useState, useContext } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import SEO from '../components/SEO';
+import { motion as Motion } from 'framer-motion';
 import { GoogleLogin } from '@react-oauth/google';
 import Logo from '../components/Logo';
-import { motion } from 'framer-motion';
 import { Mail, Lock, Loader2, ArrowRight, UserPlus } from 'lucide-react';
 
 const Login = () => {
@@ -63,21 +63,21 @@ const Login = () => {
                 noindex={true}
             />
 
-            <motion.div
+            <Motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
                 className="max-w-md w-full space-y-8 glass-effect p-10 rounded-3xl relative z-10"
             >
                 <div className="text-center">
-                    <motion.div
+                    <Motion.div
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ delay: 0.2 }}
                         className="flex justify-center mb-6"
                     >
                         <Logo size="lg" />
-                    </motion.div>
+                    </Motion.div>
                     <h2 className="mt-2 text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700">
                         Welcome Back
                     </h2>
@@ -87,14 +87,14 @@ const Login = () => {
                 </div>
 
                 {error && (
-                    <motion.div
+                    <Motion.div
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         className="bg-red-50/80 backdrop-blur-sm text-red-600 p-4 rounded-xl text-sm text-center border border-red-200 shadow-sm flex items-center justify-center gap-2"
                     >
                         <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
                         {error}
-                    </motion.div>
+                    </Motion.div>
                 )}
 
                 {isGoogleConfigured && (
@@ -219,7 +219,7 @@ const Login = () => {
                         Create free account
                     </Link>
                 </div>
-            </motion.div>
+            </Motion.div>
         </div>
     );
 };

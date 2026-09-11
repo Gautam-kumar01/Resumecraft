@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from '../api/axios';
 import Logo from '../components/Logo';
 import SEO from '../components/SEO';
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 import { Lock, Key, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 
 const ResetPassword = () => {
@@ -61,7 +61,7 @@ const ResetPassword = () => {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <motion.div
+          <Motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 text-center"
@@ -81,7 +81,7 @@ const ResetPassword = () => {
                 Go to Login
               </Link>
             </div>
-          </motion.div>
+          </Motion.div>
         </div>
       </div>
     );
@@ -111,7 +111,7 @@ const ResetPassword = () => {
         </div>
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-          <motion.div
+          <Motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10"
@@ -234,7 +234,7 @@ const ResetPassword = () => {
                 </button>
               </div>
             </form>
-          </motion.div>
+          </Motion.div>
         </div>
       </div>
     </>

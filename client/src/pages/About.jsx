@@ -15,7 +15,7 @@ import {
     CheckCircle2
 } from 'lucide-react';
 import SEO from '../components/SEO';
-import { motion } from 'framer-motion';
+import { motion as Motion } from 'framer-motion';
 
 const About = () => {
     const skills = [
@@ -31,8 +31,8 @@ const About = () => {
 
     return (
         <div className="min-h-screen pt-32 pb-24 bg-white dark:bg-slate-900 font-sans">
-            <SEO 
-            title="About ResumeCraft | Free AI Resume Builder" 
+            <SEO
+            title="About ResumeCraft | Free AI Resume Builder"
             description="ResumeCraft is the #1 free AI-powered resume builder. Create ATS-friendly resumes with 35+ MNC-approved templates, AI cover letter maker, and instant PDF download — 100% free."
         />
 
@@ -88,7 +88,7 @@ const About = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Hero Section */}
                 <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-32">
-                    <motion.div 
+                    <Motion.div
                         initial={{ opacity: 0, x: -30 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
@@ -119,16 +119,16 @@ const About = () => {
                                 <Mail className="h-6 w-6" />
                             </a>
                         </div>
-                    </motion.div>
+                    </Motion.div>
 
-                    <motion.div 
+                    <Motion.div
                         initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ 
-                            opacity: 1, 
+                        animate={{
+                            opacity: 1,
                             scale: 1,
                             y: [0, -10, 0]
                         }}
-                        transition={{ 
+                        transition={{
                             duration: 0.8,
                             y: {
                                 duration: 4,
@@ -140,7 +140,7 @@ const About = () => {
                     >
                         {/* Circular Animated Glow */}
                         <div className="absolute -inset-4 bg-gradient-to-r from-orange-500 via-purple-500 to-orange-600 rounded-full blur-2xl opacity-20 animate-pulse"></div>
-                        
+
                         <div className="relative h-64 w-64 md:h-[450px] md:w-[450px] rounded-full p-1.5 md:p-2 bg-gradient-to-tr from-orange-500 to-purple-600 shadow-2xl">
                             <div className="h-full w-full rounded-full overflow-hidden border-4 border-white dark:border-slate-800 bg-white dark:bg-slate-800">
                                 <img
@@ -153,17 +153,17 @@ const About = () => {
                                 />
                             </div>
                         </div>
-                        
+
                         {/* Status Indicator with Audio Visualizer Style */}
                         <div className="absolute -bottom-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md px-4 md:px-6 py-2 md:py-3 rounded-full border border-orange-500/20 shadow-2xl flex items-center space-x-3 md:space-x-4">
                             <div className="flex items-end space-x-1 h-3 md:h-4">
-                                <motion.div animate={{ height: [3, 12, 6, 9, 3] }} transition={{ repeat: Infinity, duration: 1 }} className="w-0.5 md:w-1 bg-green-500 rounded-full"></motion.div>
-                                <motion.div animate={{ height: [6, 3, 12, 5, 6] }} transition={{ repeat: Infinity, duration: 0.8 }} className="w-0.5 md:w-1 bg-green-500 rounded-full"></motion.div>
-                                <motion.div animate={{ height: [9, 6, 3, 12, 9] }} transition={{ repeat: Infinity, duration: 1.2 }} className="w-0.5 md:w-1 bg-green-500 rounded-full"></motion.div>
+                                <Motion.div animate={{ height: [3, 12, 6, 9, 3] }} transition={{ repeat: Infinity, duration: 1 }} className="w-0.5 md:w-1 bg-green-500 rounded-full"></Motion.div>
+                                <Motion.div animate={{ height: [6, 3, 12, 5, 6] }} transition={{ repeat: Infinity, duration: 0.8 }} className="w-0.5 md:w-1 bg-green-500 rounded-full"></Motion.div>
+                                <Motion.div animate={{ height: [9, 6, 3, 12, 9] }} transition={{ repeat: Infinity, duration: 1.2 }} className="w-0.5 md:w-1 bg-green-500 rounded-full"></Motion.div>
                             </div>
                             <span className="text-[10px] md:text-xs font-black text-slate-900 dark:text-white uppercase tracking-[0.1em] md:tracking-[0.2em]">Always Live</span>
                         </div>
-                    </motion.div>
+                    </Motion.div>
                 </div>
 
                 {/* My Journey */}
@@ -198,7 +198,7 @@ const About = () => {
                 <div className="bg-slate-950 rounded-[3rem] md:rounded-[5rem] p-8 md:p-24 text-white relative overflow-hidden shadow-2xl">
                     <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-orange-600/10 blur-[120px] rounded-full"></div>
                     <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-purple-600/10 blur-[100px] rounded-full"></div>
-                    
+
                     <div className="relative z-10">
                         <div className="text-center mb-20">
                             <h2 className="text-4xl md:text-6xl font-black mb-8 italic tracking-tighter">Code is my <span className="text-orange-500">Craft.</span></h2>
@@ -209,7 +209,7 @@ const About = () => {
 
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                             {skills.map((skill, idx) => (
-                                <motion.div 
+                                <Motion.div
                                     key={idx}
                                     whileHover={{ y: -10, scale: 1.02 }}
                                     className="bg-white/5 backdrop-blur-xl border border-white/10 p-8 rounded-[2rem] flex flex-col items-center text-center group transition-all"
@@ -218,7 +218,7 @@ const About = () => {
                                     <h4 className="font-bold text-xl mb-2">{skill.name}</h4>
                                     <div className="h-1 w-12 bg-orange-500/50 rounded-full mb-3"></div>
                                     <span className="text-[10px] uppercase font-black tracking-widest text-slate-500 group-hover:text-orange-500">{skill.level}</span>
-                                </motion.div>
+                                </Motion.div>
                             ))}
                         </div>
                     </div>

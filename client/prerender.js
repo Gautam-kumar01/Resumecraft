@@ -1,3 +1,4 @@
+/* global process */
 import puppeteer from 'puppeteer';
 import handler from 'serve-handler';
 import http from 'http';
@@ -34,6 +35,10 @@ const routes = [
     '/resume-template/marketing-manager',
     '/resume-template/fresher',
     '/resume-template/teacher',
+    '/resume-template/frontend-developer',
+    '/resume-template/backend-developer',
+    '/resume-template/product-manager',
+    '/resume-template/hr-manager',
     '/resource/resume-formats',
     '/resource/resume-examples',
     '/resource/how-to-write-a-resume',
@@ -74,9 +79,17 @@ async function prerender() {
                 ignoreHTTPSErrors: true,
             });
         } else {
+            const detectedExecutable = process.env.PUPPETEER_EXECUTABLE_PATH || [
+                '/usr/bin/chromium',
+                '/usr/bin/chromium-browser',
+                '/usr/bin/google-chrome-stable',
+                '/usr/bin/google-chrome'
+            ].find((candidate) => fs.existsSync(candidate));
+
             browser = await puppeteer.launch({
                 headless: true,
-                args: ['--no-sandbox', '--disable-setuid-sandbox']
+                ...(detectedExecutable ? { executablePath: detectedExecutable } : {}),
+                args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
             });
         }
     } catch (e) {
@@ -163,6 +176,26 @@ async function prerender() {
             loc: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?q=80&w=800&auto=format&fit=crop',
             title: 'Teacher / Educator Resume Template',
             caption: 'Academic teacher resume blueprint highlighting curriculum development and student growth'
+        },
+        '/resume-template/frontend-developer': {
+            loc: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=800&auto=format&fit=crop',
+            title: 'Frontend Developer Resume Template',
+            caption: 'Frontend developer resume blueprint for React, TypeScript, accessibility, and performance work'
+        },
+        '/resume-template/backend-developer': {
+            loc: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=800&auto=format&fit=crop',
+            title: 'Backend Developer Resume Template',
+            caption: 'Backend developer resume blueprint for APIs, databases, reliability, and cloud systems'
+        },
+        '/resume-template/product-manager': {
+            loc: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=800&auto=format&fit=crop',
+            title: 'Product Manager Resume Template',
+            caption: 'Product manager resume blueprint for discovery, roadmaps, experiments, and launches'
+        },
+        '/resume-template/hr-manager': {
+            loc: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=800&auto=format&fit=crop',
+            title: 'HR Manager Resume Template',
+            caption: 'HR manager resume blueprint for hiring, onboarding, employee experience, and people operations'
         }
     };
 

@@ -1,19 +1,19 @@
 
 import { useParams, Link } from 'react-router-dom';
 import SEO from '../components/SEO';
-import { 
-    FileText, 
-    BookOpen, 
-    Lightbulb, 
-    Target, 
-    CheckCircle2, 
+import { motion as Motion } from 'framer-motion';
+import {
+    FileText,
+    BookOpen,
+    Lightbulb,
+    Target,
+    CheckCircle2,
     ArrowRight,
     Search,
     Users,
     Briefcase,
     Zap
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 const resourceContent = {
     'resume-formats': {
@@ -144,20 +144,20 @@ const Resource = () => {
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-900 pt-16 pb-24">
-            <SEO 
+            <SEO
                 title={`${content.title} | ResumeCraft Resources`}
                 description={content.description}
             />
-            
+
             {/* Header */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-                <motion.div 
+                <Motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-10 md:p-16 border border-white dark:border-slate-700 shadow-xl relative overflow-hidden"
                 >
                     <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/5 rounded-full blur-3xl -mr-20 -mt-20"></div>
-                    
+
                     <div className="relative z-10">
                         <div className="mb-6 p-4 bg-slate-50 dark:bg-slate-700 w-fit rounded-2xl shadow-sm">
                             {content.icon}
@@ -169,14 +169,14 @@ const Resource = () => {
                             {content.description}
                         </p>
                     </div>
-                </motion.div>
+                </Motion.div>
             </div>
 
             {/* Content Sections */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid lg:grid-cols-3 gap-8">
                     {content.sections.map((section, idx) => (
-                        <motion.div 
+                        <Motion.div
                             key={idx}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -195,7 +195,7 @@ const Resource = () => {
                                     </li>
                                 ))}
                             </ul>
-                        </motion.div>
+                        </Motion.div>
                     ))}
                 </div>
 
@@ -208,14 +208,14 @@ const Resource = () => {
                             Start building your professional resume or cover letter today with our AI-powered editor.
                         </p>
                         <div className="flex flex-col sm:flex-row justify-center gap-4">
-                            <Link 
-                                to="/templates" 
+                            <Link
+                                to="/templates"
                                 className="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-bold transition-all shadow-lg shadow-orange-500/20"
                             >
                                 Build My Resume
                             </Link>
-                            <Link 
-                                to="/cover-letter-templates" 
+                            <Link
+                                to="/cover-letter-templates"
                                 className="px-8 py-4 bg-white text-slate-900 rounded-xl font-bold hover:bg-slate-100 transition-all"
                             >
                                 Create Cover Letter
@@ -231,8 +231,8 @@ const Resource = () => {
                         {Object.entries(resourceContent)
                             .filter(([key]) => key !== slug)
                             .map(([key, value]) => (
-                                <Link 
-                                    key={key} 
+                                <Link
+                                    key={key}
                                     to={`/resource/${key}`}
                                     className="p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 hover:border-orange-500 transition-all group"
                                 >
