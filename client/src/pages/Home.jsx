@@ -15,6 +15,8 @@ import {
     BarChart3,
     MessageSquare,
     ChevronRight,
+    ArrowRight,
+    BookOpen,
     Sparkles
 } from 'lucide-react';
 import Logo from '../components/Logo';
@@ -22,6 +24,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const FeatureShowcase = lazy(() => import('../components/FeatureShowcase'));
 import OptimizedImage from '../components/OptimizedImage';
 import { trackEvent } from '../utils/analytics';
+import { blogPosts } from '../data/blogPosts';
 
 const MotionDiv = motion.div;
 
@@ -83,6 +86,16 @@ const Home = () => {
         localStorage.setItem('guest_resume_draft', JSON.stringify(initialData));
         navigate('/editor');
     };
+
+    const featuredPosts = blogPosts.filter((post) => post.featured).slice(0, 3);
+    const roleLinks = [
+        { label: 'Software Engineer', href: '/resume-template/software-engineer', detail: 'Projects, APIs, cloud, and measurable engineering impact.' },
+        { label: 'Data Analyst', href: '/resume-template/data-analyst', detail: 'SQL, dashboards, insights, and business outcomes.' },
+        { label: 'Frontend Developer', href: '/resume-template/frontend-developer', detail: 'React, TypeScript, accessibility, and performance.' },
+        { label: 'Product Manager', href: '/resume-template/product-manager', detail: 'Discovery, roadmaps, launches, and decision-making.' },
+        { label: 'MBA Student', href: '/resume-format-for-mba-students', detail: 'Projects, internships, leadership, and case work.' },
+        { label: 'Fresher', href: '/resume-builder-for-freshers', detail: 'Education, skills, projects, and first-job evidence.' }
+    ];
 
     const mncCards = [
         { company: 'Product teams', role: 'Software Engineer', skills: ['Go', 'Distributed Systems', 'Cloud'], image: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&q=80&w=800' },
@@ -507,6 +520,64 @@ const Home = () => {
                                 <div className={`absolute inset-0 border-2 border-transparent group-hover:border-slate-100/50 rounded-[32px] transition-all duration-500`}></div>
                             </MotionDiv>
                         ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Role discovery: internal links connect high-intent searches to the right blueprint. */}
+            <section className="bg-slate-50 py-24" aria-labelledby="role-blueprints-heading">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+                        <div className="max-w-2xl">
+                            <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-500">Start with your target role</p>
+                            <h2 id="role-blueprints-heading" className="mt-3 text-3xl font-black tracking-tight text-slate-950 sm:text-5xl">Resume examples built around real job intent</h2>
+                            <p className="mt-4 text-base leading-7 text-slate-600">Choose a role to see a focused blueprint, practical sample content, and a starting structure you can edit honestly.</p>
+                        </div>
+                        <Link to="/resume-templates" className="inline-flex items-center text-sm font-black text-orange-600 hover:text-orange-700">Browse all templates <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                    </div>
+                    <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                        {roleLinks.map((role) => (
+                            <Link key={role.href} to={role.href} className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-orange-300 hover:shadow-xl">
+                                <div className="flex items-start justify-between gap-4"><h3 className="text-lg font-black text-slate-950 group-hover:text-orange-600">{role.label}</h3><ArrowRight className="h-5 w-5 shrink-0 text-slate-300 transition group-hover:translate-x-1 group-hover:text-orange-500" /></div>
+                                <p className="mt-3 text-sm leading-6 text-slate-600">{role.detail}</p>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Blog discovery: gives visitors a useful next step and strengthens internal topical linking. */}
+            <section className="bg-white py-24" aria-labelledby="career-guides-heading">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+                        <div className="max-w-2xl">
+                            <p className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-orange-500"><BookOpen className="h-4 w-4" /> Career guides</p>
+                            <h2 id="career-guides-heading" className="mt-3 text-3xl font-black tracking-tight text-slate-950 sm:text-5xl">Learn what to write before you start</h2>
+                            <p className="mt-4 text-base leading-7 text-slate-600">Practical guidance for freshers, students, and professionals. Read a guide, then open the matching template with your notes ready.</p>
+                        </div>
+                        <Link to="/blog" className="inline-flex items-center text-sm font-black text-orange-600 hover:text-orange-700">View all career guides <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                    </div>
+                    <div className="mt-10 grid gap-6 lg:grid-cols-3">
+                        {featuredPosts.map((post) => (
+                            <article key={post.slug} className="group overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+                                <Link to={`/blog/${post.slug}`} aria-label={`Read ${post.title}`}>
+                                    <div className="h-44 overflow-hidden bg-slate-100"><OptimizedImage src={post.coverImage} alt="" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" /></div>
+                                    <div className="p-6"><p className="text-xs font-black uppercase tracking-wider text-orange-500">{post.category} · {post.readTime}</p><h3 className="mt-3 text-xl font-black leading-7 text-slate-950 group-hover:text-orange-600">{post.title}</h3><p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-600">{post.description}</p><span className="mt-5 inline-flex items-center text-sm font-black text-slate-900">Read guide <ArrowRight className="ml-2 h-4 w-4 text-orange-500" /></span></div>
+                                </Link>
+                            </article>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* A compact workflow section answers how the product works and reduces hesitation. */}
+            <section className="bg-orange-50 py-20" aria-labelledby="how-it-works-heading">
+                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
+                        <div><p className="text-xs font-black uppercase tracking-[0.2em] text-orange-600">A simple workflow</p><h2 id="how-it-works-heading" className="mt-3 text-3xl font-black tracking-tight text-slate-950 sm:text-5xl">From rough notes to a resume you can explain</h2><p className="mt-5 text-base leading-7 text-slate-600">ResumeCraft helps you organize the facts, improve the wording, and review the final document before you apply. You stay in control of every claim.</p><Link to="/create-resume?mode=choose" className="mt-7 inline-flex items-center rounded-2xl bg-slate-950 px-5 py-3.5 text-sm font-black text-white transition hover:bg-orange-600">Start with a blank resume <ArrowRight className="ml-2 h-4 w-4" /></Link></div>
+                        <div className="grid gap-4 sm:grid-cols-3">
+                            {[['01', 'Choose a direction', 'Pick a role, audience, or clean template that matches the job you want.'], ['02', 'Add your evidence', 'Write your real projects, responsibilities, skills, links, and outcomes.'], ['03', 'Review and export', 'Check the content, preview the layout, and download when it is ready.']].map(([number, title, text]) => <div key={number} className="rounded-3xl border border-orange-100 bg-white p-6 shadow-sm"><p className="text-3xl font-black text-orange-500">{number}</p><h3 className="mt-6 text-lg font-black text-slate-950">{title}</h3><p className="mt-3 text-sm leading-6 text-slate-600">{text}</p></div>)}
+                        </div>
                     </div>
                 </div>
             </section>
