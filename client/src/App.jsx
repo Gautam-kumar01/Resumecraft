@@ -121,6 +121,9 @@ function App() {
                 <Route path="/resume-format-for-mba-students" element={<AudienceLanding />} />
                 <Route path="/resume-format-for-engineering-students" element={<AudienceLanding />} />
                 <Route path="/ats-resume-for-freshers" element={<AudienceLanding />} />
+                <Route path="/resume-builder-for-career-changers" element={<AudienceLanding />} />
+                <Route path="/resume-builder-for-internships" element={<AudienceLanding />} />
+                <Route path="/resume-builder-for-tech-jobs" element={<AudienceLanding />} />
 
                 <Route path="/dashboard" element={
                   <ProtectedRoute>

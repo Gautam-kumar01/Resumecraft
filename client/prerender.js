@@ -23,7 +23,7 @@ const routes = [
     ...['software-engineer', 'frontend-developer', 'backend-developer', 'data-analyst', 'data-scientist', 'web-developer', 'bca-fresher', 'mba', 'student', 'internship', 'accountant', 'teacher'].map((slug) => `/resume-examples/${slug}`),
     '/resume-templates',
     ...['ats', 'fresher', 'student', 'software-engineer', 'modern', 'professional'].map((slug) => `/resume-templates/${slug}`),
-    ...['resume-builder-for-freshers', 'resume-builder-for-students', 'resume-builder-india', 'resume-format-for-freshers', 'resume-format-for-bca-students', 'resume-format-for-mba-students', 'resume-format-for-engineering-students', 'ats-resume-for-freshers'].map((slug) => `/${slug}`),
+    ...['resume-builder-for-freshers', 'resume-builder-for-students', 'resume-builder-india', 'resume-format-for-freshers', 'resume-format-for-bca-students', 'resume-format-for-mba-students', 'resume-format-for-engineering-students', 'ats-resume-for-freshers', 'resume-builder-for-career-changers', 'resume-builder-for-internships', 'resume-builder-for-tech-jobs'].map((slug) => `/${slug}`),
     '/cover-letter-examples',
     '/interview-prep',
     '/about',

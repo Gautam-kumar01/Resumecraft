@@ -19,6 +19,7 @@ router.post('/improve-text', aiController.improveText);
 router.post('/summary-options', aiController.generateSummaryOptions);
 router.post('/suggest-skills', aiController.suggestSkills);
 router.post('/analyze-ats', aiController.analyzeAts);
+router.post('/deep-analyze-resume', aiController.deepAnalyzeResume);
 router.post('/match-job', aiController.matchJobDescription);
 router.post('/tailor-resume', aiController.tailorResume);
 router.post('/import-resume', upload.single('resume'), aiController.importResume);

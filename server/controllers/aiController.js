@@ -372,6 +372,29 @@ exports.suggestSkills = async (req, res) => {
     }
 };
 
+exports.deepAnalyzeResume = async (req, res) => {
+    const { resumeText = '', jobDescription = '' } = req.body || {};
+    const text = String(resumeText).trim();
+    if (text.length < 40) return res.status(400).json({ message: 'At least 40 characters of resume text are required.' });
+    const prompt = `You are a careful resume coach. Analyze the supplied resume text for clarity, evidence, structure, and relevance. Do not invent facts, scores, employers, dates, skills, metrics, or hiring outcomes. Do not treat missing information as proof that the candidate lacks it. Return JSON only with this exact shape: {"headline":"short overall assessment","strengths":[""],"priorityFixes":[{"title":"","why":"","example":""}],"sectionNotes":[{"section":"","note":""}],"keywordNotes":[""],"nextStep":""}. Keep strengths to 4 items, priorityFixes to 5 items, sectionNotes to 6 items, keywordNotes to 5 items, and nextStep to one sentence. Make every suggestion practical and grounded in the supplied text. State clearly that this is coaching feedback, not an ATS or hiring prediction.\nResume text:\n${text.slice(0, 18000)}\n${jobDescription.trim() ? `Target job description:\n${String(jobDescription).slice(0, 10000)}` : 'No target job description was supplied.'}`;
+    try {
+        if (!process.env.GEMINI_API_KEY) return res.status(503).json({ message: 'Gemini deep analysis is not configured yet. Your local score is still available.', code: 'GEMINI_NOT_CONFIGURED' });
+        const data = cleanJsonResponse(await callGemini(prompt, true));
+        res.json({
+            headline: String(data.headline || 'Your resume has a useful foundation.').slice(0, 500),
+            strengths: Array.isArray(data.strengths) ? data.strengths.slice(0, 4).map((item) => String(item).slice(0, 300)) : [],
+            priorityFixes: Array.isArray(data.priorityFixes) ? data.priorityFixes.slice(0, 5).map((item) => ({ title: String(item?.title || 'Review this section').slice(0, 160), why: String(item?.why || '').slice(0, 400), example: String(item?.example || '').slice(0, 500) })) : [],
+            sectionNotes: Array.isArray(data.sectionNotes) ? data.sectionNotes.slice(0, 6).map((item) => ({ section: String(item?.section || 'Resume').slice(0, 100), note: String(item?.note || '').slice(0, 400) })) : [],
+            keywordNotes: Array.isArray(data.keywordNotes) ? data.keywordNotes.slice(0, 5).map((item) => String(item).slice(0, 300)) : [],
+            nextStep: String(data.nextStep || 'Review the highest-priority fix, then check the resume again.').slice(0, 300),
+            disclaimer: 'AI coaching is based only on the text provided. It is not a hiring prediction, ATS guarantee, or substitute for reviewing every claim yourself.',
+        });
+    } catch (error) {
+        console.error('Gemini deep resume analysis error:', error.message);
+        res.status(503).json({ message: 'Gemini deep analysis is temporarily unavailable. Your local score is still available.', code: 'GEMINI_UNAVAILABLE' });
+    }
+};
+
 exports.analyzeAts = async (req, res) => {
     if (!req.body?.resume) return res.status(400).json({ message: 'Resume data is required.' });
     res.json(analyzeResume(req.body.resume, req.body.jobDescription || ''));
