@@ -17,6 +17,7 @@ const routes = [
     '/cover-letter-templates',
     '/resume-builder-dashboard',
     '/ats-resume-checker-preview',
+    '/resume-score-checker',
     '/free-resume-templates',
     '/resume-examples',
     ...['software-engineer', 'frontend-developer', 'backend-developer', 'data-analyst', 'data-scientist', 'web-developer', 'bca-fresher', 'mba', 'student', 'internship', 'accountant', 'teacher'].map((slug) => `/resume-examples/${slug}`),

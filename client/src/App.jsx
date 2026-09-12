@@ -50,6 +50,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 const ResumeBuilderDashboard = lazy(() => import('./pages/ResumeBuilderDashboard'));
 
 const AtsResumeCheckerPreview = lazy(() => import('./pages/AtsResumeCheckerPreview'));
+const ResumeScoreChecker = lazy(() => import('./pages/ResumeScoreChecker'));
 
 const FreeResumeTemplates = lazy(() => import('./pages/FreeResumeTemplates'));
 
@@ -105,6 +106,7 @@ function App() {
                 
                 <Route path="/resume-builder-dashboard" element={<ResumeBuilderDashboard />} />
                 <Route path="/ats-resume-checker-preview" element={<AtsResumeCheckerPreview />} />
+                <Route path="/resume-score-checker" element={<ResumeScoreChecker />} />
                 <Route path="/free-resume-templates" element={<FreeResumeTemplates />} />
                 <Route path="/resume-template/:slug" element={<RoleTemplate />} />
                 <Route path="/resume-examples" element={<ResumeExamples />} />
