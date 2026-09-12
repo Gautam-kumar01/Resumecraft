@@ -1,4 +1,7 @@
+import { additionalRoleTemplates } from './additionalRoleTemplates';
+
 export const roleTemplates = [
+    ...additionalRoleTemplates,
     {
         slug: 'software-engineer',
         roleName: 'Software Engineer',

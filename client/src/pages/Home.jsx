@@ -15,6 +15,7 @@ import {
     BarChart3,
     MessageSquare,
     ChevronRight,
+    ChevronLeft,
     ArrowRight,
     BookOpen,
     Sparkles
@@ -32,6 +33,7 @@ const Home = () => {
     const navigate = useNavigate();
     const [showcaseOpen, setShowcaseOpen] = useState(false);
     const [activeFeature, setActiveFeature] = useState(0);
+    const [templateSlide, setTemplateSlide] = useState(0);
 
     const openFeature = (index) => {
         setActiveFeature(index);
@@ -94,7 +96,13 @@ const Home = () => {
         { label: 'Frontend Developer', href: '/resume-template/frontend-developer', detail: 'React, TypeScript, accessibility, and performance.' },
         { label: 'Product Manager', href: '/resume-template/product-manager', detail: 'Discovery, roadmaps, launches, and decision-making.' },
         { label: 'MBA Student', href: '/resume-format-for-mba-students', detail: 'Projects, internships, leadership, and case work.' },
-        { label: 'Fresher', href: '/resume-builder-for-freshers', detail: 'Education, skills, projects, and first-job evidence.' }
+        { label: 'Fresher', href: '/resume-builder-for-freshers', detail: 'Education, skills, projects, and first-job evidence.' },
+        { label: 'AI Engineer', href: '/resume-template/ai-engineer', detail: 'Models, evaluation, data pipelines, and deployment.' },
+        { label: 'DevOps Engineer', href: '/resume-template/devops-engineer', detail: 'CI/CD, cloud infrastructure, and reliability.' },
+        { label: 'Full Stack Developer', href: '/resume-template/full-stack-developer', detail: 'Frontend, APIs, databases, and end-to-end delivery.' },
+        { label: 'UI/UX Designer', href: '/resume-template/ui-ux-designer', detail: 'Research, prototypes, systems, and shipped outcomes.' },
+        { label: 'Business Analyst', href: '/resume-template/business-analyst', detail: 'Requirements, process mapping, analysis, and decisions.' },
+        { label: 'Project Manager', href: '/resume-template/project-manager', detail: 'Scope, delivery, risks, stakeholders, and outcomes.' }
     ];
 
     const mncCards = [
@@ -314,6 +322,23 @@ const Home = () => {
                                 </div>
                             </MotionDiv>
                         ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Interactive template preview carousel */}
+            <section className="bg-slate-950 py-24 text-white" aria-labelledby="template-carousel-heading">
+                <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+                    <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+                        <div className="max-w-2xl"><p className="text-xs font-black uppercase tracking-[0.2em] text-orange-300">Preview before you build</p><h2 id="template-carousel-heading" className="mt-3 text-3xl font-black tracking-tight sm:text-5xl">Explore a resume style in seconds</h2><p className="mt-4 text-base leading-7 text-slate-300">Switch through a few popular directions, preview the visual language, and open the matching blueprint when you are ready.</p></div>
+                        <Link to="/resume-templates" className="inline-flex items-center text-sm font-black text-orange-300 hover:text-white">See all templates <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                    </div>
+                    <div className="mt-10 grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+                        <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 p-3 shadow-2xl">
+                            <div className="aspect-[16/10] overflow-hidden rounded-[1.5rem] bg-slate-800"><OptimizedImage src={mncCards[templateSlide].image} alt={`${mncCards[templateSlide].role} resume template preview`} className="h-full w-full object-cover opacity-80" /></div>
+                            <div className="absolute inset-x-8 bottom-8 rounded-2xl border border-white/15 bg-slate-950/80 p-4 backdrop-blur"><p className="text-xs font-black uppercase tracking-widest text-orange-300">{mncCards[templateSlide].company}</p><p className="mt-1 text-xl font-black">{mncCards[templateSlide].role}</p></div>
+                        </div>
+                        <div><div className="flex items-center justify-between"><div><p className="text-sm font-bold text-orange-300">Preview {templateSlide + 1} of {mncCards.length}</p><h3 className="mt-2 text-3xl font-black">{mncCards[templateSlide].role} blueprint</h3></div><div className="flex gap-2"><button type="button" onClick={() => setTemplateSlide((current) => (current - 1 + mncCards.length) % mncCards.length)} className="rounded-xl border border-white/15 bg-white/10 p-3 text-white hover:bg-orange-500" aria-label="Previous resume template"><ChevronLeft className="h-5 w-5" /></button><button type="button" onClick={() => setTemplateSlide((current) => (current + 1) % mncCards.length)} className="rounded-xl border border-white/15 bg-white/10 p-3 text-white hover:bg-orange-500" aria-label="Next resume template"><ChevronRight className="h-5 w-5" /></button></div></div><p className="mt-5 max-w-xl text-base leading-7 text-slate-300">Use a clean visual direction, then make the content your own. Add only skills and achievements you can explain clearly.</p><div className="mt-6 flex flex-wrap gap-2">{mncCards[templateSlide].skills.map((skill) => <span key={skill} className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-bold text-slate-200">{skill}</span>)}</div><button type="button" onClick={() => handleBlueprintClick(mncCards[templateSlide])} className="mt-8 inline-flex items-center rounded-2xl bg-orange-500 px-5 py-3.5 text-sm font-black text-white hover:bg-orange-400">Use this blueprint <ArrowRight className="ml-2 h-4 w-4" /></button><div className="mt-8 flex gap-2" role="tablist" aria-label="Resume template previews">{mncCards.map((card, index) => <button key={card.role + card.company} type="button" role="tab" aria-selected={templateSlide === index} aria-label={`Show ${card.role} preview`} onClick={() => setTemplateSlide(index)} className={`h-2.5 rounded-full transition-all ${templateSlide === index ? 'w-10 bg-orange-400' : 'w-2.5 bg-white/30 hover:bg-white/60'}`} />)}</div></div>
                     </div>
                 </div>
             </section>

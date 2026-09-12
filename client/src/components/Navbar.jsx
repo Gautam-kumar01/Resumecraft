@@ -96,10 +96,18 @@ const Navbar = () => {
                                             </div>
                                         </Link>
                                     </div>
+                                                                </div>
+                                <div className="mt-6 border-t border-slate-100 pt-5 dark:border-slate-800">
+                                    <p className="mb-3 text-[10px] font-black uppercase tracking-widest text-slate-400">Popular role blueprints</p>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <Link to="/resume-template/ai-engineer" className="rounded-lg px-2 py-1.5 text-xs font-bold text-slate-600 hover:bg-orange-50 hover:text-orange-600 dark:text-slate-300 dark:hover:bg-orange-900/20">AI Engineer</Link>
+                                        <Link to="/resume-template/devops-engineer" className="rounded-lg px-2 py-1.5 text-xs font-bold text-slate-600 hover:bg-orange-50 hover:text-orange-600 dark:text-slate-300 dark:hover:bg-orange-900/20">DevOps Engineer</Link>
+                                        <Link to="/resume-template/full-stack-developer" className="rounded-lg px-2 py-1.5 text-xs font-bold text-slate-600 hover:bg-orange-50 hover:text-orange-600 dark:text-slate-300 dark:hover:bg-orange-900/20">Full Stack Developer</Link>
+                                        <Link to="/resume-template/ui-ux-designer" className="rounded-lg px-2 py-1.5 text-xs font-bold text-slate-600 hover:bg-orange-50 hover:text-orange-600 dark:text-slate-300 dark:hover:bg-orange-900/20">UI/UX Designer</Link>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
                         {/* Cover Letter Dropdown */}
                         <div 
                             className="relative group"

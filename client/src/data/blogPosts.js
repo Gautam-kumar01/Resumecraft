@@ -1,4 +1,7 @@
+import { seoPosts } from './seoPosts.js';
+
 export const blogPosts = [
+  ...seoPosts,
   {
     slug: 'bca-ke-baad-resume-kaise-banaye-2026',
     title: 'BCA Ke Baad Resume Kaise Banaye 2026 - Free Template',
