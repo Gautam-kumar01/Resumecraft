@@ -200,21 +200,21 @@ const Home = () => {
                     <div className="relative z-10">
                         <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-orange-300/20 bg-orange-400/10 px-3.5 py-2 text-xs font-bold uppercase tracking-[0.18em] text-orange-200">
                             <Sparkles className="h-4 w-4" />
-                            <span>Build with confidence</span>
+                            <span>Turn experience into opportunity</span>
                         </div>
                         <h1 className="max-w-3xl text-[2.65rem] font-extrabold leading-[1.02] tracking-[-0.035em] text-white sm:text-5xl lg:text-[4.25rem]">
-                            Your next role starts with a better
-                            <span className="mt-2 block bg-gradient-to-r from-orange-300 via-orange-400 to-amber-200 bg-clip-text text-transparent">resume.</span>
+                            Make your next move
+                            <span className="mt-2 block bg-gradient-to-r from-orange-300 via-orange-400 to-amber-200 bg-clip-text text-transparent">impossible to ignore.</span>
                         </h1>
                         <p className="mt-7 max-w-xl text-[0.98rem] leading-7 text-slate-300 sm:text-base">
-                            Create a polished, ATS-friendly resume in minutes with smart guidance, modern templates, and a live preview that keeps every detail recruiter-ready.
+                            Turn your real experience into a clear, confident resume—without starting from a blank page. Get smart guidance, role-ready templates, and a live preview from your first draft to your final PDF.
                         </p>
                         <div className="mt-9 flex flex-col gap-3 sm:flex-row">
                             <button
                                 onClick={handleCreateNew}
                                 className="group inline-flex items-center justify-center rounded-2xl bg-orange-500 px-5 py-3.5 text-sm font-extrabold text-white shadow-[0_16px_40px_rgba(249,115,22,0.3)] transition-all hover:-translate-y-0.5 hover:bg-orange-400 active:translate-y-0"
                             >
-                                Create my resume
+                                Start my resume — free
                                 <ChevronRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                             </button>
                             <button
@@ -222,7 +222,7 @@ const Home = () => {
                                 className="group inline-flex items-center justify-center rounded-2xl border border-orange-300/30 bg-orange-400/10 px-5 py-3.5 text-sm font-extrabold text-orange-100 backdrop-blur transition-all hover:-translate-y-0.5 hover:bg-orange-400/20"
                             >
                                 <Sparkles className="mr-2 h-5 w-5 text-orange-300" />
-                                Build with AI Resume
+                                Let AI help me start
                                 <ChevronRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                             </button>
                             <Link
@@ -232,6 +232,7 @@ const Home = () => {
                                 Explore templates
                             </Link>
                         </div>
+                        <p className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-semibold text-slate-400"><span className="inline-flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" /> Start as a guest</span><span className="inline-flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" /> Edit every suggestion</span><span className="inline-flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" /> Export when ready</span></p>
                         <div className="mt-10 grid max-w-md grid-cols-3 gap-4 border-t border-white/10 pt-6">
                             <div><p className="text-2xl font-black text-white">7+</p><p className="mt-1 text-xs font-semibold text-slate-400">Starter layouts</p></div>
                             <div><p className="text-2xl font-black text-white">Live</p><p className="mt-1 text-xs font-semibold text-slate-400">Preview updates</p></div>
@@ -258,14 +259,15 @@ const Home = () => {
                                 className="mt-3 rounded-2xl border border-slate-200/20 shadow-2xl"
                                 priority={true}
                             />
-                            <div className="absolute -bottom-5 -left-5 hidden items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3 text-slate-900 shadow-2xl sm:flex lg:-left-12">
+                            <div className="motion-safe:animate-[pulse_3.5s_ease-in-out_infinite] absolute -bottom-5 -left-5 hidden items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3 text-slate-900 shadow-2xl sm:flex lg:-left-12">
                                 <div className="rounded-xl bg-emerald-100 p-2"><CheckCircle2 className="h-5 w-5 text-emerald-600" /></div>
                                 <div><p className="text-xs font-black">ATS-ready structure</p><p className="mt-0.5 text-[11px] font-semibold text-slate-500">Built to be noticed</p></div>
                             </div>
-                            <div className="absolute -right-4 top-16 hidden rounded-2xl border border-orange-100 bg-white px-4 py-3 text-slate-900 shadow-2xl sm:block lg:-right-8">
+                            <div className="motion-safe:animate-[pulse_4.5s_ease-in-out_infinite] absolute -right-4 top-16 hidden rounded-2xl border border-orange-100 bg-white px-4 py-3 text-slate-900 shadow-2xl sm:block lg:-right-8">
                                 <p className="text-[10px] font-black uppercase tracking-widest text-orange-500">Live preview</p>
                                 <p className="mt-1 text-xs font-bold">Every edit, instantly</p>
                             </div>
+                            <div className="absolute -top-5 right-8 hidden rounded-full border border-white/20 bg-slate-900/90 px-4 py-2 text-xs font-black text-white shadow-xl backdrop-blur sm:block motion-safe:animate-[bounce_5s_ease-in-out_infinite]">3 steps to ready</div>
                         </MotionDiv>
                     </div>
                 </div>
