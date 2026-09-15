@@ -93,6 +93,7 @@ app.use('/api/presence', ensureDb, require('./routes/presence'));
 app.use('/api/auth', ensureDb, require('./routes/auth'));
 app.use('/api/resumes', ensureDb, require('./routes/resume'));
 app.use('/api/cover-letters', ensureDb, require('./routes/coverLetter'));
+app.use('/api/job-matches', ensureDb, require('./routes/jobMatch'));
 
 app.get('/', (req, res) => {
   res.send('ResumeCraft API is running...');

@@ -61,6 +61,7 @@ const AudienceLanding = lazy(() => import('./pages/AudienceLanding'));
 const CoverLetterExamples = lazy(() => import('./pages/CoverLetterExamples'));
 const InterviewPrep = lazy(() => import('./pages/InterviewPrep'));
 const Applications = lazy(() => import('./pages/Applications'));
+const JobMatch = lazy(() => import('./pages/JobMatch'));
 
 import GoogleAnalytics from './components/GoogleAnalytics';
 
@@ -107,6 +108,7 @@ function App() {
                 <Route path="/resume-builder-dashboard" element={<ResumeBuilderDashboard />} />
                 <Route path="/ats-resume-checker-preview" element={<AtsResumeCheckerPreview />} />
                 <Route path="/resume-score-checker" element={<ResumeScoreChecker />} />
+                <Route path="/job-match" element={<JobMatch />} />
                 <Route path="/free-resume-templates" element={<FreeResumeTemplates />} />
                 <Route path="/resume-template/:slug" element={<RoleTemplate />} />
                 <Route path="/resume-examples" element={<ResumeExamples />} />
@@ -167,4 +169,3 @@ function App() {
 }
 
 export default App;
-

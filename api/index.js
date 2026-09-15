@@ -60,6 +60,7 @@ app.use('/api/presence', withDB, require('../server/routes/presence'));
 app.use('/api/auth', withDB, require('../server/routes/auth'));
 app.use('/api/resumes', withDB, require('../server/routes/resume'));
 app.use('/api/cover-letters', withDB, require('../server/routes/coverLetter'));
+app.use('/api/job-matches', withDB, require('../server/routes/jobMatch'));
 
 // Root path
 app.get('/', (req, res) => res.send('ResumeCraft API is operational.'));
