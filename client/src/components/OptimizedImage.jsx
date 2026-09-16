@@ -18,7 +18,7 @@ const OptimizedImage = ({
         <div className={`relative overflow-hidden rounded-xl bg-slate-200 dark:bg-slate-800 ${className}`}>
             {/* Blur placeholder */}
             <div 
-                className={`absolute inset-0 bg-slate-200 dark:bg-slate-800 transition-opacity duration-700 ease-in-out ${priority || isLoaded ? 'opacity-0' : 'opacity-100 animate-pulse'}`}
+                className={`absolute inset-0 bg-slate-200 dark:bg-slate-800 transition-opacity duration-500 ease-in-out ${priority || isLoaded ? 'opacity-0' : 'opacity-100'}`}
             ></div>
             
             <img

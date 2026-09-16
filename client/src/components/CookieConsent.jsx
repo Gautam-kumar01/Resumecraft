@@ -50,7 +50,7 @@ const CookieConsent = () => {
     }
 
     return (
-        <div className="fixed inset-x-0 bottom-0 z-50 md:bottom-6 md:left-6 md:right-auto md:w-full md:max-w-[380px]">
+        <div className="fixed inset-x-0 bottom-0 z-50 md:bottom-6 md:left-6 md:right-auto md:w-full md:max-w-[380px]" role="dialog" aria-modal="false" aria-labelledby="cookie-consent-title">
             <div 
                 className={`
                     relative mx-auto w-full overflow-hidden 
@@ -66,7 +66,7 @@ const CookieConsent = () => {
                     type="button"
                     onClick={closePopup}
                     className="absolute right-4 top-4 rounded-full p-1 text-slate-400 transition-colors hover:bg-slate-800 hover:text-white"
-                    aria-label="Close"
+                    aria-label="Close cookie notice"
                 >
                     <X className="h-4 w-4" />
                 </button>
@@ -77,7 +77,7 @@ const CookieConsent = () => {
                         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500/20 to-orange-600/10 text-orange-500 ring-1 ring-orange-500/20">
                             <Cookie className="h-5 w-5" aria-hidden="true" />
                         </div>
-                        <h2 className="text-base font-semibold text-white">Cookies & Privacy</h2>
+                        <h2 id="cookie-consent-title" className="text-base font-semibold text-white">Cookies & Privacy</h2>
                     </div>
 
                     {/* Content */}

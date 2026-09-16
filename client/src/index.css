@@ -246,6 +246,37 @@
   pointer-events: none;
 }
 
+@media (max-width: 768px) {
+  .premium-bg::before,
+  .premium-bg::after {
+    display: none;
+  }
+
+  .premium-bg {
+    background-image: none;
+    background: #fffaf5;
+  }
+
+  .glass-effect {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 
 .glass-effect {
   background: rgba(255, 255, 255, 0.45);

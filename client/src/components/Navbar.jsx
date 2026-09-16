@@ -49,7 +49,7 @@ const Navbar = () => {
                             onMouseEnter={() => setActiveDropdown('resume')}
                             onMouseLeave={() => setActiveDropdown(null)}
                         >
-                            <button className="flex items-center space-x-1 px-4 py-2 text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors font-medium">
+                            <button type="button" aria-expanded={activeDropdown === 'resume'} className="flex items-center space-x-1 px-4 py-2 text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors font-medium">
                                 <span>Resume</span>
                                 <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${activeDropdown === 'resume' ? 'rotate-180' : ''}`} />
                             </button>
@@ -114,7 +114,7 @@ const Navbar = () => {
                             onMouseEnter={() => setActiveDropdown('coverletter')}
                             onMouseLeave={() => setActiveDropdown(null)}
                         >
-                            <button className="flex items-center space-x-1 px-4 py-2 text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors font-medium">
+                            <button type="button" aria-expanded={activeDropdown === 'coverletter'} className="flex items-center space-x-1 px-4 py-2 text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors font-medium">
                                 <span>Cover Letter</span>
                                 <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${activeDropdown === 'coverletter' ? 'rotate-180' : ''}`} />
                             </button>
@@ -171,7 +171,7 @@ const Navbar = () => {
                             onMouseEnter={() => setActiveDropdown('tips')}
                             onMouseLeave={() => setActiveDropdown(null)}
                         >
-                            <button className="flex items-center space-x-1 px-4 py-2 text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors font-medium">
+                            <button type="button" aria-expanded={activeDropdown === 'tips'} className="flex items-center space-x-1 px-4 py-2 text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors font-medium">
                                 <span>Tips</span>
                                 <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${activeDropdown === 'tips' ? 'rotate-180' : ''}`} />
                             </button>
@@ -248,6 +248,7 @@ const Navbar = () => {
                         <button
                             onClick={() => setIsDark(!isDark)}
                             className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400"
+                            aria-label="Toggle dark mode"
                         >
                             {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
                         </button>
@@ -255,6 +256,8 @@ const Navbar = () => {
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
                             className="text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white p-2.5 bg-slate-50 dark:bg-slate-800/50 rounded-xl transition-all active:scale-95 touch-manipulation"
                             aria-label="Toggle Menu"
+                            aria-expanded={isMenuOpen}
+                            aria-controls="mobile-navigation"
                         >
                             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
                         </button>
@@ -276,6 +279,9 @@ const Navbar = () => {
                             className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] lg:hidden"
                         />
                         <Motion.div
+                            id="mobile-navigation"
+                            role="dialog"
+                            aria-label="Mobile navigation"
                             initial={{ x: '100%' }}
                             animate={{ x: 0 }}
                             exit={{ x: '100%' }}
@@ -285,7 +291,7 @@ const Navbar = () => {
                             <div className="p-6">
                                 <div className="flex items-center justify-between mb-8">
                                     <Logo size="sm" />
-                                    <button onClick={() => setIsMenuOpen(false)} className="p-2 text-slate-500">
+                                    <button onClick={() => setIsMenuOpen(false)} className="p-2 text-slate-500" aria-label="Close navigation menu">
                                         <X className="h-6 w-6" />
                                     </button>
                                 </div>
