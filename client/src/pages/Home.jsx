@@ -102,7 +102,8 @@ const Home = () => {
         { label: 'Full Stack Developer', href: '/resume-template/full-stack-developer', detail: 'Frontend, APIs, databases, and end-to-end delivery.' },
         { label: 'UI/UX Designer', href: '/resume-template/ui-ux-designer', detail: 'Research, prototypes, systems, and shipped outcomes.' },
         { label: 'Business Analyst', href: '/resume-template/business-analyst', detail: 'Requirements, process mapping, analysis, and decisions.' },
-        { label: 'Project Manager', href: '/resume-template/project-manager', detail: 'Scope, delivery, risks, stakeholders, and outcomes.' }
+        { label: 'Project Manager', href: '/resume-template/project-manager', detail: 'Scope, delivery, risks, stakeholders, and outcomes.' },
+        { label: 'Customer Support', href: '/resume-template/customer-support-specialist', detail: 'Communication, troubleshooting, ticketing, and customer outcomes.' }
     ];
 
     const mncCards = [
@@ -124,8 +125,9 @@ const Home = () => {
             className="bg-white"
         >
             <SEO
-                title="Free AI Resume Builder | ATS-Friendly Resume Maker"
-                description="Create a professional, ATS-friendly resume online with ResumeCraft. Use AI guidance, modern templates, live editing, and reliable PDF download to prepare for your next job."
+                title="Free AI Resume Builder & ATS Resume Maker"
+                description="Build a professional resume online with ResumeCraft. Use AI guidance, ATS-friendly templates, resume examples, job-description matching, cover letters, and PDF export for your next application."
+                keywords="free resume builder, AI resume builder, ATS resume checker, resume maker online, CV maker, fresher resume builder, student resume template, resume examples, job description matcher, cover letter builder, resume builder India"
             />
             {/* FAQ JSON-LD Schema for Google AI Overview */}
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
@@ -620,6 +622,20 @@ const Home = () => {
                 )}
             </AnimatePresence>
 
+            {/* Job search workflow section: adds a high-intent path without changing the existing hero or builder flow. */}
+            <section className="border-y border-orange-100 bg-orange-50/50 py-20">
+                <div className="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:px-8">
+                    <div>
+                        <p className="text-xs font-black uppercase tracking-[0.2em] text-orange-600">More than a resume template</p>
+                        <h2 className="mt-3 text-3xl font-black tracking-tight text-slate-950 sm:text-5xl">Prepare one application from start to finish.</h2>
+                        <p className="mt-5 max-w-xl text-base leading-7 text-slate-600">Create a resume, compare it with a real job description, save a tailored version, write a cover letter, and keep your applications organized in one workspace.</p>
+                        <Link to="/job-match" className="mt-7 inline-flex items-center rounded-2xl bg-slate-950 px-5 py-3.5 text-sm font-black text-white transition hover:bg-orange-600">Try Job Match workspace <ArrowRight className="ml-2 h-4 w-4" /></Link>
+                    </div>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                        {[['01', 'Build your base resume', 'Start from a clean template or let AI help organize your real evidence.'], ['02', 'Match a target job', 'Find relevant keywords and evidence gaps without adding claims you cannot support.'], ['03', 'Tailor and write', 'Save a role-specific version and generate a reviewable cover letter.'], ['04', 'Track the outcome', 'Keep the job URL, resume version, and application status together.']].map(([number, title, text]) => <div key={number} className="rounded-3xl border border-orange-100 bg-white p-6 shadow-sm"><p className="text-2xl font-black text-orange-500">{number}</p><h3 className="mt-4 font-black text-slate-950">{title}</h3><p className="mt-2 text-sm leading-6 text-slate-600">{text}</p></div>)}
+                    </div>
+                </div>
+            </section>
             {/* FAQ Section */}
             <section className="py-24 bg-white">
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -647,6 +663,10 @@ const Home = () => {
                             {
                                 q: "How many resume templates do you offer?",
                                  a: "We offer role-ready resume layouts for different industries, students, freshers, and professionals. Choose the format that keeps your evidence clear and easy to review."
+                            },
+                            {
+                                q: "Can I match my resume to a job description?",
+                                a: "Yes. ResumeCraft's Job Match workspace compares your resume evidence with a target job description, highlights supported and missing terms, and lets you save a tailored version for that application."
                             }
                         ].map((faq, i) => (
                             <div key={i} className="p-8 rounded-3xl bg-slate-50 border border-slate-100 hover:border-orange-200 transition-all">
