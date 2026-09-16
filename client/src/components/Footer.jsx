@@ -8,12 +8,13 @@ import {
     MessageSquare, 
     Globe, 
     BarChart3,
+    Target,
+    GraduationCap,
     Mail,
     Phone,
     MapPin,
     Twitter,
     Linkedin,
-    Youtube,
     Github
 } from 'lucide-react';
 
@@ -31,11 +32,8 @@ const Footer = () => {
                             <a href="https://twitter.com/Imgautam_001" target="_blank" rel="noopener noreferrer" className="h-10 w-10 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-slate-400 hover:text-orange-500 hover:border-orange-500/30 transition-all">
                                 <Twitter className="h-5 w-5" />
                             </a>
-                            <a href="https://www.linkedin.com/in/imgautam01" target="_blank" rel="noopener noreferrer" className="h-10 w-10 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-slate-400 hover:text-orange-500 hover:border-orange-500/30 transition-all">
+                            <a href="https://www.linkedin.com/posts/imgautam01" target="_blank" rel="noopener noreferrer" aria-label="Gautam Kumar on LinkedIn" className="h-10 w-10 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-slate-400 hover:text-orange-500 hover:border-orange-500/30 transition-all">
                                 <Linkedin className="h-5 w-5" />
-                            </a>
-                            <a href="https://www.youtube.com/@UNFILTERED_GOJO" target="_blank" rel="noopener noreferrer" className="h-10 w-10 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-slate-400 hover:text-orange-500 hover:border-orange-500/30 transition-all">
-                                <Youtube className="h-5 w-5" />
                             </a>
                             <a href="https://github.com/Gautam-kumar01/" target="_blank" rel="noopener noreferrer" className="h-10 w-10 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-slate-400 hover:text-orange-500 hover:border-orange-500/30 transition-all">
                                 <Github className="h-5 w-5" />
@@ -82,6 +80,8 @@ const Footer = () => {
                                     <span>Application Tracker</span>
                                 </Link>
                             </li>
+                            <li><Link to="/job-description-matcher" className="flex items-center space-x-2 hover:text-orange-500 transition-colors"><Target className="h-4 w-4" /><span>Job Description Matcher</span></Link></li>
+                            <li><Link to="/fresher-resume-builder" className="flex items-center space-x-2 hover:text-orange-500 transition-colors"><GraduationCap className="h-4 w-4" /><span>Fresher Resume Builder</span></Link></li>
                         </ul>
                     </div>
 

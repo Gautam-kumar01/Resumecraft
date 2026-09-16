@@ -19,6 +19,11 @@ const routes = [
     '/ats-resume-checker-preview',
     '/resume-score-checker',
     '/job-match',
+    '/job-description-matcher',
+    '/fresher-resume-builder',
+    '/resume-guide/software-engineer',
+    '/resume-guide/data-analyst',
+    '/resume-guide/marketing',
     '/free-resume-templates',
     '/resume-examples',
     ...['software-engineer', 'frontend-developer', 'backend-developer', 'data-analyst', 'data-scientist', 'web-developer', 'bca-fresher', 'mba', 'student', 'internship', 'accountant', 'teacher'].map((slug) => `/resume-examples/${slug}`),
@@ -113,17 +118,25 @@ async function prerender() {
     }
 
     const page = await browser.newPage();
+    await page.setRequestInterception(true);
+    page.on('request', request => {
+        if (['image', 'font', 'media'].includes(request.resourceType())) {
+            request.abort();
+        } else {
+            request.continue();
+        }
+    });
     for (const route of routes) {
         console.log(`Prerendering ${route}...`);
 
         page.on('console', msg => console.log('BROWSER LOG:', msg.text()));
         page.on('pageerror', error => console.log('BROWSER ERROR:', error.message));
 
-        await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: 'networkidle0' });
+        await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: 'domcontentloaded', timeout: 30000 });
 
-        // Helmet updates the head during the settled render; a short pause allows the
-        // final title/meta tags to commit without adding seconds per route.
-        await new Promise(resolve => setTimeout(resolve, 400));
+        // Wait for React Helmet/lazy route content, not every image/font request.
+        await page.waitForFunction(() => document.title && document.title !== 'ResumeCraft', { timeout: 10000 }).catch(() => {});
+        await new Promise(resolve => setTimeout(resolve, 120));
 
         const html = await page.content();
 

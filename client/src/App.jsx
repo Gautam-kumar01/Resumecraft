@@ -62,6 +62,7 @@ const CoverLetterExamples = lazy(() => import('./pages/CoverLetterExamples'));
 const InterviewPrep = lazy(() => import('./pages/InterviewPrep'));
 const Applications = lazy(() => import('./pages/Applications'));
 const JobMatch = lazy(() => import('./pages/JobMatch'));
+const SeoLanding = lazy(() => import('./pages/SeoLanding'));
 
 import GoogleAnalytics from './components/GoogleAnalytics';
 
@@ -109,6 +110,11 @@ function App() {
                 <Route path="/ats-resume-checker-preview" element={<AtsResumeCheckerPreview />} />
                 <Route path="/resume-score-checker" element={<ResumeScoreChecker />} />
                 <Route path="/job-match" element={<JobMatch />} />
+                <Route path="/job-description-matcher" element={<SeoLanding />} />
+                <Route path="/fresher-resume-builder" element={<SeoLanding />} />
+                <Route path="/resume-guide/software-engineer" element={<SeoLanding />} />
+                <Route path="/resume-guide/data-analyst" element={<SeoLanding />} />
+                <Route path="/resume-guide/marketing" element={<SeoLanding />} />
                 <Route path="/free-resume-templates" element={<FreeResumeTemplates />} />
                 <Route path="/resume-template/:slug" element={<RoleTemplate />} />
                 <Route path="/resume-examples" element={<ResumeExamples />} />
