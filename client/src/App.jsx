@@ -63,6 +63,7 @@ const InterviewPrep = lazy(() => import('./pages/InterviewPrep'));
 const Applications = lazy(() => import('./pages/Applications'));
 const JobMatch = lazy(() => import('./pages/JobMatch'));
 const SeoLanding = lazy(() => import('./pages/SeoLanding'));
+const TechInterviewLanding = lazy(() => import('./pages/TechInterviewLanding'));
 
 import GoogleAnalytics from './components/GoogleAnalytics';
 
@@ -115,6 +116,11 @@ function App() {
                 <Route path="/resume-guide/software-engineer" element={<SeoLanding />} />
                 <Route path="/resume-guide/data-analyst" element={<SeoLanding />} />
                 <Route path="/resume-guide/marketing" element={<SeoLanding />} />
+                <Route path="/interview-prep/software-engineer" element={<TechInterviewLanding />} />
+                <Route path="/interview-prep/frontend-developer" element={<TechInterviewLanding />} />
+                <Route path="/interview-prep/backend-developer" element={<TechInterviewLanding />} />
+                <Route path="/interview-prep/data-analyst" element={<TechInterviewLanding />} />
+                <Route path="/interview-prep/devops-engineer" element={<TechInterviewLanding />} />
                 <Route path="/free-resume-templates" element={<FreeResumeTemplates />} />
                 <Route path="/resume-template/:slug" element={<RoleTemplate />} />
                 <Route path="/resume-examples" element={<ResumeExamples />} />

@@ -94,6 +94,7 @@ const Footer = () => {
                             <li><Link to="/resource/how-to-write-a-resume" className="hover:text-orange-500 transition-colors">How to Write a Resume</Link></li>
                             <li><Link to="/resource/career-advice" className="hover:text-orange-500 transition-colors">Career Advice</Link></li>
                             <li><Link to="/resource/interview-tips" className="hover:text-orange-500 transition-colors">Interview Tips</Link></li>
+                            <li><Link to="/interview-prep/software-engineer" className="hover:text-orange-500 transition-colors">Tech Interview Guides</Link></li>
                         </ul>
                     </div>
 

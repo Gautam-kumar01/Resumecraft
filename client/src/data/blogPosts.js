@@ -1,9 +1,11 @@
 import { seoPosts } from './seoPosts.js';
 import { extraBlogPosts } from './extraContent.js';
+import { interviewBlogPosts } from './interviewBlogPosts.js';
 
 export const blogPosts = [
   ...seoPosts,
   ...extraBlogPosts,
+  ...interviewBlogPosts,
   {
     slug: 'bca-ke-baad-resume-kaise-banaye-2026',
     title: 'BCA Ke Baad Resume Kaise Banaye 2026 - Free Template',
