@@ -72,6 +72,21 @@ const routes = [
     ...blogPosts.map(post => `/blog/${post.slug}`)
 ];
 
+// Vercel's serverless build environment has much less CPU than local builds.
+// Keep the complete route inventory for sitemap generation, but prerender the
+// highest-value landing pages there. Local builds still prerender every route.
+const vercelCriticalRoutes = new Set([
+    '/', '/templates', '/free-resume-templates', '/resume-examples',
+    '/resume-templates', '/cover-letter-templates', '/cover-letter-examples',
+    '/resume-score-checker', '/job-description-matcher', '/fresher-resume-builder',
+    '/job-match', '/interview-prep', '/interview-prep/software-engineer',
+    '/interview-prep/frontend-developer', '/interview-prep/backend-developer',
+    '/interview-prep/data-analyst', '/interview-prep/devops-engineer',
+    '/resume-guide/software-engineer', '/resume-guide/data-analyst',
+    '/resume-guide/marketing', '/about', '/contact', '/blog',
+]);
+const renderRoutes = process.env.VERCEL ? routes.filter((route) => vercelCriticalRoutes.has(route)) : routes;
+
 const PORT = 3000;
 const DIST_DIR = path.join(__dirname, 'dist');
 
@@ -145,8 +160,9 @@ async function prerender() {
         }
     };
     const concurrency = Math.min(6, routes.length);
-    for (let index = 0; index < routes.length; index += concurrency) {
-        await Promise.all(routes.slice(index, index + concurrency).map(renderRoute));
+    console.log(`Rendering ${renderRoutes.length} of ${routes.length} routes${process.env.VERCEL ? ' on Vercel' : ''}...`);
+    for (let index = 0; index < renderRoutes.length; index += concurrency) {
+        await Promise.all(renderRoutes.slice(index, index + concurrency).map(renderRoute));
     }
 
     // Route to images mapping for Sitemap

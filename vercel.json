@@ -104,7 +104,7 @@
             "destination": "/sitemap.xml"
         },
         {
-            "source": "/((?!api/|templates|cover-letter-templates|resume-builder-dashboard|ats-resume-checker-preview|resume-score-checker|job-match|job-description-matcher|fresher-resume-builder|resume-guide|interview-prep|free-resume-templates|resume-template|about|contact|terms|privacy|cookies|blog|resource|.*\\..*).*)",
+            "source": "/((?!api/|.*\\..*).*)",
             "destination": "/index.html"
         }
     ]
