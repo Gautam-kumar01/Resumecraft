@@ -7,7 +7,7 @@ import { ArrowLeft, ArrowRight, CheckCircle2, ChevronLeft, ChevronRight, Eye, Lo
 import { trackEvent } from '../utils/analytics';
 
 const categories = ['Technical', 'HR', 'Behavioral', 'Role-specific'];
-const inputClass = 'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-900 outline-none focus:border-orange-500 focus:bg-white focus:ring-4 focus:ring-orange-100';
+const inputClass = 'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-base sm:text-sm font-medium text-slate-900 outline-none focus:border-orange-500 focus:bg-white focus:ring-4 focus:ring-orange-100';
 const quizBank = {
   'software engineer': [
     { question: 'What is the time complexity of binary search on a sorted array?', options: ['O(n)', 'O(log n)', 'O(n log n)', 'O(1)'], answer: 1, explanation: 'Binary search halves the remaining search space at each step, giving O(log n) time.' },
