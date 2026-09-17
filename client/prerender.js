@@ -122,44 +122,31 @@ async function prerender() {
         process.exit(1);
     }
 
-    const page = await browser.newPage();
-    await page.setRequestInterception(true);
-    page.on('request', request => {
-        if (['image', 'font', 'media'].includes(request.resourceType())) {
-            request.abort();
-        } else {
-            request.continue();
-        }
-    });
-    for (const route of routes) {
-        console.log(`Prerendering ${route}...`);
-
-        page.on('console', msg => console.log('BROWSER LOG:', msg.text()));
-        page.on('pageerror', error => console.log('BROWSER ERROR:', error.message));
-
-        await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: 'domcontentloaded', timeout: 30000 });
-
-        // Wait for React Helmet/lazy route content, not every image/font request.
-        await page.waitForFunction(() => document.title && document.title !== 'ResumeCraft', { timeout: 10000 }).catch(() => {});
-        await new Promise(resolve => setTimeout(resolve, 120));
-
-        const html = await page.content();
-
-        page.removeAllListeners('console');
-        page.removeAllListeners('pageerror');
-
-        // Save to dist/route.html (or dist/index.html if route is '/')
-        if (route === '/') {
-            fs.writeFileSync(path.join(DIST_DIR, 'index.html'), html);
-        } else {
-            const filePath = path.join(DIST_DIR, `${route}.html`);
+    const renderRoute = async (route) => {
+        const page = await browser.newPage();
+        await page.setRequestInterception(true);
+        page.on('request', request => {
+            if (['image', 'font', 'media'].includes(request.resourceType())) request.abort();
+            else request.continue();
+        });
+        try {
+            console.log(`Prerendering ${route}...`);
+            await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: 'domcontentloaded', timeout: 30000 });
+            // Wait only for the lazy route and Helmet title; never wait on media or a fixed timer.
+            await page.waitForFunction(() => document.title && document.title !== 'ResumeCraft' && document.querySelector('#root')?.textContent?.trim(), { timeout: 10000 }).catch(() => {});
+            const html = await page.content();
+            const filePath = route === '/' ? path.join(DIST_DIR, 'index.html') : path.join(DIST_DIR, `${route}.html`);
             const dirPath = path.dirname(filePath);
-            if (!fs.existsSync(dirPath)) {
-                fs.mkdirSync(dirPath, { recursive: true });
-            }
+            if (!fs.existsSync(dirPath)) fs.mkdirSync(dirPath, { recursive: true });
             fs.writeFileSync(filePath, html);
+            console.log(`Saved ${route}`);
+        } finally {
+            await page.close();
         }
-        console.log(`Saved ${route}`);
+    };
+    const concurrency = Math.min(6, routes.length);
+    for (let index = 0; index < routes.length; index += concurrency) {
+        await Promise.all(routes.slice(index, index + concurrency).map(renderRoute));
     }
 
     // Route to images mapping for Sitemap

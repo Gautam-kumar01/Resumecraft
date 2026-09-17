@@ -1,9 +1,38 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useContext, useState, useEffect } from 'react';
 import AuthContext from '../context/AuthContext';
 import { LogOut, User, Menu, X, Sun, Moon, Star, FileText, Mail, ChevronDown, BookOpen, ClipboardCheck } from 'lucide-react';
 import Logo from './Logo';
 import { motion as Motion, AnimatePresence } from 'framer-motion';
+
+const routeLoaders = {
+    '/templates': () => import('../pages/Templates'),
+    '/cover-letter-templates': () => import('../pages/CoverLetterTemplates'),
+    '/resume-score-checker': () => import('../pages/ResumeScoreChecker'),
+    '/blog': () => import('../pages/BlogList'),
+    '/about': () => import('../pages/About'),
+    '/contact': () => import('../pages/Contact'),
+    '/login': () => import('../pages/Login'),
+    '/dashboard': () => import('../pages/Dashboard'),
+    '/resource/resume-formats': () => import('../pages/Resource'),
+    '/resource/career-advice': () => import('../pages/Resource'),
+    '/resource/interview-tips': () => import('../pages/Resource'),
+};
+const prefetchedRoutes = new Set();
+const prefetchRoute = (to) => {
+    const loader = routeLoaders[to];
+    if (!loader || prefetchedRoutes.has(to)) return;
+    prefetchedRoutes.add(to);
+    loader().catch(() => prefetchedRoutes.delete(to));
+};
+const Link = ({ to, onMouseEnter, onFocus, ...props }) => (
+    <RouterLink
+        to={to}
+        onMouseEnter={(event) => { prefetchRoute(to); onMouseEnter?.(event); }}
+        onFocus={(event) => { prefetchRoute(to); onFocus?.(event); }}
+        {...props}
+    />
+);
 
 const Navbar = () => {
     const { user, logout } = useContext(AuthContext);
