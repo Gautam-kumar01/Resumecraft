@@ -61,6 +61,8 @@ const SEO = ({
             <meta name="twitter:description" content={metaDescription} />
             <meta name="twitter:image" content={metaImage} />
             <meta name="twitter:image:alt" content={metaTitle} />
+            <meta name="twitter:site" content="@Imgautam_001" />
+            <meta name="twitter:creator" content="@Imgautam_001" />
 
             {/* Site identity and application schema */}
             {isHomepage && <script type="application/ld+json">
@@ -77,7 +79,12 @@ const SEO = ({
                             "@type": "Organization",
                             "name": "ResumeCraft",
                             "url": siteUrl,
-                            "logo": `${siteUrl}logo.svg`
+                            "logo": `${siteUrl}logo.svg`,
+                            "sameAs": [
+                                "https://www.linkedin.com/posts/imgautam01",
+                                "https://www.facebook.com/profile.php?id=100070090665121",
+                                "https://github.com/Gautam-kumar01/"
+                            ]
                         },
                         {
                             "@type": "SoftwareApplication",

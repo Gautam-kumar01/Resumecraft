@@ -15,7 +15,8 @@ import {
     MapPin,
     Twitter,
     Linkedin,
-    Github
+    Github,
+    Facebook
 } from 'lucide-react';
 
 const Footer = () => {
@@ -34,6 +35,9 @@ const Footer = () => {
                             </a>
                             <a href="https://www.linkedin.com/posts/imgautam01" target="_blank" rel="noopener noreferrer" aria-label="Gautam Kumar on LinkedIn" className="h-10 w-10 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-slate-400 hover:text-orange-500 hover:border-orange-500/30 transition-all">
                                 <Linkedin className="h-5 w-5" />
+                            </a>
+                            <a href="https://www.facebook.com/profile.php?id=100070090665121" target="_blank" rel="noopener noreferrer" aria-label="ResumeCraft on Facebook" className="h-10 w-10 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-slate-400 hover:text-orange-500 hover:border-orange-500/30 transition-all">
+                                <Facebook className="h-5 w-5" />
                             </a>
                             <a href="https://github.com/Gautam-kumar01/" target="_blank" rel="noopener noreferrer" className="h-10 w-10 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-slate-400 hover:text-orange-500 hover:border-orange-500/30 transition-all">
                                 <Github className="h-5 w-5" />

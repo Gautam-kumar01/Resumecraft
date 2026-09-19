@@ -6,8 +6,10 @@ import {
     Calendar, 
     Clock, 
     Share2, 
-    Twitter, 
-    Linkedin, 
+    Twitter,
+    Linkedin,
+    Facebook,
+    MessageCircle,
     Link2, 
     Check, 
     ChevronLeft, 
@@ -301,6 +303,24 @@ const BlogPost = () => {
                                     aria-label="Share on Twitter"
                                 >
                                     <Twitter className="h-4 w-4" />
+                                </a>
+                                <a
+                                    href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="p-3 bg-stone-50 hover:bg-orange-50 hover:text-orange-500 dark:bg-stone-800 dark:hover:bg-orange-950/20 dark:hover:text-orange-400 border border-stone-100 dark:border-stone-700 rounded-xl text-stone-400 transition-colors flex-grow flex justify-center"
+                                    aria-label="Share on Facebook"
+                                >
+                                    <Facebook className="h-4 w-4" />
+                                </a>
+                                <a
+                                    href={`https://wa.me/?text=${encodeURIComponent(`${post.title} ${currentUrl}`)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="p-3 bg-stone-50 hover:bg-orange-50 hover:text-orange-500 dark:bg-stone-800 dark:hover:bg-orange-950/20 dark:hover:text-orange-400 border border-stone-100 dark:border-stone-700 rounded-xl text-stone-400 transition-colors flex-grow flex justify-center"
+                                    aria-label="Share on WhatsApp"
+                                >
+                                    <MessageCircle className="h-4 w-4" />
                                 </a>
                                 <button 
                                     onClick={handleCopyLink}
