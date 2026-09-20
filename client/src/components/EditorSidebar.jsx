@@ -1,8 +1,11 @@
 import {
   Award,
   BriefcaseBusiness,
+  Check,
   ChevronDown,
   ChevronUp,
+  Cloud,
+  CloudOff,
   Code2,
   FileText,
   FolderKanban,
@@ -10,10 +13,13 @@ import {
   GraduationCap,
   Heart,
   Layout,
+  Loader2,
   Palette,
   Plus,
+  Save,
   Sparkles,
   Star,
+  Target,
   UserRound,
   WandSparkles,
 } from 'lucide-react';
@@ -24,7 +30,32 @@ const ICONS = { user: UserRound, file: FileText, briefcase: BriefcaseBusiness, g
 const EDITABLE_SECTIONS = new Set(['personal', 'summary', 'experience', 'education', 'skills', 'projects', 'certifications', 'extras']);
 const EXTRA_SECTIONS = new Set(['achievements', 'languages', 'volunteer', 'interests', 'custom']);
 
-const EditorSidebar = ({ resume, openSection, setOpenSection, setResume, activeTool, setActiveTool, saveStatus, onAddSection }) => {
+const formatRelativeTime = (date) => {
+  if (!date) return '';
+  const now = new Date();
+  const diffMs = now.getTime() - new Date(date).getTime();
+  const diffSec = Math.floor(diffMs / 1000);
+  const diffMin = Math.floor(diffSec / 60);
+  const diffHour = Math.floor(diffMin / 60);
+  if (diffSec < 5) return 'just now';
+  if (diffSec < 60) return `${diffSec}s ago`;
+  if (diffMin < 60) return `${diffMin}m ago`;
+  if (diffHour < 24) return `${diffHour}h ago`;
+  return new Date(date).toLocaleDateString();
+};
+
+const StatusDot = ({ status }) => {
+  const isSaving = status === 'Saving…';
+  const isError = status?.toLowerCase().includes('fail');
+  const isLocal = status === 'Saved locally';
+
+  if (isError) return <CloudOff className="h-3.5 w-3.5 shrink-0 text-red-500" />;
+  if (isSaving) return <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-orange-500" />;
+  if (isLocal) return <Save className="h-3.5 w-3.5 shrink-0 text-slate-500" />;
+  return <Check className="h-3.5 w-3.5 shrink-0 text-emerald-500" />;
+};
+
+const EditorSidebar = ({ resume, openSection, setOpenSection, setResume, activeTool, setActiveTool, saveStatus, lastSavedAt, onAddSection, onRetrySave }) => {
   const sectionOrder = resume.sectionOrder?.length ? resume.sectionOrder : SECTION_DEFINITIONS.map((section) => section.id);
   const moveSection = (sectionId, direction) => {
     const index = sectionOrder.indexOf(sectionId);
@@ -59,7 +90,38 @@ const EditorSidebar = ({ resume, openSection, setOpenSection, setResume, activeT
           return <div key={section.id} className={`group flex items-center rounded-xl transition ${active ? 'bg-orange-50 text-orange-700' : 'text-slate-600 hover:bg-slate-50'}`}><button type="button" onClick={() => openSectionFor(section.id)} className="flex min-w-0 flex-1 items-center gap-2 px-2 py-2 text-left text-xs font-bold"><Icon className="h-4 w-4 shrink-0" /><span className="truncate">{section.shortLabel}</span>{isHidden && <span className="ml-auto text-[9px] text-slate-400">off</span>}</button><div className="hidden items-center gap-0.5 pr-1 group-hover:flex"><button type="button" onClick={() => moveSection(section.id, -1)} disabled={index === 0} className="rounded p-0.5 text-slate-400 hover:bg-white disabled:opacity-20" aria-label={`Move ${section.label} up`}><ChevronUp className="h-3 w-3" /></button><button type="button" onClick={() => moveSection(section.id, 1)} disabled={index === sectionOrder.length - 1} className="rounded p-0.5 text-slate-400 hover:bg-white disabled:opacity-20" aria-label={`Move ${section.label} down`}><ChevronDown className="h-3 w-3" /></button><button type="button" onClick={() => toggleHidden(section.id)} className="rounded px-1 text-[9px] font-black text-slate-400 hover:bg-white hover:text-slate-700" aria-label={`${isHidden ? 'Show' : 'Hide'} ${section.label}`}>{isHidden ? 'show' : 'hide'}</button></div></div>;
         })}
       </nav>
-      <div className="mt-3 border-t border-slate-100 pt-3"><p className="mb-2 px-2 text-[10px] font-black uppercase tracking-[0.16em] text-slate-400">Tools</p><div className="space-y-1"><button type="button" onClick={() => { setOpenSection(''); setActiveTool('customize'); }} className={`flex w-full items-center gap-2 rounded-xl px-2 py-2 text-xs font-bold ${activeTool === 'customize' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-50'}`}><Palette className="h-4 w-4" /> Customize</button><button type="button" onClick={() => { setOpenSection(''); setActiveTool('copilot'); }} className={`flex w-full items-center gap-2 rounded-xl px-2 py-2 text-xs font-bold ${activeTool === 'copilot' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-50'}`}><WandSparkles className="h-4 w-4" /> AI Assistant</button><button type="button" onClick={() => { setOpenSection(''); setActiveTool('ats'); }} className={`flex w-full items-center gap-2 rounded-xl px-2 py-2 text-xs font-bold ${activeTool === 'ats' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-50'}`}><Sparkles className="h-4 w-4" /> ATS Score</button><button type="button" onClick={() => { setOpenSection(''); setActiveTool('matcher'); }} className={`flex w-full items-center gap-2 rounded-xl px-2 py-2 text-xs font-bold ${activeTool === 'matcher' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-50'}`}><Layout className="h-4 w-4" /> Match a job</button></div><div className="mt-3 flex items-center gap-2 px-2 text-[10px] font-bold text-slate-400"><span className={`h-2 w-2 rounded-full ${saveStatus === 'Saving…' ? 'animate-pulse bg-orange-500' : 'bg-emerald-500'}`} />{saveStatus}</div></div>
+      <div className="mt-3 border-t border-slate-100 pt-3">
+        <p className="mb-2 px-2 text-[10px] font-black uppercase tracking-[0.16em] text-slate-400">Tools</p>
+        <div className="space-y-1">
+          <button type="button" onClick={() => { setOpenSection(''); setActiveTool('customize'); }} className={`flex w-full items-center gap-2 rounded-xl px-2 py-2 text-xs font-bold ${activeTool === 'customize' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-50'}`}><Palette className="h-4 w-4" /> Customize</button>
+          <button type="button" onClick={() => { setOpenSection(''); setActiveTool('copilot'); }} className={`flex w-full items-center gap-2 rounded-xl px-2 py-2 text-xs font-bold ${activeTool === 'copilot' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-50'}`}><WandSparkles className="h-4 w-4" /> AI Assistant</button>
+          <button type="button" onClick={() => { setOpenSection(''); setActiveTool('ats'); }} className={`flex w-full items-center gap-2 rounded-xl px-2 py-2 text-xs font-bold ${activeTool === 'ats' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-50'}`}><Sparkles className="h-4 w-4" /> ATS Score</button>
+          <button type="button" onClick={() => { setOpenSection(''); setActiveTool('skillgap'); }} className={`flex w-full items-center gap-2 rounded-xl px-2 py-2 text-xs font-bold ${activeTool === 'skillgap' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-50'}`}><Target className="h-4 w-4" /> Skill Gap</button>
+          <button type="button" onClick={() => { setOpenSection(''); setActiveTool('matcher'); }} className={`flex w-full items-center gap-2 rounded-xl px-2 py-2 text-xs font-bold ${activeTool === 'matcher' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-50'}`}><Layout className="h-4 w-4" /> Match a job</button>
+        </div>
+        <button
+          type="button"
+          onClick={saveStatus?.toLowerCase().includes('fail') ? onRetrySave : undefined}
+          className={`mt-3 flex w-full items-center gap-2 rounded-xl border px-2 py-2 text-left text-[10px] font-bold transition ${
+            saveStatus?.toLowerCase().includes('fail')
+              ? 'cursor-pointer border-red-200 bg-red-50 text-red-700 hover:bg-red-100'
+              : saveStatus === 'Saving…'
+                ? 'border-orange-200 bg-orange-50 text-orange-700'
+                : saveStatus === 'Saved locally'
+                  ? 'border-slate-200 bg-slate-50 text-slate-600'
+                  : 'border-emerald-200 bg-emerald-50 text-emerald-700'
+          }`}
+          title={lastSavedAt ? new Date(lastSavedAt).toLocaleString() : ''}
+        >
+          <StatusDot status={saveStatus} />
+          <div className="min-w-0 flex-1">
+            <p className="truncate">{saveStatus}</p>
+            {lastSavedAt && saveStatus !== 'Saving…' && (
+              <p className="truncate text-[9px] opacity-70">{formatRelativeTime(lastSavedAt)}</p>
+            )}
+          </div>
+        </button>
+      </div>
     </aside>
   );
 };

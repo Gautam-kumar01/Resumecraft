@@ -3,8 +3,11 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const rateLimit = require('express-rate-limit');
 
 dotenv.config();
+
+const SERVER_STARTED_AT = Date.now();
 
 console.log('--- Environment Diagnostics ---');
 console.log('PORT:', process.env.PORT || 'not set (default 5000)');
@@ -20,7 +23,22 @@ const app = express();
 
 // Middleware
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '4mb' }));
+
+app.set('trust proxy', 1);
+
+const globalApiLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 200,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    message: 'Too many requests from this IP. Please wait a moment and try again.',
+    code: 'RATE_LIMITED_GLOBAL',
+    retryAfterMs: 60_000,
+  },
+});
+app.use('/api/', globalApiLimiter);
 
 // Disable buffering so we don't get the "buffering timed out" 10s hang
 mongoose.set('bufferCommands', false);
@@ -50,14 +68,81 @@ const connectDB = async () => {
 // Initial connection attempt
 connectDB();
 
+const AI_PROVIDERS = [
+  { name: 'Gemini', key: 'GEMINI_API_KEY', endpoint: 'https://generativelanguage.googleapis.com/$discovery/rest?version=v1beta' },
+  { name: 'DeepSeek', key: 'DEEPSEEK_API_KEY', endpoint: 'https://api.deepseek.com/v1/models' },
+  { name: 'Groq', key: 'GROQ_API_KEY', endpoint: 'https://api.groq.com/openai/v1/models' },
+  { name: 'Manus', key: 'MANUS_API_KEY', endpoint: 'https://api.manus.im/v1/models' },
+];
+
+const probeUrl = async (url, timeoutMs = 1500) => {
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
+    const start = performance.now();
+    const res = await fetch(url, { method: 'HEAD', signal: controller.signal }).catch(() => null);
+    clearTimeout(timeout);
+    const latency = Math.round(performance.now() - start);
+    return { reachable: !!res || true /* HEAD may fail; just checking network */, latencyMs: latency };
+  } catch (_) {
+    return { reachable: false, latencyMs: null };
+  }
+};
+
+const measureDbPing = async () => {
+  if (mongoose.connection.readyState !== 1) return { ok: false, latencyMs: null };
+  try {
+    const start = performance.now();
+    const admin = mongoose.connection.db.admin();
+    const pinged = await admin.ping();
+    return { ok: !!pinged?.ok, latencyMs: Math.round(performance.now() - start) };
+  } catch (err) {
+    return { ok: false, latencyMs: null, error: err.message };
+  }
+};
+
 // Routes
-app.get('/api/health', (req, res) => {
+app.get('/api/health', async (req, res) => {
+  const dbPing = await measureDbPing();
+  const providers = AI_PROVIDERS.map((provider) => ({
+    name: provider.name,
+    keySet: !!process.env[provider.key],
+  }));
+
+  const anyAiConfigured = providers.some((p) => p.keySet);
+
+  const overall = (() => {
+    if (!anyAiConfigured) return 'degraded';
+    if (mongoose.connection.readyState !== 1 || !dbPing.ok) return 'degraded';
+    return 'ok';
+  })();
+
+  const uptimeMs = Date.now() - SERVER_STARTED_AT;
+  const uptimeSeconds = Math.round(uptimeMs / 1000);
+  const uptimeHuman = (() => {
+    const days = Math.floor(uptimeSeconds / 86400);
+    const hours = Math.floor((uptimeSeconds % 86400) / 3600);
+    const minutes = Math.floor((uptimeSeconds % 3600) / 60);
+    const parts = [];
+    if (days) parts.push(`${days}d`);
+    if (hours) parts.push(`${hours}h`);
+    if (minutes) parts.push(`${minutes}m`);
+    if (!parts.length) parts.push(`${uptimeSeconds}s`);
+    return parts.join(' ');
+  })();
+
   res.json({
-    status: 'ok',
+    status: overall,
+    uptimeMs,
+    uptimeSeconds,
+    uptimeHuman,
+    startedAtIso: new Date(SERVER_STARTED_AT).toISOString(),
     mongodb: {
       status: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
-      readyState: mongoose.connection.readyState
+      readyState: mongoose.connection.readyState,
+      ping: dbPing,
     },
+    aiProviders: providers,
     vercelConfig: {
       hasMongo: !!process.env.MONGO_URI,
       hasJwt: !!process.env.JWT_SECRET,
@@ -65,9 +150,9 @@ app.get('/api/health', (req, res) => {
       hasEmailPass: !!process.env.EMAIL_PASS,
       hasGemini: !!process.env.GEMINI_API_KEY,
       hasDeepseek: !!process.env.DEEPSEEK_API_KEY,
-      nodeEnv: process.env.NODE_ENV
+      nodeEnv: process.env.NODE_ENV,
     },
-    tip: 'If any "hasX" is false, add that variable in your .env file or Vercel Dashboard.'
+    tip: 'If any "hasX" is false, add that variable in your .env file or Vercel Dashboard.',
   });
 });
 
@@ -101,6 +186,13 @@ app.get('/', (req, res) => {
 
 // Global Error Handler
 app.use((err, req, res, next) => {
+  if (err?.status === 429 || err?.name === 'RateLimitExceeded') {
+    return res.status(429).json({
+      message: err.message || 'Too many requests.',
+      code: err.code || 'RATE_LIMITED',
+      retryAfterMs: err.retryAfterMs || 60_000,
+    });
+  }
   console.error('[SERVER ERROR]', err);
   res.status(err.status || 500).json({
     message: err.message || 'Internal Server Error',

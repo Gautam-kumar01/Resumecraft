@@ -7,7 +7,7 @@ import AuthContext from '../context/AuthContext';
 import ResumePreview from '../components/ResumePreview';
 import LoginModal from '../components/LoginModal';
 import SEO from '../components/SEO';
-import { Save, Download, Eye, ArrowLeft, Plus, Trash2, User, Sparkles, FileText, Briefcase, GraduationCap, Code, Folder, Layout, ChevronDown, ChevronUp, GripVertical, Menu, Palette, PencilLine, Minus, Award, X, Maximize2, Minimize2, Undo2, Redo2, FileDown } from 'lucide-react';
+import { Save, Download, Eye, ArrowLeft, Plus, Trash2, User, Sparkles, FileText, Briefcase, GraduationCap, Code, Folder, Layout, ChevronDown, ChevronUp, GripVertical, Menu, Palette, PencilLine, Minus, Award, X, Maximize2, Minimize2, Undo2, Redo2, FileDown, Cloud, CloudOff, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import ReactQuill from 'react-quill-new';
@@ -17,6 +17,7 @@ import EditorToolsPanel from '../components/EditorToolsPanel';
 import AdditionalResumeSections from '../components/AdditionalResumeSections';
 import { createEmptyResume, normalizeResume } from '../data/resumeBuilder';
 import { trackEvent } from '../utils/analytics';
+import { ValidationHint, inputBorderClass, validateEmail, validatePhone, validateLinkedIn, validateGithub, validateDateOrder, validateRequired } from '../utils/validation';
 const initialResumeState = createEmptyResume();
 const modules = {
     toolbar: [
@@ -27,6 +28,58 @@ const modules = {
 };
 
 const MotionDiv = motion.div;
+
+const formatRelativeTime = (date) => {
+    if (!date) return '';
+    const now = new Date();
+    const diffMs = now.getTime() - new Date(date).getTime();
+    const diffSec = Math.floor(diffMs / 1000);
+    const diffMin = Math.floor(diffSec / 60);
+    const diffHour = Math.floor(diffMin / 60);
+    if (diffSec < 5) return 'just now';
+    if (diffSec < 60) return `${diffSec}s ago`;
+    if (diffMin < 60) return `${diffMin} min ago`;
+    if (diffHour < 24) return `${diffHour}h ago`;
+    return new Date(date).toLocaleDateString();
+};
+
+const SaveStatusBadge = ({ status, lastSavedAt, onClick }) => {
+    const isSaving = status === 'Saving…';
+    const isError = status?.toLowerCase().includes('fail');
+    const isLocal = status === 'Saved locally';
+
+    let icon;
+    let badgeClasses;
+
+    if (isError) {
+        icon = <CloudOff className="h-3.5 w-3.5 shrink-0" />;
+        badgeClasses = 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100';
+    } else if (isSaving) {
+        icon = <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin" />;
+        badgeClasses = 'bg-orange-50 text-orange-700 border-orange-200';
+    } else if (isLocal) {
+        icon = <Save className="h-3.5 w-3.5 shrink-0" />;
+        badgeClasses = 'bg-slate-50 text-slate-600 border-slate-200';
+    } else {
+        icon = <Cloud className="h-3.5 w-3.5 shrink-0" />;
+        badgeClasses = 'bg-emerald-50 text-emerald-700 border-emerald-200';
+    }
+
+    return (
+        <button
+            type="button"
+            onClick={isError ? onClick : undefined}
+            className={`hidden sm:inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-bold transition ${badgeClasses} ${isError ? 'cursor-pointer' : 'cursor-default'}`}
+            title={lastSavedAt ? new Date(lastSavedAt).toLocaleString() : ''}
+        >
+            {icon}
+            <span className="truncate max-w-[140px]">{status}</span>
+            {!isSaving && lastSavedAt && (
+                <span className="text-[10px] opacity-70">· {formatRelativeTime(lastSavedAt)}</span>
+            )}
+        </button>
+    );
+};
 
 const templateOptions = [
     { id: 'executive', name: 'Executive', desc: 'Premium Corporate' },
@@ -97,7 +150,7 @@ const normalizeLegacyCssColors = (value) => {
     return withoutModernInterpolation.replace(/(?:oklab|oklch)\([^)]*\)/gi, (modernColor) => {
         legacyColorContext.fillStyle = '#000000';
         legacyColorContext.fillStyle = modernColor;
-        const normalized = legacyColorContext.fillStyle;
+        const normalized = String(legacyColorContext.fillStyle || '');
         return /oklab|oklch/i.test(normalized) ? 'transparent' : normalized;
     });
 };
@@ -197,6 +250,7 @@ const Editor = () => {
     const [aiSuggestions, setAiSuggestions] = useState(null);
     const [activeTool, setActiveTool] = useState('');
     const [saveStatus, setSaveStatus] = useState('Saved locally');
+    const [lastSavedAt, setLastSavedAt] = useState(null);
     const [history, setHistory] = useState([]);
     const [future, setFuture] = useState([]);
     const lastSnapshotRef = useRef(null);
@@ -249,6 +303,7 @@ const Editor = () => {
         if (!id) {
             localStorage.setItem('guest_resume_draft', snapshot);
             setSaveStatus('Saved locally');
+            setLastSavedAt(new Date());
             return undefined;
         }
         if (!user) return undefined;
@@ -257,11 +312,12 @@ const Editor = () => {
         autosaveTimerRef.current = window.setTimeout(async () => {
             try {
                 await api.put(`/resumes/${id}`, resume);
-                setSaveStatus('Saved ✓');
+                setSaveStatus('All changes saved');
+                setLastSavedAt(new Date());
                 trackEvent('resume_saved', { source: 'autosave' });
             } catch (error) {
                 console.error('Autosave error:', error);
-                setSaveStatus('Save failed');
+                setSaveStatus('Save failed — click to retry');
             }
         }, 1200);
         return () => window.clearTimeout(autosaveTimerRef.current);
@@ -328,20 +384,24 @@ const Editor = () => {
         }
 
         setSaving(true);
+        setSaveStatus('Saving…');
         try {
             if (id) {
                 await api.put(`/resumes/${id}`, resume);
-                setSaveStatus('Saved ✓');
+                setSaveStatus('All changes saved');
+                setLastSavedAt(new Date());
                 trackEvent('resume_saved', { source: 'manual' });
             } else {
                 const { data } = await api.post('/resumes', resume);
                 localStorage.removeItem('guest_resume_draft');
+                setSaveStatus('All changes saved');
+                setLastSavedAt(new Date());
                 trackEvent('resume_created', { source: 'manual' });
                 navigate(`/editor/${data._id}`, { replace: true });
             }
         } catch (error) {
             console.error("Error saving resume:", error);
-            setSaveStatus('Save failed');
+            setSaveStatus('Save failed — click to retry');
         } finally {
             setSaving(false);
         }
@@ -374,22 +434,22 @@ const Editor = () => {
             ].join(';');
             document.body.appendChild(offscreen);
 
-            /** @type {HTMLElement} */
-            const clone = sourceEl.cloneNode(true);
+            const clone = /** @type {HTMLElement} */ (sourceEl.cloneNode(true));
             offscreen.appendChild(clone);
-            [clone, ...clone.querySelectorAll('*')].forEach(/** @type {any} */ (el) => {
-                if (!el.style) return;
-                el.style.transform = 'none';
-                el.style.transition = 'none';
-                el.style.animation = 'none';
-                el.style.boxShadow = 'none';
-                if (window.getComputedStyle(el).letterSpacing !== 'normal') {
-                    el.style.letterSpacing = 'normal';
+            [clone, ...Array.from(clone.querySelectorAll('*'))].forEach((el) => {
+                const htmlEl = /** @type {HTMLElement} */ (el);
+                if (!htmlEl || !htmlEl.style) return;
+                htmlEl.style.transform = 'none';
+                htmlEl.style.transition = 'none';
+                htmlEl.style.animation = 'none';
+                htmlEl.style.boxShadow = 'none';
+                if (window.getComputedStyle(htmlEl).letterSpacing !== 'normal') {
+                    htmlEl.style.letterSpacing = 'normal';
                 }
-                if (window.getComputedStyle(el).textAlign === 'justify') {
-                    el.style.textAlign = 'left';
+                if (window.getComputedStyle(htmlEl).textAlign === 'justify') {
+                    htmlEl.style.textAlign = 'left';
                 }
-                sanitizeCloneColors(el);
+                sanitizeCloneColors(htmlEl);
             });
             clone.style.width = `${A4_W}px`;
             clone.style.height = 'auto';
@@ -493,7 +553,8 @@ const Editor = () => {
             alert("Resume saved locally but failed to sync. Please try saving again.");
         } finally {
             setSaving(false);
-            setSaveStatus('Saved ✓');
+            setSaveStatus('All changes saved');
+            setLastSavedAt(new Date());
             setPendingAction(null);
         }
     };
@@ -621,13 +682,16 @@ const Editor = () => {
                 
                 {/* Header */}
                 <div className="bg-white/85 backdrop-blur-xl border-b border-white/70 px-4 py-3 md:p-4 flex items-center justify-between shrink-0 shadow-[0_8px_30px_rgba(15,23,42,0.06)] z-20 relative">
-                    <button onClick={() => navigate(user ? '/dashboard' : '/')} className="flex items-center gap-2 text-slate-600 hover:text-orange-500 transition-colors font-black text-sm">
-                        <span className="h-9 w-9 rounded-2xl bg-slate-100 flex items-center justify-center">
-                            <ArrowLeft className="h-4 w-4" />
-                        </span>
-                        <span className="tracking-tight">ResumeCraft</span>
-                    </button>
-                    <div className="flex items-center space-x-2 md:space-x-3">
+                    <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
+                        <button onClick={() => navigate(user ? '/dashboard' : '/')} className="flex items-center gap-2 text-slate-600 hover:text-orange-500 transition-colors font-black text-sm shrink-0">
+                            <span className="h-9 w-9 rounded-2xl bg-slate-100 flex items-center justify-center">
+                                <ArrowLeft className="h-4 w-4" />
+                            </span>
+                            <span className="tracking-tight hidden sm:inline">ResumeCraft</span>
+                        </button>
+                        <SaveStatusBadge status={saveStatus} lastSavedAt={lastSavedAt} onClick={handleSave} />
+                    </div>
+                    <div className="flex items-center space-x-2 md:space-x-3 shrink-0">
                         <button onClick={() => setIsFullscreenPreview(!isFullscreenPreview)} className="hidden md:flex items-center px-4 py-2 bg-slate-100 text-slate-700 rounded-xl font-bold text-sm hover:bg-slate-200 transition-colors">
                             {isFullscreenPreview ? <Layout className="h-4 w-4 mr-2" /> : <Eye className="h-4 w-4 mr-2" />}
                             {isFullscreenPreview ? 'Show Editor' : 'Full Preview'}
@@ -655,7 +719,9 @@ const Editor = () => {
                             activeTool={activeTool}
                             setActiveTool={setActiveTool}
                             saveStatus={saveStatus}
+                            lastSavedAt={lastSavedAt}
                             onAddSection={addCustomSection}
+                            onRetrySave={handleSave}
                         />
                         <div className="flex-1 min-w-0 overflow-y-auto px-4 pt-4 pb-[calc(8.75rem+env(safe-area-inset-bottom))] md:p-6 lg:p-8 space-y-4 md:space-y-6 scroll-smooth bg-transparent md:bg-[#f8fafc]">
                     
@@ -762,15 +828,18 @@ const Editor = () => {
                             </div>
                             <div className="md:col-span-2">
                                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Full Name</label>
-                                <input value={resume.personalInfo?.fullName || ''} onChange={(e) => handleChange('personalInfo', 'fullName', e.target.value)} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 focus:border-orange-500 rounded-xl outline-none font-medium" />
+                                <input value={resume.personalInfo?.fullName || ''} onChange={(e) => handleChange('personalInfo', 'fullName', e.target.value)} className={`w-full px-4 py-3 bg-slate-50 ${inputBorderClass(validateRequired(resume.personalInfo?.fullName, 'Full name'))} rounded-xl outline-none font-medium`} />
+                                <ValidationHint result={validateRequired(resume.personalInfo?.fullName, 'Full name')} />
                             </div>
                             <div>
                                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Email</label>
-                                <input value={resume.personalInfo?.email || ''} onChange={(e) => handleChange('personalInfo', 'email', e.target.value)} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 focus:border-orange-500 rounded-xl outline-none font-medium" />
+                                <input value={resume.personalInfo?.email || ''} onChange={(e) => handleChange('personalInfo', 'email', e.target.value)} className={`w-full px-4 py-3 bg-slate-50 ${inputBorderClass(validateEmail(resume.personalInfo?.email))} rounded-xl outline-none font-medium`} />
+                                <ValidationHint result={validateEmail(resume.personalInfo?.email)} />
                             </div>
                             <div>
                                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Phone</label>
-                                <input value={resume.personalInfo?.phone || ''} onChange={(e) => handleChange('personalInfo', 'phone', e.target.value)} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 focus:border-orange-500 rounded-xl outline-none font-medium" />
+                                <input value={resume.personalInfo?.phone || ''} onChange={(e) => handleChange('personalInfo', 'phone', e.target.value)} className={`w-full px-4 py-3 bg-slate-50 ${inputBorderClass(validatePhone(resume.personalInfo?.phone))} rounded-xl outline-none font-medium`} />
+                                <ValidationHint result={validatePhone(resume.personalInfo?.phone)} />
                             </div>
                             <div className="md:col-span-2">
                                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Address</label>
@@ -778,11 +847,13 @@ const Editor = () => {
                             </div>
                             <div>
                                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">LinkedIn URL</label>
-                                <input value={resume.personalInfo?.linkedin || ''} onChange={(e) => handleChange('personalInfo', 'linkedin', e.target.value)} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 focus:border-orange-500 rounded-xl outline-none font-medium" />
+                                <input value={resume.personalInfo?.linkedin || ''} onChange={(e) => handleChange('personalInfo', 'linkedin', e.target.value)} className={`w-full px-4 py-3 bg-slate-50 ${inputBorderClass(validateLinkedIn(resume.personalInfo?.linkedin))} rounded-xl outline-none font-medium`} />
+                                <ValidationHint result={validateLinkedIn(resume.personalInfo?.linkedin)} />
                             </div>
                             <div>
                                 <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">GitHub / Website</label>
-                                <input value={resume.personalInfo?.github || ''} onChange={(e) => handleChange('personalInfo', 'github', e.target.value)} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 focus:border-orange-500 rounded-xl outline-none font-medium" />
+                                <input value={resume.personalInfo?.github || ''} onChange={(e) => handleChange('personalInfo', 'github', e.target.value)} className={`w-full px-4 py-3 bg-slate-50 ${inputBorderClass(validateGithub(resume.personalInfo?.github))} rounded-xl outline-none font-medium`} />
+                                <ValidationHint result={validateGithub(resume.personalInfo?.github)} />
                             </div>
                         </div>
                     </AccordionItem>
@@ -842,11 +913,12 @@ const Editor = () => {
                                                             </div>
                                                             <div>
                                                                 <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Start Date</label>
-                                                                <input value={exp.startDate} onChange={(e) => handleArrayChange('experience', index, 'startDate', e.target.value)} placeholder="e.g. Jan 2020" className="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg outline-none focus:border-orange-500 font-medium" />
+                                                                <input value={exp.startDate} onChange={(e) => handleArrayChange('experience', index, 'startDate', e.target.value)} placeholder="e.g. Jan 2020" className={`w-full px-4 py-2 bg-white ${inputBorderClass(validateDateOrder(exp.startDate, exp.endDate, !!exp.currentlyWorking))} rounded-lg outline-none focus:border-orange-500 font-medium`} />
                                                             </div>
                                                             <div>
                                                                 <label className="block text-xs font-bold text-slate-500 uppercase mb-1">End Date</label>
-                                                                <input value={exp.endDate} onChange={(e) => handleArrayChange('experience', index, 'endDate', e.target.value)} placeholder="e.g. Present" className="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg outline-none focus:border-orange-500 font-medium" />
+                                                                <input value={exp.endDate} onChange={(e) => handleArrayChange('experience', index, 'endDate', e.target.value)} placeholder="e.g. Present" className={`w-full px-4 py-2 bg-white ${inputBorderClass(validateDateOrder(exp.startDate, exp.endDate, !!exp.currentlyWorking))} rounded-lg outline-none focus:border-orange-500 font-medium`} />
+                                                                <ValidationHint result={validateDateOrder(exp.startDate, exp.endDate, !!exp.currentlyWorking)} />
                                                             </div>
                                                             <div className="md:col-span-2">
                                                                 <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Description</label>
@@ -912,11 +984,12 @@ const Editor = () => {
                                                             </div>
                                                             <div>
                                                                 <label className="block text-xs font-bold text-slate-500 uppercase mb-1">Start Date</label>
-                                                                <input value={edu.startDate} onChange={(e) => handleArrayChange('education', index, 'startDate', e.target.value)} className="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg outline-none focus:border-orange-500 font-medium" />
+                                                                <input value={edu.startDate} onChange={(e) => handleArrayChange('education', index, 'startDate', e.target.value)} className={`w-full px-4 py-2 bg-white ${inputBorderClass(validateDateOrder(edu.startDate, edu.endDate, false))} rounded-lg outline-none focus:border-orange-500 font-medium`} />
                                                             </div>
                                                             <div>
                                                                 <label className="block text-xs font-bold text-slate-500 uppercase mb-1">End Date</label>
-                                                                <input value={edu.endDate} onChange={(e) => handleArrayChange('education', index, 'endDate', e.target.value)} className="w-full px-4 py-2 bg-white border border-slate-200 rounded-lg outline-none focus:border-orange-500 font-medium" />
+                                                                <input value={edu.endDate} onChange={(e) => handleArrayChange('education', index, 'endDate', e.target.value)} className={`w-full px-4 py-2 bg-white ${inputBorderClass(validateDateOrder(edu.startDate, edu.endDate, false))} rounded-lg outline-none focus:border-orange-500 font-medium`} />
+                                                                <ValidationHint result={validateDateOrder(edu.startDate, edu.endDate, false)} />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1170,7 +1243,7 @@ const Editor = () => {
                 </button>
                 <div
                     className="bg-white shadow-2xl origin-top transition-transform duration-300 ease-out"
-                    style={{
+                    style={/** @type {any} */ ({
                         width: '794px',
                         minHeight: '1123px',
                         transform: `scale(${previewTransformScale})`,
@@ -1179,7 +1252,7 @@ const Editor = () => {
                         fontSize: `${resume.customization?.fontSize || 14}px`,
                         lineHeight: resume.customization?.lineSpacing || 1.45,
                         '--resume-accent': resume.customization?.accentColor || '#f97316'
-                    }}
+                    })}
                 >
                     <ResumePreview resume={resume} />
                 </div>
@@ -1349,7 +1422,7 @@ const Editor = () => {
                                 <div ref={mobilePreviewRef} className="flex-1 overflow-y-auto flex justify-center px-4 py-5 bg-slate-300">
                                     <div
                                         className="bg-white shadow-2xl origin-top transition-transform duration-300 ease-out"
-                                        style={{
+                                        style={/** @type {any} */ ({
                                             width: '794px',
                                             minHeight: '1123px',
                                             transform: `scale(${previewTransformScale})`,
@@ -1358,7 +1431,7 @@ const Editor = () => {
                                             fontSize: `${resume.customization?.fontSize || 14}px`,
                                             lineHeight: resume.customization?.lineSpacing || 1.45,
                                             '--resume-accent': resume.customization?.accentColor || '#f97316'
-                                        }}
+                                        })}
                                     >
                                         <ResumePreview resume={resume} />
                                     </div>

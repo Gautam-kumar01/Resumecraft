@@ -395,6 +395,79 @@ exports.deepAnalyzeResume = async (req, res) => {
     }
 };
 
+exports.analyzeSkillGap = async (req, res) => {
+    const { targetRole, currentSkills = [], experienceLevel = 'mid' } = req.body;
+    if (!targetRole) return res.status(400).json({ message: 'Target role is required.' });
+    const normalized = Array.from(new Set((currentSkills || []).map((s) => String(s).trim()).filter(Boolean))).slice(0, 40);
+    const prompt = `You are a career coach analyzing skill gaps.
+Target role: "${targetRole}"
+Experience level: ${experienceLevel}
+Current skills the candidate already has: ${JSON.stringify(normalized)}
+
+Return a SINGLE JSON object only, matching this exact shape:
+{
+  "overview": "Short 1-2 sentence summary of the candidate's overall positioning for ${targetRole}.",
+  "topExistingSkills": [
+    { "skill": "Skill Name", "relevance": "high|medium|low", "why": "1-line explanation of why this helps for the role" }
+  ],
+  "missingSkills": [
+    { "skill": "Skill Name", "importance": "critical|high|medium|low", "category": "technical|framework|tool|soft|certification", "why": "1-line explanation of why this skill is commonly expected", "learningSummary": "Very brief note on where to learn it (freeCodeCamp, Coursera, official docs, YouTube, Udemy, etc)" }
+  ],
+  "recommendedProjectIdeas": [
+    { "title": "Short project title", "focus": "Skills it would demonstrate" }
+  ],
+  "priorities": {
+    "next30Days": ["skill1", "skill2"],
+    "next90Days": ["skill3", "skill4"]
+  },
+  "confidenceScore": 0
+}
+
+Rules:
+- Keep topExistingSkills between 3 and 6 items. Only pick from the provided current skills list; if empty return an empty array.
+- Keep missingSkills between 5 and 10 items. Order by importance (critical first).
+- Never include a skill in both topExistingSkills and missingSkills.
+- recommendedProjectIdeas should be 2-4 practical, resume-friendly project ideas.
+- priorities.next30Days should be 2-3 quick wins. priorities.next90Days should be 2-4 deeper skills.
+- confidenceScore from 0-100: 100 means the existing skills almost fully match the role.
+- Preserve facts: if no current skills are provided, do not invent any topExistingSkills entries.
+- Return JSON only. No markdown fences, no commentary.`;
+
+    try {
+        const raw = await generateWithFallback(prompt);
+        const data = cleanJsonResponse(raw);
+        res.json({
+            overview: typeof data.overview === 'string' ? data.overview : '',
+            topExistingSkills: Array.isArray(data.topExistingSkills)
+                ? data.topExistingSkills.filter((s) => s?.skill).slice(0, 6)
+                : [],
+            missingSkills: Array.isArray(data.missingSkills)
+                ? data.missingSkills.filter((s) => s?.skill).slice(0, 10)
+                : [],
+            recommendedProjectIdeas: Array.isArray(data.recommendedProjectIdeas)
+                ? data.recommendedProjectIdeas.filter((p) => p?.title).slice(0, 4)
+                : [],
+            priorities: {
+                next30Days: Array.isArray(data.priorities?.next30Days)
+                    ? data.priorities.next30Days.filter(Boolean).slice(0, 3)
+                    : [],
+                next90Days: Array.isArray(data.priorities?.next90Days)
+                    ? data.priorities.next90Days.filter(Boolean).slice(0, 4)
+                    : [],
+            },
+            confidenceScore: Number.isFinite(Number(data.confidenceScore))
+                ? Math.max(0, Math.min(100, Math.round(Number(data.confidenceScore))))
+                : 50,
+        });
+    } catch (error) {
+        console.error('AI skill gap analysis error:', error.message);
+        res.status(503).json({
+            message: 'AI is temporarily unavailable. Please try again in a moment.',
+            code: 'AI_PROVIDER_UNAVAILABLE',
+        });
+    }
+};
+
 exports.analyzeAts = async (req, res) => {
     if (!req.body?.resume) return res.status(400).json({ message: 'Resume data is required.' });
     res.json(analyzeResume(req.body.resume, req.body.jobDescription || ''));

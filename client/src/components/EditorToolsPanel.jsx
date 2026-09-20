@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check, ChevronDown, ChevronUp, LoaderCircle, RotateCcw, Sparkles, WandSparkles } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, LoaderCircle, RotateCcw, Sparkles, Target, WandSparkles, Plus, Lightbulb, Calendar, Trophy, AlertTriangle } from 'lucide-react';
 import api from '../api/axios';
 import { trackEvent } from '../utils/analytics';
 
@@ -9,7 +9,7 @@ const smallButton = 'rounded-xl border border-slate-200 bg-white px-3 py-2 text-
 
 const Metric = ({ label, value }) => <div className="rounded-2xl border border-slate-200 bg-white p-3"><p className="text-[10px] font-black uppercase tracking-wider text-slate-400">{label}</p><p className="mt-1 text-2xl font-black text-slate-950">{value}%</p></div>;
 
-const EditorToolsPanel = ({ activeTool, resume, setResume, onResetCustomization }) => {
+const EditorToolsPanel = ({ activeTool, resume, setResume, onResetCustomization, onOpenSection }) => {
   const [copilotText, setCopilotText] = useState('');
   const [copilotResult, setCopilotResult] = useState(null);
   const [copilotLoading, setCopilotLoading] = useState(false);
@@ -22,6 +22,10 @@ const EditorToolsPanel = ({ activeTool, resume, setResume, onResetCustomization 
   const [matchLoading, setMatchLoading] = useState(false);
   const [tailor, setTailor] = useState(null);
   const [tailorLoading, setTailorLoading] = useState(false);
+  const [skillGap, setSkillGap] = useState(null);
+  const [skillGapLoading, setSkillGapLoading] = useState(false);
+  const [skillGapRole, setSkillGapRole] = useState(resume.targetRole || '');
+  const [skillGapLevel, setSkillGapLevel] = useState('mid');
 
   const runCopilot = async (action) => {
     const text = copilotText.trim();
