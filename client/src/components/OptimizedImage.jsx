@@ -15,11 +15,13 @@ const OptimizedImage = ({
     const [isLoaded, setIsLoaded] = useState(false);
 
     const imageContent = (
-        <div className={`relative overflow-hidden rounded-xl bg-slate-200 dark:bg-slate-800 ${className}`}>
-            {/* Blur placeholder */}
-            <div 
-                className={`absolute inset-0 bg-slate-200 dark:bg-slate-800 transition-opacity duration-500 ease-in-out ${priority || isLoaded ? 'opacity-0' : 'opacity-100'}`}
-            ></div>
+        <div className={`relative overflow-hidden rounded-xl ${priority ? '' : 'bg-slate-200 dark:bg-slate-800'} ${className}`}>
+            {/* Blur placeholder for lazy images */}
+            {!priority && (
+                <div 
+                    className={`absolute inset-0 bg-slate-200 dark:bg-slate-800 transition-opacity duration-300 ease-in-out ${isLoaded ? 'opacity-0' : 'opacity-100'}`}
+                ></div>
+            )}
             
             <img
                 src={src}
@@ -37,7 +39,7 @@ const OptimizedImage = ({
                     image.src = '/images/ai-resume-builder-dashboard.webp';
                     setIsLoaded(true);
                 }}
-                className={`w-full h-auto transition-opacity duration-700 ease-in-out ${priority || isLoaded ? 'opacity-100' : 'opacity-0'}`}
+                className={`w-full h-auto ${priority ? 'opacity-100' : `transition-opacity duration-300 ease-in-out ${isLoaded ? 'opacity-100' : 'opacity-0'}`}`}
             />
         </div>
     );

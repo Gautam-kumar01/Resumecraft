@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import SEO from '../components/SEO';
-import { GoogleLogin } from '@react-oauth/google';
+import LazyGoogleLogin from '../components/LazyGoogleLogin';
 import Logo from '../components/Logo';
 
 const Register = () => {
@@ -139,13 +139,13 @@ const Register = () => {
                         {isGoogleConfigured && (
                             <div className="mt-8">
                                 <div className="flex justify-center">
-                                    <GoogleLogin
+                                    <LazyGoogleLogin
                                         onSuccess={handleGoogleSuccess}
                                         onError={() => setError('Google login failed')}
-                                        useOneTap
                                         theme="outline"
-                                        shape="pill"
+                                        shape="rectangular"
                                         width="100%"
+                                        text="signup_with"
                                     />
                                 </div>
 
@@ -212,7 +212,7 @@ const Register = () => {
                             <input
                                 type="text"
                                 required
-                                maxLength="6"
+                                maxLength={6}
                                 className="appearance-none rounded-xl relative block w-full px-4 py-4 border border-slate-300 placeholder-slate-400 text-slate-900 text-center text-3xl font-bold tracking-[0.5em] focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all"
                                 placeholder="000000"
                                 value={otp}

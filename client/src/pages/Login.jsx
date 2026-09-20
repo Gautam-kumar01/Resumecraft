@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import SEO from '../components/SEO';
 import { motion as Motion } from 'framer-motion';
-import { GoogleLogin } from '@react-oauth/google';
+import LazyGoogleLogin from '../components/LazyGoogleLogin';
 import Logo from '../components/Logo';
 import { Mail, Lock, Loader2, ArrowRight, UserPlus } from 'lucide-react';
 
@@ -99,14 +99,13 @@ const Login = () => {
 
                 {isGoogleConfigured && (
                     <div className="mt-8">
-                        <div className="flex justify-center transform transition-transform hover:scale-[1.02] active:scale-[0.98]">
+                        <div className="flex justify-center">
                             <div className="w-full">
-                                <GoogleLogin
+                                <LazyGoogleLogin
                                     onSuccess={handleGoogleSuccess}
                                     onError={() => setError('Google login failed')}
-                                    useOneTap
-                                    theme="filled_blue"
-                                    shape="pill"
+                                    theme="outline"
+                                    shape="rectangular"
                                     width="100%"
                                     text="continue_with"
                                 />

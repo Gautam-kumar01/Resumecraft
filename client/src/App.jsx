@@ -2,7 +2,7 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import Home from './pages/Home';
+const Home = lazy(() => import('./pages/Home'));
 const Onboarding = lazy(() => import('./pages/Onboarding'));
 const Login = lazy(() => import('./pages/Login'));
 
@@ -45,7 +45,6 @@ import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 import CookieConsent from './components/CookieConsent';
 import ScrollToTop from './components/ScrollToTop';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const ResumeBuilderDashboard = lazy(() => import('./pages/ResumeBuilderDashboard'));
 
@@ -81,21 +80,20 @@ function App() {
     <Router>
       <GoogleAnalytics />
       <ScrollToTop />
-      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || 'your-google-client-id'}>
-        <AuthProvider>
-          <div className="min-h-screen font-sans text-slate-900 relative">
-            <a href="#main-content" className="sr-only-focusable fixed left-4 top-4 z-[100] rounded-xl bg-slate-950 text-sm font-bold text-white shadow-xl">Skip to main content</a>
-            {/* Premium Background Elements */}
-            <div className="premium-bg">
-              <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-orange-400/10 blur-[120px] rounded-full animate-blob"></div>
-              <div className="absolute top-[20%] right-[-5%] w-[35%] h-[35%] bg-orange-300/10 blur-[100px] rounded-full animate-blob" style={{ animationDelay: '2s' }}></div>
-              <div className="absolute bottom-[-10%] left-[20%] w-[30%] h-[30%] bg-orange-200/10 blur-[80px] rounded-full animate-blob" style={{ animationDelay: '4s' }}></div>
-            </div>
+      <AuthProvider>
+        <div className="min-h-screen font-sans text-slate-900 relative">
+          <a href="#main-content" className="sr-only-focusable fixed left-4 top-4 z-[100] rounded-xl bg-slate-950 text-sm font-bold text-white shadow-xl">Skip to main content</a>
+          {/* Premium Background Elements */}
+          <div className="premium-bg pointer-events-none">
+            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-orange-400/10 blur-[120px] rounded-full will-change-transform"></div>
+            <div className="absolute top-[20%] right-[-5%] w-[35%] h-[35%] bg-orange-300/10 blur-[100px] rounded-full will-change-transform"></div>
+            <div className="absolute bottom-[-10%] left-[20%] w-[30%] h-[30%] bg-orange-200/10 blur-[80px] rounded-full will-change-transform"></div>
+          </div>
 
-            <Navbar />
-            <main id="main-content" className="relative z-10">
-              <Suspense fallback={pageLoader}>
-                <Routes>
+          <Navbar />
+          <main id="main-content" className="relative z-10">
+            <Suspense fallback={pageLoader}>
+              <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/create-resume" element={<Onboarding />} />
                 <Route path="/login" element={<Login />} />
@@ -175,7 +173,6 @@ function App() {
             <CookieConsent />
           </div>
         </AuthProvider>
-      </GoogleOAuthProvider>
     </Router>
   );
 }

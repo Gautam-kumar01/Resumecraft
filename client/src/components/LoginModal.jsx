@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import AuthContext from '../context/AuthContext';
-import { GoogleLogin } from '@react-oauth/google';
+import LazyGoogleLogin from './LazyGoogleLogin';
 import Logo from './Logo';
 import { motion as Motion, AnimatePresence } from 'framer-motion';
 import { Mail, Lock, Loader2, ArrowRight, UserPlus, X, User } from 'lucide-react';
@@ -112,12 +112,11 @@ const LoginModal = ({ isOpen, onClose, onSuccess, initialMode = 'login', title, 
                     )}
 
                     <div className="mb-6">
-                        <GoogleLogin
+                        <LazyGoogleLogin
                             onSuccess={handleGoogleSuccess}
                             onError={() => setError('Google login failed')}
-                            useOneTap
-                            theme="filled_blue"
-                            shape="pill"
+                            theme="outline"
+                            shape="rectangular"
                             width="100%"
                             text={mode === 'login' ? "signin_with" : "signup_with"}
                         />

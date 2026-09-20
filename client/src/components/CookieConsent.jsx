@@ -20,9 +20,16 @@ const CookieConsent = () => {
     const [isAnimatingOut, setIsAnimatingOut] = useState(false);
 
     useEffect(() => {
-        if (!hasAcceptedCookies()) {
-            // Delay to allow smooth entry animation
-            const timer = setTimeout(() => setIsVisible(true), 100);
+        if (hasAcceptedCookies()) return;
+
+        // Defer until browser is idle or 2.5s after load to prevent blocking initial LCP
+        const show = () => setIsVisible(true);
+
+        if ('requestIdleCallback' in window) {
+            const idleId = window.requestIdleCallback(show, { timeout: 2500 });
+            return () => window.cancelIdleCallback(idleId);
+        } else {
+            const timer = setTimeout(show, 2000);
             return () => clearTimeout(timer);
         }
     }, []);
