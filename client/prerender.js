@@ -257,11 +257,27 @@ async function prerender() {
         let page;
         try {
             page = await browser.newPage();
-            console.log(`Prerendering ${route}...`);
-            await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: 'networkidle2', timeout: 20000 }).catch(async () => {
-                await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: 'domcontentloaded', timeout: 15000 });
+            page.on('pageerror', err => console.error(`PAGE ERROR ON ${route}:`, err.message));
+            page.on('console', msg => {
+                if (msg.type() === 'error') console.error(`CONSOLE ERROR ON ${route}:`, msg.text());
             });
-            await page.waitForFunction(() => document.title && document.title !== 'ResumeCraft' && document.querySelector('#root')?.textContent?.trim(), { timeout: 6000 }).catch(() => {});
+            console.log(`Prerendering ${route}...`);
+            await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: 'domcontentloaded', timeout: 15000 });
+            await page.waitForFunction(() => {
+                const root = document.querySelector('#root');
+                return root && root.children && root.children.length > 0 && root.textContent.trim().length > 50;
+            }, { timeout: 8000 }).catch(() => {});
+            
+            const hasRealContent = await page.evaluate(() => {
+                const root = document.querySelector('#root');
+                return Boolean(root && root.children && root.children.length > 0 && root.textContent.trim().length > 50);
+            });
+
+            if (!hasRealContent) {
+                console.warn(`Skipping saving ${route} because root content is empty.`);
+                return;
+            }
+
             const html = await page.content();
             const filePath = route === '/' ? path.join(DIST_DIR, 'index.html') : path.join(DIST_DIR, `${route}.html`);
             const dirPath = path.dirname(filePath);

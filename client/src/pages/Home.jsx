@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO';
 import {
     ChevronRight,
+    ChevronLeft,
     ArrowRight,
     BookOpen,
     Sparkles,
@@ -13,7 +14,10 @@ import {
     Eye,
     MessageSquare,
     Globe,
-    BarChart3
+    BarChart3,
+    Award,
+    Clock,
+    Target
 } from 'lucide-react';
 const FeatureShowcase = lazy(() => import('../components/FeatureShowcase'));
 import OptimizedImage from '../components/OptimizedImage';
