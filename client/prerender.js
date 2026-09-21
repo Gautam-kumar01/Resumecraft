@@ -257,19 +257,12 @@ async function prerender() {
         let page;
         try {
             page = await browser.newPage();
-            await page.setRequestInterception(true);
-            page.on('request', request => {
-                if (['image', 'font', 'media'].includes(request.resourceType())) request.abort();
-                else request.continue();
-            });
             console.log(`Prerendering ${route}...`);
-            await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: 'domcontentloaded', timeout: 15000 });
-            await page.waitForFunction(() => document.title && document.title !== 'ResumeCraft' && document.querySelector('#root')?.textContent?.trim(), { timeout: 6000 }).catch(() => {});
-            let html = await page.content();
-            // Ensure Google Fonts remains non-render-blocking in pre-rendered static HTML
-            html = html.replace(/<link rel="stylesheet" href="https:\/\/fonts\.googleapis\.com\/css2\?[^"]+" media="all"/g, (match) => {
-                return match.replace('media="all"', 'media="print"');
+            await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: 'networkidle2', timeout: 20000 }).catch(async () => {
+                await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: 'domcontentloaded', timeout: 15000 });
             });
+            await page.waitForFunction(() => document.title && document.title !== 'ResumeCraft' && document.querySelector('#root')?.textContent?.trim(), { timeout: 6000 }).catch(() => {});
+            const html = await page.content();
             const filePath = route === '/' ? path.join(DIST_DIR, 'index.html') : path.join(DIST_DIR, `${route}.html`);
             const dirPath = path.dirname(filePath);
             if (!fs.existsSync(dirPath)) fs.mkdirSync(dirPath, { recursive: true });
