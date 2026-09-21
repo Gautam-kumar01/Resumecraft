@@ -197,12 +197,12 @@ async function prerender() {
     // Generate sitemap immediately
     generateSitemap();
 
-    // Set hard 60s timeout to prevent hanging on CI/Vercel builds
+    // Set safety timeout to prevent hanging on CI/Vercel builds
     const safetyTimeout = setTimeout(() => {
-        console.warn('Prerender safety timeout reached (60s). Exiting gracefully.');
+        console.warn('Prerender safety timeout reached. Exiting gracefully.');
         try { server.close(); } catch (_) {}
         process.exit(0);
-    }, 60000);
+    }, process.env.VERCEL ? 60000 : 180000);
 
     console.log('Starting prerender server...');
     await new Promise(resolve => server.listen(PORT, resolve));
@@ -265,7 +265,11 @@ async function prerender() {
             console.log(`Prerendering ${route}...`);
             await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: 'domcontentloaded', timeout: 15000 });
             await page.waitForFunction(() => document.title && document.title !== 'ResumeCraft' && document.querySelector('#root')?.textContent?.trim(), { timeout: 6000 }).catch(() => {});
-            const html = await page.content();
+            let html = await page.content();
+            // Ensure Google Fonts remains non-render-blocking in pre-rendered static HTML
+            html = html.replace(/<link rel="stylesheet" href="https:\/\/fonts\.googleapis\.com\/css2\?[^"]+" media="all"/g, (match) => {
+                return match.replace('media="all"', 'media="print"');
+            });
             const filePath = route === '/' ? path.join(DIST_DIR, 'index.html') : path.join(DIST_DIR, `${route}.html`);
             const dirPath = path.dirname(filePath);
             if (!fs.existsSync(dirPath)) fs.mkdirSync(dirPath, { recursive: true });

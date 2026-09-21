@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import html2canvas from 'html2canvas';
-import { jsPDF } from 'jspdf';
 import api from '../api/axios';
 import AuthContext from '../context/AuthContext';
 import ResumePreview from '../components/ResumePreview';
@@ -462,6 +460,12 @@ const Editor = () => {
             await document.fonts?.ready;
             await waitForImages(clone);
             await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+            const [{ jsPDF }, html2canvasModule] = await Promise.all([
+                import('jspdf'),
+                import('html2canvas')
+            ]);
+            const html2canvas = html2canvasModule.default || html2canvasModule;
 
             const contentHeight = Math.max(clone.scrollHeight, clone.offsetHeight, 1123);
             const canvas = await html2canvas(clone, {

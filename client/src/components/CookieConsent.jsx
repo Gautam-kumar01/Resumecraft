@@ -22,16 +22,25 @@ const CookieConsent = () => {
     useEffect(() => {
         if (hasAcceptedCookies()) return;
 
-        // Defer until browser is idle or 2.5s after load to prevent blocking initial LCP
-        const show = () => setIsVisible(true);
+        let timer;
+        const show = () => {
+            setIsVisible(true);
+            cleanup();
+        };
 
-        if ('requestIdleCallback' in window) {
-            const idleId = window.requestIdleCallback(show, { timeout: 2500 });
-            return () => window.cancelIdleCallback(idleId);
-        } else {
-            const timer = setTimeout(show, 2000);
-            return () => clearTimeout(timer);
-        }
+        const cleanup = () => {
+            window.removeEventListener('scroll', show);
+            window.removeEventListener('pointerdown', show);
+            window.removeEventListener('keydown', show);
+            if (timer) clearTimeout(timer);
+        };
+
+        window.addEventListener('scroll', show, { once: true, passive: true });
+        window.addEventListener('pointerdown', show, { once: true, passive: true });
+        window.addEventListener('keydown', show, { once: true, passive: true });
+        timer = setTimeout(show, 6000);
+
+        return cleanup;
     }, []);
 
     const acceptCookies = () => {

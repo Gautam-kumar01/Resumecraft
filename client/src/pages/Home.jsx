@@ -3,31 +3,22 @@ import { lazy, Suspense, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import SEO from '../components/SEO';
 import {
-    FileText,
-    Award,
-    Clock,
-    Target,
-    Star,
-    CheckCircle2,
-    Cpu,
-    Eye,
-    Globe,
-    BarChart3,
-    MessageSquare,
     ChevronRight,
-    ChevronLeft,
     ArrowRight,
     BookOpen,
-    Sparkles
+    Sparkles,
+    CheckCircle2,
+    FileText,
+    Cpu,
+    Eye,
+    MessageSquare,
+    Globe,
+    BarChart3
 } from 'lucide-react';
-import Logo from '../components/Logo';
-import { motion, AnimatePresence } from 'framer-motion';
 const FeatureShowcase = lazy(() => import('../components/FeatureShowcase'));
 import OptimizedImage from '../components/OptimizedImage';
 import { trackEvent } from '../utils/analytics';
-import { blogPosts } from '../data/blogPosts';
-
-const MotionDiv = motion.div;
+import { featuredBlogPosts } from '../data/featuredBlogPosts';
 
 const Home = () => {
     const navigate = useNavigate();
@@ -88,8 +79,7 @@ const Home = () => {
         localStorage.setItem('guest_resume_draft', JSON.stringify(initialData));
         navigate('/editor');
     };
-
-    const featuredPosts = blogPosts.filter((post) => post.featured).slice(0, 3);
+    const featuredPosts = featuredBlogPosts;
     const roleLinks = [
         { label: 'Software Engineer', href: '/resume-template/software-engineer', detail: 'Projects, APIs, cloud, and measurable engineering impact.' },
         { label: 'Data Analyst', href: '/resume-template/data-analyst', detail: 'SQL, dashboards, insights, and business outcomes.' },
@@ -118,12 +108,7 @@ const Home = () => {
     ];
 
     return (
-        <MotionDiv
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-            className="bg-white"
-        >
+        <div className="bg-white">
             <SEO
                 title="Free AI Resume Builder & ATS Resume Maker"
                 description="Build a professional resume online with ResumeCraft. Use AI guidance, ATS-friendly templates, resume examples, job-description matching, cover letters, and PDF export for your next application."
@@ -234,27 +219,28 @@ const Home = () => {
                                 Explore templates
                             </Link>
                         </div>
-                        <p className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-semibold text-slate-400"><span className="inline-flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" /> Start as a guest</span><span className="inline-flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" /> Edit every suggestion</span><span className="inline-flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" /> Export when ready</span></p>
+                        <p className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-semibold text-slate-300"><span className="inline-flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" /> Start as a guest</span><span className="inline-flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" /> Edit every suggestion</span><span className="inline-flex items-center gap-1.5"><CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" /> Export when ready</span></p>
                         <div className="mt-10 grid max-w-md grid-cols-3 gap-4 border-t border-white/10 pt-6">
-                            <div><p className="text-2xl font-black text-white">7+</p><p className="mt-1 text-xs font-semibold text-slate-400">Starter layouts</p></div>
-                            <div><p className="text-2xl font-black text-white">Live</p><p className="mt-1 text-xs font-semibold text-slate-400">Preview updates</p></div>
-                            <div><p className="text-2xl font-black text-white">Guest</p><p className="mt-1 text-xs font-semibold text-slate-400">Drafts supported</p></div>
+                            <div><p className="text-2xl font-black text-white">7+</p><p className="mt-1 text-xs font-semibold text-slate-300">Starter layouts</p></div>
+                            <div><p className="text-2xl font-black text-white">Live</p><p className="mt-1 text-xs font-semibold text-slate-300">Preview updates</p></div>
+                            <div><p className="text-2xl font-black text-white">Guest</p><p className="mt-1 text-xs font-semibold text-slate-300">Drafts supported</p></div>
                         </div>
                     </div>
 
                     <div className="relative mx-auto w-full max-w-2xl lg:ml-auto">
                         <div className="absolute -inset-5 rounded-[2.5rem] bg-gradient-to-br from-orange-500/20 via-transparent to-blue-500/10 blur-2xl" />
-                        <MotionDiv
-                            whileHover={{ y: -6, rotate: 0 }}
+                        <div
                             onClick={handleCreateNew}
-                            className="relative cursor-pointer rounded-[2rem] border border-white/15 bg-white/10 p-3 shadow-[0_30px_90px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-transform duration-500 sm:rotate-2 sm:p-4"
+                            className="relative cursor-pointer rounded-[2rem] border border-white/15 bg-white/10 p-3 shadow-[0_30px_90px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-all duration-500 hover:-translate-y-1.5 sm:rotate-2 sm:p-4"
                         >
                             <div className="flex items-center gap-2 border-b border-white/10 px-2 pb-3">
                                 <span className="h-2.5 w-2.5 rounded-full bg-red-400" /><span className="h-2.5 w-2.5 rounded-full bg-amber-400" /><span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
-                                <span className="ml-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">ResumeCraft workspace</span>
+                                <span className="ml-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-300">ResumeCraft workspace</span>
                             </div>
                             <OptimizedImage
                                 src="/images/free-online-resume-maker.webp"
+                                srcSet="/images/free-online-resume-maker-600.webp 600w, /images/free-online-resume-maker.webp 1200w"
+                                sizes="(max-width: 640px) 100vw, 600px"
                                 alt="ResumeCraft AI resume builder workspace with ATS-friendly templates"
                                 width={1200}
                                 height={630}
@@ -270,7 +256,7 @@ const Home = () => {
                                 <p className="mt-1 text-xs font-bold">Every edit, instantly</p>
                             </div>
                             <div className="absolute -top-5 right-8 hidden rounded-full border border-white/20 bg-slate-900/90 px-4 py-2 text-xs font-black text-white shadow-xl backdrop-blur sm:block motion-safe:animate-[bounce_5s_ease-in-out_infinite]">3 steps to ready</div>
-                        </MotionDiv>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -284,11 +270,9 @@ const Home = () => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
                         {mncCards.map((card, idx) => (
-                            <MotionDiv
+                            <div
                                 key={idx}
-                                whileHover={{ y: -6, scale: 1.01 }}
-                                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                                className="relative bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden group cursor-pointer"
+                                className="relative bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden group cursor-pointer transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl"
                                 onClick={() => handleBlueprintClick(card)}
                             >
                                 <div className="h-40 bg-slate-900 relative overflow-hidden">
@@ -324,7 +308,7 @@ const Home = () => {
                                         </div>
                                     </div>
                                 </div>
-                            </MotionDiv>
+                            </div>
                         ))}
                     </div>
                 </div>
@@ -512,15 +496,10 @@ const Home = () => {
                                 textColor: "text-orange-600"
                             }
                         ].map((item, i) => (
-                            <MotionDiv
+                            <div
                                 key={i}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: i * 0.1 }}
-                                whileHover={{ y: -8, scale: 1.02 }}
                                 onClick={() => openFeature(i)}
-                                className="group relative flex flex-col items-start p-8 rounded-[32px] bg-white border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-slate-200/50 transition-all duration-500 cursor-pointer overflow-hidden"
+                                className="group relative flex flex-col items-start p-8 rounded-[32px] bg-white border border-slate-100 shadow-sm hover:shadow-2xl hover:shadow-slate-200/50 hover:-translate-y-2 transition-all duration-300 cursor-pointer overflow-hidden"
                             >
                                 {/* Glassmorphism background effect on hover */}
                                 <div className="absolute inset-0 bg-gradient-to-br from-slate-50/50 to-white/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 backdrop-blur-[2px]"></div>
@@ -547,7 +526,7 @@ const Home = () => {
 
                                 {/* Premium Ripple/Glow Border Effect */}
                                 <div className={`absolute inset-0 border-2 border-transparent group-hover:border-slate-100/50 rounded-[32px] transition-all duration-500`}></div>
-                            </MotionDiv>
+                            </div>
                         ))}
                     </div>
                 </div>
@@ -611,16 +590,14 @@ const Home = () => {
                 </div>
             </section>
 
-            <AnimatePresence>
-                {showcaseOpen && (
-                    <Suspense fallback={null}>
-                        <FeatureShowcase
+            {showcaseOpen && (
+                <Suspense fallback={null}>
+                    <FeatureShowcase
                         onClose={() => setShowcaseOpen(false)}
-                            initialFeature={activeFeature}
-                        />
-                    </Suspense>
-                )}
-            </AnimatePresence>
+                        initialFeature={activeFeature}
+                    />
+                </Suspense>
+            )}
 
             {/* Job search workflow section: adds a high-intent path without changing the existing hero or builder flow. */}
             <section className="border-y border-orange-100 bg-orange-50/50 py-20">
@@ -703,7 +680,7 @@ const Home = () => {
                     </div>
                 </div>
             </section>
-        </MotionDiv>
+        </div>
     );
 };
 

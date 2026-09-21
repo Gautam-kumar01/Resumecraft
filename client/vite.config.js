@@ -13,11 +13,24 @@ export default defineConfig({
     chunkSizeWarningLimit: 600,
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-motion': ['framer-motion'],
-          'vendor-icons': ['lucide-react'],
-          'vendor-pdf': ['jspdf', 'html2canvas', 'dompurify'],
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react-quill-new') || id.includes('quill')) {
+              return 'vendor-quill';
+            }
+            if (id.includes('@hello-pangea/dnd')) {
+              return 'vendor-dnd';
+            }
+            if (id.includes('framer-motion')) {
+              return 'vendor-motion';
+            }
+            if (id.includes('lucide-react')) {
+              return 'vendor-icons';
+            }
+            if (id.includes('react-router') || id.includes('react-dom') || id.includes('react/') || id.includes('react-helmet-async')) {
+              return 'vendor-react';
+            }
+          }
         },
       },
     },

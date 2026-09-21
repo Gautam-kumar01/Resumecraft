@@ -30,16 +30,16 @@ const Footer = () => {
                             An AI-assisted resume builder with professional templates, live editing, resume feedback, and practical career tools for students and job seekers.
                         </p>
                         <div className="flex flex-wrap gap-3">
-                            <a href="https://twitter.com/Imgautam_001" target="_blank" rel="noopener noreferrer" className="h-10 w-10 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-slate-400 hover:text-orange-500 hover:border-orange-500/30 transition-all">
+                            <a href="https://twitter.com/Imgautam_001" target="_blank" rel="noopener noreferrer" aria-label="ResumeCraft on Twitter" className="h-10 w-10 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-slate-500 hover:text-orange-500 hover:border-orange-500/30 transition-all">
                                 <Twitter className="h-5 w-5" />
                             </a>
-                            <a href="https://www.linkedin.com/posts/imgautam01" target="_blank" rel="noopener noreferrer" aria-label="Gautam Kumar on LinkedIn" className="h-10 w-10 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-slate-400 hover:text-orange-500 hover:border-orange-500/30 transition-all">
+                            <a href="https://www.linkedin.com/posts/imgautam01" target="_blank" rel="noopener noreferrer" aria-label="Gautam Kumar on LinkedIn" className="h-10 w-10 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-slate-500 hover:text-orange-500 hover:border-orange-500/30 transition-all">
                                 <Linkedin className="h-5 w-5" />
                             </a>
-                            <a href="https://www.facebook.com/profile.php?id=100070090665121" target="_blank" rel="noopener noreferrer" aria-label="ResumeCraft on Facebook" className="h-10 w-10 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-slate-400 hover:text-orange-500 hover:border-orange-500/30 transition-all">
+                            <a href="https://www.facebook.com/profile.php?id=100070090665121" target="_blank" rel="noopener noreferrer" aria-label="ResumeCraft on Facebook" className="h-10 w-10 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-slate-500 hover:text-orange-500 hover:border-orange-500/30 transition-all">
                                 <Facebook className="h-5 w-5" />
                             </a>
-                            <a href="https://github.com/Gautam-kumar01/" target="_blank" rel="noopener noreferrer" className="h-10 w-10 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-slate-400 hover:text-orange-500 hover:border-orange-500/30 transition-all">
+                            <a href="https://github.com/Gautam-kumar01/" target="_blank" rel="noopener noreferrer" aria-label="ResumeCraft on GitHub" className="h-10 w-10 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl flex items-center justify-center text-slate-500 hover:text-orange-500 hover:border-orange-500/30 transition-all">
                                 <Github className="h-5 w-5" />
                             </a>
                         </div>
@@ -118,7 +118,7 @@ const Footer = () => {
 
                     <div className="border-t border-slate-200 pt-10 dark:border-slate-800">
                     <div className="flex flex-col md:flex-row justify-between items-center text-sm gap-6">
-                        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8 text-slate-400">
+                        <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8 text-slate-500 dark:text-slate-400">
                             <p>© 2026 ResumeCraft. All rights reserved.</p>
                             <div className="flex gap-6">
                                 <Link to="/privacy" className="hover:text-slate-900 dark:hover:text-white transition-colors">Privacy Policy</Link>
@@ -126,7 +126,7 @@ const Footer = () => {
                                 <Link to="/cookies" className="hover:text-slate-900 dark:hover:text-white transition-colors">Cookie Policy</Link>
                             </div>
                         </div>
-                        <div className="flex items-center space-x-2 text-slate-400 text-xs">
+                        <div className="flex items-center space-x-2 text-slate-500 dark:text-slate-400 text-xs">
                             <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-500"></span>
                             <span>ResumeCraft is ready to help</span>
                         </div>

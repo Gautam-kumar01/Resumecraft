@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 
 const OptimizedImage = ({
     src,
+    srcSet = undefined,
+    sizes = undefined,
     alt,
     caption = '',
     linkTo = '',
@@ -25,6 +27,8 @@ const OptimizedImage = ({
             
             <img
                 src={src}
+                srcSet={srcSet}
+                sizes={sizes}
                 alt={alt}
                 width={width}
                 height={height}

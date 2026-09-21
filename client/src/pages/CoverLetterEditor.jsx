@@ -1,8 +1,6 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import html2canvas from 'html2canvas';
-import { jsPDF } from 'jspdf';
 import api from '../api/axios';
 import { Save, Download, ArrowLeft, Send, User, Building, Calendar, FileText, Type, Wand2, Sparkles, Brain } from 'lucide-react';
 
@@ -112,6 +110,12 @@ const CoverLetterEditor = () => {
 
             // Give it a moment to render
             await new Promise(r => setTimeout(r, 500));
+
+            const [{ jsPDF }, html2canvasModule] = await Promise.all([
+                import('jspdf'),
+                import('html2canvas')
+            ]);
+            const html2canvas = html2canvasModule.default || html2canvasModule;
 
             const canvas = await html2canvas(offscreen, {
                 scale: 3,
