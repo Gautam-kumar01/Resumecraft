@@ -7,6 +7,94 @@ const { parseResumeFile } = require('../utils/resumeParser');
 
 dotenv.config();
 
+// Helper to call OpenRouter API using built-in https module (Primary AI Provider)
+const callOpenRouter = async (prompt, isJson = true) => {
+    const apiKey = process.env.OPENROUTER_API_KEY;
+    if (!apiKey) throw new Error("OpenRouter API Key is missing");
+
+    const preferredModel = process.env.OPENROUTER_MODEL || "openai/gpt-4o-mini";
+    const modelsToTry = [...new Set([
+        preferredModel,
+        "openai/gpt-4o-mini",
+        "meta-llama/llama-3.3-70b-instruct",
+        "deepseek/deepseek-chat",
+        "mistralai/mistral-small-24b-instruct-2501"
+    ])];
+
+    let lastError = null;
+
+    for (const model of modelsToTry) {
+        try {
+            console.log(`AI: Attempting generation with OpenRouter (${model})...`);
+            const content = await new Promise((resolve, reject) => {
+                const data = JSON.stringify({
+                    model: model,
+                    messages: [
+                        { role: "system", content: "You are a professional resume writer, career coach, and ATS specialist." },
+                        { role: "user", content: prompt }
+                    ],
+                    ...(isJson ? { response_format: { type: "json_object" } } : {}),
+                    temperature: 0.7
+                });
+
+                const options = {
+                    hostname: 'openrouter.ai',
+                    path: '/api/v1/chat/completions',
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                        'HTTP-Referer': 'https://resumecraft.in',
+                        'X-Title': 'ResumeCraft',
+                        'Content-Type': 'application/json',
+                        'Content-Length': Buffer.byteLength(data)
+                    },
+                    timeout: 45000
+                };
+
+                const req = https.request(options, (res) => {
+                    let body = '';
+                    res.on('data', (chunk) => body += chunk);
+                    res.on('end', () => {
+                        try {
+                            const response = JSON.parse(body);
+                            if (res.statusCode >= 200 && res.statusCode < 300) {
+                                if (response.choices && response.choices[0] && response.choices[0].message) {
+                                    resolve(response.choices[0].message.content);
+                                } else {
+                                    reject(new Error(`Invalid OpenRouter response structure: ${body}`));
+                                }
+                            } else {
+                                reject(new Error(`OpenRouter failed (${res.statusCode}): ${response.error?.message || body}`));
+                            }
+                        } catch (e) {
+                            reject(new Error(`Failed to parse OpenRouter response: ${e.message}`));
+                        }
+                    });
+                });
+
+                req.on('error', (e) => reject(new Error(`OpenRouter request error: ${e.message}`)));
+                req.on('timeout', () => {
+                    req.destroy();
+                    reject(new Error('OpenRouter request timed out'));
+                });
+
+                req.write(data);
+                req.end();
+            });
+
+            if (content) {
+                console.log(`AI: Success with OpenRouter (${model})`);
+                return content;
+            }
+        } catch (err) {
+            lastError = err;
+            console.warn(`AI: OpenRouter model ${model} failed: ${err.message}`);
+        }
+    }
+
+    throw lastError || new Error("All OpenRouter models failed");
+};
+
 // Helper to call DeepSeek API using built-in https module to avoid dependency issues
 const callDeepSeek = async (prompt, isJson = true) => {
     const apiKey = process.env.DEEPSEEK_API_KEY;
@@ -32,7 +120,7 @@ const callDeepSeek = async (prompt, isJson = true) => {
             headers: {
                 'Authorization': `Bearer ${apiKey}`,
                 'Content-Type': 'application/json',
-                'Content-Length': data.length
+                'Content-Length': Buffer.byteLength(data)
             },
             timeout: 30000
         };
@@ -90,7 +178,7 @@ const callGroq = async (prompt, isJson = true) => {
             headers: {
                 'Authorization': `Bearer ${apiKey}`,
                 'Content-Type': 'application/json',
-                'Content-Length': data.length
+                'Content-Length': Buffer.byteLength(data)
             },
             timeout: 30000
         };
@@ -186,7 +274,6 @@ const callManus = async (prompt, isJson = true) => {
     });
 };
 
-
 // Helper to call Gemini API. The key stays server-side and is never sent to the browser.
 const callGemini = async (prompt, isJson = true) => {
     if (!process.env.GEMINI_API_KEY) throw new Error("Gemini API Key is missing");
@@ -237,6 +324,66 @@ const callGemini = async (prompt, isJson = true) => {
     throw lastError || new Error("All Gemini models failed");
 };
 
+const cleanJsonResponse = (text) => {
+    let jsonStr = String(text || '').trim();
+    if (jsonStr.includes('```')) {
+        const matches = jsonStr.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+        jsonStr = matches ? matches[1] : jsonStr.replace(/```json/gi, '').replace(/```/g, '').trim();
+    }
+    return JSON.parse(jsonStr.trim());
+};
+
+// Priority AI Fallback Pipeline: OpenRouter -> Gemini -> Manus -> DeepSeek -> Groq
+const generateWithFallback = async (prompt, isJson = true) => {
+    // 1. Primary: OpenRouter
+    if (process.env.OPENROUTER_API_KEY) {
+        try {
+            return await callOpenRouter(prompt, isJson);
+        } catch (openRouterError) {
+            console.warn("AI: OpenRouter failed, attempting fallback to Gemini...", openRouterError.message);
+        }
+    }
+
+    // 2. Fallback: Gemini
+    if (process.env.GEMINI_API_KEY) {
+        try {
+            return await callGemini(prompt, isJson);
+        } catch (geminiError) {
+            console.warn("AI: Gemini failed, attempting fallback to Manus AI...", geminiError.message);
+        }
+    }
+
+    // 3. Fallback: Manus AI
+    if (process.env.MANUS_API_KEY) {
+        try {
+            return await callManus(prompt, isJson);
+        } catch (manusError) {
+            console.warn("AI: Manus AI failed, attempting fallback to DeepSeek...", manusError.message);
+        }
+    }
+
+    // 4. Fallback: DeepSeek
+    if (process.env.DEEPSEEK_API_KEY) {
+        try {
+            return await callDeepSeek(prompt, isJson);
+        } catch (deepSeekError) {
+            console.warn("AI: DeepSeek failed, attempting fallback to Groq...", deepSeekError.message);
+        }
+    }
+
+    // 5. Fallback: Groq
+    if (process.env.GROQ_API_KEY) {
+        return await callGroq(prompt, isJson);
+    }
+
+    // If none are configured or all failed, try OpenRouter as final attempt if key exists
+    if (process.env.OPENROUTER_API_KEY) {
+        return await callOpenRouter(prompt, isJson);
+    }
+
+    throw new Error("No AI providers configured or all providers failed");
+};
+
 exports.getSuggestions = async (req, res) => {
     const { jobRole, resumeContext = {} } = req.body;
 
@@ -255,75 +402,15 @@ exports.getSuggestions = async (req, res) => {
     Return ONLY the JSON, no markdown.`;
 
     try {
-        let text;
-        try {
-            // Try Gemini first
-            text = await callGemini(prompt);
-        } catch (geminiError) {
-            console.log("AI: Gemini failed, falling back to Manus AI...");
-            try {
-                // Fallback to Manus AI
-                text = await callManus(prompt, true);
-            } catch (manusError) {
-                console.log("AI: Manus AI failed, falling back to DeepSeek...");
-                try {
-                    // Fallback to DeepSeek
-                    text = await callDeepSeek(prompt, true);
-                } catch (deepSeekError) {
-                    console.log("AI: DeepSeek failed, falling back to Groq...");
-                    // Fallback to Groq
-                    text = await callGroq(prompt, true);
-                }
-            }
-        }
-
-        // Clean up text if it contains markdown code blocks (sometimes LLMs ignore instructions)
-        let jsonStr = text;
-        if (text.includes('```')) {
-            const matches = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
-            jsonStr = matches ? matches[1] : text.replace(/```json/gi, '').replace(/```/g, '').trim();
-        }
-        
-        jsonStr = jsonStr.trim();
-
-        try {
-            const data = JSON.parse(jsonStr);
-            res.json(data);
-        } catch (parseError) {
-            console.error("JSON Parse Error:", parseError.message);
-            throw new Error("AI returned invalid JSON format");
-        }
+        const raw = await generateWithFallback(prompt, true);
+        const data = cleanJsonResponse(raw);
+        res.json(data);
     } catch (error) {
         console.error("AI Generation Error:", error.message);
         res.status(503).json({
             message: "AI generation is temporarily unavailable. Please try again shortly.",
             code: "AI_PROVIDER_UNAVAILABLE"
         });
-    }
-};
-
-const cleanJsonResponse = (text) => {
-    let jsonStr = String(text || '').trim();
-    if (jsonStr.includes('```')) {
-        const matches = jsonStr.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
-        jsonStr = matches ? matches[1] : jsonStr.replace(/```json/gi, '').replace(/```/g, '').trim();
-    }
-    return JSON.parse(jsonStr.trim());
-};
-
-const generateWithFallback = async (prompt) => {
-    try {
-        return await callGemini(prompt);
-    } catch (geminiError) {
-        try {
-            return await callManus(prompt, true);
-        } catch (manusError) {
-            try {
-                return await callDeepSeek(prompt, true);
-            } catch (deepSeekError) {
-                return callGroq(prompt, true);
-            }
-        }
     }
 };
 
@@ -378,8 +465,8 @@ exports.deepAnalyzeResume = async (req, res) => {
     if (text.length < 40) return res.status(400).json({ message: 'At least 40 characters of resume text are required.' });
     const prompt = `You are a careful resume coach. Analyze the supplied resume text for clarity, evidence, structure, and relevance. Do not invent facts, scores, employers, dates, skills, metrics, or hiring outcomes. Do not treat missing information as proof that the candidate lacks it. Return JSON only with this exact shape: {"headline":"short overall assessment","strengths":[""],"priorityFixes":[{"title":"","why":"","example":""}],"sectionNotes":[{"section":"","note":""}],"keywordNotes":[""],"nextStep":""}. Keep strengths to 4 items, priorityFixes to 5 items, sectionNotes to 6 items, keywordNotes to 5 items, and nextStep to one sentence. Make every suggestion practical and grounded in the supplied text. State clearly that this is coaching feedback, not an ATS or hiring prediction.\nResume text:\n${text.slice(0, 18000)}\n${jobDescription.trim() ? `Target job description:\n${String(jobDescription).slice(0, 10000)}` : 'No target job description was supplied.'}`;
     try {
-        if (!process.env.GEMINI_API_KEY) return res.status(503).json({ message: 'Gemini deep analysis is not configured yet. Your local score is still available.', code: 'GEMINI_NOT_CONFIGURED' });
-        const data = cleanJsonResponse(await callGemini(prompt, true));
+        const raw = await generateWithFallback(prompt, true);
+        const data = cleanJsonResponse(raw);
         res.json({
             headline: String(data.headline || 'Your resume has a useful foundation.').slice(0, 500),
             strengths: Array.isArray(data.strengths) ? data.strengths.slice(0, 4).map((item) => String(item).slice(0, 300)) : [],
@@ -390,8 +477,8 @@ exports.deepAnalyzeResume = async (req, res) => {
             disclaimer: 'AI coaching is based only on the text provided. It is not a hiring prediction, ATS guarantee, or substitute for reviewing every claim yourself.',
         });
     } catch (error) {
-        console.error('Gemini deep resume analysis error:', error.message);
-        res.status(503).json({ message: 'Gemini deep analysis is temporarily unavailable. Your local score is still available.', code: 'GEMINI_UNAVAILABLE' });
+        console.error('Deep resume analysis error:', error.message);
+        res.status(503).json({ message: 'Deep analysis is temporarily unavailable. Your local score is still available.', code: 'AI_PROVIDER_UNAVAILABLE' });
     }
 };
 
@@ -597,47 +684,16 @@ exports.generateCoverLetter = async (req, res) => {
     Return ONLY the JSON object, no markdown, no preamble.`;
 
     try {
-        let text;
+        const raw = await generateWithFallback(prompt, true);
         try {
-            // Try Gemini first
-            text = await callGemini(prompt);
-        } catch (geminiError) {
-            console.log("AI: Gemini failed, falling back to Manus AI...");
-            try {
-                // Fallback to Manus AI
-                text = await callManus(prompt, true);
-            } catch (manusError) {
-                console.log("AI: Manus AI failed, falling back to DeepSeek...");
-                try {
-                    // Fallback to DeepSeek
-                    text = await callDeepSeek(prompt, true);
-                } catch (deepSeekError) {
-                    console.log("AI: DeepSeek failed, falling back to Groq...");
-                    // Fallback to Groq
-                    text = await callGroq(prompt, true);
-                }
-            }
-        }
-
-        // Clean up text if it contains markdown code blocks
-        let jsonStr = text;
-        if (text.includes('```')) {
-            const matches = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
-            jsonStr = matches ? matches[1] : text.replace(/```json/gi, '').replace(/```/g, '').trim();
-        }
-        
-        jsonStr = jsonStr.trim();
-
-        try {
-            const data = JSON.parse(jsonStr);
+            const data = cleanJsonResponse(raw);
             res.json(data);
         } catch (parseError) {
-            console.error("JSON Parse Error:", parseError.message);
-            // Fallback for non-JSON responses
+            console.error("JSON Parse Error in Cover Letter:", parseError.message);
             res.json({
                 subject: `Application for ${jobRole}`,
                 salutation: "Dear Hiring Manager,",
-                introduction: text.substring(0, 200) + "...",
+                introduction: String(raw).substring(0, 200) + "...",
                 bodyParagraph1: "...",
                 bodyParagraph2: "...",
                 conclusion: "...",
