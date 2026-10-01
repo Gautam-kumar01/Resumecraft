@@ -248,7 +248,7 @@ const Home = () => {
                                 alt="ResumeCraft AI resume builder workspace with ATS-friendly templates"
                                 width={1200}
                                 height={630}
-                                className="mt-3 rounded-2xl border border-slate-200/20 shadow-2xl"
+                                className="mt-3 rounded-2xl border border-slate-200/20 shadow-2xl aspect-[16/9] w-full"
                                 priority={true}
                             />
                             <div className="motion-safe:animate-[pulse_3.5s_ease-in-out_infinite] absolute -bottom-5 -left-5 hidden items-center gap-3 rounded-2xl border border-slate-200 bg-white p-3 text-slate-900 shadow-2xl sm:flex lg:-left-12">

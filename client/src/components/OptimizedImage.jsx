@@ -19,16 +19,14 @@ const OptimizedImage = ({
 }) => {
     const [imgSrc, setImgSrc] = useState(src || fallbackSrc);
     const [hasFailed, setHasFailed] = useState(false);
-    const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
         setImgSrc(src || fallbackSrc);
         setHasFailed(false);
-        setIsLoaded(false);
     }, [src, fallbackSrc]);
 
     const handleError = () => {
-        if (imgSrc !== fallbackSrc) {
+        if (imgSrc !== fallbackSrc && fallbackSrc) {
             setImgSrc(fallbackSrc);
         } else {
             setHasFailed(true);
@@ -36,7 +34,7 @@ const OptimizedImage = ({
     };
 
     const imageContent = (
-        <div className={`relative overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800/80 ${className}`}>
+        <div className={`relative overflow-hidden rounded-xl ${priority ? '' : 'bg-slate-200 dark:bg-slate-800'} ${className}`}>
             {!hasFailed ? (
                 <img
                     src={imgSrc}
@@ -48,14 +46,11 @@ const OptimizedImage = ({
                     loading={priority ? 'eager' : 'lazy'}
                     decoding="async"
                     fetchPriority={priority ? 'high' : 'low'}
-                    onLoad={() => setIsLoaded(true)}
                     onError={handleError}
-                    className={`w-full h-full object-cover transition-opacity duration-300 ${
-                        isLoaded ? 'opacity-100' : 'opacity-0'
-                    }`}
+                    className="w-full h-full object-cover block"
                 />
             ) : (
-                <div className="w-full h-full min-h-[120px] flex flex-col items-center justify-center p-4 bg-gradient-to-br from-orange-500/10 via-amber-500/5 to-slate-900/40 text-slate-400">
+                <div className="w-full h-full min-h-[140px] flex flex-col items-center justify-center p-4 bg-gradient-to-br from-orange-500/10 via-amber-500/5 to-slate-900/40 text-slate-400">
                     <svg className="w-8 h-8 text-orange-400/70 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
