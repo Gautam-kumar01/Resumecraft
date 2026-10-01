@@ -43,12 +43,12 @@ const callOpenRouter = async (prompt, isJson = true) => {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${apiKey}`,
-                        'HTTP-Referer': 'https://resumecraft.in',
+                        'HTTP-Referer': 'https://resumecraft.co.in',
                         'X-Title': 'ResumeCraft',
                         'Content-Type': 'application/json',
                         'Content-Length': Buffer.byteLength(data)
                     },
-                    timeout: 45000
+                    timeout: 15000
                 };
 
                 const req = https.request(options, (res) => {
@@ -61,10 +61,10 @@ const callOpenRouter = async (prompt, isJson = true) => {
                                 if (response.choices && response.choices[0] && response.choices[0].message) {
                                     resolve(response.choices[0].message.content);
                                 } else {
-                                    reject(new Error(`Invalid OpenRouter response structure: ${body}`));
+                                    reject(new Error(`Invalid OpenRouter response structure: ${body.slice(0, 150)}`));
                                 }
                             } else {
-                                reject(new Error(`OpenRouter failed (${res.statusCode}): ${response.error?.message || body}`));
+                                reject(new Error(`OpenRouter (${res.statusCode}): ${response.error?.message || body.slice(0, 150)}`));
                             }
                         } catch (e) {
                             reject(new Error(`Failed to parse OpenRouter response: ${e.message}`));
@@ -89,6 +89,10 @@ const callOpenRouter = async (prompt, isJson = true) => {
         } catch (err) {
             lastError = err;
             console.warn(`AI: OpenRouter model ${model} failed: ${err.message}`);
+            // If authentication, credit, or model error, fail quickly to let next provider run
+            if (err.message.includes('401') || err.message.includes('402') || err.message.includes('403') || err.message.includes('User key') || err.message.includes('credits') || err.message.includes('Unauthorized')) {
+                break;
+            }
         }
     }
 
@@ -335,12 +339,15 @@ const cleanJsonResponse = (text) => {
 
 // Priority AI Fallback Pipeline: OpenRouter -> Gemini -> Manus -> DeepSeek -> Groq
 const generateWithFallback = async (prompt, isJson = true) => {
+    const errorLogs = [];
+
     // 1. Primary: OpenRouter
     if (process.env.OPENROUTER_API_KEY) {
         try {
             return await callOpenRouter(prompt, isJson);
         } catch (openRouterError) {
             console.warn("AI: OpenRouter failed, attempting fallback to Gemini...", openRouterError.message);
+            errorLogs.push(`OpenRouter: ${openRouterError.message}`);
         }
     }
 
@@ -350,6 +357,7 @@ const generateWithFallback = async (prompt, isJson = true) => {
             return await callGemini(prompt, isJson);
         } catch (geminiError) {
             console.warn("AI: Gemini failed, attempting fallback to Manus AI...", geminiError.message);
+            errorLogs.push(`Gemini: ${geminiError.message}`);
         }
     }
 
@@ -359,6 +367,7 @@ const generateWithFallback = async (prompt, isJson = true) => {
             return await callManus(prompt, isJson);
         } catch (manusError) {
             console.warn("AI: Manus AI failed, attempting fallback to DeepSeek...", manusError.message);
+            errorLogs.push(`Manus: ${manusError.message}`);
         }
     }
 
@@ -368,20 +377,25 @@ const generateWithFallback = async (prompt, isJson = true) => {
             return await callDeepSeek(prompt, isJson);
         } catch (deepSeekError) {
             console.warn("AI: DeepSeek failed, attempting fallback to Groq...", deepSeekError.message);
+            errorLogs.push(`DeepSeek: ${deepSeekError.message}`);
         }
     }
 
     // 5. Fallback: Groq
     if (process.env.GROQ_API_KEY) {
-        return await callGroq(prompt, isJson);
+        try {
+            return await callGroq(prompt, isJson);
+        } catch (groqError) {
+            console.warn("AI: Groq failed...", groqError.message);
+            errorLogs.push(`Groq: ${groqError.message}`);
+        }
     }
 
-    // If none are configured or all failed, try OpenRouter as final attempt if key exists
-    if (process.env.OPENROUTER_API_KEY) {
-        return await callOpenRouter(prompt, isJson);
-    }
-
-    throw new Error("No AI providers configured or all providers failed");
+    const detailMsg = errorLogs.length > 0 
+        ? errorLogs.join(" | ") 
+        : "No AI API keys configured. Please add OPENROUTER_API_KEY, GEMINI_API_KEY, or MANUS_API_KEY in environment variables.";
+    
+    throw new Error(`AI generation unavailable: ${detailMsg}`);
 };
 
 exports.getSuggestions = async (req, res) => {

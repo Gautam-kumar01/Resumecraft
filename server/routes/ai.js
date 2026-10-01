@@ -33,6 +33,7 @@ const strictAiLimiter = rateLimit({
   max: 15,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: false,
   keyGenerator,
   handler: (req, res) => {
     res.status(429).json({
@@ -48,6 +49,7 @@ const importLimiter = rateLimit({
   max: 10,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: false,
   keyGenerator,
   handler: (req, res) => {
     res.status(429).json({
@@ -63,6 +65,7 @@ const lightAiLimiter = rateLimit({
   max: 30,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: false,
   keyGenerator,
   handler: (req, res) => {
     res.status(429).json({
