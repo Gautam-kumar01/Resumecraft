@@ -102,9 +102,9 @@ const Home = () => {
 
     const mncCards = [
         { company: 'Product teams', role: 'Software Engineer', skills: ['Go', 'Distributed Systems', 'Cloud'], image: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&q=70&w=400' },
-        { company: 'Cloud teams', role: 'AI Engineer', skills: ['Python', 'LLMs', 'SageMaker'], image: 'https://images.unsplash.com/photo-1551288560-66936b61ee2b?auto=format&fit=crop&q=70&w=400' },
+        { company: 'Cloud teams', role: 'AI Engineer', skills: ['Python', 'LLMs', 'SageMaker'], image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=70&w=400' },
         { company: 'Research teams', role: 'Product Manager', skills: ['Roadmaps', 'Analytics', 'Stakeholders'], image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=70&w=400' },
-        { company: 'Design teams', role: 'Designer', skills: ['Figma', 'HIG', 'Prototyping'], image: 'https://images.unsplash.com/photo-1512484776495-a09d92e8a9ec?auto=format&fit=crop&q=70&w=400' },
+        { company: 'Design teams', role: 'Designer', skills: ['Figma', 'HIG', 'Prototyping'], image: 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&q=70&w=400' },
         { company: 'Analytics teams', role: 'Data Scientist', skills: ['PySpark', 'AB Testing', 'ML'], image: 'https://images.unsplash.com/photo-1557838923-2985c318be48?auto=format&fit=crop&q=70&w=400' },
         { company: 'Platform teams', role: 'Software Engineer', skills: ['React', 'GraphQL', 'Hack'], image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=70&w=400' },
         { company: 'Applied AI teams', role: 'AI Engineer', skills: ['C++', 'Vision', 'Robotics'], image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=70&w=400' },

@@ -67,7 +67,7 @@ export const roleTemplates = [
         keywords: 'data analyst resume, business intelligence CV template, data scientist resume maker, SQL analyst CV format, dashboard designer resume',
         heading: 'Data Analyst Resume Blueprint',
         subheading: 'High-performance analytical template optimized for business intelligence, data modeling, and reporting roles at leading financial and tech enterprises.',
-        imageUrl: 'https://images.unsplash.com/photo-1551288560-66936b61ee2b?q=80&w=800&auto=format&fit=crop',
+        imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop',
         industry: 'Data & Analytics',
         targetCompanies: ['Uber', 'JPMorgan', 'Airbnb', 'Accenture'],
         sampleSummary: 'Detail-oriented Data Analyst with 3+ years of experience translating complex datasets into actionable business strategies. Expert in SQL, Python, and Tableau, with a proven ability to design automated dashboards, perform statistical analysis, and deliver executive-level presentations that drive business growth.',
