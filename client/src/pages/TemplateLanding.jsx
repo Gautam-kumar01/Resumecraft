@@ -1,7 +1,8 @@
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, Navigate } from 'react-router-dom';
 import SEO from '../components/SEO';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import { createEmptyResume, TEMPLATE_OPTIONS } from '../data/resumeBuilder';
+import { roleTemplates } from '../data/roleTemplates';
 import { trackEvent } from '../utils/analytics';
 
 const categories = {
@@ -23,6 +24,13 @@ const TemplateLanding = () => {
     trackEvent('template_selected', { template_id: template.id, category: slug });
     navigate('/editor');
   };
+
+  if (slug && !category) {
+    const matchingRole = roleTemplates.find((item) => item.slug === slug);
+    if (matchingRole) {
+      return <Navigate to={`/resume-template/${slug}`} replace />;
+    }
+  }
 
   if (!category) return <div className="mx-auto max-w-6xl px-4 py-24"><SEO title="Resume Templates" description="Explore ATS-friendly, modern, student, fresher, and professional resume templates." /><h1 className="text-4xl font-black text-slate-950">Resume templates</h1><p className="mt-4 text-slate-600">Choose a category to find a layout that matches your role and experience.</p><div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{Object.entries(categories).map(([key, item]) => <Link key={key} to={`/resume-templates/${key}`} className="rounded-3xl border border-slate-200 bg-white p-5 transition hover:-translate-y-1 hover:border-orange-300 hover:shadow-xl"><h2 className="font-black text-slate-900">{item.title}</h2><p className="mt-2 text-sm leading-6 text-slate-500">{item.description}</p><span className="mt-5 inline-flex items-center text-sm font-black text-orange-600">Explore category <ArrowRight className="ml-1 h-4 w-4" /></span></Link>)}</div></div>;
 

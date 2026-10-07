@@ -5,15 +5,23 @@ Allow: /blog/
 Allow: /resource/
 Allow: /templates
 Allow: /cover-letter-templates
+Allow: /cover-letter-examples
 Allow: /free-resume-templates
 Allow: /resume-builder-dashboard
 Allow: /ats-resume-checker-preview
+Allow: /resume-score-checker
+Allow: /job-match
+Allow: /job-description-matcher
+Allow: /fresher-resume-builder
 Allow: /resume-examples
 Allow: /resume-templates
+Allow: /resume-template/
+Allow: /interview-prep
 Allow: /about
 Allow: /contact
 Allow: /terms
 Allow: /privacy
+Allow: /cookies
 Disallow: /login
 Disallow: /register
 Disallow: /dashboard
@@ -21,5 +29,6 @@ Disallow: /editor
 Disallow: /forgot-password
 Disallow: /reset-password
 Disallow: /cover-letter-editor
+Disallow: /cover-letter-builder
 
 Sitemap: https://resumecraft.co.in/sitemap.xml

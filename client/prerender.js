@@ -9,6 +9,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+import { roleTemplates } from './src/data/roleTemplates.js';
 import { blogPosts } from './src/data/blogPosts.js';
 
 const routes = [
@@ -42,27 +43,7 @@ const routes = [
     '/terms',
     '/privacy',
     '/cookies',
-    '/resume-template/software-engineer',
-    '/resume-template/data-analyst',
-    '/resume-template/marketing-manager',
-    '/resume-template/fresher',
-    '/resume-template/teacher',
-    '/resume-template/frontend-developer',
-    '/resume-template/backend-developer',
-    '/resume-template/product-manager',
-    '/resume-template/hr-manager',
-    '/resume-template/ai-engineer',
-    '/resume-template/machine-learning-engineer',
-    '/resume-template/devops-engineer',
-    '/resume-template/cloud-engineer',
-    '/resume-template/qa-test-engineer',
-    '/resume-template/cybersecurity-analyst',
-    '/resume-template/full-stack-developer',
-    '/resume-template/ui-ux-designer',
-    '/resume-template/business-analyst',
-    '/resume-template/project-manager',
-    '/resume-template/digital-marketing-executive',
-    '/resume-template/customer-support-specialist',
+    ...roleTemplates.map(template => `/resume-template/${template.slug}`),
     '/resource/resume-formats',
     '/resource/resume-examples',
     '/resource/how-to-write-a-resume',
@@ -98,53 +79,18 @@ const generateSitemap = () => {
                 loc: 'https://resumecraft.co.in/images/ats-friendly-resume-template.webp',
                 title: 'Free ATS-Friendly Resume Templates',
                 caption: 'Gallery of professional free ATS-friendly resume templates inside ResumeCraft'
-            },
-            '/resume-template/software-engineer': {
-                loc: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=800&auto=format&fit=crop',
-                title: 'Software Engineer Resume Template',
-                caption: 'Professional Software Engineer resume template with pre-filled skills and summaries'
-            },
-            '/resume-template/data-analyst': {
-                loc: 'https://images.unsplash.com/photo-1551288560-66936b61ee2b?q=80&w=800&auto=format&fit=crop',
-                title: 'Data Analyst Resume Template',
-                caption: 'ATS-optimized Data Analyst resume template with pre-filled skills and SQL highlights'
-            },
-            '/resume-template/marketing-manager': {
-                loc: 'https://images.unsplash.com/photo-1557838923-2985c318be48?q=80&w=800&auto=format&fit=crop',
-                title: 'Marketing Manager Resume Template',
-                caption: 'High-impact campaign-focused Marketing Manager resume blueprint'
-            },
-            '/resume-template/fresher': {
-                loc: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800&auto=format&fit=crop',
-                title: 'Fresher / Entry-Level Resume Template',
-                caption: 'Entry-level graduate resume blueprint emphasizing academic projects and skills'
-            },
-            '/resume-template/teacher': {
-                loc: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?q=80&w=800&auto=format&fit=crop',
-                title: 'Teacher / Educator Resume Template',
-                caption: 'Academic teacher resume blueprint highlighting curriculum development and student growth'
-            },
-            '/resume-template/frontend-developer': {
-                loc: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=800&auto=format&fit=crop',
-                title: 'Frontend Developer Resume Template',
-                caption: 'Frontend developer resume blueprint for React, TypeScript, accessibility, and performance work'
-            },
-            '/resume-template/backend-developer': {
-                loc: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=800&auto=format&fit=crop',
-                title: 'Backend Developer Resume Template',
-                caption: 'Backend developer resume blueprint for APIs, databases, reliability, and cloud systems'
-            },
-            '/resume-template/product-manager': {
-                loc: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?q=80&w=800&auto=format&fit=crop',
-                title: 'Product Manager Resume Template',
-                caption: 'Product manager resume blueprint for discovery, roadmaps, experiments, and launches'
-            },
-            '/resume-template/hr-manager': {
-                loc: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=800&auto=format&fit=crop',
-                title: 'HR Manager Resume Template',
-                caption: 'HR manager resume blueprint for hiring, onboarding, employee experience, and people operations'
             }
         };
+
+        roleTemplates.forEach(template => {
+            if (template.imageUrl) {
+                routeImages[`/resume-template/${template.slug}`] = {
+                    loc: template.imageUrl,
+                    title: template.title || `${template.roleName} Resume Template`,
+                    caption: template.subheading || template.description
+                };
+            }
+        });
 
         blogPosts.forEach(post => {
             if (post.coverImage) {
@@ -291,13 +237,7 @@ async function prerender() {
         }
     };
 
-    const vercelCriticalRoutes = new Set([
-        '/', '/templates', '/free-resume-templates', '/resume-examples',
-        '/resume-templates', '/cover-letter-templates', '/cover-letter-examples',
-        '/resume-score-checker', '/job-description-matcher', '/fresher-resume-builder',
-        '/job-match', '/interview-prep', '/about', '/contact', '/blog',
-    ]);
-    const renderRoutes = process.env.VERCEL ? routes.filter((route) => vercelCriticalRoutes.has(route)) : routes;
+    const renderRoutes = routes;
 
     const concurrency = Math.min(4, renderRoutes.length);
     console.log(`Rendering ${renderRoutes.length} routes...`);

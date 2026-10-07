@@ -1,5 +1,5 @@
-import { additionalRoleTemplates } from './additionalRoleTemplates';
-import { extraRoleTemplates } from './extraContent';
+import { additionalRoleTemplates } from './additionalRoleTemplates.js';
+import { extraRoleTemplates } from './extraContent.js';
 
 export const roleTemplates = [
     ...additionalRoleTemplates,

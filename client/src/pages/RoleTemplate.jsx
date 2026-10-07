@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link, Navigate } from 'react-router-dom';
 import { roleTemplates } from '../data/roleTemplates';
 import SEO from '../components/SEO';
 import api from '../api/axios';
@@ -28,6 +28,10 @@ const RoleTemplate = () => {
     const template = roleTemplates.find(t => t.slug === slug);
 
     if (!template) {
+        const categorySlugs = ['ats', 'fresher', 'student', 'software-engineer', 'modern', 'professional'];
+        if (categorySlugs.includes(slug)) {
+            return <Navigate to={`/resume-templates/${slug}`} replace />;
+        }
         return (
             <div className="min-h-screen pt-32 pb-24 flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900">
                 <h1 className="text-3xl font-black mb-4 dark:text-white">Template Not Found</h1>
