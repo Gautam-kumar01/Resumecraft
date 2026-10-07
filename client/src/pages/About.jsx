@@ -19,14 +19,14 @@ import { motion as Motion } from 'framer-motion';
 
 const About = () => {
     const skills = [
-        { name: 'Java', level: 'Expert', icon: <Cpu className="text-red-500" /> },
-        { name: 'Python', level: 'Advanced', icon: <Terminal className="text-blue-500" /> },
-        { name: 'JavaScript', level: 'Expert', icon: <Code2 className="text-yellow-500" /> },
-        { name: 'TypeScript', level: 'Advanced', icon: <Globe className="text-blue-400" /> },
-        { name: 'React', level: 'Expert', icon: <Layers className="text-cyan-400" /> },
-        { name: 'Node.js', level: 'Advanced', icon: <Database className="text-green-500" /> },
-        { name: 'MongoDB', level: 'Advanced', icon: <Database className="text-emerald-500" /> },
-        { name: 'Tailwind CSS', level: 'Expert', icon: <Layout className="text-sky-400" /> }
+        { name: 'Java', level: 'Expert', icon: <Cpu className="text-orange-600" /> },
+        { name: 'Python', level: 'Advanced', icon: <Terminal className="text-amber-500" /> },
+        { name: 'JavaScript', level: 'Expert', icon: <Code2 className="text-amber-600" /> },
+        { name: 'TypeScript', level: 'Advanced', icon: <Globe className="text-orange-500" /> },
+        { name: 'React', level: 'Expert', icon: <Layers className="text-amber-500" /> },
+        { name: 'Node.js', level: 'Advanced', icon: <Database className="text-emerald-500" /> },
+        { name: 'MongoDB', level: 'Advanced', icon: <Database className="text-emerald-600" /> },
+        { name: 'Tailwind CSS', level: 'Expert', icon: <Layout className="text-orange-500" /> }
     ];
 
     return (

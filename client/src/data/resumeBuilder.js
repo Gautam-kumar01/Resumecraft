@@ -22,12 +22,12 @@ export const TARGET_ROLES = [
 
 export const TEMPLATE_OPTIONS = [
   { id: 'modern', name: 'Modern', category: 'Modern', description: 'Clean hierarchy with confident accents.', accent: '#f97316' },
-  { id: 'executive', name: 'Executive', category: 'Executive', description: 'Structured and polished for leadership roles.', accent: '#0f172a' },
+  { id: 'executive', name: 'Executive', category: 'Executive', description: 'Structured and polished for leadership roles.', accent: '#1c1008' },
   { id: 'visual', name: 'Impact', category: 'Creative', description: 'A strong visual profile for standout applications.', accent: '#ea580c' },
-  { id: 'elegant', name: 'Elegant', category: 'Professional', description: 'Classic typography with refined spacing.', accent: '#475569' },
-  { id: 'government', name: 'Formal', category: 'ATS Friendly', description: 'Straightforward formatting for formal applications.', accent: '#111827' },
-  { id: 'internship', name: 'Student', category: 'Student', description: 'Education-forward layout for students and freshers.', accent: '#2563eb' },
-  { id: 'aurora', name: 'Aurora', category: 'Minimal', description: 'Editorial layout with a calm, modern rhythm.', accent: '#7c3aed' },
+  { id: 'elegant', name: 'Elegant', category: 'Professional', description: 'Classic typography with refined spacing.', accent: '#684530' },
+  { id: 'government', name: 'Formal', category: 'ATS Friendly', description: 'Straightforward formatting for formal applications.', accent: '#2a190f' },
+  { id: 'internship', name: 'Student', category: 'Student', description: 'Education-forward layout for students and freshers.', accent: '#ea580c' },
+  { id: 'aurora', name: 'Aurora', category: 'Minimal', description: 'Editorial layout with a calm, modern rhythm.', accent: '#7c2d12' },
 ];
 
 export const SECTION_DEFINITIONS = [
