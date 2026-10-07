@@ -183,9 +183,9 @@ const Home = () => {
             })}} />
             {/* Hero Section */}
             <section className="relative isolate overflow-hidden bg-slate-950 py-16 text-white sm:py-20 lg:py-28">
-                <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_82%_18%,rgba(249,115,22,0.2),transparent_32%),radial-gradient(circle_at_15%_85%,rgba(59,130,246,0.16),transparent_28%)]" />
+                <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_82%_18%,rgba(249,115,22,0.2),transparent_32%),radial-gradient(circle_at_15%_85%,rgba(217,119,6,0.14),transparent_30%)]" />
                 <div className="absolute -right-28 top-10 -z-10 h-80 w-80 rounded-full bg-orange-500/10 blur-3xl" />
-                <div className="absolute -bottom-32 left-1/3 -z-10 h-80 w-80 rounded-full bg-blue-500/10 blur-3xl" />
+                <div className="absolute -bottom-32 left-1/3 -z-10 h-80 w-80 rounded-full bg-amber-600/10 blur-3xl" />
 
                 <div className="mx-auto grid max-w-7xl items-center gap-14 px-4 sm:px-6 lg:grid-cols-[0.95fr_1.05fr] lg:px-8">
                     <div className="relative z-10">
@@ -232,7 +232,7 @@ const Home = () => {
                     </div>
 
                     <div className="relative mx-auto w-full max-w-2xl lg:ml-auto">
-                        <div className="absolute -inset-5 rounded-[2.5rem] bg-gradient-to-br from-orange-500/20 via-transparent to-blue-500/10 blur-2xl" />
+                        <div className="absolute -inset-5 rounded-[2.5rem] bg-gradient-to-br from-orange-500/20 via-transparent to-amber-700/15 blur-2xl" />
                         <div
                             onClick={handleCreateNew}
                             className="relative cursor-pointer rounded-[2rem] border border-white/15 bg-white/10 p-3 shadow-[0_30px_90px_rgba(0,0,0,0.35)] backdrop-blur-xl transition-all duration-500 hover:-translate-y-1.5 sm:rotate-2 sm:p-4"

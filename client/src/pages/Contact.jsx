@@ -51,7 +51,7 @@ const Contact = () => {
                                 transition={{ delay: 0.1 }}
                                 className="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-700 shadow-sm"
                             >
-                                <Clock className="h-8 w-8 text-blue-500 mb-4" />
+                                <Clock className="h-8 w-8 text-amber-500 mb-4" />
                                 <h4 className="font-bold text-slate-900 dark:text-white mb-2">Response Time</h4>
                                 <p className="text-slate-500 dark:text-slate-400 text-sm">We typically respond to all inquiries within 2-4 business hours.</p>
                             </Motion.div>

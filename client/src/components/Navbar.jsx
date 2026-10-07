@@ -95,11 +95,11 @@ const Navbar = () => {
                                             </div>
                                         </Link>
                                         <Link to="/resource/resume-formats" className="flex items-start space-x-3 group/item">
-                                            <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg group-hover/item:bg-blue-500 transition-colors">
-                                                <Menu className="h-5 w-5 text-blue-600 dark:text-blue-400 group-hover/item:text-white" />
+                                            <div className="p-2 bg-amber-50 dark:bg-amber-950/30 rounded-lg group-hover/item:bg-orange-500 transition-colors">
+                                                <Menu className="h-5 w-5 text-amber-700 dark:text-amber-400 group-hover/item:text-white" />
                                             </div>
                                             <div>
-                                                <h4 className="font-bold text-slate-900 dark:text-white group-hover/item:text-blue-500 transition-colors">Resume Formats</h4>
+                                                <h4 className="font-bold text-slate-900 dark:text-white group-hover/item:text-orange-500 transition-colors">Resume Formats</h4>
                                                 <p className="text-xs text-slate-500 dark:text-slate-400">Learn the best practices for resume formatting.</p>
                                             </div>
                                         </Link>
@@ -160,11 +160,11 @@ const Navbar = () => {
                                             </div>
                                         </Link>
                                         <Link to="/resource/resume-formats" className="flex items-start space-x-3 group/item">
-                                            <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg group-hover/item:bg-blue-500 transition-colors">
-                                                <Menu className="h-5 w-5 text-blue-600 dark:text-blue-400 group-hover/item:text-white" />
+                                            <div className="p-2 bg-amber-50 dark:bg-amber-950/30 rounded-lg group-hover/item:bg-orange-500 transition-colors">
+                                                <Menu className="h-5 w-5 text-amber-700 dark:text-amber-400 group-hover/item:text-white" />
                                             </div>
                                             <div>
-                                                <h4 className="font-bold text-slate-900 dark:text-white group-hover/item:text-blue-500 transition-colors">Cover Letter Formats</h4>
+                                                <h4 className="font-bold text-slate-900 dark:text-white group-hover/item:text-orange-500 transition-colors">Cover Letter Formats</h4>
                                                 <p className="text-xs text-slate-500 dark:text-slate-400">Learn the best practices for cover letter formatting.</p>
                                             </div>
                                         </Link>

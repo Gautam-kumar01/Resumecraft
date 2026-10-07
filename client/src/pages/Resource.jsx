@@ -41,7 +41,7 @@ const resourceContent = {
     'resume-examples': {
         title: 'High-Impact Resume Examples',
         description: 'Get inspired by real-world resume samples that successfully landed interviews at top MNCs.',
-        icon: <BookOpen className="h-8 w-8 text-blue-500" />,
+        icon: <BookOpen className="h-8 w-8 text-orange-500" />,
         sections: [
             {
                 title: 'Software Engineer',

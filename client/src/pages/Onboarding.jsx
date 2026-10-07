@@ -10,9 +10,9 @@ const Onboarding = () => {
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-slate-950 relative flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 overflow-hidden">
       {/* Premium background elements matching the main page aesthetics */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,rgba(249,115,22,0.12),transparent_40%),radial-gradient(circle_at_15%_85%,rgba(59,130,246,0.1),transparent_35%)]" />
-      <div className="absolute -right-28 top-10 h-80 w-80 rounded-full bg-orange-500/5 blur-3xl" />
-      <div className="absolute -bottom-32 left-1/3 h-80 w-80 rounded-full bg-blue-500/5 blur-3xl" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_82%_18%,rgba(249,115,22,0.14),transparent_40%),radial-gradient(circle_at_15%_85%,rgba(217,119,6,0.12),transparent_35%)]" />
+      <div className="absolute -right-28 top-10 h-80 w-80 rounded-full bg-orange-500/10 blur-3xl" />
+      <div className="absolute -bottom-32 left-1/3 h-80 w-80 rounded-full bg-amber-600/10 blur-3xl" />
       
       <div className="relative z-10 w-full max-w-3xl flex justify-center">
         <ResumeOnboarding

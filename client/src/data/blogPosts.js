@@ -443,7 +443,7 @@ export const blogPosts = [
     updatedDate: 'June 6, 2026',
     readTime: '5 min read',
     featured: false,
-    coverImage: 'https://images.unsplash.com/photo-1540747737956-3787240444b6?auto=format&fit=crop&w=1200&q=80',
+    coverImage: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1200&q=80',
     tags: ['Resume Rejection', 'Career Mistakes', 'Resume Advice'],
     author: {
       name: 'Aditya Sen',
