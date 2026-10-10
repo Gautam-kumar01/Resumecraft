@@ -45,7 +45,6 @@ import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 import CookieConsent from './components/CookieConsent';
 import ScrollToTop from './components/ScrollToTop';
-import SocialBarAd from './components/ads/SocialBarAd';
 
 const ResumeBuilderDashboard = lazy(() => import('./pages/ResumeBuilderDashboard'));
 
@@ -172,7 +171,6 @@ function App() {
             </main>
             <Footer />
             <CookieConsent />
-            <SocialBarAd />
           </div>
         </AuthProvider>
     </Router>
