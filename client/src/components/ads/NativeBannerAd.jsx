@@ -1,9 +1,8 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * Adsterra Native Banner (4:1 Widget Layout)
+ * Native Banner (4:1 Widget Layout)
  * Placement Key: c22ba0be7de9372fb7daf72872423fb5
- * Unit ID: 31652262 (NativeBanner_1)
  */
 const NativeBannerAd = ({ className = '' }) => {
     const containerRef = useRef(null);
@@ -25,7 +24,7 @@ const NativeBannerAd = ({ className = '' }) => {
             try {
                 container.appendChild(script);
             } catch (err) {
-                console.warn('Adsterra Native Banner script load error:', err);
+                console.warn('Native Banner script load error:', err);
             }
         }
     }, []);

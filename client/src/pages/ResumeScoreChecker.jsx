@@ -105,7 +105,7 @@ const ResumeScoreChecker = () => {
                     </section>
                 </div>
 
-                {/* Adsterra Native Banner */}
+                {/* Native Banner */}
                 <NativeBannerAd className="mt-12" />
             </div>
         </div>

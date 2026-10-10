@@ -339,16 +339,16 @@ const BlogList = () => {
                                 </div>
                             </div>
 
-                            {/* Adsterra 300x250 Medium Rectangle Banner */}
+                            {/* 300x250 Medium Rectangle Banner */}
                             <Banner300x250 />
                         </div>
                     </div>
                 )}
 
-                {/* Adsterra Native Banner */}
+                {/* Native Banner */}
                 <NativeBannerAd />
 
-                {/* Adsterra Responsive Leaderboard Banner (728x90 Desktop / 320x50 Mobile) */}
+                {/* Responsive Leaderboard Banner (728x90 Desktop / 320x50 Mobile) */}
                 <ResponsiveLeaderboardAd className="my-8" />
 
                 {/* Bottom Newsletter Signup Container */}

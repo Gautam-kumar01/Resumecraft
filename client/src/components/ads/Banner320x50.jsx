@@ -1,8 +1,7 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * Adsterra Banner 320x50 Ad Unit (Mobile Leaderboard)
- * Unit ID: 31652266 (320x50_1)
+ * Banner 320x50 Ad Unit (Mobile Leaderboard)
  * Key: f8e3e8a2d00ee8eda4ad8ed952064c61
  */
 const Banner320x50 = ({ className = '' }) => {
@@ -22,7 +21,7 @@ const Banner320x50 = ({ className = '' }) => {
         iframe.style.border = 'none';
         iframe.style.overflow = 'hidden';
         iframe.scrolling = 'no';
-        iframe.title = 'Adsterra 320x50 Banner';
+        iframe.title = 'Advertisement 320x50';
 
         container.appendChild(iframe);
 

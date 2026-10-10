@@ -665,7 +665,7 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* Adsterra Leaderboard Banner */}
+            {/* Leaderboard Banner */}
             <div className="py-8 bg-slate-50 dark:bg-slate-900 border-t border-b border-slate-100 dark:border-slate-800">
                 <ResponsiveLeaderboardAd />
             </div>

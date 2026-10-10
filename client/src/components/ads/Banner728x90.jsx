@@ -1,8 +1,7 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * Adsterra Banner 728x90 Ad Unit (Leaderboard)
- * Unit ID: 31652265 (728x90_1)
+ * Banner 728x90 Ad Unit (Leaderboard)
  * Key: add11f92698790a65dc96618ef436f0d
  */
 const Banner728x90 = ({ className = '' }) => {
@@ -22,7 +21,7 @@ const Banner728x90 = ({ className = '' }) => {
         iframe.style.border = 'none';
         iframe.style.overflow = 'hidden';
         iframe.scrolling = 'no';
-        iframe.title = 'Adsterra 728x90 Banner';
+        iframe.title = 'Advertisement 728x90';
 
         container.appendChild(iframe);
 

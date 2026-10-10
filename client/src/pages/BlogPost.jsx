@@ -339,7 +339,7 @@ const BlogPost = () => {
                             </div>
                         </div>
 
-                        {/* Adsterra 300x250 Medium Rectangle Banner */}
+                        {/* 300x250 Medium Rectangle Banner */}
                         <Banner300x250 />
                     </aside>
 
@@ -442,7 +442,7 @@ const BlogPost = () => {
                     </div>
                 </div>
 
-                {/* Adsterra Native Banner */}
+                {/* Native Banner */}
                 <NativeBannerAd />
 
                 {/* Bottom Recommendations */}

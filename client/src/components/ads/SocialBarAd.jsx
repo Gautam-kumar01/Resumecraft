@@ -1,14 +1,13 @@
 import { useEffect } from 'react';
 
 /**
- * Adsterra Social Bar Ad Unit
- * Unit ID: 31652263 (SocialBar_1)
+ * Social Bar Ad Unit
  */
 const SocialBarAd = () => {
     useEffect(() => {
         if (typeof window === 'undefined' || window['__PRERENDERING__']) return;
 
-        const scriptId = 'adsterra-social-bar';
+        const scriptId = 'sb-unit-script';
         if (document.getElementById(scriptId)) return;
 
         try {
@@ -20,7 +19,7 @@ const SocialBarAd = () => {
 
             document.body.appendChild(script);
         } catch (err) {
-            console.warn('Adsterra Social Bar script load error:', err);
+            console.warn('Social Bar script load error:', err);
         }
     }, []);
 
