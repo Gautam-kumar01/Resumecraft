@@ -21,6 +21,7 @@ import { blogPosts } from '../data/blogPosts';
 import InternalLink from '../components/InternalLink';
 import Newsletter from '../components/Newsletter';
 import OptimizedImage from '../components/OptimizedImage';
+import NativeBannerAd from '../components/ads/NativeBannerAd';
 
 const BlogPost = () => {
     const { slug } = useParams();
@@ -436,6 +437,9 @@ const BlogPost = () => {
 
                     </div>
                 </div>
+
+                {/* Adsterra Native Banner */}
+                <NativeBannerAd />
 
                 {/* Bottom Recommendations */}
                 <InternalLink currentSlug={post.slug} category={post.category} />

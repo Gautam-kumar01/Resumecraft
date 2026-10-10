@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { CheckCircle2, ClipboardCheck, FileText, Lightbulb, LoaderCircle, ShieldCheck, Target, TrendingUp, XCircle } from 'lucide-react';
 import SEO from '../components/SEO';
 import api from '../api/axios';
+import NativeBannerAd from '../components/ads/NativeBannerAd';
 
 const stopWords = new Set(['about', 'after', 'again', 'being', 'could', 'from', 'have', 'into', 'more', 'other', 'their', 'there', 'these', 'they', 'this', 'that', 'with', 'your', 'will', 'would', 'years', 'using', 'work', 'team']);
 const actionVerbs = ['built', 'created', 'improved', 'led', 'managed', 'designed', 'delivered', 'analyzed', 'developed', 'launched', 'reduced', 'increased', 'automated', 'implemented', 'coordinated', 'supported'];
@@ -103,6 +104,9 @@ const ResumeScoreChecker = () => {
 <div className="mt-8 rounded-2xl bg-orange-50 p-5 dark:bg-orange-500/10"><p className="text-sm font-black text-orange-900 dark:text-orange-200">Ready to improve the draft?</p><p className="mt-1 text-xs leading-5 text-orange-800/80 dark:text-orange-200/70">Use your feedback as a checklist, then open the editor to refine your content and preview the layout.</p><Link to="/create-resume" className="mt-4 inline-flex items-center rounded-xl bg-orange-500 px-4 py-2.5 text-xs font-black text-white hover:bg-orange-600">Open resume editor</Link></div></div>}
                     </section>
                 </div>
+
+                {/* Adsterra Native Banner */}
+                <NativeBannerAd className="mt-12" />
             </div>
         </div>
     );

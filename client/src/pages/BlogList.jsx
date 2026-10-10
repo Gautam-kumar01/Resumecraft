@@ -6,6 +6,7 @@ import { motion as Motion } from 'framer-motion';
 import { blogPosts } from '../data/blogPosts';
 import Newsletter from '../components/Newsletter';
 import OptimizedImage from '../components/OptimizedImage';
+import NativeBannerAd from '../components/ads/NativeBannerAd';
 
 const BlogList = () => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -338,6 +339,9 @@ const BlogList = () => {
                         </div>
                     </div>
                 )}
+
+                {/* Adsterra Native Banner */}
+                <NativeBannerAd />
 
                 {/* Bottom Newsletter Signup Container */}
                 <div className="mt-20">
