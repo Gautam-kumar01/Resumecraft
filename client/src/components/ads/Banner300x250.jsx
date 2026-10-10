@@ -9,7 +9,7 @@ const Banner300x250 = ({ className = '' }) => {
     const containerRef = useRef(null);
 
     useEffect(() => {
-        if (typeof window === 'undefined' || window.__PRERENDERING__) return;
+        if (typeof window === 'undefined' || window['__PRERENDERING__']) return;
 
         const container = containerRef.current;
         if (!container) return;
@@ -57,13 +57,13 @@ const Banner300x250 = ({ className = '' }) => {
     }, []);
 
     return (
-        <div className={`flex flex-col items-center justify-center my-6 overflow-hidden ${className}`}>
+        <div className={`w-full max-w-full flex flex-col items-center justify-center my-6 overflow-hidden ${className}`}>
             <span className="text-[10px] uppercase tracking-widest text-slate-400 dark:text-stone-500 font-semibold mb-1 select-none">
                 Advertisement
             </span>
             <div 
                 ref={containerRef}
-                className="w-[300px] h-[250px] flex items-center justify-center bg-slate-50/50 dark:bg-stone-900/40 rounded-xl overflow-hidden"
+                className="w-[300px] max-w-full h-[250px] flex items-center justify-center bg-slate-50/50 dark:bg-stone-900/40 rounded-xl overflow-hidden"
             ></div>
         </div>
     );

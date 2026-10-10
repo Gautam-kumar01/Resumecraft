@@ -6,7 +6,7 @@ import { useEffect } from 'react';
  */
 const SocialBarAd = () => {
     useEffect(() => {
-        if (typeof window === 'undefined' || window.__PRERENDERING__) return;
+        if (typeof window === 'undefined' || window['__PRERENDERING__']) return;
 
         const scriptId = 'adsterra-social-bar';
         if (document.getElementById(scriptId)) return;

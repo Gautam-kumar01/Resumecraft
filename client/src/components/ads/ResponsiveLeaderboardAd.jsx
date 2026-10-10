@@ -8,11 +8,11 @@ import Banner320x50 from './Banner320x50';
  */
 const ResponsiveLeaderboardAd = ({ className = '' }) => {
     return (
-        <div className={`w-full flex justify-center items-center ${className}`}>
-            <div className="hidden md:flex justify-center w-full">
+        <div className={`w-full max-w-full flex justify-center items-center overflow-hidden ${className}`}>
+            <div className="hidden md:flex justify-center w-full max-w-full overflow-hidden">
                 <Banner728x90 />
             </div>
-            <div className="flex md:hidden justify-center w-full">
+            <div className="flex md:hidden justify-center w-full max-w-full overflow-hidden">
                 <Banner320x50 />
             </div>
         </div>
