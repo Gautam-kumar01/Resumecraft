@@ -23,6 +23,7 @@ const FeatureShowcase = lazy(() => import('../components/FeatureShowcase'));
 import OptimizedImage from '../components/OptimizedImage';
 import { trackEvent } from '../utils/analytics';
 import { featuredBlogPosts } from '../data/featuredBlogPosts';
+import ResponsiveLeaderboardAd from '../components/ads/ResponsiveLeaderboardAd';
 
 const Home = () => {
     const navigate = useNavigate();
@@ -663,6 +664,11 @@ const Home = () => {
                     </div>
                 </div>
             </section>
+
+            {/* Adsterra Leaderboard Banner */}
+            <div className="py-8 bg-slate-50 dark:bg-slate-900 border-t border-b border-slate-100 dark:border-slate-800">
+                <ResponsiveLeaderboardAd />
+            </div>
 
             {/* Partners / Companies Section */}
             <section className="py-24 bg-slate-900 relative overflow-hidden">

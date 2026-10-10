@@ -7,6 +7,8 @@ import { blogPosts } from '../data/blogPosts';
 import Newsletter from '../components/Newsletter';
 import OptimizedImage from '../components/OptimizedImage';
 import NativeBannerAd from '../components/ads/NativeBannerAd';
+import Banner300x250 from '../components/ads/Banner300x250';
+import ResponsiveLeaderboardAd from '../components/ads/ResponsiveLeaderboardAd';
 
 const BlogList = () => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -336,12 +338,18 @@ const BlogList = () => {
                                     ))}
                                 </div>
                             </div>
+
+                            {/* Adsterra 300x250 Medium Rectangle Banner */}
+                            <Banner300x250 />
                         </div>
                     </div>
                 )}
 
                 {/* Adsterra Native Banner */}
                 <NativeBannerAd />
+
+                {/* Adsterra Responsive Leaderboard Banner (728x90 Desktop / 320x50 Mobile) */}
+                <ResponsiveLeaderboardAd className="my-8" />
 
                 {/* Bottom Newsletter Signup Container */}
                 <div className="mt-20">

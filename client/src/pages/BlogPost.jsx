@@ -22,6 +22,7 @@ import InternalLink from '../components/InternalLink';
 import Newsletter from '../components/Newsletter';
 import OptimizedImage from '../components/OptimizedImage';
 import NativeBannerAd from '../components/ads/NativeBannerAd';
+import Banner300x250 from '../components/ads/Banner300x250';
 
 const BlogPost = () => {
     const { slug } = useParams();
@@ -337,6 +338,9 @@ const BlogPost = () => {
                                 </button>
                             </div>
                         </div>
+
+                        {/* Adsterra 300x250 Medium Rectangle Banner */}
+                        <Banner300x250 />
                     </aside>
 
                     {/* Middle: Content Blocks Rendering */}

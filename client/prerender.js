@@ -203,6 +203,9 @@ async function prerender() {
         let page;
         try {
             page = await browser.newPage();
+            await page.evaluateOnNewDocument(() => {
+                window.__PRERENDERING__ = true;
+            });
             page.on('pageerror', err => console.error(`PAGE ERROR ON ${route}:`, err.message));
             page.on('console', msg => {
                 if (msg.type() === 'error') console.error(`CONSOLE ERROR ON ${route}:`, msg.text());

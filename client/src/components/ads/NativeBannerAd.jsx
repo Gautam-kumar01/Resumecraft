@@ -9,10 +9,7 @@ const NativeBannerAd = ({ className = '' }) => {
     const containerRef = useRef(null);
 
     useEffect(() => {
-        if (typeof window === 'undefined') return;
-
-        // Skip loading in automated/prerender bots to ensure fast builds
-        if (window.navigator?.webdriver) return;
+        if (typeof window === 'undefined' || window.__PRERENDERING__) return;
 
         const container = containerRef.current;
         if (!container) return;
